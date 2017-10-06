@@ -1,6 +1,6 @@
 package com.ds.retl.rest.error;
 
-import org.mx.rest.vo.UserInterfaceError;
+import org.mx.rest.error.UserInterfaceError;
 
 /**
  * Created by john on 2017/10/6.
