@@ -1,0 +1,82 @@
+ext.versions = [
+  spring	: '4.3.8.RELEASE',
+  'spring-mongodb'	: '1.10.4.RELEASE',
+  'commons-logging'	: '1.2',
+  'commons-dbcp2'	: '2.1.1',
+  log4j		: '2.8.2',
+  slf4j		: '1.7.25',
+  fastjson	: '1.2.29',
+  jedis		: '2.9.0',
+  jersey	: '2.25.1',
+  jetty		: '9.2.14.v20151106',
+  activiti	: '6.0.0',
+  storm		: '1.1.1',
+  activemq	: '5.9.1',
+  h2database	: '1.4.196',
+  mysql		: '5.1.34',
+  ojdbc14	: '10.2.0.1',
+  c3p0		: '0.9.1.2',
+  junit		: '4.12',
+  'mongodb-driver'	: '3.5.0',
+  zookeeper	: '3.4.9',
+  'mx-utils'	: '2.0.3',
+  'mx-rest-utils'	: '1.1.2'
+]
+
+ext.libs = [
+  "spring-context"	: "org.springframework:spring-context:${versions.spring}",
+  "spring-data-mongodb"	: "org.springframework.data:spring-data-mongodb:${versions.'spring-mongodb'}",
+
+  "commons-logging"	: "commons-logging:commons-logging:${versions.'commons-logging'}",
+  "commons-dbcp2"	: "org.apache.commons:commons-dbcp2:${versions.'commons-dbcp2'}",
+
+  "log4j-api"		: "org.apache.logging.log4j:log4j-api:${versions.log4j}",
+  "log4j-core"		: "org.apache.logging.log4j:log4j-core:${versions.log4j}",
+  "log4j-jcl"		: "org.apache.logging.log4j:log4j-jcl:${versions.log4j}",
+  "log4j-slf4j-impl"	: "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}",
+  "slf4j-api"		: "org.slf4j:slf4j-api:${versions.slf4j}",
+
+  "fastjson"		: "com.alibaba:fastjson:${versions.fastjson}",
+
+  "jedis"		: "redis.clients:jedis:${versions.jedis}",
+
+  "jersey-server"	: "org.glassfish.jersey.core:jersey-server:${versions.jersey}",
+  "jersey-media-jackson": "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}",
+  "jersey-jetty-http"	: "org.glassfish.jersey.containers:jersey-container-jetty-http:${versions.jersey}",
+  "jetty-server"	: "org.eclipse.jetty:jetty-server:${versions.jetty}",
+  "jetty-servlet"	: "org.eclipse.jetty:jetty-servlet:${versions.jetty}",
+  "jetty-websocket"	: "org.eclipse.jetty.websocket:javax-websocket-server-impl:${versions.jetty}",
+
+  "activiti-engine"	: "org.activiti:activiti-engine:${versions.activiti}",
+  "activiti-converter"	: "org.activiti:activiti-bpmn-converter:${versions.activiti}",
+  "activiti-image"	: "org.activiti:activiti-image-generator:${versions.activiti}",
+  "activiti-validation"	: "org.activiti:activiti-process-validation:${versions.activiti}",
+  "activiti-spring"	: "org.activiti:activiti-spring:${versions.activiti}",
+
+  "activemq"		: "org.apache.activemq:activemq-client:${versions.activemq}",
+
+  "storm-core"		: "org.apache.storm:storm-core:${versions.storm}",
+  "storm-jms"		: "org.apache.storm:storm-jms:${versions.storm}",
+  "storm-jms-examples"	: "org.apache.storm:storm-jms-examples:${versions.storm}",
+  "storm-redis"		: "org.apache.storm:storm-redis:${versions.storm}",
+  "storm-redis-examples": "org.apache.storm:storm-redis-examples:${versions.storm}",
+  "storm-jdbc"		: "org.apache.storm:storm-jdbc:${versions.storm}",
+  "storm-jdbc-examples"	: "org.apache.storm:storm-jdbc-examples:${versions.storm}",
+
+  "h2database"		: "com.h2database:h2:${versions.h2database}",
+
+  "mysql"		: "mysql:mysql-connector-java:${versions.mysql}",
+
+  "ojdbc14"		: "com.oracle:ojdbc14:${versions.ojdbc14}",
+
+  "c3p0"		: "c3p0:c3p0:${versions.c3p0}",
+
+  "mongodb-driver"	: "org.mongodb:mongodb-driver:${versions.'mongodb-driver'}",
+
+  "junit"		: "junit:junit:${versions.junit}",
+
+  zookeeper		: "org.apache.zookeeper:zookeeper:${versions.zookeeper}",
+
+  "mx-utils"		: "org.mx:mx-utils:${versions.'mx-utils'}",
+  "mx-rest-utils"	: "org.mx:mx-rest-utils:${versions.'mx-rest-utils'}"
+]

@@ -1,0 +1,6 @@
+rootProject.name = 'core'
+
+include 'mx-utils'
+include 'mx-dal'
+include 'mx-dal-jdbc'
+include 'mx-rest-utils'

@@ -1,0 +1,130 @@
+apply from: 'dependencies.gradle'
+
+allprojects {
+  apply plugin: 'java'
+  apply plugin: 'maven'
+  apply plugin: 'idea'
+  apply plugin: 'eclipse'
+
+  group = 'org.mx'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+}
+
+project(':mx-utils') {
+  version = '2.0.4'
+
+  dependencies {
+    compile(
+      libs.'fastjson',
+      libs.'log4j-api',
+      libs.'log4j-core',
+      libs.'log4j-jcl',
+      libs.'log4j-slf4j-impl',
+      libs.'slf4j-api'
+    )
+  }
+}
+
+project(':mx-dal') {
+  version = '1.0.0'
+
+  dependencies {
+    compile(
+      project(':mx-utils'),
+      libs.'spring-context'
+    )
+  }
+}
+
+project(':mx-dal-jdbc') {
+  version = '1.0.0'
+
+  dependencies {
+    compile(
+      project(':mx-dal'),
+      libs.'h2database',
+      libs.'commons-dbcp2',
+      libs.'mysql'
+    )
+  }
+}
+
+project(':mx-rest-utils') {
+  version = '1.1.3'
+
+  dependencies {
+    compile(
+      project(':mx-utils'),
+      project(':mx-dal'),
+      libs.'spring-context',
+      libs.'jersey-server',
+      libs.'jersey-media-jackson',
+      libs.'jersey-jetty-http',
+      libs.'jetty-server',
+      libs.'jetty-servlet'
+    )
+  }
+}
+
+subprojects { subprj ->
+  repositories {
+    mavenCentral()
+    maven {
+      url 'http://repo.clojars.org/'
+    }
+    jcenter()
+    mavenLocal()
+  }
+
+  jar {
+    manifest.attributes provider: 'MX Foundation.'
+    excludes = []
+  }
+
+  task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from "$buildDir/docs/javadoc"
+  }
+
+  task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+  }
+
+  task copyDependencies(type: Copy) {
+    into "$buildDir/dependencies"
+    from configurations.runtime
+  }
+
+  [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+  artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+  }
+
+  configurations {
+    provided
+    deployerJars
+  }
+
+  dependencies {
+    testCompile(
+      libs.'junit'
+    )
+  }
+
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        repository(url: 'file://localhost/Users/john/.m2/repository')
+        pom.groupId = subprj.group
+        pom.artifactId = subprj.name
+        pom.version = subprj.version
+      }
+    }
+  } 
+}
