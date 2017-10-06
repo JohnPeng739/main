@@ -1,0 +1,101 @@
+{
+  "name": "sample-persist-2-jdbc-topology",
+  "cluster": false,
+  "debug": true,
+  "maxSpoutPending": 5,
+  "maxTaskParallelism": 5,
+  "messageTimeoutSecs": 3,
+  "numAckers": 5,
+  "numWorkers": 5,
+  "spouts": [
+    {
+      "name": "sample-jms-spout",
+      "type": "JMS_PULL",
+      "parallelism": 2,
+      "method": "ACTIVEMQ",
+      "configuration": {
+        "connection": "nio://mqserver:61616?trace=true",
+        "user": "",
+        "password": "",
+        "destinateName": "tar-cjd-queue",
+        "isTopic": false,
+        "isPersist": true,
+        "producer": "JSON"
+      }
+    }
+  ],
+  "bolts": [
+    {
+      "name": "sample-jdbc-bolt",
+      "type": "JDBC",
+      "parallelism": 5,
+      "configuration": {
+        "dataSource": "dataSource1",
+        "tables": [
+          {
+            "table": "TB_TAR_JMS",
+            "key": "ID",
+            "mapping": {
+              "id": "ID",
+              "code": "CODE",
+              "name": "NAME",
+              "desc": "DESCRIPTION",
+              "age": "AGE",
+              "money": "MONEY",
+              "average": "AVERAGE",
+              "updatedtime": "UPDATEDTIME",
+              "email": "EMAIL",
+              "indexNo": "INDEXNO",
+              "_structuredTime": "STRUCTUREDTIME",
+              "_validatedTime": "VALIDATEDTIME",
+              "_transformedTime": "TRANSFORMEDTIME",
+              "_errorTime": "ERRORTIME",
+              "_persistedTime": "PERSISTEDTIME"
+            },
+            "specialTypes": {
+              "TIMESTAMP": "UPDATEDTIME"
+            }
+          }
+        ]
+      },
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-jms-spout"
+        }
+      ]
+    }
+  ],
+  "dataSources": [
+    {
+      "dataSource": "dataSource1",
+      "driver": "com.mysql.jdbc.Driver",
+      "url": "jdbc:mysql://dbserver:3306/sample",
+      "user": "root",
+      "password": "12345678",
+      "initialPoolSize": 3,
+      "maxPoolSize": 20,
+      "maxIdleTime": 1000,
+      "errorTable": {
+        "table": "TB_ERRORS",
+        "key": "ID",
+        "mapping": {
+          "id": "ID",
+          "type": "TYPE",
+          "message": "MESSAGE",
+          "data": "DATA",
+          "fieldName": "FIELDNAME",
+          "createdtime": "CREATEDTIME",
+          "_structuredTime": "STRUCTUREDTIME",
+          "_validatedTime": "VALIDATEDTIME",
+          "_transformedTime": "TRANSFORMEDTIME",
+          "_errorTime": "ERRORTIME",
+          "_persistedTime": "PERSISTEDTIME"
+        },
+        "specialTypes": {
+          "TIMESTAMP": "CREATEDTIME"
+        }
+      }
+    }
+  ]
+}

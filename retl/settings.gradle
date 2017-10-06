@@ -1,0 +1,4 @@
+rootProject.name = 'retl'
+
+include 'retl-platform'
+include 'retl-deploy'

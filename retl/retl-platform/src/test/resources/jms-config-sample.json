@@ -1,0 +1,15 @@
+{
+  "activemq": {
+    "connection": "nio://localhost:61616?trace=true",
+    "user": "",
+    "password": "",
+    "destinateName": "jjd-queue",
+    "isTopic": false,
+    "producer": "JSON"
+  },
+  "jndi": {
+    "connectionFactoryName": "java:comp/env/queue/connectionFactory",
+    "destinateName": "jjd-queue",
+    "producer": "JSON"
+  }
+}

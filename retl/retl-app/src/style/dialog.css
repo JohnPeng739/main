@@ -1,0 +1,26 @@
+.layout-form {
+  min-width: 400px;
+  margin: auto;
+  padding: 10px;
+}
+.tag {
+  margin-right: 3px;
+}
+.tag-input {
+  width: 80px;
+  margin: 0;
+}
+.tag-button {
+  color: red;
+}
+.dialog-form {
+  font-size: 14px;
+  font-weight: 300;
+}
+.dialog-footer .button {
+  color: #9ba4b0;
+}
+.dialog-footer .button:hover {
+  color: #800000;
+  border: 1px solid #800000;
+}

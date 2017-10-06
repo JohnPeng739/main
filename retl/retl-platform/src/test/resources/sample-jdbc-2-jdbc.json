@@ -1,0 +1,345 @@
+{
+  "name": "sample-jdbc-2-jdbc-topology",
+  "cluster": true,
+  "debug": true,
+  "maxSpoutPending": 1,
+  "maxTaskParallelism": 1,
+  "messageTimeoutSecs": 3,
+  "numAckers": 3,
+  "numWorkers": 5,
+  "spouts": [
+    {
+      "name": "sample-jdbc-spout",
+      "type": "JDBC",
+      "configuration": {
+        "dataSource": "dataSource1",
+        "table": "sample1",
+        "key": "id",
+        "timestamp": "updatedtime",
+        "ackPath": "/com/ds/retl/sample1",
+        "windowSize": 1000,
+        "intervalSec": 6,
+        "fields": "id,code,name,families,age,money,birthday,createdtime,updatedtime,email,married,indexNo"
+      }
+    }
+  ],
+  "bolts": [
+    {
+      "name": "sample-structure-bolt",
+      "type": "STRUCTURE",
+      "parallelism": 5,
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-jdbc-spout"
+        }
+      ]
+    },
+    {
+      "name": "sample-validate-bolt",
+      "type": "VALIDATE",
+      "parallelism": 1,
+      "configuration": {},
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-structure-bolt"
+        }
+      ]
+    },
+    {
+      "name": "sample-transform-bolt",
+      "type": "TRANSFORM",
+      "parallelism": 1,
+      "configuration": {},
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-validate-bolt"
+        }
+      ]
+    },
+    {
+      "name": "sample-error-bolt",
+      "type": "ERROR",
+      "parallelism": 1,
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-structure-bolt",
+          "streamId": "error-stream"
+        },
+        {
+          "type": "shuffle",
+          "source": "sample-validate-bolt",
+          "streamId": "error-stream"
+        },
+        {
+          "type": "shuffle",
+          "source": "sample-transform-bolt",
+          "streamId": "error-stream"
+        }
+      ]
+    },
+    {
+      "name": "sample-jdbc-bolt",
+      "type": "JDBC",
+      "parallelism": 1,
+      "configuration": {
+        "dataSource": "dataSource1",
+        "tables": [
+          {
+            "table": "sample2",
+            "key": "id",
+            "timestamp": "updatedtime",
+            "mapping": {
+              "id": "id",
+              "code": "code",
+              "name": "name",
+              "desc": "description",
+              "age": "age",
+              "money": "money",
+              "average": "average",
+              "updatedtime": "updatedtime",
+              "indexNo": "indexNo",
+              "_structuredDate": "starttime",
+              "_transformedDate": "endtime"
+            },
+            "specialTypes": {
+              "TIMESTAMP": "updatedtime"
+            }
+          }
+        ]
+      },
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-transform-bolt"
+        },
+        {
+          "type": "shuffle",
+          "source": "sample-error-bolt"
+        }
+      ]
+    }
+  ],
+  "dataSources": [
+    {
+      "dataSource": "dataSource1",
+      "driver": "com.mysql.jdbc.Driver",
+      "url": "jdbc:mysql://dbserver:3306/sample",
+      "user": "root",
+      "password": "12345678",
+      "initialPoolSize": 3,
+      "maxPoolSize": 20,
+      "maxIdleTime": 1000
+    }
+  ],
+  "zookeeper": {
+    "serverList": "storm1:2181,storm2:2181,storm3:2181"
+  },
+  "columns": [
+    {
+      "name": "id",
+      "desc": "关键字"
+    },
+    {
+      "name": "code",
+      "desc": "代码"
+    },
+    {
+      "name": "name",
+      "desc": "姓名"
+    },
+    {
+      "name": "desc",
+      "desc": "描述"
+    },
+    {
+      "name": "email",
+      "desc": "电子邮件"
+    },
+    {
+      "name": "families",
+      "desc": "家庭成员数量"
+    },
+    {
+      "name": "age",
+      "desc": "年龄"
+    },
+    {
+      "name": "money",
+      "desc": "财产"
+    },
+    {
+      "name": "average",
+      "desc": "平均年收入"
+    },
+    {
+      "name": "birthday",
+      "desc": "生日"
+    },
+    {
+      "name": "createdtime",
+      "desc": "创建时间"
+    },
+    {
+      "name": "updatedtime",
+      "desc": "更新时间"
+    },
+    {
+      "name": "email",
+      "desc": "电子邮件"
+    },
+    {
+      "name": "married",
+      "desc": "婚姻状况"
+    },
+    {
+      "name": "indexNo",
+      "desc": "顺序号"
+    }
+  ],
+  "validates": {
+    "id": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "STRING"
+      },
+      {
+        "type": "LengthValidate",
+        "min": 36,
+        "max": 36
+      }
+    ],
+    "code": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "STRING"
+      },
+      {
+        "type": "LengthValidate",
+        "min": 1,
+        "max": 30
+      }
+    ],
+    "name": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "STRING"
+      },
+      {
+        "type": "LengthValidate",
+        "min": 3,
+        "max": 100
+      }
+    ],
+    "email": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "STRING"
+      },
+      {
+        "type": "RegExpValidate",
+        "regexp": "(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w+)+)"
+      }
+    ],
+    "families": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "INT"
+      },
+      {
+        "type": "RangeValidate",
+        "min": 1,
+        "max": 20
+      }
+    ],
+    "age": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "INT"
+      },
+      {
+        "type": "RangeValidate",
+        "min": 0,
+        "max": -1
+      }
+    ],
+    "money": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "DECIMAL"
+      }
+    ],
+    "birthday": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "DATE"
+      }
+    ],
+    "createdtime": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "DATE"
+      }
+    ],
+    "updatedtime": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "DATE"
+      }
+    ]
+  },
+  "transforms": {
+    "average": {
+      "type": "FormulaTransform",
+      "calculate": "money/age"
+    },
+    "desc": {
+      "type": "MergeTransform",
+      "fields": "code,name",
+      "separator": ", "
+    }
+  }
+}

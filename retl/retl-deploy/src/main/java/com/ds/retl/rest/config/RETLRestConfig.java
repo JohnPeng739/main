@@ -1,0 +1,29 @@
+package com.ds.retl.rest.config;
+
+import com.ds.retl.rest.TopologyManageResource;
+import com.ds.retl.rest.UserManageResource;
+import org.mx.rest.server.config.ServerConfig;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Created by john on 2017/10/6.
+ */
+@Configuration
+@Import({ServerConfig.class})
+@ComponentScan({"com.ds.retl.rest"})
+public class RETLRestConfig {
+    public RETLRestConfig() {
+        super();
+    }
+
+    @Bean(name = "restfulClassesRETL")
+    public List<Class<?>> restulClassesRETL() {
+        return Arrays.asList(UserManageResource.class, TopologyManageResource.class);
+    }
+}

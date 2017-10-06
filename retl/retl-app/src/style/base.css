@@ -1,0 +1,15 @@
+.layout-form {
+  min-width: 400px;
+  margin: auto;
+  padding: 10px;
+}
+.tag {
+  margin-right: 3px;
+}
+.tag-input {
+  width: 80px;
+  margin: 0;
+}
+.tag-button {
+  color: red;
+}

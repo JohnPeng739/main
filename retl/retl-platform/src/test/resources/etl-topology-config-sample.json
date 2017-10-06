@@ -1,0 +1,166 @@
+{
+  "name": "sample-etl-topology",
+  "cluster": false,
+  "debug": true,
+  "maxSpoutPending": 3,
+  "maxTaskParallelism": 5,
+  "messageTimeoutSecs": 3,
+  "numAckers": 3,
+  "numWorkers": 5,
+  "spouts": [
+    {
+      "name": "sample-jms-spout",
+      "type": "JMS",
+      "parallelism": 1,
+      "method": "ACTIVEMQ",
+      "configuration": {
+        "connection": "nio://storm1:61616?trace=true",
+        "user": "",
+        "password": "",
+        "destinateName": "src-jjd-queue",
+        "isTopic": false,
+        "producer": "JSON"
+      }
+    }
+  ],
+  "bolts": [
+    {
+      "name": "sample-structure-bolt",
+      "type": "STRUCTURE",
+      "parallelism": 3,
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-jms-spout"
+        }
+      ]
+    },
+    {
+      "name": "sample-validate-bolt",
+      "type": "VALIDATE",
+      "parallelism": 3,
+      "configuration": {},
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-structure-bolt"
+        }
+      ]
+    },
+    {
+      "name": "sample-transform-bolt",
+      "type": "TRANSFORM",
+      "parallelism": 3,
+      "configuration": {},
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-validate-bolt"
+        }
+      ]
+    },
+    {
+      "name": "sample-error-bolt",
+      "type": "ERROR",
+      "parallelism": 5,
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-structure-bolt",
+          "streamId": "error-stream"
+        },
+        {
+          "type": "shuffle",
+          "source": "sample-validate-bolt",
+          "streamId": "error-stream"
+        },
+        {
+          "type": "shuffle",
+          "source": "sample-transform-bolt",
+          "streamId": "error-stream"
+        }
+      ]
+    },
+    {
+      "name": "sample-jms-bolt",
+      "type": "JMS",
+      "parallelism": 1,
+      "method": "ACTIVEMQ",
+      "configuration": {
+        "connection": "nio://storm1:61616?trace=true",
+        "user": "",
+        "password": "",
+        "destinateName": "tar-jjd-queue",
+        "isTopic": false,
+        "producer": "JSON"
+      },
+      "groups": [
+        {
+          "type": "shuffle",
+          "source": "sample-transform-bolt"
+        },
+        {
+          "type": "shuffle",
+          "source": "sample-error-bolt"
+        }
+      ]
+    }
+  ],
+  "columns": [
+    {
+      "name": "field1",
+      "desc": "字段1"
+    },
+    {
+      "name": "field2",
+      "desc": "字段2"
+    },
+    {
+      "name": "field3",
+      "desc": "字段3"
+    }
+  ],
+  "validates": {
+    "field1": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "LengthValidate",
+        "min": 4,
+        "max": 100
+      },
+      {
+        "type": "RegExpValidate",
+        "regexp": "(\\w)+(\\.\\w+)*@(\\w)+((\\.\\w+)+)"
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "STRING"
+      }
+    ],
+    "field2": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "LengthValidate",
+        "min": 20,
+        "max": -1
+      }
+    ],
+    "field3": [
+      {
+        "type": "NullValidate",
+        "nullable": false
+      },
+      {
+        "type": "TypeValidate",
+        "valueType": "INT"
+      }
+    ]
+  },
+  "transforms": {}
+}

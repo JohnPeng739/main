@@ -1,0 +1,154 @@
+apply from: 'dependencies.gradle'
+
+allprojects {
+  group = 'com.ds.retl'
+}
+
+subprojects { subproject ->
+  apply plugin: 'java'
+  apply plugin: 'eclipse'
+  apply plugin: 'idea'
+  apply plugin: 'maven'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  repositories {
+    mavenCentral()
+    maven {
+      url "http://repo.clojars.org/"
+    }
+    mavenLocal()
+  }
+
+  jar {
+    excludes = []
+    doFirst {
+//      manifest = defaultManifest([
+//        project: subproject,
+//        projectVendor: 'DS Co. Ltd.'
+//      ])
+    }
+  }
+
+  task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+    doFirst {
+//      manifest = defaultManifest({ subproject })
+    }
+  }
+
+  task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+    doFirst {
+//      manifest = defaultManifest({ subproject })
+    }
+  }
+
+  task copyDependencies(type: Copy) {
+    into "$buildDir/dependencies"
+    from configurations.runtime
+  }
+
+  [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+  artifacts {
+    archives jar
+    archives sourcesJar
+  }
+
+  configurations {
+    provided
+    deployerJars
+    // 要忽略的包
+    // all*.exclude group: 'junit'
+  }
+
+  dependencies {
+    // 用于上传自己项目的jar到中心maven库
+    //deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
+
+    // 通用依赖
+    compile(
+      libs.'fastjson',
+      libs.'mx-utils'
+    )
+    compile(
+      libs.'log4j-api',
+      libs.'log4j-core',
+      libs.'log4j-jcl',
+      libs.'log4j-slf4j-impl',
+      libs.'slf4j-api'
+    )
+
+    // 测试依赖
+    testCompile 'junit:junit:4.12'
+    testCompile(
+      libs.'junit'
+    )
+
+    // 引入根目录和各子目录下的libs中的jar包
+    ext.jarTree = fileTree(dir: 'libs', include: '**/*.jar')
+    ext.rootProjectLibs = new File(rootProject.rootDir, 'libs').getAbsolutePath()
+    ext.jarTree += fileTree(dir: rootProjectLibs, include: '**/*.jar')
+    compile jarTree
+  }
+
+  uploadArchives {
+    repositories.mavenDeployer {
+      //beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+      configuration = configurations.deployerJars
+      repository (
+        // 注意：后面的地址是服务器地址，需要写全，是个大坑
+        // 初次执行时最好带上--info参数，会提示保存ssh验证信息的时候输入yes
+        // 参见：http://my.oschina.net/someok/blog/374562
+        url: "file://~/.m2/repository/"
+             //"scp://repos.example.com:22/home/maven/repos/release"
+      ) {
+        authentication(userName: "maven", password: "maven")
+      }
+    }
+  }
+}
+
+project(':retl-platform') {
+  version = '3.0.0'
+
+  dependencies {
+    compile(
+      libs.'jedis',
+      libs.'activemq',
+      libs.'commons-dbcp2',
+      libs.'mysql',
+      libs.'mongodb-driver'
+    )
+    compile(
+      libs.'storm-core',
+      libs.'storm-jdbc',
+      libs.'storm-jms'
+    )
+    compile(libs.'zookeeper') {
+      exclude group: 'org.slf4j'
+      exclude group: 'log4j'
+    }
+  }
+}
+
+project(':retl-deploy') {
+  version = '3.0.0'
+
+  dependencies {
+    compile(
+      project(':retl-platform'),
+      libs.'mx-rest-utils',
+      libs.'h2database',
+      libs.'jersey-server',
+      libs.'jersey-media-jackson',
+      libs.'jersey-jetty-http',
+      libs.'jetty-server',
+      libs.'jetty-servlet'
+    )
+  }
+}
