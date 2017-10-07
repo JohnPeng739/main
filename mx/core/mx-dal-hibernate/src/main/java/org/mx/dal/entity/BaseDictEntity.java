@@ -1,10 +1,12 @@
 package org.mx.dal.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 
 /**
  * Created by john on 2017/10/6.
  */
+@Entity
 public class BaseDictEntity extends BaseEntity implements BaseDict {
     @Column(unique = true)
     private String code;

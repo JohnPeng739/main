@@ -21,6 +21,15 @@ public class Pagination {
         this.size = size;
     }
 
+    @Override
+    public String toString() {
+        return "Pagination{" +
+                "total=" + total +
+                ", page=" + page +
+                ", size=" + size +
+                '}';
+    }
+
     public int getTotal() {
         return this.total;
     }

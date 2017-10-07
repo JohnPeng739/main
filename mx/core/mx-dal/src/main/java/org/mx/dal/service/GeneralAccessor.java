@@ -12,7 +12,7 @@ import java.util.List;
  * <p>
  * Created by john on 2017/8/18.
  */
-public interface GeneralEntityAccessor {
+public interface GeneralAccessor {
     /**
      * 对指定的实体类型进行计数，实体接口必须继承Base接口。
      *

@@ -1,8 +1,11 @@
 package org.mx.dal.entity;
 
+import javax.persistence.Entity;
+
 /**
  * Created by john on 2017/10/6.
  */
+@Entity
 public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
     private String parentId;
 

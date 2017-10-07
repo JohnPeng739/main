@@ -1,10 +1,12 @@
 package org.mx.dal.entity;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
  * Created by john on 2017/10/6.
  */
+@Entity
 public class BaseEntity implements Base {
     @Id
     private String id;

@@ -1,5 +1,7 @@
 package org.mx.test.entity;
 
+import org.mx.dal.entity.BaseDictTreeEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 

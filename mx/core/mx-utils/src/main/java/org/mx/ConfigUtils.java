@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.dal.config.SystemConfig;
+import org.mx.config.SystemConfig;
 
 /**
  * 操作系统配置信息的工具类。

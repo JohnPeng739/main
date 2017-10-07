@@ -33,7 +33,8 @@ project(':mx-dal') {
   dependencies {
     compile(
       project(':mx-utils'),
-      libs.'spring-context'
+      libs.'spring-context',
+      libs.'commons-dbcp2'
     )
   }
 }
