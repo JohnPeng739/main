@@ -1,6 +1,6 @@
 package org.mx.rest.vo;
 
-import org.mx.Pagination;
+import org.mx.dal.Pagination;
 import org.mx.rest.error.UserInterfaceError;
 import org.mx.rest.error.UserInterfaceException;
 

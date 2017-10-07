@@ -1,6 +1,8 @@
 ext.versions = [
   spring	: '4.3.8.RELEASE',
+  'spring-data-jpa'	: '2.0.0.RELEASE',
   'spring-mongodb'	: '1.10.4.RELEASE',
+  'hibernate-entitymanager'	: '5.2.9.Final',
   'commons-logging'	: '1.2',
   'commons-dbcp2'	: '2.1.1',
   log4j		: '2.8.2',
@@ -25,7 +27,10 @@ ext.versions = [
 
 ext.libs = [
   "spring-context"	: "org.springframework:spring-context:${versions.spring}",
+  "spring-data-jpa"	: "org.springframework.data:spring-data-jpa:${versions.'spring-data-jpa'}",
   "spring-data-mongodb"	: "org.springframework.data:spring-data-mongodb:${versions.'spring-mongodb'}",
+
+  "hibernate-entitymanager"	: "org.hibernate:hibernate-entitymanager:${versions.'hibernate-entitymanager'}",
 
   "commons-logging"	: "commons-logging:commons-logging:${versions.'commons-logging'}",
   "commons-dbcp2"	: "org.apache.commons:commons-dbcp2:${versions.'commons-dbcp2'}",

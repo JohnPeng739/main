@@ -38,7 +38,7 @@ project(':mx-dal') {
   }
 }
 
-project(':mx-dal-jdbc') {
+project(':mx-dal-hibernate') {
   version = '1.0.0'
 
   dependencies {
@@ -46,7 +46,20 @@ project(':mx-dal-jdbc') {
       project(':mx-dal'),
       libs.'h2database',
       libs.'commons-dbcp2',
+      libs.'spring-data-jpa',
+      libs.'hibernate-entitymanager',
       libs.'mysql'
+    )
+  }
+}
+
+project(':mx-dal-mongodb') {
+  version = '1.0.0'
+
+  dependencies {
+    compile(
+      project(':mx-dal'),
+      libs.'spring-data-mongodb'
     )
   }
 }

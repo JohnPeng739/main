@@ -9,6 +9,7 @@
 /**/node_modules/*
 /**/logs/*
 /**/data/*
+/**/out/*
 !/retl/retl-app/build/*
 app-test-mongo/*
 log*/*
