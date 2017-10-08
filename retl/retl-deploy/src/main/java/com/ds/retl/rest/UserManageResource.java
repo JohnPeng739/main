@@ -1,10 +1,15 @@
 package com.ds.retl.rest;
 
+import com.ds.retl.dal.entity.User;
+import com.ds.retl.dal.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.rest.vo.user.AuthenticateVO;
 import com.ds.retl.rest.vo.user.UserVO;
+import com.ds.retl.service.UserManageService;
+import net.bytebuddy.asm.Advice;
 import org.mx.StringUtils;
 import org.mx.rest.vo.DataVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -20,17 +25,23 @@ import java.util.Arrays;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserManageResource {
+    @Autowired
+    private UserManageService userManageService = null;
+
     @Path("login")
     @POST
     public DataVO<UserVO> login(AuthenticateVO login) {
         if (login == null) {
             return new DataVO<>();
         }
-        // TODO 进行真正的登录操作
-        UserVO user = new UserVO(login.getUser(), "John Peng");
-        user.setTools(Arrays.asList("/summary", "/tasks/add"));
-        user.setRoles(Arrays.asList("manager"));
-        return new DataVO<>(user);
+        try {
+            User user = userManageService.login(login.getUser(), login.getPassword());
+            UserVO userVO = new UserVO();
+            UserVO.transform(user, userVO);
+            return new DataVO<>(userVO);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
     }
 
     @Path("logout")
@@ -39,7 +50,11 @@ public class UserManageResource {
         if (StringUtils.isBlank(user)) {
            return new DataVO<>(UserInterfaceErrors.USER_NOT_FOUND);
         }
-        // TODO 进行真正的登出操作
-        return new DataVO<>(true);
+        try {
+            userManageService.logout(user);
+            return new DataVO<>(true);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
     }
 }

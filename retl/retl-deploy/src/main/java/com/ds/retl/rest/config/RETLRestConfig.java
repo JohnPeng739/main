@@ -2,6 +2,7 @@ package com.ds.retl.rest.config;
 
 import com.ds.retl.rest.TopologyManageResource;
 import com.ds.retl.rest.UserManageResource;
+import org.mx.dal.config.DalHibernateConfig;
 import org.mx.rest.server.config.ServerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,7 +16,7 @@ import java.util.List;
  * Created by john on 2017/10/6.
  */
 @Configuration
-@Import({ServerConfig.class})
+@Import({ServerConfig.class, DalHibernateConfig.class})
 @ComponentScan({"com.ds.retl.rest"})
 public class RETLRestConfig {
     public RETLRestConfig() {
