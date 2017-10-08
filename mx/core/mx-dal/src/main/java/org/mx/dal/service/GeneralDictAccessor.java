@@ -15,6 +15,7 @@ public interface GeneralDictAccessor extends GeneralAccessor {
      *
      * @param code                 实体代码
      * @param entityInterfaceClass 实体接口类
+     * @param <T>                  实现BaseDict接口的泛型对象类型
      * @return 实体对象，如果不存在，则返回null。
      * @throws EntityAccessException 获取过程中发生的异常
      */
