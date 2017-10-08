@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import {logger} from 'dsutils'
 import {taskNavData, taskRouters} from './task-routers'
 
 const summaryNavData = {
@@ -28,17 +29,18 @@ let findNavNode = (list, path) => {
 }
 
 export function getNavTitle(path) {
-  let found = findNavNode(navData, path)
+  logger.debug('Get nav title: %s.', path)
+  let found = findNavNode(Object.values(navData), path)
   return found == null ? '' : found.title
 }
 
 export function getNavIcon(path) {
-  let found = findNavNode(navData, path)
+  let found = findNavNode(Object.values(navData), path)
   return found == null ? '' : found.icon
 }
 
 export function getNavRole(path) {
-  let found = findNavNode(navData, path)
+  let found = findNavNode(Object.values(navData), path)
   return found == null ? '' : found.role
 }
 
@@ -56,6 +58,10 @@ const router = new Router({
     component: resolve => require(['../view/index.vue'], resolve),
     children: [
       ...taskRouters,
+      {
+        path: '/user-info/:userCode',
+        component: resolve => require(['../../../pages/user-info.vue'], resolve)
+      },
       {
         path: '',
         component: resolve => require(['../../../pages/summary.vue'], resolve)

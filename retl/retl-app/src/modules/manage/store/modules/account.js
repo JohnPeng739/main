@@ -8,7 +8,7 @@ const state = {
   loginUser: null
 }
 
-let flushState = () => {
+let refreshState = () => {
   state.loginUser = JSON.parse(sessionStorage.getItem('auth.user'))
 }
 
@@ -19,25 +19,25 @@ const getters = {
   },
   code: state => {
     if (state.loginUser === null) {
-      flushState()
+      refreshState()
     }
     return state.loginUser.code
   },
   name: state => {
     if (state.loginUser === null) {
-      flushState()
+      refreshState()
     }
     return state.loginUser.name
   },
   tools: state => {
     if (state.loginUser === null) {
-      flushState()
+      refreshState()
     }
     return state.loginUser.tools
   },
   roles: state => {
     if (state.loginUser === null) {
-      flushState()
+      refreshState()
     }
     return state.loginUser.roles
   }
@@ -48,7 +48,6 @@ const actions = {
     let url = '/rest/login'
     logger.debug('send POST "%s".', url)
     post(url, {user, password}, data => {
-      console.log(data)
       let {code, name, tools, roles} = data
       logger.info('POST "%s" success, user code: %s, user name: %s, role: %s.', url, code, name, roles)
       commit(LOGIN, {code, name, tools, roles})

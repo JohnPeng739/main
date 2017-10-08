@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TB_USER")
 public class UserEntity extends BaseDictEntity implements User {
-    @Column(name = "PASSWORD", nullable = false, length = 20)
+    @Column(name = "PASSWORD", nullable = false, length = 64)
     private String password;
     @Column(name = "ONLINE")
     private boolean online = false;
@@ -24,41 +24,41 @@ public class UserEntity extends BaseDictEntity implements User {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public boolean isOnline() {
-        return false;
+        return online;
     }
 
     @Override
     public String getFavorite() {
-        return null;
+        return favorite;
     }
 
     @Override
     public String getRoles() {
-        return null;
+        return roles;
     }
 
     @Override
     public void setPassword(String password) {
-
+        this.password = password;
     }
 
     @Override
     public void setOnline(boolean online) {
-
+        this.online = online;
     }
 
     @Override
     public void setFavorite(String favorite) {
-
+        this.favorite = favorite;
     }
 
     @Override
     public void setRoles(String roles) {
-
+        this.roles = roles;
     }
 }

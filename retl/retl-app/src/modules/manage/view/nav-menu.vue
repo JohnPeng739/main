@@ -15,7 +15,7 @@
 </style>
 
 <template>
-  <el-menu v-if="spanLeft == 4" :default-active="getActived" unique-opened
+  <el-menu v-if="spanLeft == 4" :default-active="getActived" unique-opened @select="handleSelect"
            @open="handleOpen" @close="handleClose" theme="dark" router>
     <el-menu-item v-if="isRole(summaryNavData.role)" :index="summaryNavData.path" class="menu-item">
       <ds-icon :name="summaryNavData.icon" class="nav-icon"></ds-icon>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
   import {logger} from 'dsutils'
   import DsIcon from '@/components/icon.vue'
   import NavSubMenu from './nav-sub-menu.vue'
@@ -57,8 +57,13 @@
       }
     },
     methods: {
+      ...mapActions(['setPathName']),
       isRole (role) {
         return this.roles.indexOf(role) !== -1 || role === 'all'
+      },
+      handleSelect(index, indexPath) {
+        logger.debug('index: %s, path: %s.', index, indexPath)
+        this.setPathName({path: index})
       },
       handleOpen (item) {
         logger.debug('open toggled')

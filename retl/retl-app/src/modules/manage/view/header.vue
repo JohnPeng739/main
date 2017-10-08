@@ -24,20 +24,22 @@
   .header-col3 {
     min-width: 100px;
     font-size: 8px;
-    text-align: center;
-    margin: 0px auto;
-    padding-top: 10px;
-    .account {
-      color: mix(@header-color, lightblue);
-      font-size: 12px;
-      font-weight: lighter;
-    }
-    .logout-icon {
-      font-size: 24px;
-      margin: -6px auto;
-      color: @header-color;
-      &:hover {
-        color: @header-hover-color;
+    margin: 0 auto;
+    .button {
+      display: block;
+      .account {
+        color: mix(@header-color, indianred);
+        font-size: 12px;
+        font-weight: lighter;
+      }
+      .logout-icon {
+        font-size: 24px;
+        margin: -15px auto;
+        padding-left: 10px;
+        color: @header-color;
+        &:hover {
+          color: @header-hover-color;
+        }
       }
     }
   }
@@ -55,8 +57,8 @@
       <slot></slot>
     </el-col>
     <el-col :span="3" class="header-col3">
-      <span class="account">{{loginUserName}}</span><br>
-      <el-button type="text" @click="logout">
+      <el-button class="button" type="text" @click="handleShowUserInfo"><span class="account">{{loginUserName}}</span></el-button>
+      <el-button class="button" type="text" @click="logout">
         <ds-icon name="exit_to_app" class="logout-icon"></ds-icon>
       </el-button>
     </el-col>
@@ -64,6 +66,7 @@
 </template>
 
 <script>
+  import {logger} from 'dsutils'
   import DsIcon from '../../../components/icon.vue'
 
   export default {
@@ -87,6 +90,9 @@
     methods: {
       navToggled() {
         this.$emit('navToggled')
+      },
+      handleShowUserInfo() {
+        this.$emit('showUserInfo')
       },
       logout() {
         this.$emit('logout')

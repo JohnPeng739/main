@@ -4,10 +4,12 @@ import com.ds.retl.dal.entity.User;
 import com.ds.retl.dal.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.service.OperateLogService;
+import com.ds.retl.service.UserManageService;
 import org.mx.DigestUtils;
+import org.mx.dal.EntityFactory;
 import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.rest.error.UserInterfaceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
  * Created by john on 2017/10/8.
  */
 @Component("userManageServiceHibernate")
-public class UserManageServiceImpl implements com.ds.retl.service.UserManageService {
+public class UserManageServiceImpl implements UserManageService {
     @Autowired
     @Qualifier("generalDictEntityAccessorHibernate")
     private GeneralDictAccessor accessor = null;
@@ -26,6 +28,28 @@ public class UserManageServiceImpl implements com.ds.retl.service.UserManageServ
     @Autowired
     @Qualifier("operateLogService")
     private OperateLogService logService = null;
+
+    @Override
+    public User initUser() throws UserInterfaceErrorException {
+        String userCode = "ds110";
+        try {
+            User user = accessor.getByCode(userCode, User.class);
+            if (user == null) {
+                user = EntityFactory.createEntity(User.class);
+                user.setCode("ds110");
+            }
+            try {
+                user.setPassword(DigestUtils.md5("edmund110119"));
+            } catch (NoSuchAlgorithmException ex) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.USER_PASSWORD_DISGEST_FAIL);
+            }
+            user.setName("RETL管理员");
+            user.setRoles("manager");
+            return saveUser(user);
+        } catch (EntityInstantiationException | EntityAccessException ex) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
+    }
 
     @Override
     public User saveUser(User user) throws UserInterfaceErrorException {
@@ -39,14 +63,20 @@ public class UserManageServiceImpl implements com.ds.retl.service.UserManageServ
     }
 
     @Override
-    public User changePassword(String userCode, String password) throws UserInterfaceErrorException {
+    public User changePassword(String userCode, String oldPassword, String newPassword)
+            throws UserInterfaceErrorException {
         try {
             User user = accessor.getByCode(userCode, User.class);
             if (user == null) {
                 throw new UserInterfaceErrorException(UserInterfaceErrors.USER_NOT_FOUND);
             }
             try {
-                String digestPwd = DigestUtils.md5(password);
+                String digestPwd = DigestUtils.md5(oldPassword);
+                if (!digestPwd.equals(user.getPassword())) {
+                    throw new UserInterfaceErrorException(UserInterfaceErrors.USER_PASSWORD_UNMATCH);
+                }
+
+                digestPwd = DigestUtils.md5(newPassword);
                 user.setPassword(digestPwd);
                 user = accessor.save(user);
                 logService.writeLog(String.format("成功修改了用户[%s]的密码。", userCode));
@@ -60,7 +90,7 @@ public class UserManageServiceImpl implements com.ds.retl.service.UserManageServ
     }
 
     @Override
-    public User login(String userCode, String password) throws UserInterfaceException {
+    public User login(String userCode, String password) throws UserInterfaceErrorException {
         try {
             User user = accessor.getByCode(userCode, User.class);
             if (user == null) {

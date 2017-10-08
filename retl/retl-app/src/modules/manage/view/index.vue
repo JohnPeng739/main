@@ -91,7 +91,7 @@
   <div class="layout-main">
     <div class="header-row">
       <nav-header :title="title" :loginUserName="name" v-on:navToggled="handleNavToggled"
-                  v-on:logout="handleLogout">
+                  v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo">
         <nav-tools :tools="tools"></nav-tools>
       </nav-header>
     </div>
@@ -103,7 +103,7 @@
         <el-breadcrumb>
           <el-breadcrumb-item class="breadcrumb">
             当前位置：
-            <span class="breadcrumb-item">{{getPathTitle}}</span>
+            <span class="breadcrumb-item">{{pathName}}</span>
           </el-breadcrumb-item>
         </el-breadcrumb>
         <div class="content-body">
@@ -134,7 +134,7 @@
       }
     },
     computed: {
-      ...mapGetters(['code', 'name', 'tools', 'authenticated']),
+      ...mapGetters(['code', 'name', 'tools', 'authenticated', 'path', 'pathName']),
       getPathTitle () {
         return getNavTitle(this.$route.path)
       },
@@ -143,7 +143,7 @@
       }
     },
     methods: {
-      ...mapActions(['logout']),
+      ...mapActions(['logout', 'goto']),
       handleNavToggled () {
         if (this.spanLeft === 4) {
           this.spanLeft = 0
@@ -155,10 +155,13 @@
       },
       handleLogout () {
         let success = () => {
-          this.$router.push('/login')
+          this.goto({owner: this, path: '/login'})
           this.$message('成功登出系统。')
         }
         this.logout({success})
+      },
+      handleShowUserInfo() {
+        this.goto({owner: this, path: '/user-info/' + this.code, name: '用户信息'})
       }
     }
   }

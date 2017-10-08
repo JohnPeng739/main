@@ -13,14 +13,16 @@ allprojects {
 }
 
 project(':retl-platform') {
-  version = '3.0.0'
+  version = '3.0.1'
 
   dependencies {
     compile(
+      libs.'mx-utils',
       libs.'jedis',
       libs.'activemq',
       libs.'commons-dbcp2',
-      libs.'mysql'
+      libs.'mysql',
+      libs.'mongodb-driver'
     )
     compile(
       libs.'storm-core',

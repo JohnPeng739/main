@@ -1,0 +1,16 @@
+server {
+    listen 80;
+    server_name localhost;
+    access_log /var/log/nginx/localhost.access.log;
+
+    location / {
+        root /var/www/html;
+        index index.html index.htm index.php;
+    }
+    location /rest {
+        # rewrite ^~/rest/ ;
+        # include wsgi_params;
+        # proxy_pass http://10.1.183.204:9998/rest;
+        proxy_pass http://192.168.88.12:9998/rest;
+    }
+}

@@ -22,9 +22,17 @@
         text-align: center;
         padding-top: 40px;
         padding-left: 40px;
-        button {
+        .button-ok {
           width: @button-width;
-          margin: 0 5px;
+          margin: 0 30px;
+        }
+        .button-reset {
+          width: @button-width;
+          margin: 0 10px 0 30px;
+        }
+        .button-init {
+          width: @button-width - 60px;
+          margin: 0;
         }
       }
     }
@@ -42,8 +50,9 @@
         <el-input v-model="formLogin.password" type="password"></el-input>
       </el-form-item>
       <div class="buttons">
-        <el-button type="primary" @click="submit">登录</el-button>
-        <el-button @click="reset">重置</el-button>
+        <el-button class="button-ok" type="primary" @click="submit">登录</el-button>
+        <el-button class="button-reset" @click="reset">重置</el-button>
+        <el-button class="button-init" type="text" @click="handleInitUser">初始化</el-button>
       </div>
     </el-form>
   </div>
@@ -52,6 +61,8 @@
 <script>
   import {mapActions} from 'vuex'
   import {logger} from 'dsutils'
+  import {get} from '../assets/ajax'
+  import {warn, info} from '../assets/notify'
   import {requiredRule, rangeRule} from '../assets/form-validate-rules'
   import config from '../modules/manage/config'
 
@@ -70,22 +81,27 @@
       }
     },
     methods: {
-      ...mapActions(['login']),
+      ...mapActions(['login', 'goto']),
+      handleInitUser() {
+        let url = '/rest/init'
+        logger.debug('send GET "%s"', url)
+        get(url, data => {
+          logger.debug("Init user successfully, response: %j.", data)
+          info(this, '初始化用户[' + data.code + ']成功，请登录系统。')
+        })
+      },
       submit () {
         logger.debug('submit the login form')
         this.$refs['formLogin'].validate(valid => {
           if (valid) {
             let {user, password} = this.formLogin
             let success = () => {
-              this.$message('用户登录成功。')
-              this.$router.push('/')
+              info(this, '用户登录成功。')
+              this.goto({owner: this, path: '/'})
             }
             this.login({user, password, success})
           } else {
-            this.$message({
-              type: 'warning',
-              message: '登录表单数据验证失败， 请核对数据！'
-            })
+            warn(this, '登录表单数据验证失败， 请核对数据！')
           }
         })
       },

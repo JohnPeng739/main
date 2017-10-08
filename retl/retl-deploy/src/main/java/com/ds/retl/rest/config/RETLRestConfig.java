@@ -17,7 +17,10 @@ import java.util.List;
  */
 @Configuration
 @Import({ServerConfig.class, DalHibernateConfig.class})
-@ComponentScan({"com.ds.retl.rest"})
+@ComponentScan({
+        "com.ds.retl.service.impl",
+        "com.ds.retl.rest"
+})
 public class RETLRestConfig {
     public RETLRestConfig() {
         super();

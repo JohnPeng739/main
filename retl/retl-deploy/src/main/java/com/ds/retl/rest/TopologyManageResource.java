@@ -2,11 +2,14 @@ package com.ds.retl.rest;
 
 import com.ds.retl.rest.vo.LabelValueVO;
 import com.ds.retl.validate.TypeValidateFunc;
+import net.bytebuddy.asm.Advice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.ClassUtils;
 import org.mx.StringUtils;
+import org.mx.dal.session.SessionDataStore;
 import org.mx.rest.vo.DataVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -26,11 +29,16 @@ import java.util.List;
 public class TopologyManageResource {
     private static final Log logger = LogFactory.getLog(TopologyManageResource.class);
 
+    @Autowired
+    private SessionDataStore sessionDataStore = null;
+
     @Path("topologies/submit")
     @POST
-    public DataVO<Boolean> submitTopology(String topologyConfigJsonStr) {
+    public DataVO<Boolean> submitTopology(String topologyConfigJsonStr, @QueryParam("userCode") String userCode) {
+        sessionDataStore.setCurrentUserCode(userCode);
         // TODO
         System.out.println(topologyConfigJsonStr);
+        sessionDataStore.removeCurrentUserCode();
         return new DataVO<>(true);
     }
 
