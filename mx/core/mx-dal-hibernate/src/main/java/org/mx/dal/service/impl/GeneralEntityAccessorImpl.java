@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by john on 2017/10/6.
  */
-@Component("generalEntityAccessor")
+@Component("generalEntityAccessorHibernate")
 public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     private static final Log logger = LogFactory.getLog(GeneralEntityAccessorImpl.class);
 

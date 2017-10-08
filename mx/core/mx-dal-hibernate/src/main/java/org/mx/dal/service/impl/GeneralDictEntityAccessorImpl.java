@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by john on 2017/10/6.
  */
-@Component("generalDictEntityAccessor")
+@Component("generalDictEntityAccessorHibernate")
 public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl implements GeneralDictEntityAccessor {
     private static final Log logger = LogFactory.getLog(GeneralDictEntityAccessorImpl.class);
 

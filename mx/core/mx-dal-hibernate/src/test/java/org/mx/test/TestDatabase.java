@@ -38,7 +38,7 @@ public class TestDatabase {
 
     @Test
     public void testUserInterface() {
-        GeneralDictEntityAccessor accessor = context.getBean("generalDictEntityAccessor",
+        GeneralDictEntityAccessor accessor = context.getBean("generalDictEntityAccessorHibernate",
                 GeneralDictEntityAccessor.class);
         assertNotNull(accessor);
 
