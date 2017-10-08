@@ -165,38 +165,38 @@ public class StringUtils {
     }
 
     /**
-     * 组合字符串列表成为一个字符串
+     * 组合数据对象列表成为一个字符串
      *
-     * @param str 字符串列表
+     * @param list 数据对象列表
      * @return 组合后的字符串
      */
-    public static String merge(List<String> str) {
-        return merge(str, DEFAULT_SEPARATOR);
+    public static String merge(List<?> list) {
+        return merge(list, DEFAULT_SEPARATOR);
     }
 
     /**
-     * 组合字符串列表成为一个字符串
+     * 组合数据对象列表成为一个字符串
      *
-     * @param str      字符串列表
+     * @param list      数据对象列表
      * @param separate 组合分割符
      * @return 组合后的字符串
      */
-    public static String merge(List<String> str, char separate) {
-        return merge(str, String.valueOf(separate));
+    public static String merge(List<?> list, char separate) {
+        return merge(list, String.valueOf(separate));
     }
 
     /**
-     * 组合字符串列表成为一个字符串
+     * 组合数据对象列表成为一个字符串
      *
-     * @param str      字符串列表
+     * @param list      数据对象列表
      * @param separate 组合分割符
      * @return 组合后的字符串
      */
-    public static String merge(List<String> str, String separate) {
+    public static String merge(List<?> list, String separate) {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < str.size(); i++) {
-            sb.append(str.get(i));
-            if (i < str.size() - 1) {
+        for (int i = 0; i < list.size(); i++) {
+            sb.append(list.get(i).toString());
+            if (i < list.size() - 1) {
                 sb.append(separate);
             }
         }

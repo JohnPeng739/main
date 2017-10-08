@@ -127,5 +127,13 @@ public interface GeneralAccessor {
             this.field = field;
             this.value = value;
         }
+
+        @Override
+        public String toString() {
+            return "ConditionTuple{" +
+                    "field='" + field + '\'' +
+                    ", value=" + value +
+                    '}';
+        }
     }
 }
