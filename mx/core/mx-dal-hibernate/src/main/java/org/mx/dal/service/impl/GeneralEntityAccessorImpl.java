@@ -11,8 +11,11 @@ import org.mx.dal.service.GeneralEntityAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.Date;
 import java.util.List;
@@ -20,10 +23,11 @@ import java.util.List;
 /**
  * Created by john on 2017/10/6.
  */
+@Component("generalEntityAccessor")
 public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     private static final Log logger = LogFactory.getLog(GeneralEntityAccessorImpl.class);
 
-    @Autowired
+    @PersistenceContext
     protected EntityManager entityManager = null;
 
     @Autowired
@@ -35,11 +39,13 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         return (Class<T>) Class.forName(entityClassName);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(Class<T> entityInterfaceClass) throws EntityAccessException {
         return count(entityInterfaceClass, true);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
@@ -59,11 +65,13 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Class<T> entityInterfaceClass) throws EntityAccessException {
         return list(entityInterfaceClass, true);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
@@ -82,12 +90,14 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass)
             throws EntityAccessException {
         return list(pagination, entityInterfaceClass, true);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> entityClass, boolean isInterfaceClass)
             throws EntityAccessException {
@@ -115,6 +125,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> T getById(String id, Class<T> entityClass, boolean isInterfaceClass)
             throws EntityAccessException {
@@ -134,17 +145,20 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> T getById(String id, Class<T> entityInterfaceClass) throws EntityAccessException {
         return getById(id, entityInterfaceClass, true);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityInterfaceClass)
             throws EntityAccessException {
         return find(tuples, entityInterfaceClass, true);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass)
             throws EntityAccessException {
@@ -152,12 +166,14 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         return null;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityInterfaceClass)
             throws EntityAccessException {
         return findOne(tuples, entityInterfaceClass, true);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass)
             throws EntityAccessException {
@@ -169,12 +185,17 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    @Transactional()
     @Override
     public <T extends Base> T save(T t) throws EntityAccessException {
+        t.setUpdatedTime(new Date().getTime());
+        t.setOperator(sessionDataStore.getCurrentUserCode());
         if (StringUtils.isBlank(t.getId())) {
             // 新增操作
             t.setId(null);
             t.setCreatedTime(new Date().getTime());
+            entityManager.persist(t);
+            entityManager.flush();
         } else {
             // 修改操作
             T old = getById(t.getId(), (Class<T>) t.getClass(), false);
@@ -185,30 +206,34 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
             if (t instanceof BaseDict) {
                 ((BaseDict) t).setCode(((BaseDict) old).getCode());
             }
+            entityManager.merge(t);
         }
-        t.setUpdatedTime(new Date().getTime());
-        t.setOperator(sessionDataStore.getCurrentUserCode());
-        entityManager.persist(t);
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save entity success, entity: %s.", t));
         }
-        return getById(t.getId(), (Class<T>) t.getClass(), false);
+        // return getById(t.getId(), (Class<T>) t.getClass(), false);
+        // 为了提高性能，直接返回
+        return t;
     }
 
+    @Transactional()
     @Override
     public <T extends Base> T remove(T t) throws EntityAccessException {
         return remove(t, true);
     }
 
+    @Transactional()
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) throws EntityAccessException {
+        T removeEntity = getById(t.getId(), (Class<T>)t.getClass(), false);
         if (logicRemove) {
             // 逻辑删除
-            t.setValid(false);
-            return save(t);
+            removeEntity.setValid(false);
+            return save(removeEntity);
         } else {
             // 物理删除
-            entityManager.remove(t);
+            entityManager.remove(removeEntity);
+            entityManager.flush();
             return t;
         }
     }

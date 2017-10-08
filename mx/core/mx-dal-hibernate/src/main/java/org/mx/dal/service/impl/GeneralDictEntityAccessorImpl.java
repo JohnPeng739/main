@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.service.GeneralDictEntityAccessor;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Created by john on 2017/10/6.
  */
+@Component("generalDictEntityAccessor")
 public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl implements GeneralDictEntityAccessor {
     private static final Log logger = LogFactory.getLog(GeneralDictEntityAccessorImpl.class);
 
@@ -28,7 +30,8 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
             if (isInterfaceClass) {
                 clazz = (Class<T>) super.getEntityClass(entityClass);
             }
-            Query query = entityManager.createQuery(String.format("SELECT dict FROM %s dict WHERE dict.code = :code"));
+            Query query = entityManager.createQuery(String.format("SELECT dict FROM %s dict WHERE dict.code = :code",
+                    clazz.getName()));
             query.setParameter("code", code);
             List<T> result = query.getResultList();
             if (result != null && result.size() > 0) {

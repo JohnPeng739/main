@@ -47,6 +47,7 @@ project(':mx-dal-hibernate') {
       project(':mx-dal'),
       libs.'h2database',
       libs.'commons-dbcp2',
+      libs.'spring-tx',
       libs.'spring-data-jpa',
       libs.'hibernate-entitymanager',
       libs.'mysql'

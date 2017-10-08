@@ -1,7 +1,9 @@
 package org.mx.test.entity;
 
+import org.mx.StringUtils;
 import org.mx.dal.entity.BaseDictTreeEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -11,7 +13,14 @@ import javax.persistence.Table;
 @Entity(name = "User")
 @Table(name = "TB_USER")
 public class UserEntity extends BaseDictTreeEntity implements User {
-    private String email, address, postCode,  mobile;
+    @Column(name = "EMAIL", length = 50)
+    private String email;
+    @Column(name = "ADDRESS", length = 255)
+    private String address;
+    @Column(name = "POST_CODE", length = 20)
+    private String postCode;
+    @Column(name = "MOBILE", length = 20)
+    private String mobile;
 
     @Override
     public String toString() {

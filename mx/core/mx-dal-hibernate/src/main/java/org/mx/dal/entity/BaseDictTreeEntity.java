@@ -1,12 +1,14 @@
 package org.mx.dal.entity;
 
-import javax.persistence.Entity;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
  * Created by john on 2017/10/6.
  */
-@Entity
+@MappedSuperclass
 public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
+    @Column(name = "PARENT_ID", length = 40)
     private String parentId;
 
     @Override
@@ -16,12 +18,12 @@ public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
     }
 
     @Override
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public String getParentId() {
+        return parentId;
     }
 
     @Override
-    public String getParentId() {
-        return parentId;
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

@@ -28,6 +28,7 @@ ext.versions = [
 ext.libs = [
   "spring-context"	: "org.springframework:spring-context:${versions.spring}",
   "spring-data-jpa"	: "org.springframework.data:spring-data-jpa:${versions.'spring-data-jpa'}",
+  "spring-tx"		: "org.springframework:spring-tx:${versions.spring}",
   "spring-data-mongodb"	: "org.springframework.data:spring-data-mongodb:${versions.'spring-mongodb'}",
 
   "hibernate-entitymanager"	: "org.hibernate:hibernate-entitymanager:${versions.'hibernate-entitymanager'}",

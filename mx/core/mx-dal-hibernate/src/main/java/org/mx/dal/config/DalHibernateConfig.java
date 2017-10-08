@@ -9,18 +9,20 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
-import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 /**
  * Created by john on 2017/10/7.
  */
 @Configuration
+@EnableTransactionManagement
 @Import(DalConfig.class)
 @PropertySource({"classpath:jpa.properties"})
-@ComponentScan({"org.mx.service.impl"})
-public class DalHibernateConfig {
+@ComponentScan({"org.mx.dal.service.impl"})
+public class DalHibernateConfig implements TransactionManagementConfigurer {
     @Autowired
     private Environment env = null;
 
@@ -33,7 +35,7 @@ public class DalHibernateConfig {
 
     @Bean
     @DependsOn({"dataSource"})
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         String database = env.getProperty("jpa.database", String.class, "test");
         boolean generateDDL = env.getProperty("jpa.generateDDL", Boolean.class, true);
         boolean showSQL = env.getProperty("jpa.showSQL", Boolean.class, true);
@@ -41,6 +43,7 @@ public class DalHibernateConfig {
         adapter.setDatabase(Database.valueOf(database));
         adapter.setGenerateDdl(generateDDL);
         adapter.setShowSql(showSQL);
+        adapter.setPrepareConnection(true);
 
         String entityPackageString = env.getProperty("jpa.entity.package", String.class, "");
         String[] entityPackages = entityPackageString.split(",");
@@ -51,15 +54,15 @@ public class DalHibernateConfig {
         return emf;
     }
 
-    @Bean
-    public EntityManager entityManager() {
-        return entityManagerFactory().getObject().createEntityManager();
-    }
-
-    @Bean
+    @Bean()
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
         return transactionManager;
+    }
+
+    @Override
+    public PlatformTransactionManager annotationDrivenTransactionManager() {
+        return transactionManager();
     }
 }
