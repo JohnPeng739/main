@@ -1,5 +1,6 @@
 package org.mx.test;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mx.dal.EntityFactory;
@@ -21,13 +22,18 @@ import static org.junit.Assert.*;
  * Created by john on 2017/10/7.
  */
 public class TestDatabase {
-    private ApplicationContext context = null;
+    private AnnotationConfigApplicationContext context = null;
 
     @Before
     public void before() {
         context = new AnnotationConfigApplicationContext(DalHibernateConfig.class);
         SessionDataStore store = context.getBean("sessionDataThreadLocal", SessionDataStore.class);
         store.setCurrentUserCode("SYSTEM");
+    }
+
+    @After
+    public void after() {
+        context.close();
     }
 
     @Test
