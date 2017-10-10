@@ -58,4 +58,10 @@ export default [{
   data: {
     'data|5-5': true
   }
+}, {
+  path: /\/rest\/topology\/validate\?type=\w(\&\w=\w)*/,
+  type: 'post',
+  data: {
+    'data|5-5': true
+  }
 }]

@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
   @import "../../style/dialog.less";
 
@@ -38,9 +38,9 @@
         <el-input-number v-model="formSpout.parallelism" :min="1" :max="10"
                          :disabled="mode === 'detail' || jdbcConfig"></el-input-number>
       </el-form-item>
-      <form-spout-jms-config v-if="jmsConfig" ref="formSpoutJmsConfig" :topology="topology"
+      <form-spout-jms-config v-if="jmsConfig" ref="formSpoutJmsConfig" :jmsDataSources="jmsDataSources"
                              :configuration="formSpout.configuration" :mode="mode"></form-spout-jms-config>
-      <form-spout-jdbc-config v-if="jdbcConfig" ref="formSpoutJdbcConfig" :topology="topology"
+      <form-spout-jdbc-config v-if="jdbcConfig" ref="formSpoutJdbcConfig"  :zookeepers="zookeepers" :jdbcDataSources="jdbcDataSources"
                               :configuration="formSpout.configuration" :mode="mode"></form-spout-jdbc-config>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -70,19 +70,22 @@
         visible: false,
         spoutTypes: spoutTypes,
         spoutTypeDisabled(value) {
-          let topology = this.topology
-          if (topology && topology.type === 'PERSIST' && value === 'JDBC') {
+          let topologyType = this.topologyType
+          if (topologyType === 'PERSIST' && value === 'JDBC') {
             return true
           } else {
             return false
           }
         },
-        topology: null,
+        topologyType: 'RETL',
+        zookeepers: [],
+        jdbcDataSources: [],
+        jmsDataSources: [],
         formSpout: {name: '', type: 'JMS_PULL', parallelism: 1},
         rulesSpout: {
           name: [
             requiredRule({msg: '请输入采集源的名称'}),
-            rangeRule({min: 6, max: 20})
+            rangeRule({min: 3})
           ],
           type: [requiredRule({msg: '请选择采集源的类型', trigger: 'change'})]
         },
@@ -116,10 +119,12 @@
       }
     },
     methods: {
-      show(mode, topology, spout) {
-        logger.debug('operate spout, mode: %s, topology: %j, spout: %j.', mode, topology, spout)
+      show(mode, topologyType, zookeepers, jdbcDataSources, jmsDataSources, spout) {
         this.mode = mode
-        this.topology = topology
+        this.topologyType = topologyType
+        this.zookeepers = zookeepers
+        this.jdbcDataSources = jdbcDataSources
+        this.jmsDataSources = jmsDataSources
         let {name, type, parallelism, configuration} = spout
         this.formSpout = {name, type, parallelism, configuration}
         this.visible = true
@@ -131,6 +136,9 @@
           conf = this.$refs['formSpoutJmsConfig'].getConfiguration()
         } else if (this.jdbcConfig) {
           conf = this.$refs['formSpoutJdbcConfig'].getConfiguration()
+          let zookeepers = conf.zookeepers
+          this.$emit('saveZookeepers', zookeepers)
+          delete conf.zookeepers
         }
         if (conf) {
           this.formSpout.configuration = conf
@@ -142,7 +150,7 @@
             this.$emit('submit', this.mode, this.formSpout)
             this.handleClose()
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
       },

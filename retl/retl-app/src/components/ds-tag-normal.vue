@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../style/base.less";
 </style>
 
@@ -50,7 +50,7 @@
         if (tag) {
           let oldIndex = -1
           if (tags.indexOf(tag) >= 0) {
-            warn(this, '你输入的标签内容[' + tag + ']已经存在，请检查数据。')
+            warn( '你输入的标签内容[' + tag + ']已经存在，请检查数据。')
             return
           } else {
             let old = this.tagEditOld

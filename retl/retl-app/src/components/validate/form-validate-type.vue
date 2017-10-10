@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 </style>
 
@@ -44,7 +44,7 @@
             let {type, valueType} = this.formTypeValidate
             rule = {type, valueType}
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return rule

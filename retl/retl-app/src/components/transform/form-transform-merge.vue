@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 </style>
 
@@ -63,7 +63,7 @@
             let {type, columnName, fields, separator} = this.formMergeTransform
             rule = {type, columnName, fields, separator}
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return rule

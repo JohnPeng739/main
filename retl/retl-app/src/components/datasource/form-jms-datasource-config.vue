@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 
   .form-row {
@@ -91,7 +91,7 @@
             let {name, protocol, server, trace, user, password} = this.formJmsDataSource
             ds = {name, protocol, server, trace, user, password}
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return ds

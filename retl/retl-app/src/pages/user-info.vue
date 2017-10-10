@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../style/base.less";
 
   .layout-user-info {
@@ -116,11 +116,11 @@
               let oldPassword = this.formPassword.old
               let newPassword = this.formPassword.new
               post(url, {oldPassword, newPassword}, data => {
-                info(this, '修改密码成功。')
+                info( '修改密码成功。')
                 this.passwordFormVisible = false
               })
             } else {
-              formValidateWarn(this)
+              formValidateWarn()
             }
           })
         }

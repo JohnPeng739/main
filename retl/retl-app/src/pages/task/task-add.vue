@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 
   .layout-steps {
@@ -36,9 +36,14 @@
               <ds-icon class="button-icon" name="skip_previous"></ds-icon>
             </el-button>
           </el-tooltip>
-          <el-steps class="steps" :space="120" :active="steps" finish-status="success">
+          <el-steps class="steps" :space="100" :active="steps" finish-status="success">
             <el-step v-for="item in stepList" :key="item.step" :title="item.name"></el-step>
           </el-steps>
+          <el-tooltip effect="dark" content="暂存" :hide-after="2000" placement="bottom">
+            <el-button class="button" type="text" @click="handleCacheSave" :disabled="isStep('resultInfo') || isStep('submitInfo')">
+              <ds-icon class="button-icon" name="save"></ds-icon>
+            </el-button>
+          </el-tooltip>
           <el-tooltip effect="dark" content="下一步" :hide-after="2000" placement="bottom">
             <el-button class="button" type="text" @click="handleClickNext" :disabled="!hasNext">
               <ds-icon class="button-icon" name="skip_next"></ds-icon>
@@ -49,24 +54,21 @@
     </el-row>
     <el-row type="flex" justify="center">
       <el-col class="layout-content">
-        <topology-basic-info ref="basicInfo" v-if="isStep('basicInfo')" :topology="topology"></topology-basic-info>
-        <topology-spouts-info ref="spoutsInfo" v-else-if="isStep('spoutsInfo')" :topology="topology"></topology-spouts-info>
-        <topology-columns-info ref="columnsInfo" v-else-if="isStep('columnsInfo')"
-                               :topology="topology"></topology-columns-info>
-        <topology-validates-info ref="validatesInfo" v-else-if="isStep('validatesInfo')"
-                                 :topology="topology"></topology-validates-info>
-        <topology-transforms-info ref="transformsInfo" v-else-if="isStep('transformsInfo')"
-                                  :topology="topology"></topology-transforms-info>
-        <topology-persist-info ref="persistInfo" v-else-if="isStep('persistInfo')"
-                               :topology="topology"></topology-persist-info>
-        <topology-result-info ref="resultInfo" v-else-if="isStep('resultInfo')" :topology="topology"></topology-result-info>
-        <topology-submit ref="submitResult" v-else :topology="topology"></topology-submit>
+        <topology-basic-info ref="basicInfo" v-if="isStep('basicInfo')"></topology-basic-info>
+        <topology-spouts-info ref="spoutsInfo" v-else-if="isStep('spoutsInfo')"></topology-spouts-info>
+        <topology-columns-info ref="columnsInfo" v-else-if="isStep('columnsInfo')"></topology-columns-info>
+        <topology-validates-info ref="validatesInfo" v-else-if="isStep('validatesInfo')"></topology-validates-info>
+        <topology-transforms-info ref="transformsInfo" v-else-if="isStep('transformsInfo')"></topology-transforms-info>
+        <topology-persist-info ref="persistInfo" v-else-if="isStep('persistInfo')"></topology-persist-info>
+        <topology-result-info ref="resultInfo" v-else-if="isStep('resultInfo')"></topology-result-info>
+        <topology-submit ref="submitResult" v-else></topology-submit>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
   import {logger} from 'dsutils'
   import {copyData} from '../../assets/utils'
   import {warn} from '../../assets/notify'
@@ -95,11 +97,12 @@
     },
     data() {
       return {
-        topology: {name: '', type: '', debug: false, messageTimeoutSecs: 3, maxSpoutPending: 1},
+        saveInterval: null,
         steps: 0
       }
     },
     computed: {
+      ...mapGetters(['topology']),
       stepList() {
         let {type} = this.topology
         if (type === 'RETL') {
@@ -142,6 +145,7 @@
       }
     },
     methods: {
+      ...mapActions(['cacheLoad', 'cacheSave']),
       isStep(name) {
         let step = this.steps
         let {type} = this.topology
@@ -160,94 +164,92 @@
             return (type === 'RETL' && step === 5) || (type === 'PERSIST' && step === 3)
           case 'persistInfo':
             return type === 'PERSIST' && step === 2
+          case 'submitInfo':
+            return (type === 'RETL' && step === 6) || (type === 'PERSIST' && step === 4)
         }
         return false
       },
-      saveDataBeforeChange() {
+      getCurrentPane() {
         let {type} = this.topology
+        let paneStep = null
         switch (this.steps) {
           case 0:
-            let basicInfo = this.$refs['basicInfo'].getBasicInfo()
-            if (basicInfo !== null && basicInfo !== undefined) {
-              copyData(this.topology, basicInfo)
-              return true
-            }
+            paneStep = this.$refs['basicInfo']
             break;
           case 1:
-            let spoutsInfo = this.$refs['spoutsInfo'].getSpoutsInfo()
-            if (spoutsInfo !== null && spoutsInfo !== undefined) {
-              this.topology.spouts = spoutsInfo
-              return true
-            }
+            paneStep = this.$refs['spoutsInfo']
             break;
           case 2:
             if (type === 'RETL') {
-              let columnsInfo = this.$refs['columnsInfo'].getColumnsInfo()
-              if (columnsInfo) {
-                this.topology.columns = columnsInfo
-                return true
-              }
+              paneStep = this.$refs['columnsInfo']
             } else if (type === 'PERSIST') {
-              let persistInfo = this.$refs['persistInfo'].getPersistInfo()
-              if (persistInfo) {
-                this.topology.persist = persistInfo
-                return true
-              }
+              paneStep = this.$refs['persistInfo']
             }
             break
           case 3:
             if (type === 'RETL') {
-              let validatesInfo = this.$refs['validatesInfo'].getValidatesInfo()
-              if (validatesInfo) {
-                this.topology.validates = validatesInfo
-                return true
-              }
+              paneStep = this.$refs['validatesInfo']
             } else if (type === 'PERSIST') {
-              // is type == 'PERSIST' result
-              return true
+              paneStep = this.$refs['resultInfo']
             }
             break
           case 4:
             if (type === 'RETL') {
-              let transformsInfo = this.$refs['transformsInfo'].getTransformsInfo()
-              if (transformsInfo) {
-                this.topology.transforms = transformsInfo
-                return true
-              }
-            } else if (type === 'PERSIST') {
-              // is type == 'PERSIST' submit
-              return true
+              paneStep = this.$refs['transformsInfo']
             }
             break;
           case 5:
-            // is type === 'RETL' result
-          case 6:
-            // is type == 'RETL' submit
-            return true
+            if (type === 'RETL') {
+              paneStep = this.$refs['resultInfo']
+            }
+            break
           default:
             break;
         }
-        logger.debug('无校验通过的数据，step： %d.', this.steps)
-        warn(this, '请在切换页面之前输入必须的数据。')
-        return false
+        return paneStep
+      },
+      validateDataBeforeSwitch() {
+        let {type} = this.topology
+        let paneStep = this.getCurrentPane()
+        if (this.isStep('submitInfo')) {
+          // 提交页面，不需要校验
+          return true
+        }
+        if (paneStep) {
+          let valid = paneStep.validated()
+          paneStep.cacheData()
+          return valid
+        } else {
+          warn('获取步骤子页面错误， step: ' + this.steps + '。')
+          return false
+        }
       },
       handleClickNext() {
-        if (this.saveDataBeforeChange() && this.steps < this.stepList.length) {
+        if (this.validateDataBeforeSwitch() && this.steps < this.stepList.length) {
           this.steps += 1
         }
         logger.debug(this.topology)
       },
+      handleCacheSave() {
+        let paneStep = this.getCurrentPane()
+        if (paneStep) {
+          paneStep.cacheData()
+        }
+        this.cacheSave()
+      },
       handleClickPrev() {
-        if (this.saveDataBeforeChange() && this.steps > 0) {
+        if (this.validateDataBeforeSwitch() && this.steps > 0) {
           this.steps -= 1
         }
-        this.$nextTick(_ => {
-          if (this.steps >= 0 && this.steps < this.stepList.length) {
-            this.$refs[this.stepList[this.steps].id].setTopology(this.topology)
-          }
-        })
       }
+    },
+    mounted() {
+      this.cacheLoad()
+      // 每过30秒中自动缓存一下
+      this.saveInterval = setInterval(_ => this.handleCacheSave(), 300000)
+    },
+    destroyed() {
+      clearInterval(this.saveInterval)
     }
-    // TODO 添加使用store的方式操作topology
   }
 </script>

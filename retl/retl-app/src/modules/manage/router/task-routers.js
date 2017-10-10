@@ -13,12 +13,12 @@ export const taskNavData = {
   role: 'all',
   children: [{
     path: '/tasks/add',
-    icon: 'format_align_left',
-    title: '添加...',
+    icon: 'fiber_new',
+    title: '添加任务...',
     role: 'manager'
   }, {
     path: '/tasks/list',
-    icon: 'access_alarm',
+    icon: 'list',
     title: '所有任务',
     role: 'all'
   }]

@@ -1,18 +1,21 @@
-let error =(owner, message) => {
-  owner.$message({type: 'error', message})
+import {Message} from 'element-ui'
+import {Notification} from 'element-ui'
+
+let error =(message) => {
+  Message({type: 'error', message})
 }
 
-let warn = (owner, message) => {
-  owner.$message({type: 'warning', message})
+let warn = (message) => {
+  Message({type: 'warning', message})
 }
 
-let info = (owner, message, duration) => {
+let info = (message, duration) => {
   if (duration === undefined) {
     duration = 3000
   }
-  owner.$notify({title: '提示', message, duration: 0})
+  Notification({title: '提示', message, duration: duration})
 }
 
-let formValidateWarn = owner => warn(owner, '表单数据校验失败，请检查输入的数据。')
+let formValidateWarn = _ => warn('表单数据校验失败，请检查输入的数据。')
 
 export {error, warn, info, formValidateWarn}

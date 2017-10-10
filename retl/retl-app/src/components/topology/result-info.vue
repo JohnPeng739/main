@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 
   .config {
@@ -28,6 +28,14 @@
       color: blue;
     }
   }
+
+  .button {
+    margin-left: 30px;
+    color: @button-color;
+    &:hover {
+      color: @button-hover-color;
+    }
+  }
 </style>
 
 <template>
@@ -40,6 +48,7 @@
           <span v-if="state === 'checking'" class="checking">检验中...</span>
           <span v-else-if="state === 'error'" class="error">检验出错</span>
           <span v-else class="pass">通过检验</span>
+          <el-button v-if="state === 'error' || state === 'NA'" type="text" class="button" @click="handleCheckConfig">重新检测</el-button>
         </div>
       </el-col>
     </el-row>
@@ -55,39 +64,201 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import marked from 'marked'
+  import {logger} from 'dsutils'
+  import {postWithError, defaultError} from '../../assets/ajax'
+  import {warn} from '../../assets/notify'
 
   export default {
     name: 'topology-result-info',
-    props: ['topology'],
     data() {
       return {
-        result: '',
-        checkResult: '## 尚未检验',
-        state: 'checking'
+        checkResult: {}
       }
     },
     computed: {
+      ...mapGetters(['topology', 'zookeepers', 'jdbcDataSources', 'jmsDataSources']),
+      state() {
+        let state = 'NA'
+        let checkResult = this.checkResult
+        if (checkResult && checkResult.zookeepers && checkResult.zookeepers.need) {
+          state = checkResult.zookeepers.state
+        }
+        if (state === 'pass' && checkResult && checkResult.jdbcDataSources) {
+          Object.keys(checkResult.jdbcDataSources).forEach(name => {
+            let checker = checkResult.jdbcDataSources[name]
+            if (checker && checker.need && checker.state !== 'pass') {
+              state = checker.state
+              return
+            }
+          })
+        }
+        if (state === 'pass' && checkResult && checkResult.jmsDataSources) {
+          Object.keys(checkResult.jmsDataSources).forEach(name => {
+            let checker = checkResult.jmsDataSources[name]
+            if (checker && checker.need && checker.state !== 'pass') {
+              state = checker.state
+              return
+            }
+          })
+        }
+        return state
+      },
+      result() {
+        return JSON.stringify(this.topology, null, '    ')
+      },
       compileMarkdown() {
-        return marked(this.checkResult, {sanitize: true})
+        let checkResult = this.checkResult
+        let result  = '\n'
+        result += '## 总体结果：' + this.getStateName(this.state) + '\n'
+        result += '---- \n'
+        result += '### Zookeepers: \n'
+        result += '- ' + this.getStateName(checkResult.zookeepers.state) + '\n \n'
+        result += '### JDBC数据源: \n'
+        Object.keys(checkResult.jdbcDataSources).forEach((name, index) => {
+          result += index + '. ' + name + ': ' + this.getStateName(checkResult.jdbcDataSources[name].state) + '\n'
+        })
+        result += '\n \n'
+        result += '### JMS数据源: \n'
+        Object.keys(checkResult.jmsDataSources).forEach((name, index) => {
+          result += index + '. ' + name + ': ' + this.getStateName(checkResult.jmsDataSources[name].state) + '\n'
+        })
+        result += '\n \n'
+        result += '----'
+        return marked(result, {sanitize: true})
       }
     },
     methods: {
-      checkConfig(topology) {
-        // TODO 通过后台校验相关资源是否有效
-        // 校验数据库连接、消息中间件连接、zookeeper连接等
+      validated() {
+        // 只有校验通过，才能进行下一步操作
+        let valid = (this.state === 'pass')
+        if (!valid) {
+          warn('资源检测没有通过。')
+        }
+        return valid
       },
-      setTopology(topology) {
-        if (topology) {
-          this.result = JSON.stringify(topology, null, '  ')
-          setTimeout(_ => {
-            this.checkConfig(topology)
-          }, 100)
+      cacheData() {
+        // 不需要任何缓存
+      },
+      getStateName(state) {
+        switch (state) {
+          case 'checking':
+            return '__正在检测中__'
+          case 'error':
+            return '**检测错误**'
+          case 'pass':
+            return '检测通过'
+          case 'NA':
+          default:
+            return '未配置'
+        }
+      },
+      createChecker(name, need) {
+        return {name, need: need, state: 'NA', startTime: 0, endTime: 0}
+      },
+      createCheckers() {
+        let checkResult = {}
+        let topology = this.topology
+        let zookeepers = this.zookeepers
+        let jdbcDataSources = this.jdbcDataSources
+        let jmsDataSources = this.jmsDataSources
+        if (zookeepers) {
+          checkResult.zookeepers = this.createChecker('zookeepers', true)
+        } else {
+          checkResult.zookeepers = this.createChecker('zookeepers', false)
+        }
+        if (jdbcDataSources) {
+          let checkers = {}
+          jdbcDataSources.forEach(dataSource => {
+            if (dataSource) {
+              checkers[dataSource.name] = this.createChecker(dataSource.name, true)
+            } else {
+              checkers[dataSource.name] = this.createChecker(dataSource.name, false)
+            }
+          })
+          checkResult.jdbcDataSources = checkers
+        }
+        if (jmsDataSources) {
+          let checkers = {}
+          jmsDataSources.forEach(dataSource => {
+            if (dataSource) {
+              checkers[dataSource.name] = this.createChecker(dataSource.name, true)
+            } else {
+              checkers[dataSource.name] = this.createChecker(dataSource.name, false)
+            }
+          })
+          checkResult.jmsDataSources = checkers
+        }
+        this.checkResult = checkResult
+      },
+      setCheckedState(checker, passed) {
+        if (passed !== undefined) {
+          checker.state = (passed ? 'pass' : 'error')
+          checker.endTime = new Date().getTime()
+        } else {
+          checker.state = 'checking'
+          checker.startTime = new Date().getTime()
+        }
+        logger.debug('set check state: %j.', this.checkResult)
+      },
+      handleCheckConfig() {
+        this.createCheckers()
+        // 发送后台检查请求
+        let checkResult = this.checkResult
+
+        // 检查zookeepers
+        let zookeepers = this.zookeepers
+        if (checkResult.zookeepers && checkResult.zookeepers.need) {
+          this.setCheckedState(checkResult.zookeepers)
+          let url = '/rest/topology/validate?type=zookeepers'
+          logger.debug('send POST "%s"', url)
+          postWithError(url, zookeepers, data => {
+            logger.debug('response: %j.', data)
+            this.setCheckedState(checkResult.zookeepers, true)
+          }, errorMessage => {
+            this.setCheckedState(checkResult.zookeepers, false)
+            defaultError(errorMessage)
+          })
+        }
+
+        // 检查JDBC数据源
+        let jdbcDataSources = this.jdbcDataSources
+        if (jdbcDataSources && jdbcDataSources.length > 0) {
+          jdbcDataSources.forEach(dataSource => {
+            if (checkResult.jdbcDataSources[dataSource.name].need) {
+              this.setCheckedState(checkResult.jdbcDataSources[dataSource.name])
+              let url = '/rest/topology/validate?type=jdbcDataSource'
+              logger.debug('send POST "%s"', url)
+              postWithError(url, dataSource, data => {
+                this.setCheckedState(checkResult.jdbcDataSources[dataSource.name], true)
+              }, errorMessage => {
+                this.setCheckedState(checkResult.jdbcDataSources[dataSource.name], false)
+              })
+            }
+          })
+        }
+
+        // 检查JMS数据源
+        let jmsDataSources = this.jmsDataSources
+        if (jmsDataSources && jmsDataSources.length > 0) {
+          jmsDataSources.forEach(dataSource => {
+            if (checkResult.jmsDataSources[dataSource.name].need) {
+              this.setCheckedState(checkResult.jmsDataSources[dataSource.name])
+              let url = '/rest/topology/validate?type=jmsDataSource'
+              logger.debug('send POST "%s"', url)
+              postWithError(url, dataSource, data => {
+                this.setCheckedState(checkResult.jmsDataSources[dataSource.name], true)
+              }, errorMessage => {
+                this.setCheckedState(checkResult.jmsDataSources[dataSource.name], false)
+              })
+            }
+          })
         }
       }
     },
     mounted() {
-      this.setTopology(this.topology)
+      this.$nextTick(_ => this.handleCheckConfig())
     }
   }
 </script>

@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../../style/base.less";
   @import "../../../style/dialog.less";
 </style>

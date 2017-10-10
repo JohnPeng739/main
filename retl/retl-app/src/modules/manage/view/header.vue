@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../../style/base.less";
 
   .header-col1 {
@@ -12,13 +12,13 @@
     .title {
       font-size: x-large;
       font-weight: 600;
-      min-width: 200px;
+      min-width: 500px;
       padding-left: 5px;
     }
   }
 
   .header-col2 {
-    min-width: 400px;
+    //min-width: 400px;
   }
 
   .header-col3 {

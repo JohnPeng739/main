@@ -67,6 +67,12 @@
     .layout-nav {
       background: @nav-color;
     }
+    .nav-show {
+      min-width: 200px;
+    }
+    .nav-hide {
+      min-width: 0px;
+    }
     .breadcrumb {
       padding: 20px 0 0 10px;
       .breadcrumb-item {
@@ -96,7 +102,7 @@
       </nav-header>
     </div>
     <el-row type="flex" class="content-row">
-      <el-col :span="spanLeft" class="layout-nav">
+      <el-col :span="spanLeft" :class="['layout-nav', spanLeft !== 0 ? 'nav-show' : 'nav-hide']">
         <nav-menu :spanLeft="spanLeft"></nav-menu>
       </el-col>
       <el-col :span="spanRight">

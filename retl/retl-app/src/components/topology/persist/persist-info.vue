@@ -68,7 +68,7 @@
         if (tables && tables[index]) {
           this.$nextTick(_ => {this.$refs['formTable'].setTable(tables[index])})
         } else {
-          error(this, '指定的表不存在。')
+          error( '指定的表不存在。')
         }
       },
       handleResetTableForm() {
@@ -109,7 +109,7 @@
             let {dataSource, tables} = this.formJdbcPersist
             persist = {dataSource, tables}
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return persist

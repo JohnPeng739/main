@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../style/base.less";
 
   .layout-list {
@@ -71,31 +71,34 @@
   export default {
     name: 'pane-dataSource-config',
     components: {DsIcon},
+    props: ['list'],
     data() {
       return {
-        list: [],
+        listData: this.list,
         formVisible: false
       }
     },
     methods: {
       setList(list) {
-        if (list) {
-          this.list = list
-        }
+        this.listData = list
       },
-      handleListOperate(operate) {
+      getSelected() {
         let checkbox = this.$refs['listCheckbox']
         let checked = []
+        if (checkbox) {
+          checkbox.forEach((check, index) => {
+            if (check.isChecked) {
+              checked.push(index)
+            }
+          })
+        }
+        return checked
+      },
+      handleListOperate(operate) {
+        let checked = this.getSelected()
         if (operate === 'edit' || operate === 'delete') {
-          if (checkbox) {
-            checkbox.forEach((check, index) => {
-              if (check.isChecked) {
-                checked.push(index)
-              }
-            })
-          }
           if (checked.length <= 0) {
-            info(this, '操作之前请先选择数据源。')
+            info( '操作之前请先选择数据源。')
             return
           }
           if (operate === 'delete') {
@@ -104,7 +107,7 @@
             return
           }
           if (checked.length !== 1 && operate === 'edit') {
-            info(this, '修改操作之前只能选择一条数据源。')
+            info( '修改操作之前只能选择一条数据源。')
             return
           }
         }

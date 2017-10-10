@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 </style>
 
@@ -26,7 +26,7 @@
 
   export default {
     name: 'pane-spout-jms-config',
-    props: ['topology', 'configuration', 'mode'],
+    props: ['jmsDataSources', 'configuration', 'mode'],
     data () {
       let dataSourceValidator = (rule, value, callback) => {
         let dataSources = this.list
@@ -47,7 +47,7 @@
       }
       return {
         jmsProtocolTypes: jmsProtocolTypes,
-        list: this.topology.jmsDataSources,
+        list: this.jmsDataSources,
         formJmsSpout: {dataSource: '', destinateName: '', isTopic: false, producer: 'JSON'},
         rulesJmsSpout: {
           dataSource: [requiredRule({msg: '必须选择数据源', trigger: 'change'}), customRule({validator: dataSourceValidator})],
@@ -63,7 +63,7 @@
           if (valid) {
             spout = this.formJmsSpout
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return spout

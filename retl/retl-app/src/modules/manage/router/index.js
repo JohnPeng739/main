@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import {logger} from 'dsutils'
+import {manageNavData, manageRouters} from './manage-routers'
 import {taskNavData, taskRouters} from './task-routers'
 
 const summaryNavData = {
@@ -10,7 +11,7 @@ const summaryNavData = {
   role: 'all'
 }
 
-export const navData = {summaryNavData, taskNavData}
+export const navData = {summaryNavData, manageNavData, taskNavData}
 
 let findNavNode = (list, path) => {
   let found = null
@@ -57,6 +58,7 @@ const router = new Router({
     path: '/summary',
     component: resolve => require(['../view/index.vue'], resolve),
     children: [
+      ...manageRouters,
       ...taskRouters,
       {
         path: '/user-info/:userCode',

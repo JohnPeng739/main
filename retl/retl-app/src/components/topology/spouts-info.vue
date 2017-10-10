@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 
   .layout-buttons {
@@ -64,13 +64,15 @@
       </el-col>
     </el-row>
     <keep-alive v-if="!dialogDestroyed">
-      <dialog-spout-info ref="dialogSpoutInfo" v-on:submit="handleDialogSubmit"
-                         v-on:close="handleDialogClose"></dialog-spout-info>
+      <dialog-spout-info ref="dialogSpoutInfo" v-on:submit="handleDialogSubmit" v-on:close="handleDialogClose"
+                         v-on:saveZookeepers="handleSaveZookeepers"></dialog-spout-info>
     </keep-alive>
   </div>
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
+  import {logger} from 'dsutils'
   import {spoutTypeLabel} from './types'
   import {warn, info} from '../../assets/notify'
   import DsIcon from '../icon.vue'
@@ -78,57 +80,59 @@
 
   export default {
     name: 'topology-spout-info',
-    props: ['topology'],
     components: {DsIcon, DialogSpoutInfo},
     data() {
       return {
-        spouts: [],
         tableData: [],
+        list: this.spouts,
         currentRow: null,
         dialogDestroyed: false
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters(['topology', 'zookeepers', 'jdbcDataSources', 'jmsDataSources', 'spouts'])
+    },
     methods: {
+      ...mapActions(['setSpouts', 'setZookeepers']),
       fillTableData() {
-        let list = []
+        let tableData = []
         let spouts = this.spouts
+        this.list = spouts
         if (spouts) {
           spouts.forEach(spout => {
             let {name, type, parallelism, configuration} = spout
             let conf = JSON.stringify(spout)
-            list.push({name, type, parallelism, configuration, conf})
+            tableData.push({name, type, parallelism, configuration, conf})
           })
         }
-        this.tableData = list
+        this.tableData = tableData
       },
       getSpoutTypeLabel(value) {
         return spoutTypeLabel(value)
       },
-      getSpoutsInfo() {
-        let spouts = this.spouts
-        if (spouts && spouts.length > 0) {
+      validated() {
+        let spouts = this.list
+        if (spouts && spouts.length <= 0) {
+          warn('切换之前必须至少输入一个有效的采集源。')
+          return false
+        } else if (spouts && spouts.length > 0) {
           let foundJdbc = false
           spouts.forEach(spout => {
             if (spout && spout.type === 'JDBC') {
               foundJdbc = true
+              return
             }
-            // TODO 判断选择的数据源是否在定义的数据源列表中
           })
           if (foundJdbc && spouts.length !== 1) {
             // JDBC类型的Spout必须单独配置在一个独立的拓扑中，不能和其他Spout同时配置
-            warn(this, '你在配置一个JDBC类型采集源的同时，配置了其他的采集源，这是不被许可的。')
-            return null
+            warn('你在配置一个JDBC类型采集源的同时，配置了其他的采集源，这是不被许可的。')
+            return false
           }
-          return spouts
         }
-        return null
+        return true
       },
-      setTopology(topology) {
-        this.spouts = topology.spouts
-        if (!this.spouts) {
-          this.spouts = []
-        }
+      cacheData() {
+        this.setSpouts(this.list)
       },
       handleOperate(operate) {
         let spoutInfo = {}
@@ -136,7 +140,7 @@
         if (operate === 'edit' || operate === 'delete' || operate === 'detail') {
           // 检查是否选择了spout，否则跳出
           if (spout === null || spout === undefined) {
-            info(this, '在操作之前你需要选中一个现有的数据源。')
+            info('在操作之前你需要选中一个现有的数据源。')
             return
           } else {
             let {name, type, parallelism, configuration} = this.currentRow
@@ -147,47 +151,55 @@
         }
         if (operate === 'delete') {
           let list = this.spouts
-          if (list !== null && list !== undefined) {
+          if (list) {
             for (var index = list.length - 1; index >= 0; index--) {
               if (spout.name === list[index].name) {
                 list.splice(index, 1)
               }
             }
           }
-          this.spouts = list
+          this.list = list
           this.fillTableData()
         } else {
-          this.$refs['dialogSpoutInfo'].show(operate, this.topology, spoutInfo)
+          this.$refs['dialogSpoutInfo'].show(operate, this.topology.type, this.zookeepers, this.jdbcDataSources,
+            this.jmsDataSources, spoutInfo)
         }
+      },
+      handleSaveZookeepers(zookeepers) {
+        this.setZookeepers(zookeepers)
       },
       handleDialogSubmit(mode, spout) {
         if (spout === null || spout === undefined) {
-          warn(this, '对话框提交的数据为空，请联系开发人员。')
+          warn('对话框提交的数据为空，请联系开发人员。')
           return
         }
+        if (spout && spout.zookeepers) {
+          // TODO
+          logger.debug('commit zookeepers: %j.', spout.zookeepers)
+        }
         if (mode === 'add') {
-          this.spouts.unshift(spout)
+          this.list.unshift(spout)
           this.fillTableData()
           return
         } else if (mode === 'edit') {
           if (this.currentRow === null || this.currentRow === undefined) {
-            warn(this, '你没有选择数据')
+            warn('你没有选择数据')
           }
-          if (this.spouts !== null && this.spouts !== undefined) {
+          if (this.spouts) {
             let spouts = this.spouts
-            this.spouts = []
+            this.list = []
             for (var index = 0; index < spouts.length; index++) {
               if (this.currentRow.name === spouts[index].name) {
                 let {name, type, parallelism, configuration} = spout
                 spouts[index] = {name, type, parallelism, configuration}
-                this.spouts = spouts
+                this.list = spouts
                 this.fillTableData()
                 return
               }
             }
           }
         } else {
-          warn(this, '提交数据仅支持添加和修改数据源的操作。')
+          warn('提交数据仅支持添加和修改数据源的操作。')
         }
       },
       handleDialogClose() {
@@ -201,15 +213,7 @@
       }
     },
     mounted() {
-      if (this.topology) {
-        let {spouts} = this.topology
-        if (spouts) {
-          this.spouts = spouts
-        } else {
-          this.spouts = []
-        }
-        this.fillTableData()
-      }
+      this.fillTableData()
     }
   }
 </script>

@@ -78,7 +78,7 @@
             let {type, columnName, calculate} = this.formFormulaTransform
             rule = {type, columnName, calculate}
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return rule

@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 </style>
 
@@ -41,7 +41,7 @@
             let {type, regexp} = this.formRegExpValidate
             rule = {type, regexp}
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return rule

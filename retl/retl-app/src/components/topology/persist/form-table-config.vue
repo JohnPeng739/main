@@ -94,7 +94,7 @@
             }
             tb = {table, key, mapping, specialTypes}
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return tb

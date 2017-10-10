@@ -1,4 +1,4 @@
-<style scoped>
+<style rel="stylesheet/less" lang="less" scoped>
 
   .about {
     margin: 10px 20px 0 30px;

@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../style/base.less";
 
   .layout-login {
@@ -87,7 +87,7 @@
         logger.debug('send GET "%s"', url)
         get(url, data => {
           logger.debug("Init user successfully, response: %j.", data)
-          info(this, '初始化用户[' + data.code + ']成功，请登录系统。')
+          info('初始化用户[' + data.code + ']成功，请登录系统。')
         })
       },
       submit () {
@@ -96,12 +96,12 @@
           if (valid) {
             let {user, password} = this.formLogin
             let success = () => {
-              info(this, '用户登录成功。')
+              info('用户登录成功。')
               this.goto({owner: this, path: '/'})
             }
             this.login({user, password, success})
           } else {
-            warn(this, '登录表单数据验证失败， 请核对数据！')
+            warn('登录表单数据验证失败， 请核对数据！')
           }
         })
       },

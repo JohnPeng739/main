@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../../style/base.less";
 </style>
 
@@ -20,7 +20,7 @@
       <el-input v-model="formJdbcSpout.timestamp" :readonly="mode === 'detail'"></el-input>
     </el-form-item>
     <el-form-item label="Zookeepers" prop="zookeepers">
-      <ds-tag-normal v-model="zookeepers" type="gray"></ds-tag-normal>
+      <ds-tag-normal v-model="formJdbcSpout.zookeepers" type="gray" :disabled="mode === 'detail'"></ds-tag-normal>
     </el-form-item>
     <el-form-item label="ACK路径" prop="ackPath">
       <el-input v-model="formJdbcSpout.ackPath" :readonly="mode === 'detail'"></el-input>
@@ -32,7 +32,7 @@
       <el-input-number v-model="formJdbcSpout.intervalSecs" :min="1" :max="30" :disabled="mode === 'detail'"></el-input-number>
       <span>秒</span>
     </el-form-item>
-    <el-form-item label="字段列表">
+    <el-form-item label="字段列表" prop="fields">
       <ds-tag-normal v-model="formJdbcSpout.fields" type="gray" :disabled="mode === 'detail'"></ds-tag-normal>
     </el-form-item>
     <el-form-item label="字段改名">
@@ -49,7 +49,7 @@
 
   export default {
     name: 'pane-spout-jdbc-config',
-    props: ['topology', 'configuration', 'mode'],
+    props: ['jdbcDataSources', 'zookeepers', 'configuration', 'mode'],
     components: {DsTagNormal, DsTagBothSides},
     data() {
       let dataSourceValidator = (rule, value, callback) => {
@@ -70,21 +70,29 @@
         }
       }
       let zookeepersValidator = (rule, value, callback) => {
-        value = this.zookeepers
+        value = this.formJdbcSpout.zookeepers
         if (value && value.length > 0) {
           callback()
         } else {
           callback(new Error('必须输入Zookeeper服务器名称'))
         }
       }
+      let fieldsValidator = (rule, value, callback) => {
+        value = this.formJdbcSpout.fields
+        if (value && value.length > 0) {
+          callback()
+        } else {
+          callback(new Error('必须输入需要获取的表中的字段'))
+        }
+      }
       return {
-        list: this.topology.jdbcDataSources,
-        zookeepers: [],
+        list: this.jdbcDataSources,
         formJdbcSpout: {
           dataSource: '',
           table: '',
           key: '',
           timestamp: '',
+          zookeepers: [],
           ackPath: '',
           windowSize: 1000,
           intervalSecs: 6,
@@ -97,7 +105,8 @@
           key: [requiredRule({msg: '必须输入关键字字段名'})],
           timestamp: [requiredRule({msg: '必须输入时间戳字段名'})],
           zookeepers: [customRule({validator: zookeepersValidator})],
-          ackPath: [requiredRule({msg: '必须输入ACK缓冲路径'})]
+          ackPath: [requiredRule({msg: '必须输入ACK缓冲路径'})],
+          fields: [customRule({validator: fieldsValidator})]
         }
       }
     },
@@ -107,9 +116,8 @@
         this.$refs['formJdbcSpout'].validate(valid => {
           if (valid) {
             spout = this.formJdbcSpout
-            this.topology.zookeepers = this.zookeepers
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return spout
@@ -123,6 +131,7 @@
           table,
           key,
           timestamp,
+          zookeepers: this.zookeepers,
           ackPath,
           windowsSize,
           intervalSecs,

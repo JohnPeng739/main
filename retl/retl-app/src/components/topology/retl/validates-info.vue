@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../../style/base.less";
 </style>
 
@@ -7,7 +7,7 @@
     <el-table :data="tableData" :row-key="getRowKeys" :expand-row-keys="expands" style="width: 100%">
       <el-table-column type="expand">
         <template scope="props">
-          <el-row v-for="item in validates[props.row.name]" :key="item.type" type="flex">
+          <el-row v-for="item in validateDefines[props.row.name]" :key="item.type" type="flex">
             <el-col :span="4">{{getRuleName(item.type)}}</el-col>
             <el-col :span="16">{{JSON.stringify(item)}}</el-col>
             <el-col :span="4">
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
   import {logger} from 'dsutils'
   import {get} from '../../../assets/ajax'
   import {error, warn} from '../../../assets/notify'
@@ -49,14 +50,13 @@
 
   export default {
     name: 'topology-validates-info',
-    props: ['topology'],
     components: {DialogValidateRule},
     data() {
       return {
         supported: [],
         dialogDestroyed: false,
-        columns: this.topology.columns,
-        validates: this.topology.validates,
+        columnDefines: [],
+        validateDefines: {},
         tableData: null,
         getRowKeys(row) {
           return row.name
@@ -71,30 +71,54 @@
         expands: []
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters(['columns', 'validates'])
+    },
     methods: {
+      ...mapActions(['setValidates']),
+      validated() {
+        // 允许不配置校验规则
+        return true
+      },
+      cacheData() {
+        let validates = {}
+        let tableData = this.tableData
+        if (tableData && tableData.length > 0) {
+          tableData.forEach(column => {
+            let name = column.name
+            let rules = null
+            if (column.rules) {
+              rules = column.rules
+            }
+            if (rules) {
+              validates[name] = rules
+            }
+          })
+        }
+        this.setValidates(validates)
+      },
       fillTableData() {
         let columns = this.columns
-        let validates = this.validates
-        if (validates === null || validates === undefined) {
-          validates = {}
-          this.validates = {}
+        let validateDefines = this.validates
+        if (!validateDefines) {
+          validateDefines = {}
         }
         let tableData = []
         columns.forEach(column => {
           if (column) {
             let name = column.name
             let desc = column.desc
-            let rules = undefined
-            if (validates) {
-              rules = validates[name]
+            let rules = null
+            if (validateDefines) {
+              rules = validateDefines[name]
             }
-            if (rules === null || rules === undefined) {
+            if (!rules) {
               rules = []
             }
             tableData.push({name, desc, rules})
           }
         })
+        this.validateDefines = validateDefines
         this.tableData = tableData
       },
       findColumn(columns, columnName) {
@@ -131,14 +155,14 @@
             let rules = this.getRules(columnName)
             let index = this.findRule(rules, type)
             if (index >= 0) {
-              warn(this, '字段[' + columnName + ']已经包含了[' + this.getRuleName(type) + ']规则。')
+              warn('字段[' + columnName + ']已经包含了[' + this.getRuleName(type) + ']规则。')
               return
             }
             let rule = this.createDefaultRule(type)
             if (rule) {
               this.$refs['dialogValidateRule'].show('add', columnName, rule)
             } else {
-              error(this, '不支持的规则类型： ' + type + '。')
+              error('不支持的规则类型： ' + type + '。')
             }
           }
         }
@@ -199,7 +223,7 @@
         logger.debug('%s the validate rule, column: %s, rule: %j.', mode, columnName, rule)
         if (rule) {
           let rules = this.getRules(columnName)
-          if (rules === null || rules === undefined) {
+          if (!rules) {
             rules = []
           }
           let index = this.findColumn(this.tableData, columnName)
@@ -212,16 +236,15 @@
               if (ruleIndex >= 0) {
                 rules[ruleIndex] = rule
               } else {
-                warn(this, '字段[' + columnName + ']的规则[' + rule.type + ']不存在。')
+                warn('字段[' + columnName + ']的规则[' + rule.type + ']不存在。')
                 return
               }
             }
-            this.validates[columnName] = rules
+            this.validateDefines[columnName] = rules
             this.expands = [columnName]
-            this.fillTableData()
             this.handleDialogClose()
           } else {
-            warn(this, '设置的字段[' + columnName + ']不存在。')
+            warn('设置的字段[' + columnName + ']不存在。')
             return
           }
         }
@@ -259,31 +282,10 @@
           }
         })
         return name
-      },
-      getValidatesInfo() {
-        let validates = {}
-        this.tableData.forEach(column => {
-          let name = column.name
-          let rules = null
-          if (column.rules) {
-            rules = column.rules
-          }
-          if (rules) {
-            validates[name] = rules
-          }
-        })
-        return validates
-      },
-      setTopology(topology) {
-        if (topology) {
-          this.columns = topology.columns
-          this.validates = topology.validates
-          this.fillTableData()
-        }
       }
-    },
+    }
+    ,
     mounted() {
-      logger.debug(this.validates)
       let url = '/rest/topology/validates/supported'
       logger.debug('send GET "%s"', url)
       get(url, data => {

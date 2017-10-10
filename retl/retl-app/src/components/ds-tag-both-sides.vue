@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../style/base.less";
 
   .tag-row {
@@ -75,7 +75,7 @@
           let tag = left + this.sideSeparator + right
           let tagIndex = this.getTagIndex(tags, left)
           if (tagIndex >= 0) {
-            warn(this, '你输入的标签内容[' + tag + ']已经存在，请检查数据。')
+            warn( '你输入的标签内容[' + tag + ']已经存在，请检查数据。')
             return
           }
           let oldIndex = -1

@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 
   .layout-buttons {
@@ -61,7 +61,7 @@
     <el-row type="flex">
       <el-col :span="24">
         <el-form-item label="JDBC源" prop="jdbcDataSources">
-          <pane-data-source-config ref="jdbcDataSources" :dataSources="formBasicInfo.jdbcDataSources"
+          <pane-data-source-config ref="jdbcDataSources" :list="formBasicInfo.jdbcDataSources"
                                    v-on:delete="handleDeleteJdbcDataSource" v-on:edit="handleEditJdbcDataSource"
                                    v-on:reset="handleResetJdbcDataSourceForm"
                                    v-on:save="handleSaveJdbcDataSourceForm">
@@ -74,7 +74,7 @@
     <el-row type="flex">
       <el-col :span="24">
         <el-form-item label="JMS源" prop="jmsDataSources">
-          <pane-data-source-config ref="jmsDataSources" :dataSources="formBasicInfo.jmsDataSources"
+          <pane-data-source-config ref="jmsDataSources" :list="formBasicInfo.jmsDataSources"
                                    v-on:delete="handleDeleteJmsDataSource" v-on:edit="handleEditJmsDataSource"
                                    v-on:reset="handleResetJmsDataSourceForm" v-on:save="handleSaveJmsDataSourceForm">
             <form-jms-data-source-config ref="formJmsDataSource" slot="form-config">
@@ -87,6 +87,7 @@
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
   import {logger} from 'dsutils'
   import {error, formValidateWarn} from '../../assets/notify'
   import DsIcon from '../../components/icon.vue'
@@ -99,7 +100,6 @@
 
   export default {
     name: 'topology-basic-infor',
-    props: ['topology'],
     components: {DsIcon, DsTagNormal, PaneDataSourceConfig, FormJdbcDataSourceConfig, FormJmsDataSourceConfig},
     data() {
       let jdbcDataSourcesValidator = (rule, vallue, callback) => {
@@ -121,14 +121,12 @@
       return {
         topologyTypes: topologyTypes,
         formBasicInfo: {
-          name: this.topology.name,
-          type: this.topology.type,
-          messageTimeoutSecs: this.topology.messageTimeoutSecs,
-          tarDestinateName: this.topology.tarDestinateName,
-          tarIsTopic: this.topology.tarIsTopic,
-          jdbcDataSourceEditIndex: null,
+          name: '',
+          type: '',
+          messageTimeoutSecs: 3,
+          tarDestinateName: '',
+          tarIsTopic: false,
           jdbcDataSources: [],
-          jmsDataSourceEditIndex: null,
           jmsDataSources: []
         },
         rulesBasicInfo: {
@@ -143,46 +141,36 @@
         }
       }
     },
+    computed: {
+      ...mapGetters(['topology'])
+    },
     methods: {
-      getBasicInfo() {
-        let bi = null
+      ...mapActions(['setBaseInfo', 'setZookeepers', 'setJdbcDataSources', 'setJmsDataSources']),
+      validated() {
+        let validated = false
         this.$refs['baseInfo'].validate(valid => {
           if (valid) {
-            let {name, type, messageTimeoutSecs, tarDestinateName, tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources} = this.formBasicInfo
-            bi = {
-              name,
-              type,
-              messageTimeoutSecs,
-              tarDestinateName,
-              tarIsTopic,
-              zookeepers,
-              jdbcDataSources,
-              jmsDataSources
-            }
+            validated = valid
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
-        return bi
+        return validated
       },
-      setTopology(topology) {
-        this.formBasicInfo = topology
-        if (topology.jdbcDataSources) {
-          this.$refs['jdbcDataSources'].setList(topology.jdbcDataSources)
-        }
-        if (topology.jmsDataSources) {
-          this.$refs['jmsDataSources'].setList(topology.jmsDataSources)
-        }
+      cacheData() {
+        let {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic} = this.formBasicInfo
+        this.setBaseInfo({name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic})
+        this.setZookeepers(this.formBasicInfo.zookeepers)
+        this.setJdbcDataSources(this.formBasicInfo.jdbcDataSources)
+        this.setJmsDataSources(this.formBasicInfo.jmsDataSources)
       },
       handleEditJdbcDataSource(index) {
         logger.debug('edit jdbc data source request, index: %d', index)
-        this.formBasicInfo.jdbcDataSourceEditIndex = index
         let dataSources = this.formBasicInfo.jdbcDataSources
         if (dataSources && dataSources[index]) {
-          console.log(this.$refs['formJdbcDataSource'])
           this.$nextTick(_ => this.$refs['formJdbcDataSource'].setDataSource(dataSources[index]))
         } else {
-          error(this, '指定的JDBC数据源不存在!')
+          error( '指定的JDBC数据源不存在!')
         }
       },
       handleDeleteJdbcDataSource(indexes) {
@@ -204,15 +192,16 @@
       handleSaveJdbcDataSourceForm() {
         logger.debug('save jdbc data source form.')
         let dataSources = this.formBasicInfo.jdbcDataSources
-        let editIndex = this.formBasicInfo.jdbcDataSourceEditIndex
         if (!dataSources) {
           dataSources = []
         }
         let dataSource = this.$refs['formJdbcDataSource'].getDataSource()
+        let selected = this.$refs['jdbcDataSources'].getSelected()
+        logger.debug('save jdbc data, dataSource: %j, selected: %j.', dataSource, selected)
         if (dataSource) {
-          if (editIndex !== null) {
+          if (selected && selected.length > 0) {
             // edit
-            dataSource[editIndex] = dataSource
+            dataSource[selected[0]] = dataSource
           } else {
             // add
             dataSources.push(dataSource)
@@ -223,12 +212,11 @@
       },
       handleEditJmsDataSource(index) {
         logger.debug('edit jms data source request, index: %d', index)
-        this.formBasicInfo.jmsDataSourceEditIndex = index
         let dataSources = this.formBasicInfo.jmsDataSources
         if (dataSources && dataSources[index]) {
           this.$nextTick(_ => this.$refs['formJmsDataSource'].setDataSource(dataSources[index]))
         } else {
-          error(this, '指定的JMS数据源不存在!')
+          error( '指定的JMS数据源不存在!')
         }
       },
       handleDeleteJmsDataSource(indexes) {
@@ -250,15 +238,16 @@
       handleSaveJmsDataSourceForm() {
         logger.debug('save jms data source form.')
         let dataSources = this.formBasicInfo.jmsDataSources
-        let editIndex = this.formBasicInfo.jmsDataSourceEditIndex
         if (!dataSources) {
           dataSources = []
         }
         let dataSource = this.$refs['formJmsDataSource'].getDataSource()
+        let selected = this.$refs['jmsDataSources'].getSelected()
+        logger.debug('save jms data, dataSource: %j, selected: %j.', dataSource, selected)
         if (dataSource) {
-          if (editIndex !== null) {
+          if (selected && selected.length > 0) {
             // edit
-            dataSources[editIndex] = dataSource
+            dataSources[selected[0]] = dataSource
           } else {
             // add
             dataSources.push(dataSource)
@@ -272,17 +261,21 @@
           dataSources = []
         }
         this.formBasicInfo.jdbcDataSources = dataSources
-        this.formBasicInfo.jdbcDataSourceEditIndex = null
-        this.$refs['jdbcDataSources'].setList(dataSources)
+        this.$refs['jdbcDataSources'].setList(this.formBasicInfo.jdbcDataSources)
       },
       setJmsDataSources(dataSources) {
         if (!dataSources) {
           dataSources = []
         }
         this.formBasicInfo.jmsDataSources = dataSources
-        this.formBasicInfo.jmsDataSourceEditIndex = null
-        this.$refs['jmsDataSources'].setList(dataSources)
+        this.$refs['jmsDataSources'].setList(this.formBasicInfo.jmsDataSources)
       }
+    },
+    mounted() {
+      this.$nextTick(_ => {
+        let {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources} = this.topology
+        this.formBasicInfo = {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources}
+      })
     }
   }
 </script>

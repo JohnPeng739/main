@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 
   .button {
@@ -27,17 +27,22 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import {logger} from 'dsutils'
   import {info} from '../../assets/notify'
   import {post} from '../../assets/ajax'
 
   export default {
     name: 'topology-submit',
-    props: ['topology'],
     data() {
       return {
-        result: '',
         submitTopology: null
+      }
+    },
+    computed: {
+      ...mapGetters(['topology']),
+      result() {
+        return JSON.stringify(this.topology, null, '    ')
       }
     },
     methods: {
@@ -49,19 +54,10 @@
         post(url, topology, data => {
           if (data) {
             logger.debug('POST result: %j.', data)
-            info(this, '提交计算拓扑成功。')
+            info( '提交计算拓扑成功。')
           }
         })
-      },
-      setTopology(topology) {
-        if (topology) {
-          this.submitTopology = topology
-          this.result = JSON.stringify(topology, null, '  ')
-        }
       }
-    },
-    mounted() {
-      this.setTopology(this.topology)
     }
   }
 </script>

@@ -1,4 +1,4 @@
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
 
   .form-row {
@@ -88,7 +88,7 @@
             let {name, driver, url, user, password, initialPoolSize, maxPoolSize, maxIdleTime} = this.formDataSource
             ds = {name, driver, url, user, password, initialPoolSize, maxPoolSize, maxIdleTime}
           } else {
-            formValidateWarn(this)
+            formValidateWarn()
           }
         })
         return ds
