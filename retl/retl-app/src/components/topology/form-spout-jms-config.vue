@@ -20,7 +20,6 @@
 </template>
 
 <script>
-  import {jmsProtocolTypes} from './types'
   import {requiredRule, customRule} from '../../assets/form-validate-rules'
   import {formValidateWarn} from '../../assets/notify'
 
@@ -46,7 +45,6 @@
         }
       }
       return {
-        jmsProtocolTypes: jmsProtocolTypes,
         list: this.jmsDataSources,
         formJmsSpout: {dataSource: '', destinateName: '', isTopic: false, producer: 'JSON'},
         rulesJmsSpout: {

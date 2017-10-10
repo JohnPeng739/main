@@ -15,16 +15,27 @@
         </el-form-item>
       </el-col>
       <el-col :span="14">
+        <el-form-item label="类型" prop="method">
+          <el-select v-model="formJmsDataSource.method">
+            <el-option v-for="item in methodSupported" :key="item" :label="item" :value="item"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row v-if="isActiveMQ" type="flex" class="form-row">
+      <el-col :span="18">
         <el-form-item label="连接" prop="server">
           <el-input v-model="formJmsDataSource.server">
             <el-select v-model="formJmsDataSource.protocol" slot="prepend"style="width: 80px;">
-              <el-option v-for="item in jmsProtocolTypes" :key="item.value" :label="item.label" :value="item.value"></el-option>
+              <el-option label="NIO（推荐使用）" value="nio://"></el-option>
+              <el-option label="TCP" value="tcp://"></el-option>
+              <el-option label="HTTP" value="http://"></el-option>
             </el-select>
           </el-input>
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row type="flex" class="form-row">
+    <el-row v-if="isActiveMQ" type="flex" class="form-row">
       <el-col :span="10">
         <el-form-item label="用户" prop="user">
           <el-input v-model="formJmsDataSource.user"></el-input>
@@ -41,11 +52,19 @@
         </el-form-item>
       </el-col>
     </el-row>
+    <el-row v-if="isJNDI" type="flex" class="form-row">
+      <el-col :span="18">
+        <el-form-item label="JNDI" prop="jndiName">
+          <el-input v-model="formJmsDataSource.jndiName"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
 </template>
 
 <script>
-  import {jmsProtocolTypes} from '../topology/types'
+  import {logger} from 'dsutils'
+  import {get} from '../../assets/ajax'
   import {formValidateWarn} from '../../assets/notify'
   import {requiredRule, customRule} from '../../assets/form-validate-rules'
 
@@ -60,15 +79,23 @@
         }
       }
       return {
-        jmsProtocolTypes: jmsProtocolTypes,
-        formJmsDataSource: {name: '', protocol: 'nio://', server: 'localhost:61616', trace: true, user: '', password: ''},
+        methodSupported: [],
+        formJmsDataSource: {method: 'ACTIVEMQ', name: ''},
         rulesJmsDataSource: {
-          name: [requiredRule({msg: '必须输入JMS数据源的名称'})],
+          name: [requiredRule({msg: '必须输入jms数据源的名称'})],
           server: [
             requiredRule({msg: '必须输入连接的服务器和端口号'}),
             customRule({validator: serverFormalValidator})
           ]
         }
+      }
+    },
+    computed: {
+      isActiveMQ() {
+        return this.formJmsDataSource.method === 'ACTIVEMQ'
+      },
+      isJNDI() {
+        return this.formJmsDataSource.method === 'JNDI'
       }
     },
     methods: {
@@ -88,8 +115,12 @@
         let ds = null
         this.$refs['formJmsDataSource'].validate(valid => {
           if (valid) {
-            let {name, protocol, server, trace, user, password} = this.formJmsDataSource
-            ds = {name, protocol, server, trace, user, password}
+            let {method, name, protocol, server, trace, user, password, jndiName} = this.formJmsDataSource
+            if (method === 'ACTIVEMQ') {
+              ds = {method, name, protocol, server, trace, user, password}
+            } else if (method === 'JNDI') {
+              ds = {method, name, jndiName}
+            }
           } else {
             formValidateWarn()
           }
@@ -98,13 +129,20 @@
       },
       setDataSource(dataSource) {
         if (dataSource) {
-          let {name, protocol, server, trace, user, password} = dataSource
-          this.formJmsDataSource = {name, protocol, server, trace, user, password}
+          let {method, name, protocol, server, trace, user, password, jndiName} = dataSource
+          this.formJmsDataSource = {method, name, protocol, server, trace, user, password, jndiName}
         }
       },
       resetFields() {
         this.$refs['formJmsDataSource'].resetFields()
       }
+    },
+    mounted() {
+      let url = '/rest/topology/jms/supported'
+      logger.debug('send GET "%s"', url)
+      get(url, data => {
+        this.methodSupported = data
+      })
     }
   }
 </script>

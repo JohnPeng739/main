@@ -36,7 +36,6 @@
     name: 'topology-submit',
     data() {
       return {
-        submitTopology: null
       }
     },
     computed: {
@@ -47,7 +46,7 @@
     },
     methods: {
       handleSubmitTopooty() {
-        let topology = this.submitTopology
+        let topology = this.topology
         logger.debug('submit toplogy: %j.', topology)
         let url = '/rest/topology/submit'
         logger.debug('send POST "%s"', url)

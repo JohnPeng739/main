@@ -115,12 +115,12 @@
         result += '---- \n'
         result += '### Zookeepers: \n'
         result += '- ' + this.getStateName(checkResult.zookeepers.state) + '\n \n'
-        result += '### JDBC数据源: \n'
+        result += '### jdbc数据源: \n'
         Object.keys(checkResult.jdbcDataSources).forEach((name, index) => {
           result += index + '. ' + name + ': ' + this.getStateName(checkResult.jdbcDataSources[name].state) + '\n'
         })
         result += '\n \n'
-        result += '### JMS数据源: \n'
+        result += '### jms数据源: \n'
         Object.keys(checkResult.jmsDataSources).forEach((name, index) => {
           result += index + '. ' + name + ': ' + this.getStateName(checkResult.jmsDataSources[name].state) + '\n'
         })
@@ -222,7 +222,7 @@
           })
         }
 
-        // 检查JDBC数据源
+        // 检查jdbc数据源
         let jdbcDataSources = this.jdbcDataSources
         if (jdbcDataSources && jdbcDataSources.length > 0) {
           jdbcDataSources.forEach(dataSource => {
@@ -239,7 +239,7 @@
           })
         }
 
-        // 检查JMS数据源
+        // 检查jms数据源
         let jmsDataSources = this.jmsDataSources
         if (jmsDataSources && jmsDataSources.length > 0) {
           jmsDataSources.forEach(dataSource => {

@@ -32,8 +32,8 @@
       <el-col :span="8">
         <el-form-item label="拓扑类型" prop="type">
           <el-select v-model="formBasicInfo.type">
-            <el-option v-for="item in topologyTypes" :key="item.value" :label="item.label"
-                       :value="item.value"></el-option>
+            <el-option v-for="item in Object.keys(topologyTypes)" :key="item" :label="topologyTypes[item]"
+                       :value="item"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -45,14 +45,14 @@
           <span>秒</span>
         </el-form-item>
       </el-col>
-      <el-col :span="8" v-if="formBasicInfo.type === 'RETL'">
-        <el-tooltip content="数据存储的队列或订阅主题的名称，默认使用第一个JMS数据源。" placement="bottom" :hide-after="2000">
+      <el-col :span="8" v-if="formBasicInfo.type === 'retl'">
+        <el-tooltip content="数据存储的队列或订阅主题的名称，默认使用第一个jms数据源。" placement="bottom" :hide-after="2000">
           <el-form-item label="存储名" prop="tarDestinateName">
             <el-input v-model="formBasicInfo.tarDestinateName"></el-input>
           </el-form-item>
         </el-tooltip>
       </el-col>
-      <el-col :span="6" v-if="formBasicInfo.type === 'RETL'">
+      <el-col :span="6" v-if="formBasicInfo.type === 'retl'">
         <el-form-item label="是否主题" prop="tarIsTopic">
           <el-switch v-model="formBasicInfo.tarIsTopic"></el-switch>
         </el-form-item>
@@ -60,7 +60,7 @@
     </el-row>
     <el-row type="flex">
       <el-col :span="24">
-        <el-form-item label="JDBC源" prop="jdbcDataSources">
+        <el-form-item label="jdbc源" prop="jdbcDataSources">
           <pane-data-source-config ref="jdbcDataSources" :list="formBasicInfo.jdbcDataSources"
                                    v-on:delete="handleDeleteJdbcDataSource" v-on:edit="handleEditJdbcDataSource"
                                    v-on:reset="handleResetJdbcDataSourceForm"
@@ -73,7 +73,7 @@
     </el-row>
     <el-row type="flex">
       <el-col :span="24">
-        <el-form-item label="JMS源" prop="jmsDataSources">
+        <el-form-item label="jms源" prop="jmsDataSources">
           <pane-data-source-config ref="jmsDataSources" :list="formBasicInfo.jmsDataSources"
                                    v-on:delete="handleDeleteJmsDataSource" v-on:edit="handleEditJmsDataSource"
                                    v-on:reset="handleResetJmsDataSourceForm" v-on:save="handleSaveJmsDataSourceForm">
@@ -95,7 +95,6 @@
   import PaneDataSourceConfig from '../pane-listable-config.vue'
   import FormJdbcDataSourceConfig from '../datasource/form-jdbc-datasource-config.vue'
   import FormJmsDataSourceConfig from '../datasource/form-jms-datasource-config.vue'
-  import {topologyTypes} from './types'
   import {requiredRule, rangeRule, customRule} from '../../assets/form-validate-rules'
 
   export default {
@@ -104,8 +103,8 @@
     data() {
       let jdbcDataSourcesValidator = (rule, vallue, callback) => {
         let {type, jdbcDataSources} = this.formBasicInfo
-        if (type === 'PERSIST' && (jdbcDataSources && jdbcDataSources.length <= 0)) {
-          callback(new Error('数据存储类计算拓扑必须配置JDBC数据源。'))
+        if (type === 'persist' && (jdbcDataSources && jdbcDataSources.length <= 0)) {
+          callback(new Error('数据存储类计算拓扑必须配置jdbc数据源。'))
         } else {
           callback()
         }
@@ -115,11 +114,10 @@
         if (jmsDataSources && jmsDataSources.length > 0) {
           callback()
         } else {
-          callback(new Error('必须要配置JMS数据源。'))
+          callback(new Error('必须要配置jms数据源。'))
         }
       }
       return {
-        topologyTypes: topologyTypes,
         formBasicInfo: {
           name: '',
           type: '',
@@ -142,7 +140,7 @@
       }
     },
     computed: {
-      ...mapGetters(['topology'])
+      ...mapGetters(['topology', 'topologyTypes'])
     },
     methods: {
       ...mapActions(['setBaseInfo', 'setZookeepers', 'setJdbcDataSources', 'setJmsDataSources']),
@@ -170,7 +168,7 @@
         if (dataSources && dataSources[index]) {
           this.$nextTick(_ => this.$refs['formJdbcDataSource'].setDataSource(dataSources[index]))
         } else {
-          error( '指定的JDBC数据源不存在!')
+          error( '指定的jdbc数据源不存在!')
         }
       },
       handleDeleteJdbcDataSource(indexes) {
@@ -216,7 +214,7 @@
         if (dataSources && dataSources[index]) {
           this.$nextTick(_ => this.$refs['formJmsDataSource'].setDataSource(dataSources[index]))
         } else {
-          error( '指定的JMS数据源不存在!')
+          error( '指定的jms数据源不存在!')
         }
       },
       handleDeleteJmsDataSource(indexes) {
@@ -272,6 +270,7 @@
       }
     },
     mounted() {
+      logger.debug(this.topologyTypes)
       this.$nextTick(_ => {
         let {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources} = this.topology
         this.formBasicInfo = {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources}

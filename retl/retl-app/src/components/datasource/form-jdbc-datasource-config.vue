@@ -17,7 +17,7 @@
       <el-col :span="16">
         <el-form-item label="驱动" prop="driver">
           <el-select v-model="formDataSource.driver">
-            <el-option v-for="item in drivers" :key="item" :value="item"></el-option>
+            <el-option v-for="item in Object.keys(jdbcDriverTypes)" :key="item" :label="item" :value="jdbcDriverTypes[item]"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -63,15 +63,14 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import {requiredRule} from '../../assets/form-validate-rules'
   import {formValidateWarn} from '../../assets/notify'
-  import {jdbcDrivers} from '../topology/types'
 
   export default {
     name: 'pane-dataSource-config',
     data () {
       return {
-        drivers: jdbcDrivers,
         formDataSource: {name: '', driver: '', url: '', user: '', password: '', initialPoolSize: 3, maxIdleTime: 3000, maxPoolSize: 10},
         rulesDataSource: {
           name: [requiredRule({msg: '必须输入数据源名称'})],
@@ -79,6 +78,9 @@
           url: [requiredRule({msg: '必须输入数据源连接字符串'})]
         }
       }
+    },
+    computed: {
+      ...mapGetters(['jdbcDriverTypes'])
     },
     methods: {
       getDataSource() {

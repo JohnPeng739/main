@@ -105,7 +105,7 @@
       ...mapGetters(['topology']),
       stepList() {
         let {type} = this.topology
-        if (type === 'RETL') {
+        if (type === 'retl') {
           return [{
             name: '基本信息', id: 'basicInfo', step: 0
           }, {
@@ -119,7 +119,7 @@
           }, {
             name: '配置结果', id: 'resultInfo', step: 5
           }]
-        } else if (type === 'PERSIST') {
+        } else if (type === 'persist') {
           return [{
             name: '基本信息', id: 'basicInfo', step: 0
           }, {
@@ -155,17 +155,17 @@
           case 'spoutsInfo':
             return step === 1
           case 'columnsInfo':
-            return type === 'RETL' && step === 2
+            return type === 'retl' && step === 2
           case 'validatesInfo':
-            return type === 'RETL' && step === 3
+            return type === 'retl' && step === 3
           case 'transformsInfo':
-            return type === 'RETL' && step === 4
+            return type === 'retl' && step === 4
           case 'resultInfo':
-            return (type === 'RETL' && step === 5) || (type === 'PERSIST' && step === 3)
+            return (type === 'retl' && step === 5) || (type === 'persist' && step === 3)
           case 'persistInfo':
-            return type === 'PERSIST' && step === 2
+            return type === 'persist' && step === 2
           case 'submitInfo':
-            return (type === 'RETL' && step === 6) || (type === 'PERSIST' && step === 4)
+            return (type === 'retl' && step === 6) || (type === 'persist' && step === 4)
         }
         return false
       },
@@ -180,26 +180,26 @@
             paneStep = this.$refs['spoutsInfo']
             break;
           case 2:
-            if (type === 'RETL') {
+            if (type === 'retl') {
               paneStep = this.$refs['columnsInfo']
-            } else if (type === 'PERSIST') {
+            } else if (type === 'persist') {
               paneStep = this.$refs['persistInfo']
             }
             break
           case 3:
-            if (type === 'RETL') {
+            if (type === 'retl') {
               paneStep = this.$refs['validatesInfo']
-            } else if (type === 'PERSIST') {
+            } else if (type === 'persist') {
               paneStep = this.$refs['resultInfo']
             }
             break
           case 4:
-            if (type === 'RETL') {
+            if (type === 'retl') {
               paneStep = this.$refs['transformsInfo']
             }
             break;
           case 5:
-            if (type === 'RETL') {
+            if (type === 'retl') {
               paneStep = this.$refs['resultInfo']
             }
             break
@@ -238,7 +238,8 @@
         this.cacheSave()
       },
       handleClickPrev() {
-        if (this.validateDataBeforeSwitch() && this.steps > 0) {
+        this.handleCacheSave()
+        if (this.steps > 0) {
           this.steps -= 1
         }
       }

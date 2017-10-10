@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.zookeeper.*;
 import org.mx.StringUtils;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

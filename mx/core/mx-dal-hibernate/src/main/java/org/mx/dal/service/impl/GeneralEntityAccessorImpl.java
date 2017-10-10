@@ -110,7 +110,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
                 pagination = new Pagination();
             }
             pagination.setTotal((int) count(clazz, false));
-            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity"));
+            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity", clazz.getName()));
             query.setFirstResult((pagination.getPage() - 1) * pagination.getSize());
             query.setMaxResults(pagination.getSize());
             List<T> result = query.getResultList();

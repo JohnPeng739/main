@@ -1,21 +1,36 @@
 package com.ds.retl.rest;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.ds.retl.dal.entity.Topology;
+import com.ds.retl.dal.exception.UserInterfaceErrorException;
+import com.ds.retl.jms.JmsManager;
+import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.rest.vo.LabelValueVO;
+import com.ds.retl.rest.vo.topology.TopologyVO;
+import com.ds.retl.rest.vo.topology.TypesVO;
+import com.ds.retl.service.TopologyManageService;
 import com.ds.retl.validate.TypeValidateFunc;
 import net.bytebuddy.asm.Advice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.ClassUtils;
 import org.mx.StringUtils;
+import org.mx.dal.Pagination;
+import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.rest.vo.DataVO;
+import org.mx.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,16 +45,73 @@ public class TopologyManageResource {
     private static final Log logger = LogFactory.getLog(TopologyManageResource.class);
 
     @Autowired
+    @Qualifier("generalEntityAccessorHibernate")
+    private GeneralAccessor accessor = null;
+
+    @Autowired
+    private TopologyManageService topologyManageService = null;
+
+    @Autowired
     private SessionDataStore sessionDataStore = null;
 
-    @Path("topologies/submit")
+    @Path("topologies")
     @POST
-    public DataVO<Boolean> submitTopology(String topologyConfigJsonStr, @QueryParam("userCode") String userCode) {
+    public PaginationDataVO<List<TopologyVO>> pagingList(Pagination pagination) {
+        if (pagination == null) {
+            pagination = new Pagination();
+        }
+        try {
+            List<Topology> topologies = accessor.list(pagination, Topology.class);
+            List<TopologyVO> list = new ArrayList<>();
+            if (topologies != null && !topologies.isEmpty()) {
+                topologies.forEach(topology -> {
+                    TopologyVO vo = new TopologyVO();
+                    TopologyVO.transform(topology, vo);
+                    list.add(vo);
+                });
+            }
+            return new PaginationDataVO<>(pagination, list);
+        } catch (EntityAccessException ex) {
+            return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
+        }
+    }
+
+    @Path("topology/submit")
+    @POST
+    public DataVO<Boolean> submitTopology(@QueryParam("userCode") String userCode, String topologyConfigJsonStr) {
         sessionDataStore.setCurrentUserCode(userCode);
-        // TODO
-        System.out.println(topologyConfigJsonStr);
-        sessionDataStore.removeCurrentUserCode();
-        return new DataVO<>(true);
+        try {
+            JSONObject json = JSON.parseObject(topologyConfigJsonStr);
+            topologyManageService.submit(json.getString("name"), topologyConfigJsonStr);
+            sessionDataStore.removeCurrentUserCode();
+            return new DataVO<>(true);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
+    }
+
+    @Path("topology/validate")
+    @POST
+    public DataVO<Boolean> validateResource(@QueryParam("type")String type, String resourceJsonStr) {
+        try {
+            boolean validated = false;
+            switch (type) {
+                case "zookeepers":
+                    validated = topologyManageService.validateZookeepers(resourceJsonStr);
+                    break;
+                case "jdbcDataSource":
+                    validated = topologyManageService.validateJdbcDataSource(resourceJsonStr);
+                    break;
+                case "jmsDataSource":
+                    validated = topologyManageService.validateJmsDataSource(resourceJsonStr);
+                    break;
+                default:
+                    throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
+            }
+            return new DataVO<>(validated);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_VALIDATE_FAIL));
+        }
     }
 
     private List<LabelValueVO> transform(List<String> classes) {
@@ -68,6 +140,22 @@ public class TopologyManageResource {
             });
         }
         return supported;
+    }
+
+    @Path("topology/types")
+    @GET
+    public DataVO<TypesVO> getTypes() {
+        return new DataVO<>(new TypesVO());
+    }
+
+    @Path("topology/jms/supported")
+    @GET
+    public DataVO<List<String>> supportedJms() {
+        List<String> supported = new ArrayList<>();
+        for (JmsManager.Supported s : JmsManager.Supported.values()) {
+            supported.add(s.name());
+        }
+        return new DataVO<>(supported);
     }
 
     @Path("topology/validates/supported")

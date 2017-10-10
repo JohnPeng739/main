@@ -56,7 +56,7 @@
           <el-table-column prop="name" label="名称" width="200"></el-table-column>
           <el-table-column prop="type" label="类型" width="150">
             <template scope="scope">
-              {{getSpoutTypeLabel(scope.row.type)}}
+              {{spoutTypes[scope.row.type]}}
             </template>
           </el-table-column>
           <el-table-column prop="conf" label="配置信息"></el-table-column>
@@ -73,7 +73,6 @@
 <script>
   import {mapGetters, mapActions} from 'vuex'
   import {logger} from 'dsutils'
-  import {spoutTypeLabel} from './types'
   import {warn, info} from '../../assets/notify'
   import DsIcon from '../icon.vue'
   import DialogSpoutInfo from './dialog-spout-info.vue'
@@ -90,7 +89,7 @@
       }
     },
     computed: {
-      ...mapGetters(['topology', 'zookeepers', 'jdbcDataSources', 'jmsDataSources', 'spouts'])
+      ...mapGetters(['spoutTypes', 'topology', 'zookeepers', 'jdbcDataSources', 'jmsDataSources', 'spouts'])
     },
     methods: {
       ...mapActions(['setSpouts', 'setZookeepers']),
@@ -118,14 +117,14 @@
         } else if (spouts && spouts.length > 0) {
           let foundJdbc = false
           spouts.forEach(spout => {
-            if (spout && spout.type === 'JDBC') {
+            if (spout && spout.type === 'jdbc') {
               foundJdbc = true
               return
             }
           })
           if (foundJdbc && spouts.length !== 1) {
-            // JDBC类型的Spout必须单独配置在一个独立的拓扑中，不能和其他Spout同时配置
-            warn('你在配置一个JDBC类型采集源的同时，配置了其他的采集源，这是不被许可的。')
+            // jdbc类型的Spout必须单独配置在一个独立的拓扑中，不能和其他Spout同时配置
+            warn('你在配置一个jdbc类型采集源的同时，配置了其他的采集源，这是不被许可的。')
             return false
           }
         }
@@ -147,7 +146,7 @@
             spoutInfo = {name, type, parallelism, configuration}
           }
         } else if (operate === 'add') {
-          spoutInfo = {name: '', type: 'JMS_PULL', parallelism: 1}
+          spoutInfo = {name: '', type: 'jmsPull', parallelism: 1}
         }
         if (operate === 'delete') {
           let list = this.spouts

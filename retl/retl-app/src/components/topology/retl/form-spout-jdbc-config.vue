@@ -100,7 +100,7 @@
           fieldsTransform: []
         },
         rulesJdbcSpout: {
-          dataSource: [requiredRule({msg: '必须选择一个JDBC数据源', trigger: 'change'}), customRule({validator: dataSourceValidator})],
+          dataSource: [requiredRule({msg: '必须选择一个jdbc数据源', trigger: 'change'}), customRule({validator: dataSourceValidator})],
           table: [requiredRule({msg: '必须输入表名'})],
           key: [requiredRule({msg: '必须输入关键字字段名'})],
           timestamp: [requiredRule({msg: '必须输入时间戳字段名'})],

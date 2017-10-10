@@ -14,6 +14,7 @@ import java.util.List;
 public class UserVO extends BaseDictVO {
     private String password;
     private List<String> tools, roles;
+    private boolean online;
 
     public static void transform(User user, UserVO userVO) {
         if (user == null || userVO == null) {
@@ -36,6 +37,7 @@ public class UserVO extends BaseDictVO {
                 userVO.roles.addAll(Arrays.asList(roles));
             }
         }
+        userVO.online = user.isOnline();
     }
 
     public static void transform(UserVO userVO, User user) {
@@ -66,6 +68,10 @@ public class UserVO extends BaseDictVO {
         this.roles = roles;
     }
 
+    public void setOnline(boolean online) {
+        this.online = online;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -76,5 +82,9 @@ public class UserVO extends BaseDictVO {
 
     public List<String> getRoles() {
         return roles;
+    }
+
+    public boolean isOnline() {
+        return online;
     }
 }

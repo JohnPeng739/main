@@ -30,8 +30,8 @@
       </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-select v-model="formSpout.type" :disabled="mode === 'detail'">
-          <el-option v-for="item in spoutTypes" :key="item.value" :label="item.label" :value="item.value"
-                     :disabled="spoutTypeDisabled(item.value)"></el-option>
+          <el-option v-for="item in Object.keys(spoutTypes)" :key="item" :label="spoutTypes[item]" :value="item"
+                     :disabled="spoutTypeDisabled(item)"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="并行度" prop="parallelism">
@@ -52,9 +52,9 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import {logger} from 'dsutils'
   import {formValidateWarn} from '../../assets/notify'
-  import {spoutTypes} from './types'
   import {requiredRule, rangeRule} from '../../assets/form-validate-rules'
   import DsIcon from '../icon.vue'
   import FormSpoutJmsConfig from './form-spout-jms-config.vue'
@@ -68,20 +68,19 @@
     data() {
       return {
         visible: false,
-        spoutTypes: spoutTypes,
         spoutTypeDisabled(value) {
           let topologyType = this.topologyType
-          if (topologyType === 'PERSIST' && value === 'JDBC') {
+          if (topologyType === 'persist' && value === 'jdbc') {
             return true
           } else {
             return false
           }
         },
-        topologyType: 'RETL',
+        topologyType: 'retl',
         zookeepers: [],
         jdbcDataSources: [],
         jmsDataSources: [],
-        formSpout: {name: '', type: 'JMS_PULL', parallelism: 1},
+        formSpout: {name: '', type: 'jmsPull', parallelism: 1},
         rulesSpout: {
           name: [
             requiredRule({msg: '请输入采集源的名称'}),
@@ -93,6 +92,7 @@
       }
     },
     computed: {
+      ...mapGetters(['spoutTypes']),
       title() {
         switch (this.mode) {
           case 'add':
@@ -112,10 +112,10 @@
         }
       },
       jmsConfig() {
-        return (this.formSpout.type === 'JMS' || this.formSpout.type === 'JMS_PULL')
+        return (this.formSpout.type === 'jms' || this.formSpout.type === 'jmsPull')
       },
       jdbcConfig() {
-        return this.formSpout.type === 'JDBC'
+        return this.formSpout.type === 'jdbc'
       }
     },
     methods: {

@@ -7,7 +7,7 @@ const TOPOLOGY='current-topology'
 
 const topologySample = {
   name: 'SampleTopology',
-  type: 'RETL',
+  type: 'retl',
   debug: false,
   messageTimeoutSecs: 3,
   maxSpoutPending: 1,

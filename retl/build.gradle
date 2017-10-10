@@ -51,6 +51,10 @@ project(':retl-deploy') {
       libs.'jetty-server',
       libs.'jetty-servlet'
     )
+    compile(libs.'zookeeper') {
+      exclude group: 'org.slf4j'
+      exclude group: 'log4j'
+    }
   }
 }
 
