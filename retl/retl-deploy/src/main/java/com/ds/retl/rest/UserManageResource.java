@@ -81,6 +81,28 @@ public class UserManageResource {
         }
     }
 
+    @Path("users")
+    @POST
+    public PaginationDataVO<List<UserVO>> listUsers(Pagination pagination) {
+        if (pagination == null) {
+            pagination = new Pagination();
+        }
+        try {
+            List<User> users = accessor.list(pagination, User.class);
+            List<UserVO> list = new ArrayList<>();
+            if (users != null && users.size() > 0) {
+                users.forEach(user -> {
+                    UserVO userVO = new UserVO();
+                    UserVO.transform(user, userVO);
+                    list.add(userVO);
+                });
+            }
+            return new PaginationDataVO<>(pagination, list);
+        } catch (EntityAccessException ex) {
+            return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
+        }
+    }
+
     @Path("users/{userCode}")
     @GET
     public DataVO<UserVO> getUser(@PathParam("userCode") String userCode) {
