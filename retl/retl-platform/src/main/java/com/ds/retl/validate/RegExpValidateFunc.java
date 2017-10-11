@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  */
 public class RegExpValidateFunc implements ValidateFunc {
     public static final String CODE = "RegExpValidate";
-    public static final String NAME = "正则检验";
+    public static final String NAME = "5. 正则检验";
 
     @Override
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {

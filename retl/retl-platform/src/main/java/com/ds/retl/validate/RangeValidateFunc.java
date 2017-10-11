@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  */
 public class RangeValidateFunc implements ValidateFunc {
     public static final String CODE = "RangeValidate";
-    public static final String NAME = "范围检验";
+    public static final String NAME = "4. 数据范围检验";
 
     @Override
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {

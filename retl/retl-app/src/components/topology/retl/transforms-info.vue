@@ -1,22 +1,5 @@
 <style rel="stylesheet/less" lang="less" scoped>
   @import "../../../style/base.less";
-
-  .layout-buttons {
-    display: inline-block;
-    float: right;
-    margin: 3px;
-    .button {
-      padding-left: 10px;
-      font-size: @content-text-font-size;
-      color: @button-color;
-      &:hover {
-        color: @button-hover-color
-      }
-    }
-    .button-icon {
-      font-size: 12px;
-    }
-  }
 </style>
 
 <template>
@@ -30,7 +13,7 @@
               添加
             </el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-for="item in supported" :key="item.value"
+              <el-dropdown-item v-for="item in transformTypes" :key="item.value"
                                 :command="item.value">{{item.label}}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -56,7 +39,7 @@
           <el-table-column prop="columnName" label="字段名称" width="150"></el-table-column>
           <el-table-column prop="type" label="转换类型" width="200">
             <template scope="scope">
-              {{getTypeName(scope.row.type)}}
+              {{typeLabel('transformTypes', scope.row.type)}}
             </template>
           </el-table-column>
           <el-table-column prop="conf" label="配置信息">
@@ -74,6 +57,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
+  import {getTypeLabel} from '../../../modules/manage/store/modules/types'
   import DsIcon from "../../icon.vue"
   import {logger} from 'dsutils'
   import {get} from '../../../assets/ajax'
@@ -85,30 +69,19 @@
     components: {DsIcon, DialogTransformInfo},
     data() {
       return {
-        supported: [],
         tableData: [],
         currentRow: null,
         dialogDestroyed: false,
-        getTypeName(type) {
-          let name = ''
-          let supported = this.supported
-          if (supported && supported.length > 0) {
-            supported.forEach(item => {
-              if (item && item.value === type) {
-                name = item.label
-                return
-              }
-            })
-          }
-          return name
-        }
       }
     },
     computed: {
-      ...mapGetters(['columns', 'transforms'])
+      ...mapGetters(['transformTypes', 'columns', 'transforms'])
     },
     methods: {
       ...mapActions(['setTransforms']),
+      typeLabel(type, value) {
+        return getTypeLabel(type, value)
+      },
       validated() {
         // 允许不配置转换规则
         return true
@@ -228,14 +201,7 @@
       }
     },
     mounted() {
-      let url = '/rest/topology/transforms/supported'
-      logger.debug('send GET "%s"', url)
-      get(url, data => {
-        if (data) {
-          this.supported = data
-          this.fillTableData()
-        }
-      })
+      this.fillTableData()
     }
   }
 </script>

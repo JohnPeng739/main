@@ -5,7 +5,7 @@ const SETDATA = 'SETDATA'
 
 const TOPOLOGY='current-topology'
 
-const topologySample = {
+export const topologySample = {
   name: 'SampleTopology',
   type: 'retl',
   debug: false,
@@ -85,6 +85,9 @@ const mutations = {
         localStorage.setItem(TOPOLOGY, JSON.stringify(state.topology))
         logger.debug('Cache topology into local storage success, topology: %j.', state.topology)
         break
+      case 'clean':
+        localStorage.removeItem(TOPOLOGY)
+        logger.debug('Clean topology success.')
       case 'load':
         let str = localStorage.getItem(TOPOLOGY)
         if (str && str.length > 0) {
@@ -95,10 +98,6 @@ const mutations = {
           logger.debug('Init topology success, topology: %j.', state.topology)
         }
         break
-      case 'clean':
-        localStorage.removeItem(TOPOLOGY)
-        state.topology = null
-        logger.debug('Clean topology success.')
       default:
         break
     }

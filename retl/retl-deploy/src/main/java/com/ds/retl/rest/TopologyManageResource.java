@@ -7,13 +7,13 @@ import com.ds.retl.dal.exception.UserInterfaceErrorException;
 import com.ds.retl.jms.JmsManager;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.rest.vo.LabelValueVO;
+import com.ds.retl.rest.vo.topology.SupportedVO;
 import com.ds.retl.rest.vo.topology.TopologyVO;
-import com.ds.retl.rest.vo.topology.TypesVO;
 import com.ds.retl.service.TopologyManageService;
 import com.ds.retl.validate.TypeValidateFunc;
-import net.bytebuddy.asm.Advice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.storm.shade.org.apache.commons.io.input.BOMInputStream;
 import org.mx.ClassUtils;
 import org.mx.StringUtils;
 import org.mx.dal.Pagination;
@@ -30,7 +30,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -90,6 +90,12 @@ public class TopologyManageResource {
         }
     }
 
+    @Path("topology/submit/{id}")
+    @GET
+    public DataVO<Boolean> submitTopologyById(@QueryParam("userCode")String userCode, @PathParam("id") String id) {
+        return new DataVO<>(true);
+    }
+
     @Path("topology/validate")
     @POST
     public DataVO<Boolean> validateResource(@QueryParam("type")String type, String resourceJsonStr) {
@@ -142,51 +148,43 @@ public class TopologyManageResource {
         return supported;
     }
 
-    @Path("topology/types")
+    @Path("topology/supported")
     @GET
-    public DataVO<TypesVO> getTypes() {
-        return new DataVO<>(new TypesVO());
-    }
-
-    @Path("topology/jms/supported")
-    @GET
-    public DataVO<List<String>> supportedJms() {
-        List<String> supported = new ArrayList<>();
+    public DataVO<SupportedVO> getSupported() {
+        SupportedVO supportedVO = new SupportedVO();
+        // get JMS supported
+        List<LabelValueVO> supportedJms = new ArrayList<>();
         for (JmsManager.Supported s : JmsManager.Supported.values()) {
-            supported.add(s.name());
+            supportedJms.add(new LabelValueVO(s.name(), s.name()));
         }
-        return new DataVO<>(supported);
-    }
+        Collections.sort(supportedJms);
+        supportedVO.setJmsTypes(supportedJms);
 
-    @Path("topology/validates/supported")
-    @GET
-    public DataVO<List<LabelValueVO>> supportedValidates() {
+        // get validate types
         List<String> validateClasses = ClassUtils.scanPackage("com.ds.retl.validate");
-        List<LabelValueVO> supported = this.transform(validateClasses);
-        return new DataVO<>(supported);
-    }
+        List<LabelValueVO> validateTypes = this.transform(validateClasses);
+        Collections.sort(validateTypes);
+        supportedVO.setValidateTypes(validateTypes);
 
-    @Path("topology/validate/type-validate/types")
-    @GET
-    public DataVO<List<LabelValueVO>> supportedValidateTypes() {
+        // get validate rule types
         TypeValidateFunc.ValueType[] types = TypeValidateFunc.ValueType.values();
-        List<LabelValueVO> supported = new ArrayList<>();
+        List<LabelValueVO> supportedValidateRules = new ArrayList<>();
         for (TypeValidateFunc.ValueType type : types) {
             switch (type) {
                 case STRING:
-                    supported.add(new LabelValueVO("字符串类型", type.name()));
+                    supportedValidateRules.add(new LabelValueVO("1. 字符串类型", type.name()));
                     break;
                 case DATE:
-                    supported.add(new LabelValueVO("时间类型", type.name()));
+                    supportedValidateRules.add(new LabelValueVO("2. 时间类型", type.name()));
                     break;
                 case INT:
-                    supported.add(new LabelValueVO("整数", type.name()));
+                    supportedValidateRules.add(new LabelValueVO("3. 整数", type.name()));
                     break;
                 case DECIMAL:
-                    supported.add(new LabelValueVO("小数类型", type.name()));
+                    supportedValidateRules.add(new LabelValueVO("4. 小数类型", type.name()));
                     break;
                 case BOOL:
-                    supported.add(new LabelValueVO("布尔类型", type.name()));
+                    supportedValidateRules.add(new LabelValueVO("5. 布尔类型", type.name()));
                     break;
                 default:
                     if (logger.isWarnEnabled()) {
@@ -194,14 +192,15 @@ public class TopologyManageResource {
                     }
             }
         }
-        return new DataVO<>(supported);
-    }
+        Collections.sort(supportedValidateRules);
+        supportedVO.setValidateRuleTypes(supportedValidateRules);
 
-    @Path("topology/transforms/supported")
-    @GET
-    public DataVO<List<LabelValueVO>> supportedTransforms() {
+        // get transform types
         List<String> transformClasses = ClassUtils.scanPackage("com.ds.retl.transform");
-        List<LabelValueVO> supported = this.transform(transformClasses);
-        return new DataVO<>(supported);
+        List<LabelValueVO> transformTypes = this.transform(transformClasses);
+        Collections.sort(transformTypes);
+        supportedVO.setTransformTypes(transformTypes);
+
+        return new DataVO<>(supportedVO);
     }
 }

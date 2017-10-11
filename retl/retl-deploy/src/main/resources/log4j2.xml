@@ -35,6 +35,9 @@
 		<logger name="org.mx" level="debug" additivity="false">
 			<appender-ref ref="async" />
 		</logger>
+		<logger name="com.ds" level="debug" additivity="false">
+			<appender-ref ref="async" />
+		</logger>
 		<logger name="AuditLog" level="info" additivity="false">
 			<appender-ref ref="async" />
 		</logger>

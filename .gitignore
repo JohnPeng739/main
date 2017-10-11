@@ -10,6 +10,7 @@
 /**/logs/*
 /**/data/*
 /**/out/*
+/**/h2/*
 !/retl/retl-app/build/*
 app-test-mongo/*
 log*/*

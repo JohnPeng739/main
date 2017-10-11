@@ -1,11 +1,5 @@
 <style rel="stylesheet/less" lang="less" scoped>
   @import "../../../style/base.less";
-
-  .nav-icon {
-    color: @header-color;
-    font-size: 16px;
-    padding-right: 10px;
-  }
   .menu-item {
     font-size: 16px;
     >div {
@@ -18,8 +12,7 @@
   <el-menu v-if="spanLeft == 4" :default-active="getActived" unique-opened @select="handleSelect"
            @open="handleOpen" @close="handleClose" theme="dark" router style="min-width: 200px;">
     <el-menu-item v-if="isRole(summaryNavData.role)" :index="summaryNavData.path" class="menu-item">
-      <ds-icon :name="summaryNavData.icon" class="nav-icon"></ds-icon>
-      {{summaryNavData.title}}
+      <ds-icon :name="summaryNavData.icon" class="nav-icon"></ds-icon>{{summaryNavData.title}}
     </el-menu-item>
     <nav-sub-menu :subMenuData="taskNavData"></nav-sub-menu>
     <nav-sub-menu :subMenuData="manageNavData"></nav-sub-menu>

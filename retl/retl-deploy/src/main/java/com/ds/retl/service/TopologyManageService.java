@@ -9,6 +9,8 @@ import com.ds.retl.dal.exception.UserInterfaceErrorException;
 public interface TopologyManageService {
     Topology save(String name, String topologyJsonStr) throws UserInterfaceErrorException;
 
+    Topology submit(String id) throws UserInterfaceErrorException;
+
     Topology submit(String name, String topologyJsonStr) throws UserInterfaceErrorException;
 
     boolean validateZookeepers(String resourceJsonStr) throws UserInterfaceErrorException;

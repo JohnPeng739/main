@@ -5,6 +5,6 @@ package com.ds.retl.transform;
  */
 public class SplitTransformFunc {
     public static final String CODE = "SplitTransform";
-    public static final String NAME = "字段分割转换";
+    public static final String NAME = "3. 字段分割转换";
     // TODO
 }

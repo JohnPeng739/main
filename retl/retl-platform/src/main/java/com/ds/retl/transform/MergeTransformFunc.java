@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class MergeTransformFunc implements TransformFunc {
     public static final String CODE = "MergeTransform";
-    public static final String NAME = "字段合并转换";
+    public static final String NAME = "1. 字段合并转换";
 
     @Override
     public List<TransformError> transform(Map<String, RecordColumn> columns, RecordColumn currentCol,

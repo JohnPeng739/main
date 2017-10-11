@@ -17,7 +17,7 @@
       <el-col :span="16">
         <el-form-item label="驱动" prop="driver">
           <el-select v-model="formDataSource.driver">
-            <el-option v-for="item in Object.keys(jdbcDriverTypes)" :key="item" :label="item" :value="jdbcDriverTypes[item]"></el-option>
+            <el-option v-for="item in jdbcDriverTypes" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
       </el-col>

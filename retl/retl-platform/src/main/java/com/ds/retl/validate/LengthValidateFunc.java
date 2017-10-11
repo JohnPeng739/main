@@ -9,7 +9,7 @@ import com.ds.retl.error.ValidateError;
  */
 public class LengthValidateFunc implements ValidateFunc {
     public static final String CODE = "LengthValidate";
-    public static final String NAME = "长度检验";
+    public static final String NAME = "3. 长度检验";
 
     @Override
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {

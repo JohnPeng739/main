@@ -12,6 +12,7 @@
     </el-form-item>
     <el-form-item label="运算公式" prop="calculate">
       <el-input v-model="formFormulaTransform.calculate" :readonly="mode === 'detail'"></el-input>
+      <span>{{columnDefines}}</span>
     </el-form-item>
   </el-form>
 </template>
@@ -44,6 +45,16 @@
           columnName: [requiredRule({msg: '必须输入计算字段名称。'})],
           calculate: [requiredRule({msg: '必须输入四则运算公式。'}), customRule({validator: fieldExistValidator})]
         }
+      }
+    },
+    computed: {
+      columnDefines() {
+        let define = ''
+        let columns = this.columns
+        if (columns && columns.length > 0) {
+          columns.forEach(column => define += column.name + ':' + column.desc + '  ')
+        }
+        return define
       }
     },
     methods: {

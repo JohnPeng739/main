@@ -30,8 +30,8 @@
       </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-select v-model="formSpout.type" :disabled="mode === 'detail'">
-          <el-option v-for="item in Object.keys(spoutTypes)" :key="item" :label="spoutTypes[item]" :value="item"
-                     :disabled="spoutTypeDisabled(item)"></el-option>
+          <el-option v-for="item in spoutTypes" :key="item.value" :label="item.label" :value="item.value"
+                     :disabled="spoutTypeDisabled(item.value)"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="并行度" prop="parallelism">

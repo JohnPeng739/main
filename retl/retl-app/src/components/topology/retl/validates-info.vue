@@ -7,8 +7,13 @@
     <el-table :data="tableData" :row-key="getRowKeys" :expand-row-keys="expands" style="width: 100%">
       <el-table-column type="expand">
         <template scope="props">
-          <el-row v-for="item in validateDefines[props.row.name]" :key="item.type" type="flex">
-            <el-col :span="4">{{getRuleName(item.type)}}</el-col>
+          <el-row type="flex" class="inline-table-row">
+            <el-col :span="4">类型</el-col>
+            <el-col :span="16">内容</el-col>
+            <el-col :span="4">操作</el-col>
+          </el-row>
+          <el-row v-for="item in validateDefines[props.row.name]" :key="item.type" type="flex" class="inline-table-row">
+            <el-col :span="4">{{typeLabel('validateTypes', item.type)}}</el-col>
             <el-col :span="16">{{JSON.stringify(item)}}</el-col>
             <el-col :span="4">
               <el-button type="text" @click="handleRuleOperate(props.row.name, item.type, 'edit')">修改</el-button>
@@ -26,7 +31,7 @@
           <el-dropdown trigger="click" @command="handleAddRule" style="padding-left: 10px;">
             <el-button type="text">添加校验</el-button>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-for="item in supported" :key="item.value"
+              <el-dropdown-item v-for="item in validateTypes" :key="item.value"
                                 :command="props.row.name + ':' + item.value">{{item.label}}
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -43,6 +48,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
+  import {getTypeLabel} from '../../../modules/manage/store/modules/types'
   import {logger} from 'dsutils'
   import {get} from '../../../assets/ajax'
   import {error, warn} from '../../../assets/notify'
@@ -53,7 +59,6 @@
     components: {DialogValidateRule},
     data() {
       return {
-        supported: [],
         dialogDestroyed: false,
         columnDefines: [],
         validateDefines: {},
@@ -72,10 +77,13 @@
       }
     },
     computed: {
-      ...mapGetters(['columns', 'validates'])
+      ...mapGetters(['validateTypes', 'columns', 'validates'])
     },
     methods: {
       ...mapActions(['setValidates']),
+      typeLabel(type, value) {
+        return getTypeLabel(type, value)
+      },
       validated() {
         // 允许不配置校验规则
         return true
@@ -155,7 +163,7 @@
             let rules = this.getRules(columnName)
             let index = this.findRule(rules, type)
             if (index >= 0) {
-              warn('字段[' + columnName + ']已经包含了[' + this.getRuleName(type) + ']规则。')
+              warn('字段[' + columnName + ']已经包含了[' + this.validateTypes[type] + ']规则。')
               return
             }
             let rule = this.createDefaultRule(type)
@@ -272,26 +280,9 @@
           rules = column.rules
         }
         return rules
-      },
-      getRuleName(type) {
-        let name = ''
-        this.supported.forEach(support => {
-          if (support && support.value === type) {
-            name = support.label
-            return
-          }
-        })
-        return name
       }
-    }
-    ,
+    },
     mounted() {
-      let url = '/rest/topology/validates/supported'
-      logger.debug('send GET "%s"', url)
-      get(url, data => {
-        logger.debug(data)
-        this.supported = data
-      })
       this.fillTableData()
     }
   }

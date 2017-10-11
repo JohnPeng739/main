@@ -9,7 +9,7 @@ import com.ds.retl.error.ValidateError;
  */
 public class NullValidateFunc implements ValidateFunc {
     public static final String CODE = "NullValidate";
-    public static final String NAME = "空值检验";
+    public static final String NAME = "1. 空值检验";
 
     @Override
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {

@@ -21,6 +21,12 @@
   padding: 10px;
 }
 
+.nav-icon {
+  color: @header-color;
+  font-size: 20px;
+  padding-right: 10px;
+}
+
 .tag {
   margin-right: 3px;
 }
@@ -32,4 +38,25 @@
 
 .tag-button {
   color: red;
+}
+
+.inline-table-row {
+  height: 30px;
+}
+
+.layout-buttons {
+  display: inline-block;
+  float: right;
+  margin: 3px;
+  .button {
+    padding-left: 10px;
+    font-size: @content-text-font-size;
+    color: @button-color;
+    &:hover {
+      color: @button-hover-color
+    }
+  }
+  .button-icon {
+    font-size: 12px;
+  }
 }

@@ -20,7 +20,9 @@ public class TopologyEntity extends BaseEntity implements Topology {
     @Column(name = "SUBMITTED")
     private boolean submitted;
     @Column(nullable = false, columnDefinition = "clob")
-    private String topologyContent;
+    private String topologyContent = "";
+    @Column(nullable = false, columnDefinition = "clob")
+    private String submitInfo = "";
 
     @Override
     public void setName(String name) {
@@ -43,6 +45,11 @@ public class TopologyEntity extends BaseEntity implements Topology {
     }
 
     @Override
+    public void setSubmitInfo(String submitInfo) {
+        this.submitInfo = submitInfo;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
@@ -60,5 +67,10 @@ public class TopologyEntity extends BaseEntity implements Topology {
     @Override
     public boolean isSubmitted() {
         return submitted;
+    }
+
+    @Override
+    public String getSubmitInfo() {
+        return submitInfo;
     }
 }

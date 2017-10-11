@@ -12,6 +12,8 @@ public interface Topology extends Base {
     void setSubmitted(boolean submitted);
     long getSubmittedTime();
     void setSubmittedTime(long submittedTime);
+    String getSubmitInfo();
+    void setSubmitInfo(String submitInfo);
     String getTopologyContent();
     void setTopologyContent(String topologyContent);
 }

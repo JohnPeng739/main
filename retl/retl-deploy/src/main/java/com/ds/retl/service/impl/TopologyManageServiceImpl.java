@@ -46,35 +46,71 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             Topology topology = EntityFactory.createEntity(Topology.class);
             topology.setName(name);
             topology.setSubmitted(false);
+            topology.setSubmitInfo("");
             topology.setTopologyContent(topologyJsonStr);
             return accessor.save(topology);
         } catch (EntityAccessException | EntityInstantiationException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
+    }
+
+    private Topology submit(Topology topology) throws UserInterfaceErrorException {
+        // TODO 真正提交计算拓扑
+        return topology;
+    }
+
+    @Override
+    public Topology submit(String id) throws UserInterfaceErrorException {
+        try {
+            Topology topology = accessor.getById(id, Topology.class);
+            if (topology == null) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_NOT_FOUND);
+            }
+            return submit(topology);
+        } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
             throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
         }
     }
 
     @Override
     public Topology submit(String name, String topologyJsonStr) throws UserInterfaceErrorException {
-        save(name, topologyJsonStr);
-        // TODO 提交计算拓扑
-        return null;
+        Topology topology = save(name, topologyJsonStr);
+        return submit(topology);
     }
 
     @Override
     public boolean validateZookeepers(String resourceJsonStr) throws UserInterfaceErrorException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Start validate the Zookeeper server ...");
+        }
         List<String> servers = JSON.parseObject(resourceJsonStr, List.class);
         try {
             ZooKeeper zk = new ZooKeeper(StringUtils.merge(servers, ","), 40 * 1000, null);
             zk.getState();
             zk.close();
+            if (logger.isDebugEnabled()) {
+                logger.debug("Validate the Zookeeper server successfully.");
+            }
             return true;
         } catch (IOException | InterruptedException ex) {
+            if (logger.isErrorEnabled()){
+                logger.error(ex);
+            }
             throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_VALIDATE_FAIL);
         }
     }
 
     @Override
     public boolean validateJdbcDataSource(String resourceJsonStr) throws UserInterfaceErrorException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Start validate the JDBC server ...");
+        }
         JSONObject json = JSON.parseObject(resourceJsonStr);
         String driver = json.getString("driver"),
                 url = json.getString("url"),
@@ -85,14 +121,23 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             Connection conn = DriverManager.getConnection(url, user, password);
             conn.isClosed();
             conn.close();
+            if (logger.isDebugEnabled()) {
+                logger.debug("Validate the JDBC server successfully.");
+            }
             return true;
         } catch (ClassNotFoundException | SQLException ex) {
+            if (logger.isErrorEnabled()){
+                logger.error(ex);
+            }
             throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_VALIDATE_FAIL);
         }
     }
 
     @Override
     public boolean validateJmsDataSource(String resourceJsonStr) throws UserInterfaceErrorException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Start validate the JMS server ...");
+        }
         JSONObject json = JSON.parseObject(resourceJsonStr);
         String protocol = json.getString("protocol"),
                 server = json.getString("server"),
@@ -107,11 +152,20 @@ public class TopologyManageServiceImpl implements TopologyManageService {
                 javax.jms.Connection conn = factory.createConnection();
                 conn.getClientID();
                 conn.close();
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Validate the JMS server successfully.");
+                }
                 return true;
             } catch (JMSException ex) {
+                if (logger.isErrorEnabled()){
+                    logger.error(ex);
+                }
                 throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_VALIDATE_FAIL);
             }
         } else {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Not supported type: %s.", method));
+            }
             throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
         }
     }

@@ -54,7 +54,7 @@
     </el-row>
     <el-row type="flex" justify="center">
       <el-col class="layout-content">
-        <topology-basic-info ref="basicInfo" v-if="isStep('basicInfo')"></topology-basic-info>
+        <topology-basic-info ref="basicInfo" v-if="isStep('basicInfo')" v-on:cleanCache="handleCleanCache"></topology-basic-info>
         <topology-spouts-info ref="spoutsInfo" v-else-if="isStep('spoutsInfo')"></topology-spouts-info>
         <topology-columns-info ref="columnsInfo" v-else-if="isStep('columnsInfo')"></topology-columns-info>
         <topology-validates-info ref="validatesInfo" v-else-if="isStep('validatesInfo')"></topology-validates-info>
@@ -104,6 +104,7 @@
     computed: {
       ...mapGetters(['topology']),
       stepList() {
+        logger.debug(this.topology)
         let {type} = this.topology
         if (type === 'retl') {
           return [{
@@ -145,7 +146,7 @@
       }
     },
     methods: {
-      ...mapActions(['cacheLoad', 'cacheSave']),
+      ...mapActions(['cacheLoad', 'cacheSave', 'cacheClean', 'loadTypes']),
       isStep(name) {
         let step = this.steps
         let {type} = this.topology
@@ -224,6 +225,11 @@
           return false
         }
       },
+      handleCleanCache() {
+        this.cacheClean()
+        this.steps = 1
+        this.$nextTick(_ => this.steps = 0)
+      },
       handleClickNext() {
         if (this.validateDataBeforeSwitch() && this.steps < this.stepList.length) {
           this.steps += 1
@@ -245,7 +251,10 @@
       }
     },
     mounted() {
-      this.cacheLoad()
+      this.$nextTick(_ => {
+        this.cacheLoad()
+        this.loadTypes()
+      })
       // 每过30秒中自动缓存一下
       this.saveInterval = setInterval(_ => this.handleCacheSave(), 300000)
     },

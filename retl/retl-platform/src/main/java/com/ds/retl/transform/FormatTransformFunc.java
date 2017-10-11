@@ -5,6 +5,6 @@ package com.ds.retl.transform;
  */
 public class FormatTransformFunc {
     public static final String CODE = "FormatTransform";
-    public static final String NAME = "格式化转换";
+    public static final String NAME = "4. 格式化转换";
     // TODO
 }

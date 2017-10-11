@@ -5,15 +5,7 @@
 </template>
 
 <script>
-  import {mapActions} from 'vuex'
-
   export default {
-    name: 'manage',
-    methods: {
-      ...mapActions(['loadTypes'])
-    },
-    mounted() {
-      this.loadTypes()
-    }
+    name: 'manage'
   }
 </script>

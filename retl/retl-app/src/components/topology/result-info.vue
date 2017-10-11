@@ -48,7 +48,9 @@
           <span v-if="state === 'checking'" class="checking">检验中...</span>
           <span v-else-if="state === 'error'" class="error">检验出错</span>
           <span v-else class="pass">通过检验</span>
-          <el-button v-if="state === 'error' || state === 'NA'" type="text" class="button" @click="handleCheckConfig">重新检测</el-button>
+          <el-button v-if="state === 'error' || state === 'NA'" type="text" class="button" @click="handleCheckConfig">
+            重新检测
+          </el-button>
         </div>
       </el-col>
     </el-row>
@@ -110,20 +112,28 @@
       },
       compileMarkdown() {
         let checkResult = this.checkResult
-        let result  = '\n'
+        let result = '\n'
         result += '## 总体结果：' + this.getStateName(this.state) + '\n'
         result += '---- \n'
         result += '### Zookeepers: \n'
         result += '- ' + this.getStateName(checkResult.zookeepers.state) + '\n \n'
         result += '### jdbc数据源: \n'
-        Object.keys(checkResult.jdbcDataSources).forEach((name, index) => {
-          result += index + '. ' + name + ': ' + this.getStateName(checkResult.jdbcDataSources[name].state) + '\n'
-        })
+        if (checkResult.jdbcDataSources && Object.keys(checkResult.jdbcDataSources).length > 0) {
+          Object.keys(checkResult.jdbcDataSources).forEach((name, index) => {
+            result += index + '. ' + name + ': ' + this.getStateName(checkResult.jdbcDataSources[name].state) + '\n'
+          })
+        } else {
+          result += '- 没有配置'
+        }
         result += '\n \n'
         result += '### jms数据源: \n'
-        Object.keys(checkResult.jmsDataSources).forEach((name, index) => {
-          result += index + '. ' + name + ': ' + this.getStateName(checkResult.jmsDataSources[name].state) + '\n'
-        })
+        if (checkResult.jmsDataSources && Object.keys(checkResult.jmsDataSources).length > 0) {
+          Object.keys(checkResult.jmsDataSources).forEach((name, index) => {
+            result += index + '. ' + name + ': ' + this.getStateName(checkResult.jmsDataSources[name].state) + '\n'
+          })
+        } else {
+          result += '- 没有配置'
+        }
         result += '\n \n'
         result += '----'
         return marked(result, {sanitize: true})
@@ -234,6 +244,7 @@
                 this.setCheckedState(checkResult.jdbcDataSources[dataSource.name], true)
               }, errorMessage => {
                 this.setCheckedState(checkResult.jdbcDataSources[dataSource.name], false)
+                defaultError(errorMessage)
               })
             }
           })
@@ -251,6 +262,7 @@
                 this.setCheckedState(checkResult.jmsDataSources[dataSource.name], true)
               }, errorMessage => {
                 this.setCheckedState(checkResult.jmsDataSources[dataSource.name], false)
+                defaultError(errorMessage)
               })
             }
           })

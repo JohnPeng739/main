@@ -12,7 +12,7 @@
     </el-form-item>
     <el-form-item label="被合并字段" prop="fields">
       <el-select v-model="formMergeTransform.fields" multiple :disabled="mode === 'detail'" filterable>
-        <el-option v-for="item in columns" :key="item.name" :label="item.desc" :value="item.name"></el-option>
+        <el-option v-for="item in columns" :key="item.name" :label="item.name + ': ' + item.desc" :value="item.name"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="分隔符" prop="separator">

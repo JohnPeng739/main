@@ -9,13 +9,14 @@
     </el-form-item>
     <el-form-item label="值类型" prop="valueType">
       <el-select v-model="formTypeValidate.valueType" :disabled="mode === 'detail'">
-        <el-option v-for="item in dataTypes" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        <el-option v-for="item in validateRuleTypes" :key="item.value" :label="item.label" :value="item.value"></el-option>
       </el-select>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import {requiredRule} from '../../assets/form-validate-rules'
   import {formValidateWarn} from '../../assets/notify'
   import {get} from '../../assets/ajax'
@@ -26,7 +27,6 @@
     props: ['rule', 'mode'],
     data() {
       return {
-        dataTypes: [],
         formTypeValidate: {
           type: this.rule.type,
           valueType: this.rule.valueType
@@ -35,6 +35,9 @@
           valueType: [requiredRule({message: '必须选择一种数据类型。', trigger: 'change'})]
         }
       }
+    },
+    computed: {
+      ...mapGetters(['validateRuleTypes'])
     },
     methods: {
       getRule() {
@@ -52,15 +55,6 @@
       reset() {
         this.$refs['formTypeValidate'].resetFields()
       }
-    },
-    mounted() {
-      let url = '/rest/topology/validate/type-validate/types'
-      logger.debug('send GET "%s"', url)
-      get(url, data => {
-        if (data) {
-          this.dataTypes = data
-        }
-      })
     }
   }
 </script>

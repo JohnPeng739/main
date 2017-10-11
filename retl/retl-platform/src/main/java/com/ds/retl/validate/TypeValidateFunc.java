@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class TypeValidateFunc implements ValidateFunc {
     public static final String CODE = "TypeValidate";
-    public static final String NAME = "类型检验";
+    public static final String NAME = "2. 类型检验";
 
     public enum ValueType {STRING, DATE, INT, DECIMAL, BOOL};
 

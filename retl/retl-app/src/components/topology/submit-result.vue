@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
   import {logger} from 'dsutils'
   import {info} from '../../assets/notify'
   import {post} from '../../assets/ajax'
@@ -45,14 +45,15 @@
       }
     },
     methods: {
+      ...mapActions(['cacheClean', 'goto']),
       handleSubmitTopooty() {
         let topology = this.topology
-        logger.debug('submit toplogy: %j.', topology)
         let url = '/rest/topology/submit'
         logger.debug('send POST "%s"', url)
         post(url, topology, data => {
           if (data) {
-            logger.debug('POST result: %j.', data)
+            this.goto({owner: this, path: '/tasks/list'})
+            this.cacheClean()
             info( '提交计算拓扑成功。')
           }
         })

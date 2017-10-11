@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class FormulaTransformFunc implements TransformFunc {
     public static final String CODE = "FormulaTransform";
-    public static final String NAME = "四则运算转换";
+    public static final String NAME = "2. 四则运算转换";
     private static final Log logger = LogFactory.getLog(FormulaTransformFunc.class);
 
     private Map<String, RecordColumn> columns = null;

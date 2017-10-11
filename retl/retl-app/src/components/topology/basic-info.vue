@@ -24,37 +24,42 @@
 <template>
   <el-form ref="baseInfo" :model="formBasicInfo" :rules="rulesBasicInfo" label-width="100px" class="layout-form">
     <el-row type="flex">
-      <el-col :span="16">
+      <el-col :span="14">
         <el-form-item label="拓扑名称" prop="name">
           <el-input v-model="formBasicInfo.name"></el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="10">
         <el-form-item label="拓扑类型" prop="type">
           <el-select v-model="formBasicInfo.type">
-            <el-option v-for="item in Object.keys(topologyTypes)" :key="item" :label="topologyTypes[item]"
-                       :value="item"></el-option>
+            <el-option v-for="item in topologyTypes" :key="item.value" :label="item.label"
+                       :value="item.value"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row type="flex">
-      <el-col :span="10">
+      <el-col :span="7">
         <el-form-item label="消息超时值" prop="messageTimeoutSecs">
           <el-input-number v-model="formBasicInfo.messageTimeoutSecs" :min="1" :max="10"></el-input-number>
           <span>秒</span>
         </el-form-item>
       </el-col>
-      <el-col :span="8" v-if="formBasicInfo.type === 'retl'">
+      <el-col :span="7" v-if="formBasicInfo.type === 'retl'">
         <el-tooltip content="数据存储的队列或订阅主题的名称，默认使用第一个jms数据源。" placement="bottom" :hide-after="2000">
           <el-form-item label="存储名" prop="tarDestinateName">
             <el-input v-model="formBasicInfo.tarDestinateName"></el-input>
           </el-form-item>
         </el-tooltip>
       </el-col>
-      <el-col :span="6" v-if="formBasicInfo.type === 'retl'">
+      <el-col :span="4" v-if="formBasicInfo.type === 'retl'">
         <el-form-item label="是否主题" prop="tarIsTopic">
           <el-switch v-model="formBasicInfo.tarIsTopic"></el-switch>
+        </el-form-item>
+      </el-col>
+      <el-col :span="4">
+        <el-form-item>
+          <el-button class="button" @click="handleCacheClean" size="small">清除缓存</el-button>
         </el-form-item>
       </el-col>
     </el-row>
@@ -130,7 +135,7 @@
         rulesBasicInfo: {
           name: [
             requiredRule({msg: '请输入计算拓扑的名称'}),
-            rangeRule({min: 6, max: 20})
+            rangeRule({min: 6, max: 50})
           ],
           type: [requiredRule({msg: '请选择计算拓扑的类型', trigger: 'change'})],
           tarDestinateName: [requiredRule({msg: '请输入数据存储的目标（队列或订阅主题）的名称'})],
@@ -162,13 +167,16 @@
         this.setJdbcDataSources(this.formBasicInfo.jdbcDataSources)
         this.setJmsDataSources(this.formBasicInfo.jmsDataSources)
       },
+      handleCacheClean() {
+        this.$emit('cleanCache')
+      },
       handleEditJdbcDataSource(index) {
         logger.debug('edit jdbc data source request, index: %d', index)
         let dataSources = this.formBasicInfo.jdbcDataSources
         if (dataSources && dataSources[index]) {
           this.$nextTick(_ => this.$refs['formJdbcDataSource'].setDataSource(dataSources[index]))
         } else {
-          error( '指定的jdbc数据源不存在!')
+          error('指定的jdbc数据源不存在!')
         }
       },
       handleDeleteJdbcDataSource(indexes) {
@@ -214,7 +222,7 @@
         if (dataSources && dataSources[index]) {
           this.$nextTick(_ => this.$refs['formJmsDataSource'].setDataSource(dataSources[index]))
         } else {
-          error( '指定的jms数据源不存在!')
+          error('指定的jms数据源不存在!')
         }
       },
       handleDeleteJmsDataSource(indexes) {
@@ -273,7 +281,18 @@
       logger.debug(this.topologyTypes)
       this.$nextTick(_ => {
         let {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources} = this.topology
-        this.formBasicInfo = {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources}
+        this.formBasicInfo = {
+          name,
+          type,
+          debug,
+          messageTimeoutSecs,
+          maxSpoutPending,
+          tarDestinateName,
+          tarIsTopic,
+          zookeepers,
+          jdbcDataSources,
+          jmsDataSources
+        }
       })
     }
   }

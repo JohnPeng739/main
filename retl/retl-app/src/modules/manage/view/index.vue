@@ -149,7 +149,7 @@
       }
     },
     methods: {
-      ...mapActions(['logout', 'goto']),
+      ...mapActions(['logout', 'goto', 'cacheLoad']),
       handleNavToggled () {
         if (this.spanLeft === 4) {
           this.spanLeft = 0
@@ -169,6 +169,9 @@
       handleShowUserInfo() {
         this.goto({owner: this, path: '/user-info/' + this.code, name: '用户信息'})
       }
+    },
+    mounted() {
+      this.cacheLoad()
     }
   }
 </script>

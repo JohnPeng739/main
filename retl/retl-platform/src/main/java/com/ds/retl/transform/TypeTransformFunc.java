@@ -5,6 +5,6 @@ package com.ds.retl.transform;
  */
 public class TypeTransformFunc {
     public static final String CODE = "TypeTransform";
-    public static final String NAME = "数据类型转换";
+    public static final String NAME = "5. 数据类型转换";
     // TODO
 }

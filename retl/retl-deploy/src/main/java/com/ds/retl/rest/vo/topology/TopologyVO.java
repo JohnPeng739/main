@@ -9,7 +9,7 @@ import org.mx.rest.vo.BaseVO;
 public class TopologyVO extends BaseVO {
     private boolean submitted;
     private long submittedTime;
-    private String name, topologyContent;
+    private String name, topologyContent, submitInfo, operator;
 
     public static void transform(Topology topology, TopologyVO topologyVO) {
         if (topology == null || topologyVO == null) {
@@ -20,6 +20,8 @@ public class TopologyVO extends BaseVO {
         topologyVO.submitted = topology.isSubmitted();
         topologyVO.submittedTime = topology.getSubmittedTime();
         topologyVO.topologyContent = topology.getTopologyContent();
+        topologyVO.submitInfo = topology.getSubmitInfo();
+        topologyVO.operator = topology.getOperator();
     }
 
     public void setName(String name) {
@@ -38,6 +40,15 @@ public class TopologyVO extends BaseVO {
         this.submittedTime = submittedTime;
     }
 
+    public void setSubmitInfo(String submitInfo) {
+        this.submitInfo = submitInfo;
+    }
+
+    @Override
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
     public String getName() {
         return name;
     }
@@ -52,5 +63,14 @@ public class TopologyVO extends BaseVO {
 
     public long getSubmittedTime() {
         return submittedTime;
+    }
+
+    public String getSubmitInfo() {
+        return submitInfo;
+    }
+
+    @Override
+    public String getOperator() {
+        return operator;
     }
 }

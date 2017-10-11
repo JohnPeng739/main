@@ -17,7 +17,7 @@
       <el-col :span="14">
         <el-form-item label="类型" prop="method">
           <el-select v-model="formJmsDataSource.method">
-            <el-option v-for="item in methodSupported" :key="item" :label="item" :value="item"></el-option>
+            <el-option v-for="item in jmsTypes" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex'
   import {logger} from 'dsutils'
   import {get} from '../../assets/ajax'
   import {formValidateWarn} from '../../assets/notify'
@@ -80,7 +81,8 @@
       }
       return {
         methodSupported: [],
-        formJmsDataSource: {method: 'ACTIVEMQ', name: ''},
+        formJmsDataSource: {method: 'ACTIVEMQ', name: '', protocol: 'NIO', server: '', trace: true, user: '',
+          password: '', jndiName: ''},
         rulesJmsDataSource: {
           name: [requiredRule({msg: '必须输入jms数据源的名称'})],
           server: [
@@ -91,6 +93,7 @@
       }
     },
     computed: {
+      ...mapGetters(['jmsTypes']),
       isActiveMQ() {
         return this.formJmsDataSource.method === 'ACTIVEMQ'
       },
@@ -136,13 +139,6 @@
       resetFields() {
         this.$refs['formJmsDataSource'].resetFields()
       }
-    },
-    mounted() {
-      let url = '/rest/topology/jms/supported'
-      logger.debug('send GET "%s"', url)
-      get(url, data => {
-        this.methodSupported = data
-      })
     }
   }
 </script>
