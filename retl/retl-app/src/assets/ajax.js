@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 const defaultError = errorMessage => {
   if (errorMessage.response) {
     logger.debug(errorMessage.response.status)
-    let msg = '访问服务器错误，错误号：' + errorMessage.response.status + ', 错误信息：' + errorMessage.response.data + '。'
+    let msg = '访问服务器错误，错误号：' + errorMessage.response.status + ', 错误信息：' + errorMessage.response.statusText + '。'
     Message({type: 'error', message: msg})
   } else {
     Message({type: 'error', message: errorMessage})

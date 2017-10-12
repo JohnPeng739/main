@@ -1,0 +1,18 @@
+{
+  "name": "",
+  "cluster": true,
+  "debug": true,
+  "maxSpoutPending": 1,
+  "maxTaskParallelism": 1,
+  "messageTimeoutSecs": 3,
+  "numAckers": 1,
+  "numWorkers": 1,
+  "spouts": [],
+  "bolts": [],
+  "zookeeper": [],
+  "jdbcDataSources": [],
+  "jmsDataSources": [],
+  "columns": [],
+  "validates": {},
+  "transforms": {}
+}

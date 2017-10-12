@@ -8,6 +8,7 @@ import org.mx.rest.error.UserInterfaceError;
 public enum UserInterfaceErrors implements UserInterfaceError {
     SYSTEM_ILLEGAL_PARAM(1, "输入的参数错误，请联系开发人员。"),
     SYSTEM_UNSUPPORTED_OPERATE(2, "不支持的操作方法，请联系开发人员。"),
+    SYSTEM_FILE_OPERATE_FAIL(3, "文件操作失败。"),
 
     DB_OPERATE_FAIL(51, "数据库操作失败。"),
 
@@ -19,6 +20,7 @@ public enum UserInterfaceErrors implements UserInterfaceError {
 
     TOPOLOGY_NOT_FOUND(301, "指定的计算拓扑不存在。"),
     TOPOLOGY_VALIDATE_FAIL(302, "校验计算拓扑所使用的资源发生错误。"),
+    TOPOLOGY_CONF_JDBC_SPOUT(303, "JDBC类型的采集源配置错误，同一个拓扑中只能且只能配置一个JDBC采集源。"),
 
     OTHER(9999, "系统未识别的错误。");
 

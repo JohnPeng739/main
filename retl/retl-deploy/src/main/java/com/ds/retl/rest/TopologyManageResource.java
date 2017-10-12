@@ -92,8 +92,16 @@ public class TopologyManageResource {
 
     @Path("topology/submit/{id}")
     @GET
-    public DataVO<Boolean> submitTopologyById(@QueryParam("userCode")String userCode, @PathParam("id") String id) {
-        return new DataVO<>(true);
+    public DataVO<TopologyVO> submitTopologyById(@QueryParam("userCode")String userCode, @PathParam("id") String id) {
+        sessionDataStore.setCurrentUserCode(userCode);
+        try {
+            Topology topology = topologyManageService.submit(id);
+            TopologyVO topologyVO = new TopologyVO();
+            TopologyVO.transform(topology, topologyVO);
+            return new DataVO<>(topologyVO);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
     }
 
     @Path("topology/validate")
