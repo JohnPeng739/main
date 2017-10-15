@@ -4,10 +4,7 @@ import com.ds.retl.rest.TopologyManageResource;
 import com.ds.retl.rest.UserManageResource;
 import org.mx.dal.config.DalHibernateConfig;
 import org.mx.rest.server.config.ServerConfig;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +14,7 @@ import java.util.List;
  */
 @Configuration
 @Import({ServerConfig.class, DalHibernateConfig.class})
+@PropertySource({"classpath:/deploy.properties"})
 @ComponentScan({
         "com.ds.retl.service.impl",
         "com.ds.retl.rest"

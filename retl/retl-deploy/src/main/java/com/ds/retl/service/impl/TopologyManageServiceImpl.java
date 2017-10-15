@@ -21,6 +21,7 @@ import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.dal.service.GeneralAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
@@ -39,7 +40,8 @@ import java.util.List;
 public class TopologyManageServiceImpl implements TopologyManageService {
     private static final Log logger = LogFactory.getLog(TopologyManageServiceImpl.class);
 
-    private static final String confPath = "/opt/storm/retl/config";
+    @Autowired
+    private Environment env = null;
 
     @Autowired
     @Qualifier("generalEntityAccessorHibernate")
@@ -83,8 +85,16 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             }
             throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
         }
-        String configName = String.format("%s/%s.json", confPath, topologyName);
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(configName)))) {
+        String stormHome = env.getProperty("storm.home"), stormBin = env.getProperty("storm.bin"),
+                retlHome = env.getProperty("storm.retl"), retlPlatform = env.getProperty("storm.retl.platform"),
+                retlDeps = env.getProperty("storm.retl.deps"), retlConf = env.getProperty("storm.retl.conf");
+        String configName = String.format("%s/%s/%s.json", retlHome, retlConf, topologyName);
+        File file = new File(configName);
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
             bw.write(topologyJson.toJSONString());
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
@@ -93,7 +103,8 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_FILE_OPERATE_FAIL);
         }
         try {
-            String submitInfo = new RETLStormCli().deploy(configName);
+            String submitInfo = new RETLStormCli(stormHome, stormBin, retlHome, retlPlatform, retlDeps)
+                    .deploy(configName);
             topology.setSubmitInfo(submitInfo);
             topology.setSubmitted(true);
             topology.setSubmittedTime(new Date().getTime());

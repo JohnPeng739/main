@@ -16,8 +16,22 @@ public class RETLStormCli {
 
     private String stormHome = "/opt/storm";
     private String storm = "storm";
+    private String retlHome = "/opt/storm/retl";
     private String retlJar = "retlp.jar";
     private String deps = "deps";
+
+    public RETLStormCli() {
+        super();
+    }
+
+    public RETLStormCli(String stormHome, String stormBin, String retlHome, String retlPlatform, String retlDeps) {
+        this();
+        this.stormHome = stormHome;
+        this.storm = stormBin;
+        this.retlHome = retlHome;
+        this.retlJar = retlPlatform;
+        this.deps = retlDeps;
+    }
 
     public void setStormHome(String stormHome) {
         this.stormHome = stormHome;
@@ -25,6 +39,10 @@ public class RETLStormCli {
 
     public void setStorm(String storm) {
         this.storm = storm;
+    }
+
+    public void setRetlHome(String retlHome) {
+        this.retlHome = retlHome;
     }
 
     public void setRetlJar(String retlJar) {
@@ -39,15 +57,19 @@ public class RETLStormCli {
         List<String> cmds = new ArrayList<>();
         cmds.add(String.format("%s/bin/%s", stormHome, storm));
         cmds.add("jar");
-        cmds.add(String.format("%s/retl/%s", stormHome, retlJar));
+        cmds.add(String.format("%s/%s", retlHome, retlJar));
         cmds.add("com.ds.retl.ETLTopologyBuilder");
         cmds.add(topologyConfigJsonFile);
-        String depsPath = String.format("%s/retl/%s", deps);
+        String depsPath = String.format("%s/%s", retlHome, deps);
         List<String> depJars = new ArrayList<>();
         findDeps(depJars, new File(depsPath));
         if (!depJars.isEmpty()) {
             cmds.add("--jars");
             cmds.add(StringUtils.merge(depJars, ","));
+        }
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("*****************\nStart a inline process:\n%s\n***********************",
+                    StringUtils.merge(cmds, " ")));
         }
         return ProcessRun.runCmd(cmds);
     }
