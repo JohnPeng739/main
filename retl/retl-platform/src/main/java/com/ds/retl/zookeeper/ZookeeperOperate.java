@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by john on 2017/9/17.
+ * ZOOKEEPER操作工具类
+ *
+ * @author : john.peng created on date : 2017/9/17
  */
 public class ZookeeperOperate implements Watcher {
     private static final Log logger = LogFactory.getLog(ZookeeperOperate.class);
@@ -21,10 +23,18 @@ public class ZookeeperOperate implements Watcher {
     private String serverList = null;
     private ZooKeeper zookeeper = null;
 
+    /**
+     * 默认的构造函数
+     */
     private ZookeeperOperate() {
         super();
     }
 
+    /**
+     * 获得ZOOKEEPER操作工具对象的工厂方法
+     *
+     * @return 返回已经就绪的操作工具对象
+     */
     public static ZookeeperOperate getOperate() {
         if (operate == null) {
             operate = new ZookeeperOperate();
@@ -32,6 +42,11 @@ public class ZookeeperOperate implements Watcher {
         return operate;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see Watcher#process(WatchedEvent)
+     */
     @Override
     public void process(WatchedEvent event) {
         if (logger.isDebugEnabled()) {
@@ -39,6 +54,11 @@ public class ZookeeperOperate implements Watcher {
         }
     }
 
+    /**
+     * 初始化ZOOKEEPER
+     *
+     * @param serverList ZOOKEEPER服务器列表定义
+     */
     public void initialize(String serverList) {
         this.serverList = serverList;
         if (StringUtils.isBlank(serverList)) {
@@ -57,11 +77,19 @@ public class ZookeeperOperate implements Watcher {
         }
     }
 
+    /**
+     * 初始化ZOOKEEPER
+     *
+     * @param zookeeperConfig 配置信息
+     */
     public void initialize(JSONObject zookeeperConfig) {
         serverList = zookeeperConfig.getString("serverList");
         initialize(serverList);
     }
 
+    /**
+     * 重连ZOOKEEPER
+     */
     private void reconnect() {
         try {
             if (this.zookeeper != null) {
@@ -80,6 +108,12 @@ public class ZookeeperOperate implements Watcher {
         }
     }
 
+    /**
+     * 获取指定路径中的数据，目前仅支持字符串类型数据。
+     *
+     * @param path 路径
+     * @return 数据
+     */
     public String getData(String path) {
         try {
             if (zookeeper.exists(path, false) != null) {
@@ -98,6 +132,12 @@ public class ZookeeperOperate implements Watcher {
         return "";
     }
 
+    /**
+     * 获取指定路径中的所有子节点名称
+     *
+     * @param path 路径
+     * @return 子节点名称列表，如果没有子节点，则返回null。
+     */
     public List<String> getChild(String path) {
         try {
             return zookeeper.getChildren(path, true);
@@ -112,6 +152,12 @@ public class ZookeeperOperate implements Watcher {
         }
     }
 
+    /**
+     * 获取指定路径中的所有子节点的名称和数据
+     *
+     * @param path 路径
+     * @return 子节点名称和数据的集合
+     */
     public Map<String, String> getChildData(String path) {
         try {
             Map<String, String> result = new HashMap<>();
@@ -136,6 +182,12 @@ public class ZookeeperOperate implements Watcher {
         return null;
     }
 
+    /**
+     * 判定指定路径是否存在
+     *
+     * @param path 路径
+     * @return 如果存在，返回true；否则返回false。
+     */
     public boolean exist(String path) {
         try {
             return zookeeper.exists(path, true) != null;
@@ -150,6 +202,12 @@ public class ZookeeperOperate implements Watcher {
         }
     }
 
+    /**
+     * 使用默认数据创建一个节点
+     *
+     * @param path        路径
+     * @param defaultData 默认数据
+     */
     public void createNode(String path, String defaultData) {
         if (exist(path)) {
             return;
@@ -179,6 +237,12 @@ public class ZookeeperOperate implements Watcher {
         }
     }
 
+    /**
+     * 设置路径的数据，目前仅支持字符串类型数据。
+     *
+     * @param path 路径
+     * @param data 数据
+     */
     public void setData(String path, String data) {
         try {
             if (!exist(path)) {
@@ -197,6 +261,11 @@ public class ZookeeperOperate implements Watcher {
         }
     }
 
+    /**
+     * 删除路径及其下属子节点，采用递归删除。
+     *
+     * @param path 路径
+     */
     public void delete(String path) {
         if (!exist(path)) {
             return;
@@ -219,6 +288,11 @@ public class ZookeeperOperate implements Watcher {
         }
     }
 
+    /**
+     * 关闭ZOOKEEPER连接
+     *
+     * @throws InterruptedException 关闭过程中发生的异常
+     */
     public void close() throws InterruptedException {
         if (logger.isDebugEnabled()) {
             logger.debug("Will close the zookeeper client...");

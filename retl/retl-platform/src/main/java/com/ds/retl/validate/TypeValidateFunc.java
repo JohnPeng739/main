@@ -8,14 +8,20 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Created by john on 2017/9/8.
- */
+ * 数据类型校验规则类
+ *
+ * @author : john date : 2017/9/8
+*/
 public class TypeValidateFunc implements ValidateFunc {
     public static final String CODE = "TypeValidate";
     public static final String NAME = "2. 类型检验";
 
     public enum ValueType {STRING, DATE, INT, DECIMAL, BOOL};
 
+    /**
+     * {@inheritDoc}
+     * @see ValidateFunc#validate(RecordColumn, JSONObject, JSONObject)
+     */
     @Override
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {
         if (!data.keySet().contains(column.getName())) {

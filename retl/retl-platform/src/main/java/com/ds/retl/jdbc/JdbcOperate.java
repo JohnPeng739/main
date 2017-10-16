@@ -13,7 +13,9 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Created by john on 2017/9/12.
+ * JDBC关系型数据库基本操作工具类
+ *
+ * @author : john.peng created on date : 2017/9/12
  */
 public class JdbcOperate {
     private static final Log logger = LogFactory.getLog(JdbcOperate.class);
@@ -30,6 +32,9 @@ public class JdbcOperate {
     private long lastSavedTime = new Date().getTime();
     private int maxCachedSecs = 1, maxCachedSize = 1000;
 
+    /**
+     * 默认的构造函数
+     */
     public JdbcOperate() {
         super();
         this.insertFields = new ArrayList<>();
@@ -39,6 +44,13 @@ public class JdbcOperate {
         this.updateStats = new ArrayList<>();
     }
 
+    /**
+     * 构造函数
+     *
+     * @param conn      数据库连接
+     * @param tableJson 初始化配置信息
+     * @throws SQLException 初始化过程中发生的异常
+     */
     public JdbcOperate(Connection conn, JSONObject tableJson) throws SQLException {
         this();
         this.connection = conn;
@@ -76,18 +88,38 @@ public class JdbcOperate {
         checkSqlClause();
     }
 
+    /**
+     * 获取处理的表名
+     *
+     * @return 表名
+     */
     public String getTable() {
         return table;
     }
 
+    /**
+     * 获取关键字字段
+     *
+     * @return 关键字字段
+     */
     public String getPrimaryField() {
         return primaryField;
     }
 
+    /**
+     * 获取关键字Key
+     *
+     * @return 关键字Key
+     */
     public String getPrimaryKey() {
         return primaryKey;
     }
 
+    /**
+     * 检测SQL语句，如果不存在，则创建语句
+     *
+     * @throws SQLException 检测过程中发生的异常
+     */
     private void checkSqlClause() throws SQLException {
         if (StringUtils.isBlank(table)) {
             throw new SQLException("The table name is blank.");
@@ -132,6 +164,13 @@ public class JdbcOperate {
         }
     }
 
+    /**
+     * 判定数据对象是否在表中存在
+     *
+     * @param data 数据对象
+     * @return 如果存在返回true，否则返回false
+     * @throws SQLException 检测过程中发生的异常
+     */
     private boolean exist(JSONObject data) throws SQLException {
         boolean found = false;
         String id = data.getString(primaryField);
@@ -145,6 +184,14 @@ public class JdbcOperate {
         return found;
     }
 
+    /**
+     * 将缓存数据批量写入到数据库中
+     *
+     * @param sql      SQL语句
+     * @param dataList 数据库对象列表
+     * @param fields   字段列表
+     * @throws SQLException 保存过程中发生的异常
+     */
     private void flushData(String sql, List<JSONObject> dataList, List<String> fields) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(sql);
         for (JSONObject data : dataList) {
@@ -159,6 +206,11 @@ public class JdbcOperate {
         dataList.clear();
     }
 
+    /**
+     * 刷新数据到数据库，根据时间原则和记录数原则进行持久化。
+     *
+     * @throws SQLException 持久化过程中发生的异常
+     */
     private void flushData() throws SQLException {
         if (insertStats.size() + updateStats.size() < maxCachedSize &&
                 new Date().getTime() - lastSavedTime < maxCachedSecs * 1000) {
@@ -177,6 +229,12 @@ public class JdbcOperate {
         }
     }
 
+    /**
+     * 保存数据到数据库中，单条处理模式，从可靠性考虑，推荐时间，性能稍差。
+     *
+     * @param data 数据对象
+     * @throws SQLException 保存过程中发生的异常
+     */
     public synchronized void saveData2Db(JSONObject data) throws SQLException {
         if (data == null) {
             return;
@@ -203,6 +261,12 @@ public class JdbcOperate {
         }
     }
 
+    /**
+     * 保存数据到数据库中，缓存模式，根据时间原则和记录数原则进行缓存，满足条件后刷新到数据库。
+     *
+     * @param data 数据库对象
+     * @throws SQLException 保存过程中发生的异常
+     */
     public synchronized void saveData2Db2(JSONObject data) throws SQLException {
         if (data == null) {
             return;
@@ -218,6 +282,13 @@ public class JdbcOperate {
         flushData();
     }
 
+    /**
+     * 对某些特殊字段（如：日期、时间字段等）进行预先处理。
+     *
+     * @param field 字段名
+     * @param data  数据对象
+     * @return 处理后的字段值
+     */
     private Object prepareValue(String field, JSONObject data) {
         Object value = data.get(field);
         if (value == null) {

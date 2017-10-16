@@ -3,7 +3,10 @@ package com.ds.retl.rest.error;
 import org.mx.rest.error.UserInterfaceError;
 
 /**
- * Created by john on 2017/10/6.
+ * 人机界面错误枚举，定义了可以反馈到操作界面上的错误信息。
+ *
+ * @author : john.peng created on date : 2017/10/6
+ * @see UserInterfaceError
  */
 public enum UserInterfaceErrors implements UserInterfaceError {
     SYSTEM_ILLEGAL_PARAM(1, "输入的参数错误，请联系开发人员。"),
@@ -27,16 +30,32 @@ public enum UserInterfaceErrors implements UserInterfaceError {
     private int errorCode;
     private String errorMessage;
 
+    /**
+     * 构造函数
+     *
+     * @param errorCode    错误代码
+     * @param errorMessage 错误信息
+     */
     private UserInterfaceErrors(int errorCode, String errorMessage) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see UserInterfaceError#getErrorCode()
+     */
     @Override
     public int getErrorCode() {
         return this.errorCode;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see UserInterfaceError#getErrorMessage()
+     */
     @Override
     public String getErrorMessage() {
         return this.errorMessage;

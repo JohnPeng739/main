@@ -14,6 +14,8 @@ import javax.jms.*;
 /**
  * 用于直接连接ActiveMQ提供的JMS功能的Provider，使用了ActiveMQ提供的API。
  * ActiveMQ连接可以支持：tcp、udp、nio、ssl、http、vm等协议，默认端口为616161，ssl端口使用61617。
+ *
+ * @author : john.peng created on date : 2017/9/10
  */
 public class ActiveMqJmsProvider implements JmsProvider {
     private static final Log logger = LogFactory
@@ -21,14 +23,31 @@ public class ActiveMqJmsProvider implements JmsProvider {
     private ConnectionFactory connectionFactory = null;
     private Destination destination = null;
 
+
     /**
-     * 默认的构造函数
+     * 构造函数
+     *
+     * @param connection    JMS连接字符串
+     * @param user          用户名
+     * @param password      密码
+     * @param destinateName 连接目标点（队列或主题）
+     * @throws JMSException 初始化过程中发生的异常
      */
     public ActiveMqJmsProvider(String connection, String user, String password,
                                String destinateName) throws JMSException {
         this(connection, user, password, destinateName, false);
     }
 
+    /**
+     * 构造函数
+     *
+     * @param connection    JMS连接字符串
+     * @param user          用户名
+     * @param password      密码
+     * @param destinateName 连接目标点（队列或主题）
+     * @param isTopic       如果设置为true，表示目标点为发布订阅主题；否则为点对点队列
+     * @throws JMSException 初始化过程中发生的异常
+     */
     public ActiveMqJmsProvider(String connection, String user, String password,
                                String destinateName, Boolean isTopic) throws JMSException {
         if (StringUtils.isBlank(connection)) {
@@ -73,20 +92,20 @@ public class ActiveMqJmsProvider implements JmsProvider {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      *
-     * @see backtype.storm.contrib.jms.JmsProvider#connectionFactory()
+     * @see JmsProvider#connectionFactory()
      */
     @Override
     public ConnectionFactory connectionFactory() throws Exception {
         return connectionFactory;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * {@inheritDoc}
      *
-     * @see backtype.storm.contrib.jms.JmsProvider#destination()
+     * @see JmsProvider#destination()
      */
     @Override
     public Destination destination() throws Exception {

@@ -20,7 +20,9 @@ import org.mx.StringUtils;
 import java.util.*;
 
 /**
- * Created by john on 2017/9/7.
+ * 数据转换Bolt类，能够根据预定义规则将数据进行变形处理。
+ *
+ * @author : john.peng created on date : 2017/9/7
  */
 public class TransformBolt extends BaseRichBolt {
     private static final Log logger = LogFactory.getLog(TransformBolt.class);
@@ -31,6 +33,11 @@ public class TransformBolt extends BaseRichBolt {
     private Map<String, JSONObject> transformConfigs = null;
     private Map<String, TransformFunc> transformRules = null;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#prepare(Map, TopologyContext, OutputCollector)
+     */
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
@@ -78,6 +85,11 @@ public class TransformBolt extends BaseRichBolt {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#execute(Tuple)
+     */
     @Override
     public void execute(Tuple input) {
         JSONObject managedJson = (JSONObject) input.getValueByField("managedJson");
@@ -131,6 +143,11 @@ public class TransformBolt extends BaseRichBolt {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#declareOutputFields(OutputFieldsDeclarer)
+     */
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("managedJson", "data"));

@@ -5,12 +5,19 @@ import com.ds.retl.RecordColumn;
 import com.ds.retl.error.ValidateError;
 
 /**
- * Created by john on 2017/9/7.
+ * 数据长度校验规则类
+ *
+ * @author : john.peng date : 2017/9/7
  */
 public class LengthValidateFunc implements ValidateFunc {
     public static final String CODE = "LengthValidate";
     public static final String NAME = "3. 长度检验";
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see ValidateFunc#validate(RecordColumn, JSONObject, JSONObject)
+     */
     @Override
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {
         if (!data.keySet().contains(column.getName())) {

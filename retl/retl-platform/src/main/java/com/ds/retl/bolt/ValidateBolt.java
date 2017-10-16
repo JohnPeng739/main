@@ -20,7 +20,9 @@ import org.mx.StringUtils;
 import java.util.*;
 
 /**
- * Created by john on 2017/9/7.
+ * 数据校验Bolt类，能够根据预定义规则对数据进行校验判定。
+ *
+ * @author : john.peng created on date : 2017/9/7
  */
 public class ValidateBolt extends BaseRichBolt {
     private static final Log logger = LogFactory.getLog(ValidateBolt.class);
@@ -31,12 +33,17 @@ public class ValidateBolt extends BaseRichBolt {
     private Map<String, List<JSONObject>> validateConfigs = null;
     private Map<String, ValidateFunc> validateRules = null;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#prepare(Map, TopologyContext, OutputCollector)
+     */
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
 
         // 记录中每个字段的定义
-        String jsonStr = (String)stormConf.get("columns");
+        String jsonStr = (String) stormConf.get("columns");
         Map<String, RecordColumn> columns = new HashMap<>();
         if (!StringUtils.isBlank(jsonStr)) {
             JSONArray jsonColumns = JSON.parseArray(jsonStr);
@@ -83,6 +90,11 @@ public class ValidateBolt extends BaseRichBolt {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#execute(Tuple)
+     */
     @Override
     public void execute(Tuple input) {
         JSONObject managedJson = (JSONObject) input.getValueByField("managedJson");
@@ -136,6 +148,11 @@ public class ValidateBolt extends BaseRichBolt {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#declareOutputFields(OutputFieldsDeclarer)
+     */
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("managedJson", "data"));

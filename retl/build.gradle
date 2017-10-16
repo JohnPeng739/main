@@ -75,7 +75,7 @@ subprojects { subprj ->
 
   task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
-    from "$buildDir/docs/javadoc"
+    from "$buildDir/javadoc"
   }
 
   task sourcesJar(type: Jar) {

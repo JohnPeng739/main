@@ -10,12 +10,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by john on 2017/9/8.
+ * 字段合并转换规则类，将多个字段使用连接字符串进行连接合并。
+ *
+ * @author : john.peng created on date : 2017/9/8
  */
 public class MergeTransformFunc implements TransformFunc {
     public static final String CODE = "MergeTransform";
     public static final String NAME = "1. 字段合并转换";
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see TransformFunc#transform(Map, RecordColumn, JSONObject, JSONObject)
+     */
     @Override
     public List<TransformError> transform(Map<String, RecordColumn> columns, RecordColumn currentCol,
                                           JSONObject config, JSONObject data) {

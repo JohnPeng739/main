@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by john on 2017/9/7.
+ * 四则运算转换规则类，用于数值类型字段之间的简单四则运算操作，支持：加、减、乘、除和圆括号等运算。
+ *
+ * @author : john.peng created on date : 2017/9/7
+ * @see TransformFunc
  */
 public class FormulaTransformFunc implements TransformFunc {
     public static final String CODE = "FormulaTransform";
@@ -28,6 +31,11 @@ public class FormulaTransformFunc implements TransformFunc {
     private Map<String, Double> values = null;
     private List<TransformError> errors = null;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see TransformFunc#transform(Map, RecordColumn, JSONObject, JSONObject)
+     */
     @Override
     public List<TransformError> transform(Map<String, RecordColumn> columns, RecordColumn currentCol,
                                           JSONObject config, JSONObject data) {
@@ -51,6 +59,12 @@ public class FormulaTransformFunc implements TransformFunc {
         }
     }
 
+    /**
+     * 检测相关的字段，如果检测不通过，会抛出异常。
+     *
+     * @param formula 四则运算的公式
+     * @param data    数据对象
+     */
     private void checkFields(String formula, JSONObject data) {
         if (StringUtils.isBlank(formula)) {
             this.errors.add(new TransformError(currentCol.getName(),
@@ -112,6 +126,13 @@ public class FormulaTransformFunc implements TransformFunc {
         }
     }
 
+    /**
+     * 检查公式中的某一段字段
+     *
+     * @param formula 四则运算的公式
+     * @param index   索引号
+     * @param data    数据对象
+     */
     private void checkFields(String formula, int index, JSONObject data) {
         if (index >= 1) {
             checkFields(formula.substring(0, index), data);
@@ -121,6 +142,12 @@ public class FormulaTransformFunc implements TransformFunc {
         }
     }
 
+    /**
+     * 计算公式的值
+     *
+     * @param formula 四则运算的公式
+     * @return 计算结果值
+     */
     private double calculate(String formula) {
         if (StringUtils.isBlank(formula)) {
             return 0.0;

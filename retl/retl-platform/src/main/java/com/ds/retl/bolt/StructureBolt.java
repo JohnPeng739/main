@@ -20,25 +20,34 @@ import java.util.Map;
 
 /**
  * 将JSON文本数据转换为标准的JSONObject对象，便于后续进行处理。
- * <p>
  * 一般情况下，所有字段数据均在JSONObject对象中作为顶级字段读写，如：
  * {bh: "23123", type: "red"}
- * <p>
- * Created by john on 2017/9/7.
+ *
+ * @author : john.peng created on date : 2017/9/7
  */
 public class StructureBolt extends BaseRichBolt {
     private static final Log logger = LogFactory.getLog(StructureBolt.class);
 
     private OutputCollector collector = null;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#prepare(Map, TopologyContext, OutputCollector)
+     */
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#execute(Tuple)
+     */
     @Override
     public void execute(Tuple input) {
-        JSONObject managedJson = (JSONObject)input.getValueByField("managedJson");
+        JSONObject managedJson = (JSONObject) input.getValueByField("managedJson");
         String json = input.getStringByField("json");
         if (StringUtils.isBlank(json)) {
             if (logger.isWarnEnabled()) {
@@ -66,6 +75,11 @@ public class StructureBolt extends BaseRichBolt {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#declareOutputFields(OutputFieldsDeclarer)
+     */
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("managedJson", "data"));

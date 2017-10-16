@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONReader;
 import com.ds.retl.cli.RETLStormCli;
 import com.ds.retl.dal.entity.Topology;
-import com.ds.retl.dal.exception.UserInterfaceErrorException;
+import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.service.OperateLogService;
 import com.ds.retl.service.TopologyManageService;
@@ -34,7 +34,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by john on 2017/10/10.
+ * 基于Hibernate JPA实现的计算拓扑管理的相关服务实现类
+ *
+ * @author : john.peng created on date : 2017/10/10
  */
 @Component
 public class TopologyManageServiceImpl implements TopologyManageService {
@@ -50,6 +52,11 @@ public class TopologyManageServiceImpl implements TopologyManageService {
     @Autowired
     private OperateLogService operateLogService = null;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see TopologyManageService#save(String, String)
+     */
     @Override
     public Topology save(String name, String topologyJsonStr) throws UserInterfaceErrorException {
         try {
@@ -69,6 +76,13 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         }
     }
 
+    /**
+     * 提交一个拓扑实体对象到Storm集群中
+     *
+     * @param topology 拓扑实体对象
+     * @return 成功返回拓扑实体对象
+     * @throws UserInterfaceErrorException 提交过程中发生的异常
+     */
     private Topology submit(Topology topology) throws UserInterfaceErrorException {
         String topologyName = topology.getName();
         String confStr = topology.getTopologyContent();
@@ -119,6 +133,11 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         }
     }
 
+    /**
+     * 从预定义模版中加载拓扑骨架配置对象
+     *
+     * @return 成功返回骨架配置对象，否则返回null。
+     */
     private JSONObject loadTemplateTopology() {
         try (JSONReader jr = new JSONReader(new InputStreamReader(
                 TopologyManageServiceImpl.class.getResourceAsStream("/template/topology-template.json")))) {
@@ -135,6 +154,13 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         }
     }
 
+    /**
+     * 从拓扑的配置信息字符串中创建一个JSON格式的拓扑配置对象
+     *
+     * @param confStr 拓扑配置信息字符串
+     * @return 创建好的拓扑配置对象
+     * @throws UserInterfaceErrorException 创建过程中发生的异常
+     */
     private JSONObject prepareTopologyConfigJsonObject(String confStr) throws UserInterfaceErrorException {
         JSONObject conf = JSON.parseObject(confStr);
         if (conf == null) {
@@ -223,6 +249,14 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         return topologyConf;
     }
 
+    /**
+     * 创建一个Bolt对象
+     *
+     * @param name        名称
+     * @param type        类型
+     * @param parallelism 并行度
+     * @return 创建好的Bolt对象
+     */
     private JSONObject createBolt(String name, String type, int parallelism) {
         JSONObject bolt = new JSONObject();
         bolt.put("name", name);
@@ -231,10 +265,23 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         return bolt;
     }
 
+    /**
+     * 设置Bolt分发组信息
+     *
+     * @param bolt  Bolt对象
+     * @param prevs 前置环境列表
+     */
     private void setGroups(JSONObject bolt, List<JSONObject> prevs) {
         setGroups(bolt, prevs, false);
     }
 
+    /**
+     * 设置Bolt分发组信息
+     *
+     * @param bolt        Bolt对象
+     * @param prevs       前置环境列表
+     * @param isErrorBolt 如果设置为true，表示本Bolt是一个错误处理的Bolt；否则是一个常规的Bolt
+     */
     private void setGroups(JSONObject bolt, List<JSONObject> prevs, boolean isErrorBolt) {
         JSONArray groups = new JSONArray();
         prevs.forEach(prev -> {
@@ -249,6 +296,11 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         bolt.put("groups", groups);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see TopologyManageService#submit(String)
+     */
     @Override
     public Topology submit(String id) throws UserInterfaceErrorException {
         try {
@@ -265,12 +317,22 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see TopologyManageService#submit(String, String)
+     */
     @Override
     public Topology submit(String name, String topologyJsonStr) throws UserInterfaceErrorException {
         Topology topology = save(name, topologyJsonStr);
         return submit(topology);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see TopologyManageService#validateZookeepers(String)
+     */
     @Override
     public boolean validateZookeepers(String resourceJsonStr) throws UserInterfaceErrorException {
         if (logger.isDebugEnabled()) {
@@ -293,6 +355,11 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see TopologyManageService#validateJdbcDataSource(String)
+     */
     @Override
     public boolean validateJdbcDataSource(String resourceJsonStr) throws UserInterfaceErrorException {
         if (logger.isDebugEnabled()) {
@@ -320,6 +387,11 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see TopologyManageService#validateJmsDataSource(String)
+     */
     @Override
     public boolean validateJmsDataSource(String resourceJsonStr) throws UserInterfaceErrorException {
         if (logger.isDebugEnabled()) {

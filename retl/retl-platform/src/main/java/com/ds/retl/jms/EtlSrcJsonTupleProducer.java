@@ -13,22 +13,32 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 
 /**
- * Created by john on 2017/9/6.
+ * 采集数据的元组产生器，将从JMS接收的的消息转换为字符串对象类型的元组进行发送。
+ *
+ * @author : john.peng created on date : 2017/9/6
  */
 public class EtlSrcJsonTupleProducer implements JmsTupleProducer {
     private static final Log logger = LogFactory.getLog(EtlSrcJsonTupleProducer.class);
 
     private JSONObject managedJson = null;
 
+    /**
+     * 默认的构造函数
+     */
     public EtlSrcJsonTupleProducer() {
         super();
         managedJson = new JSONObject();
         managedJson.put("source", "JMS");
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see JmsTupleProducer#toTuple(Message)
+     */
     @Override
     public Values toTuple(Message msg) throws JMSException {
-        if(msg instanceof TextMessage){
+        if (msg instanceof TextMessage) {
             String json = ((TextMessage) msg).getText();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("RECEIVE TEXT MESSAGE: %s.", json));
@@ -43,6 +53,11 @@ public class EtlSrcJsonTupleProducer implements JmsTupleProducer {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see JmsTupleProducer#declareOutputFields(OutputFieldsDeclarer)
+     */
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("managedJson", "json"));

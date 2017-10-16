@@ -1,7 +1,7 @@
 package com.ds.retl.service.impl;
 
 import com.ds.retl.dal.entity.User;
-import com.ds.retl.dal.exception.UserInterfaceErrorException;
+import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.service.OperateLogService;
 import com.ds.retl.service.UserManageService;
@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Created by john on 2017/10/8.
+ * 基于Hibernate JPA实现的用户操作相关服务实现类
+ *
+ * @author : john.peng created on date : 2017/10/8
  */
 @Component("userManageServiceHibernate")
 public class UserManageServiceImpl implements UserManageService {
@@ -29,6 +31,11 @@ public class UserManageServiceImpl implements UserManageService {
     @Qualifier("operateLogService")
     private OperateLogService logService = null;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see UserManageService#initUser()
+     */
     @Override
     public User initUser() throws UserInterfaceErrorException {
         String userCode = "ds110";
@@ -51,6 +58,11 @@ public class UserManageServiceImpl implements UserManageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see UserManageService#saveUser(User)
+     */
     @Override
     public User saveUser(User user) throws UserInterfaceErrorException {
         try {
@@ -62,6 +74,11 @@ public class UserManageServiceImpl implements UserManageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see UserManageService#changePassword(String, String, String)
+     */
     @Override
     public User changePassword(String userCode, String oldPassword, String newPassword)
             throws UserInterfaceErrorException {
@@ -89,6 +106,11 @@ public class UserManageServiceImpl implements UserManageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see UserManageService#login(String, String)
+     */
     @Override
     public User login(String userCode, String password) throws UserInterfaceErrorException {
         try {
@@ -115,6 +137,11 @@ public class UserManageServiceImpl implements UserManageService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see UserManageService#logout(String)
+     */
     @Override
     public void logout(String userCode) throws UserInterfaceErrorException {
         try {

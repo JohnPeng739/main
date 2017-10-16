@@ -17,24 +17,35 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by john on 2017/9/7.
+ * 错误处理Bolt类，收集各种处理程序发送的错误信息，并统一发送到持久化Bolt。
+ *
+ * @author : john.peng created on date : 2017/9/7
  */
 public class ErrorOperateBolt extends BaseRichBolt {
-    private static final Log logger = LogFactory.getLog(ErrorOperateBolt.class);
     public static final String STREAM_NAME = "error-stream";
-
+    private static final Log logger = LogFactory.getLog(ErrorOperateBolt.class);
     private OutputCollector collector = null;
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#prepare(Map, TopologyContext, OutputCollector)
+     */
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#execute(Tuple)
+     */
     @Override
     public void execute(Tuple input) {
         JSONObject managedJson = (JSONObject) input.getValueByField("managedJson");
         JSONObject data = (JSONObject) input.getValueByField("data");
-        List<ETLError> errors = (List<ETLError>)input.getValueByField("errors");
+        List<ETLError> errors = (List<ETLError>) input.getValueByField("errors");
         if (errors == null || errors.isEmpty()) {
             if (logger.isWarnEnabled()) {
                 logger.warn("There no errors, but must has any errors in here.");
@@ -49,6 +60,11 @@ public class ErrorOperateBolt extends BaseRichBolt {
         this.collector.ack(input);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichBolt#declareOutputFields(OutputFieldsDeclarer)
+     */
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         declarer.declare(new Fields("managedJson", "data"));

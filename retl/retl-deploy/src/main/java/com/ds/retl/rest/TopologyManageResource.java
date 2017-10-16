@@ -3,7 +3,7 @@ package com.ds.retl.rest;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.dal.entity.Topology;
-import com.ds.retl.dal.exception.UserInterfaceErrorException;
+import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.jms.JmsManager;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.rest.vo.LabelValueVO;
@@ -13,7 +13,6 @@ import com.ds.retl.service.TopologyManageService;
 import com.ds.retl.validate.TypeValidateFunc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.storm.shade.org.apache.commons.io.input.BOMInputStream;
 import org.mx.ClassUtils;
 import org.mx.StringUtils;
 import org.mx.dal.Pagination;
@@ -34,9 +33,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by john on 2017/9/24.
+ * RETL计算拓扑管理RESTful服务资源类
+ *
+ * @author : john.peng created on date : 2017/9/24
  */
-
 @Component
 @Path("/rest")
 @Produces(MediaType.APPLICATION_JSON)
@@ -54,6 +54,12 @@ public class TopologyManageResource {
     @Autowired
     private SessionDataStore sessionDataStore = null;
 
+    /**
+     * 按页列举RETL计算拓扑列表
+     *
+     * @param pagination 分页对象
+     * @return 符合条件的计算拓扑列表
+     */
     @Path("topologies")
     @POST
     public PaginationDataVO<List<TopologyVO>> pagingList(Pagination pagination) {
@@ -76,23 +82,39 @@ public class TopologyManageResource {
         }
     }
 
+    /**
+     * 提交输入的拓扑配置信息到Storm集群中
+     *
+     * @param userCode              操作用户代码
+     * @param topologyConfigJsonStr 计算拓扑配置信息
+     * @return 提交成功返回提交的拓扑对象，否则返回错误信息。
+     */
     @Path("topology/submit")
     @POST
-    public DataVO<Boolean> submitTopology(@QueryParam("userCode") String userCode, String topologyConfigJsonStr) {
+    public DataVO<TopologyVO> submitTopology(@QueryParam("userCode") String userCode, String topologyConfigJsonStr) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             JSONObject json = JSON.parseObject(topologyConfigJsonStr);
-            topologyManageService.submit(json.getString("name"), topologyConfigJsonStr);
+            Topology topology = topologyManageService.submit(json.getString("name"), topologyConfigJsonStr);
+            TopologyVO topologyVO = new TopologyVO();
+            TopologyVO.transform(topology, topologyVO);
             sessionDataStore.removeCurrentUserCode();
-            return new DataVO<>(true);
+            return new DataVO<>(topologyVO);
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
         }
     }
 
+    /**
+     * 提交指定关键字ID的计算拓扑到Storm集群中
+     *
+     * @param userCode 操作用户代码
+     * @param id       拓扑的关键字ID
+     * @return 提交成功返回提交的拓扑对象，否则返回错误信息。
+     */
     @Path("topology/submit/{id}")
     @GET
-    public DataVO<TopologyVO> submitTopologyById(@QueryParam("userCode")String userCode, @PathParam("id") String id) {
+    public DataVO<TopologyVO> submitTopologyById(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             Topology topology = topologyManageService.submit(id);
@@ -104,9 +126,16 @@ public class TopologyManageResource {
         }
     }
 
+    /**
+     * 校验定义的资源是否有效
+     *
+     * @param type            校验类型
+     * @param resourceJsonStr 资源定义配置信息
+     * @return 如果校验通过返回true，否则返回错误信息。
+     */
     @Path("topology/validate")
     @POST
-    public DataVO<Boolean> validateResource(@QueryParam("type")String type, String resourceJsonStr) {
+    public DataVO<Boolean> validateResource(@QueryParam("type") String type, String resourceJsonStr) {
         try {
             boolean validated = false;
             switch (type) {
@@ -128,6 +157,12 @@ public class TopologyManageResource {
         }
     }
 
+    /**
+     * 将符合条件的类信息转换为Label-Value值对象
+     *
+     * @param classes 类名列表
+     * @return 成功返回Label-Value值对象列表，否则返回空列表。
+     */
     private List<LabelValueVO> transform(List<String> classes) {
         List<LabelValueVO> supported = new ArrayList<>();
         if (classes != null && !classes.isEmpty()) {
@@ -147,8 +182,8 @@ public class TopologyManageResource {
                         supported.add(new LabelValueVO(name, code));
                     }
                 } catch (Exception ex) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(String.format("Fetch class[%s] info fail.", className));
+                    if (logger.isInfoEnabled()) {
+                        logger.info(String.format("Fetch class[%s] info fail.", className), ex);
                     }
                 }
             });
@@ -156,6 +191,11 @@ public class TopologyManageResource {
         return supported;
     }
 
+    /**
+     * 获取系统中相关的各种支持列表信息
+     *
+     * @return 支持信息列表
+     */
     @Path("topology/supported")
     @GET
     public DataVO<SupportedVO> getSupported() {

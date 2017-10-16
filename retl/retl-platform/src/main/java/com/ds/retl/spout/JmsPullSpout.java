@@ -20,7 +20,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by john on 2017/9/26.
+ * 拉取型JMS数据采集器，默认的推拉型JMS数据采集器没有使用数据流量限制，在大消息量堆积情况下可能存在风险，推荐使用拉取型JMS数据采集器。
+ *
+ * @author : john.peng created on date : 2017/9/26
  */
 public class JmsPullSpout extends BaseRichSpout {
     private static final Log logger = LogFactory.getLog(JmsPullSpout.class);
@@ -31,7 +33,6 @@ public class JmsPullSpout extends BaseRichSpout {
     private final Serializable recoveryMutex = "RECOVERY_MUTEX";
     private final Serializable pullMessageMutex = "PULL_MESSAGE_MUTEX";
     private int jmsAcknowledgeMode = Session.AUTO_ACKNOWLEDGE;
-    private boolean distributed = true;
     private JmsTupleProducer tupleProducer;
     private JmsProvider jmsProvider;
     private LinkedBlockingQueue<Message> queue;
@@ -48,6 +49,12 @@ public class JmsPullSpout extends BaseRichSpout {
     private Timer recoveryTimer = null;
     private long recoveryPeriodMs = -1;
 
+    /**
+     * 转换消息消费确认模式
+     *
+     * @param deliveryMode 消息分发确认模式
+     * @return 转换为字符串类型的消息分发确认模式
+     */
     private static String toDeliveryModeString(int deliveryMode) {
         switch (deliveryMode) {
             case Session.AUTO_ACKNOWLEDGE:
@@ -62,53 +69,38 @@ public class JmsPullSpout extends BaseRichSpout {
         }
     }
 
+    /**
+     * 获取JMS会话
+     *
+     * @return JMS会话
+     */
     protected Session getSession() {
         return this.session;
     }
 
+    /**
+     * 判定是否延迟订阅
+     *
+     * @return 如果不采用自动确认消息消费，则为延迟订阅。
+     */
     private boolean isDurableSubscription() {
         return (this.jmsAcknowledgeMode != Session.AUTO_ACKNOWLEDGE);
     }
 
-    private class RecoveryTask extends TimerTask {
-        @Override
-        public void run() {
-            synchronized (JmsPullSpout.this.recoveryMutex) {
-                if (JmsPullSpout.this.hasFailures()) {
-                    try {
-                        if (loggerRecovery.isInfoEnabled()) {
-                            loggerRecovery.info("Recovering from a message failure.");
-                        }
-                        JmsPullSpout.this.getSession().recover();
-                        JmsPullSpout.this.recovered();
-                    } catch (JMSException ex) {
-                        if (loggerRecovery.isWarnEnabled()) {
-                            loggerRecovery.warn("Couldn't recover jms session.", ex);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private class PullMessageTask extends TimerTask {
-        @Override
-        public void run() {
-            synchronized (JmsPullSpout.this.pullMessageMutex) {
-                if (JmsPullSpout.this.queue.isEmpty()) {
-                    JmsPullSpout.this.pullMessage();
-                } else {
-                    Utils.sleep(POLL_INTERVAL_MS);
-                }
-
-            }
-        }
-    }
-
+    /**
+     * 获取消息消费确认模式
+     *
+     * @return 消息消费确认模式
+     */
     public int getJmsAcknowledgeMode() {
         return this.jmsAcknowledgeMode;
     }
 
+    /**
+     * 设置消息消费确认模式
+     *
+     * @param mode 消息消费确认模式
+     */
     public void setJmsAcknowledgeMode(final int mode) {
         switch (mode) {
             case Session.AUTO_ACKNOWLEDGE:
@@ -122,22 +114,43 @@ public class JmsPullSpout extends BaseRichSpout {
         this.jmsAcknowledgeMode = mode;
     }
 
+    /**
+     * 设置JMS提供者对象
+     *
+     * @param provider JMS提供者对象
+     */
     public void setJmsProvider(final JmsProvider provider) {
         this.jmsProvider = provider;
     }
 
+    /**
+     * 设置JMS消息转换为元组的生产器
+     *
+     * @param producer 元组生产器
+     */
     public void setJmsTupleProducer(JmsTupleProducer producer) {
         this.tupleProducer = producer;
     }
 
+    /**
+     * 判定是否发生错误，如果发生错误，则进行恢复操作。
+     *
+     * @return 如果发生错误，则返回true；否则返回false。
+     */
     public boolean hasFailures() {
         return this.hasFailures;
     }
 
+    /**
+     * 设置修复完成标记
+     */
     protected void recovered() {
         this.hasFailures = false;
     }
 
+    /**
+     * 从JMS服务器上拉取消息，并进行缓存消费。
+     */
     protected void pullMessage() {
         if (this.consumer == null) {
             if (logger.isErrorEnabled()) {
@@ -160,18 +173,20 @@ public class JmsPullSpout extends BaseRichSpout {
         }
     }
 
+    /**
+     * 设置消息恢复延迟间隔时间，单位为毫秒。
+     *
+     * @param period 间隔时间
+     */
     public void setRecoveryDelayMs(long period) {
         this.recoveryPeriodMs = period;
     }
 
-    public boolean isDistributed() {
-        return this.distributed;
-    }
-
-    public void setDistributed(boolean isDistributed) {
-        this.distributed = isDistributed;
-    }
-
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichSpout#open(Map, TopologyContext, SpoutOutputCollector)
+     */
     @Override
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
         if (this.jmsProvider == null) {
@@ -215,6 +230,11 @@ public class JmsPullSpout extends BaseRichSpout {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichSpout#close()
+     */
     @Override
     public void close() {
         try {
@@ -231,6 +251,11 @@ public class JmsPullSpout extends BaseRichSpout {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichSpout#nextTuple()
+     */
     @Override
     public void nextTuple() {
         Message message = this.queue.poll();
@@ -265,6 +290,11 @@ public class JmsPullSpout extends BaseRichSpout {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichSpout#ack(Object)
+     */
     @Override
     public void ack(Object msgId) {
         Message message = this.pendingMessages.remove(msgId);
@@ -295,6 +325,11 @@ public class JmsPullSpout extends BaseRichSpout {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichSpout#fail(Object)
+     */
     @Override
     public void fail(Object msgId) {
         if (logger.isWarnEnabled()) {
@@ -307,8 +342,64 @@ public class JmsPullSpout extends BaseRichSpout {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseRichSpout#declareOutputFields(OutputFieldsDeclarer)
+     */
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         this.tupleProducer.declareOutputFields(declarer);
+    }
+
+    /**
+     * 在延迟订阅模式下，失败消息的定时恢复任务
+     */
+    private class RecoveryTask extends TimerTask {
+        /**
+         * {@inheritDoc}
+         *
+         * @see TimerTask#run()
+         */
+        @Override
+        public void run() {
+            synchronized (JmsPullSpout.this.recoveryMutex) {
+                if (JmsPullSpout.this.hasFailures()) {
+                    try {
+                        if (loggerRecovery.isInfoEnabled()) {
+                            loggerRecovery.info("Recovering from a message failure.");
+                        }
+                        JmsPullSpout.this.getSession().recover();
+                        JmsPullSpout.this.recovered();
+                    } catch (JMSException ex) {
+                        if (loggerRecovery.isWarnEnabled()) {
+                            loggerRecovery.warn("Couldn't recover jms session.", ex);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 消息拉取的定时任务，以非常小的拉取延时间隔从JMS服务器上获取数据。
+     */
+    private class PullMessageTask extends TimerTask {
+        /**
+         * {@inheritDoc}
+         *
+         * @see TimerTask#run()
+         */
+        @Override
+        public void run() {
+            synchronized (JmsPullSpout.this.pullMessageMutex) {
+                if (JmsPullSpout.this.queue.isEmpty()) {
+                    JmsPullSpout.this.pullMessage();
+                } else {
+                    Utils.sleep(POLL_INTERVAL_MS);
+                }
+
+            }
+        }
     }
 }

@@ -7,12 +7,23 @@ import com.ds.retl.error.ValidateError;
 import java.math.BigDecimal;
 
 /**
- * Created by john on 2017/9/19.
+ * Created by john on .
+ */
+
+/**
+ * 数据范围校验规则类
+ *
+ * @author : john.peng date : 2017/9/19
  */
 public class RangeValidateFunc implements ValidateFunc {
     public static final String CODE = "RangeValidate";
     public static final String NAME = "4. 数据范围检验";
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see ValidateFunc#validate(RecordColumn, JSONObject, JSONObject)
+     */
     @Override
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {
         if (!data.keySet().contains(column.getName())) {

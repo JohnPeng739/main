@@ -14,7 +14,9 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Created by john on 2017/9/12.
+ * 基于JDBC关系型数据库存储数据的Bolt类，能够将处理后的数据或者错误信息持久化存储到对应的数据库表中。
+ *
+ * @author : john.peng created on date : 2017/9/12
  */
 public class JdbcBolt extends BasePersistBolt {
     private static final Log logger = LogFactory.getLog(JdbcBolt.class);
@@ -22,16 +24,29 @@ public class JdbcBolt extends BasePersistBolt {
     private List<JdbcOperate> dataOperates = null;
     private JdbcOperate errorOperate = null;
 
+    /**
+     * 默认的构造函数
+     */
     public JdbcBolt() {
         super();
         this.dataOperates = new ArrayList<>();
     }
 
+    /**
+     * 默认的构造函数
+     *
+     * @param configuration 初始化配置信息
+     */
     public JdbcBolt(JSONObject configuration) {
         super(configuration);
         this.dataOperates = new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BasePersistBolt#initialize(Map, JSONObject)
+     */
     @Override
     public void initialize(Map stormConf, JSONObject configuration) {
         // 初始化数据源（如有必要）
@@ -78,6 +93,11 @@ public class JdbcBolt extends BasePersistBolt {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BasePersistBolt#saveData2Db(JSONObject, JSONObject)
+     */
     @Override
     public void saveData2Db(JSONObject managedJson, JSONObject data) throws Exception {
         super.saveMangedTimeData(managedJson, data);
@@ -86,6 +106,11 @@ public class JdbcBolt extends BasePersistBolt {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see BasePersistBolt#saveError2Db(JSONObject, JSONObject, JSONArray)
+     */
     @Override
     public void saveError2Db(JSONObject managedJson, JSONObject data, JSONArray errors) throws Exception {
         super.saveMangedTimeData(managedJson, data);

@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by john on 2017/9/12.
+ * 基于APACHE DBCP2的关系型数据库连接管理器，能够对JDBC数据库连接池进行管理。
+ *
+ * @author : john.peng created on date : 2017/9/12
  */
 public class JdbcManager {
     private static final Log logger = LogFactory.getLog(JdbcManager.class);
@@ -22,12 +24,21 @@ public class JdbcManager {
 
     private Map<String, BasicDataSource> pool = null;
     private Map<String, JdbcOperate> errorOperates = null;
+
+    /**
+     * 默认的构造函数
+     */
     private JdbcManager() {
         super();
         this.pool = new HashMap<>();
         this.errorOperates = new HashMap<>();
     }
 
+    /**
+     * 获得管理器的工厂方法
+     *
+     * @return 管理器
+     */
     public static JdbcManager getManager() {
         if (manager == null) {
             manager = new JdbcManager();
@@ -35,6 +46,12 @@ public class JdbcManager {
         return manager;
     }
 
+    /**
+     * 初始化管理器
+     *
+     * @param dataSourcesJson 初始化配置信息
+     * @throws SQLException 初始过程中发生的异常
+     */
     public void initManager(JSONArray dataSourcesJson) throws SQLException {
         for (int index = 0; index < dataSourcesJson.size(); index++) {
             JSONObject dataSourceJson = dataSourcesJson.getJSONObject(index);
@@ -77,6 +94,13 @@ public class JdbcManager {
         }
     }
 
+    /**
+     * 从缓冲池中获取一个数据库连接
+     *
+     * @param dataSource 数据源名称
+     * @return 数据库连接
+     * @throws SQLException 获取过程中发生的异常
+     */
     public final Connection getConnection(String dataSource) throws SQLException {
         if (!pool.containsKey(dataSource)) {
             throw new SQLException(String.format("The DataSource[%s] not existed.", dataSource));
@@ -85,6 +109,13 @@ public class JdbcManager {
         return pooledDataSource.getConnection();
     }
 
+    /**
+     * 获得统一的错误信息处理工具
+     *
+     * @param dataSource 数据源名称
+     * @return 错误信息处理工具
+     * @throws SQLException 获取过程中发生的异常
+     */
     public final JdbcOperate getErrorOperate(String dataSource) throws SQLException {
         if (!errorOperates.containsKey(dataSource)) {
             throw new SQLException(String.format("The Error JdbcOperate[%s] not existed.", dataSource));

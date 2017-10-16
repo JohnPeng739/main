@@ -12,7 +12,9 @@ import org.bson.Document;
 import java.util.Map;
 
 /**
- * Created by john on 2017/9/13.
+ * MongoDB数据库基础操作工具类
+ *
+ * @author : john.peng created on date : 2017/9/13
  */
 public class MongoOperate {
     private static final Log logger = LogFactory.getLog(MongoOperate.class);
@@ -20,6 +22,12 @@ public class MongoOperate {
     private MongoClient mongoClient = null;
     private MongoDatabase mongoDatabase = null;
 
+    /**
+     * 构造函数
+     *
+     * @param uri          MongoDB连接地址
+     * @param databaseName 数据库名称
+     */
     public MongoOperate(String uri, String databaseName) {
         super();
         this.mongoClient = new MongoClient(new MongoClientURI(uri));
@@ -29,6 +37,12 @@ public class MongoOperate {
         }
     }
 
+    /**
+     * 保存数据到数据库中
+     *
+     * @param collectionName 集合名称（类似于表名）
+     * @param json           待存储的JSON字符串
+     */
     public void saveData2Db(String collectionName, String json) {
         MongoCollection<Document> collection = this.mongoDatabase.getCollection(collectionName);
         Document document = new Document(JSON.parseObject(json, Map.class));
@@ -38,6 +52,11 @@ public class MongoOperate {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see Object#finalize()
+     */
     @Override
     protected void finalize() throws Throwable {
         this.mongoDatabase = null;

@@ -16,22 +16,22 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.5/mx-rest-utils-1.1.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.6/mx-rest-utils-1.1.6.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.5/mx-rest-utils-1.1.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.6/mx-rest-utils-1.1.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.1/mx-dal-hibernate-1.0.1.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.2/mx-dal-hibernate-1.0.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.1/mx-dal-hibernate-1.0.1-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.2/mx-dal-hibernate-1.0.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -115,11 +115,11 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.5/mx-utils-2.0.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.5/mx-utils-2.0.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -214,11 +214,11 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.0/mx-dal-1.0.0.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.1/mx-dal-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.0/mx-dal-1.0.0-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.1/mx-dal-1.0.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1102,22 +1102,22 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.5/mx-rest-utils-1.1.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.6/mx-rest-utils-1.1.6.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.5/mx-rest-utils-1.1.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.6/mx-rest-utils-1.1.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.1/mx-dal-hibernate-1.0.1.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.2/mx-dal-hibernate-1.0.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.1/mx-dal-hibernate-1.0.1-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.2/mx-dal-hibernate-1.0.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1201,11 +1201,11 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.5/mx-utils-2.0.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.5/mx-utils-2.0.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1300,11 +1300,11 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.0/mx-dal-1.0.0.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.1/mx-dal-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.0/mx-dal-1.0.0-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.1/mx-dal-1.0.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2188,22 +2188,22 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.5/mx-rest-utils-1.1.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.6/mx-rest-utils-1.1.6.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.5/mx-rest-utils-1.1.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-rest-utils/1.1.6/mx-rest-utils-1.1.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.1/mx-dal-hibernate-1.0.1.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.2/mx-dal-hibernate-1.0.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.1/mx-dal-hibernate-1.0.1-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.0.2/mx-dal-hibernate-1.0.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2298,11 +2298,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.5/mx-utils-2.0.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.5/mx-utils-2.0.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2397,11 +2397,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.0/mx-dal-1.0.0.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.1/mx-dal-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.0/mx-dal-1.0.0-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.0.1/mx-dal-1.0.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

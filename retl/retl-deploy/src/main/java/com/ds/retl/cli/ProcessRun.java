@@ -15,8 +15,8 @@ import java.util.List;
  * <p>
  * 特别的，对于使用管道命令连接的多条命令，必须采用特殊的用法，将整条命令作为一个参数进行传递，比如：
  * commands: "sh", "-c", "cat dependencies | grep 'config'"
- * <p>
- * Created by john on 2017/9/15.
+ *
+ * @author : john.peng created on date : 2017/9/15
  */
 public class ProcessRun {
     private static final Log logger = LogFactory.getLog(ProcessRun.class);

@@ -15,10 +15,8 @@ import org.apache.storm.StormSubmitter;
 import org.apache.storm.generated.AlreadyAliveException;
 import org.apache.storm.generated.AuthorizationException;
 import org.apache.storm.generated.InvalidTopologyException;
-import org.apache.storm.jms.spout.JmsSpout;
 import org.apache.storm.topology.BoltDeclarer;
 import org.apache.storm.topology.TopologyBuilder;
-import org.apache.storm.topology.base.BaseBasicBolt;
 import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.topology.base.BaseRichSpout;
 import org.apache.storm.tuple.Fields;
@@ -32,12 +30,17 @@ import java.io.InputStreamReader;
 
 /**
  * 实时ETL计算拓扑构建器
- * <p>
- * Created by john on 2017/9/7.
+ *
+ * @author : john.peng created on date : 2017/9/7
  */
 public class ETLTopologyBuilder {
     private static final Log logger = LogFactory.getLog(ETLTopologyBuilder.class);
 
+    /**
+     * 实时ETL发布的入口函数
+     *
+     * @param args 部署参数
+     */
     public static void main(String[] args) {
         if (args == null || args.length != 1) {
             printUsage();
@@ -46,7 +49,7 @@ public class ETLTopologyBuilder {
         System.out.println("******************************************************");
         System.out.println("开始提交[实时数据ETL]拓扑到集群中......");
         String configFile = args[0];
-        try(JSONReader reader = new JSONReader(new InputStreamReader(new FileInputStream(configFile)))) {
+        try (JSONReader reader = new JSONReader(new InputStreamReader(new FileInputStream(configFile)))) {
             String json = reader.readString();
             JSONObject config = JSON.parseObject(json);
             new ETLTopologyBuilder().buildTopology(true, config);
@@ -58,8 +61,11 @@ public class ETLTopologyBuilder {
         System.out.println("******************************************************");
     }
 
+    /**
+     * 打印命令使用方法
+     */
     private static void printUsage() {
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                 ETLTopologyBuilder.class.getResourceAsStream("/readme.txt")))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
@@ -70,6 +76,12 @@ public class ETLTopologyBuilder {
         }
     }
 
+    /**
+     * 建立一个实时ETL计算拓扑
+     *
+     * @param isCluster 如果设置为true，表示提交到Storm集群中；否则提交到本地虚拟集群中进行测试验证。
+     * @param json      拓扑的配置信息
+     */
     public void buildTopology(boolean isCluster, JSONObject json) {
         Config config = createConfig(json);
 
@@ -117,6 +129,12 @@ public class ETLTopologyBuilder {
         }
     }
 
+    /**
+     * 建立拓扑中的数据采集器
+     *
+     * @param spoutArray 采集器配置信息
+     * @param builder    拓扑创建者对象
+     */
     private void createSpouts(JSONArray spoutArray, TopologyBuilder builder) {
         for (int index = 0; index < spoutArray.size(); index++) {
             JSONObject jsonSpout = spoutArray.getJSONObject(index);
@@ -165,6 +183,12 @@ public class ETLTopologyBuilder {
         }
     }
 
+    /**
+     * 创建拓扑中的处理Bolt单元
+     *
+     * @param boltArray Bolt配置信息
+     * @param builder   拓扑创建者对象
+     */
     private void createBolts(JSONArray boltArray, TopologyBuilder builder) {
         for (int index = 0; index < boltArray.size(); index++) {
             JSONObject jsonBolt = boltArray.getJSONObject(index);
@@ -228,6 +252,13 @@ public class ETLTopologyBuilder {
         }
     }
 
+    /**
+     * 设置Bolt的元组分发策略
+     *
+     * @param name       发送者名称
+     * @param bd         Bolt定义
+     * @param jsonGroups 分发配置信息
+     */
     private void setBoltGrouping(String name, BoltDeclarer bd, JSONArray jsonGroups) {
         for (int index = 0; index < jsonGroups.size(); index++) {
             JSONObject jsonGroup = jsonGroups.getJSONObject(index);
@@ -293,6 +324,12 @@ public class ETLTopologyBuilder {
         }
     }
 
+    /**
+     * 创建tuop传递的配置信息
+     *
+     * @param json 配置信息
+     * @return 返回配置信息对象，最终在Storm集群中的各个拓扑任务直接传递。
+     */
     private Config createConfig(JSONObject json) {
         Config config = new Config();
         // 设置基本配置信息

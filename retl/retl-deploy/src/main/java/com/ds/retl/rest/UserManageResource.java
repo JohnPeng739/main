@@ -2,7 +2,7 @@ package com.ds.retl.rest;
 
 import com.ds.retl.dal.entity.User;
 import com.ds.retl.dal.entity.UserOperateLog;
-import com.ds.retl.dal.exception.UserInterfaceErrorException;
+import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.rest.vo.user.AuthenticateVO;
 import com.ds.retl.rest.vo.user.ChangePasswordVO;
@@ -26,9 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by john on 2017/10/6.
+ * 用户管理相关的RESTful服务资源类
+ *
+ * @author : john.peng created on date : 2017/10/6
  */
-
 @Component
 @Path("/rest")
 @Produces(MediaType.APPLICATION_JSON)
@@ -44,6 +45,11 @@ public class UserManageResource {
     @Autowired
     private SessionDataStore sessionDataStore = null;
 
+    /**
+     * 初始化用户
+     *
+     * @return 初始化的管理员用户
+     */
     @Path("init")
     @GET
     public DataVO<UserVO> initUser() {
@@ -59,6 +65,12 @@ public class UserManageResource {
         }
     }
 
+    /**
+     * 按页列举用户操作日志
+     *
+     * @param pagination 分页对象
+     * @return 符合条件的用户操作日志
+     */
     @Path("user/logs")
     @POST
     public PaginationDataVO<List<OperateLogVO>> listUserOperateLogs(Pagination pagination) {
@@ -81,6 +93,12 @@ public class UserManageResource {
         }
     }
 
+    /**
+     * 按页列举用户列表
+     *
+     * @param pagination 分页对象
+     * @return 符合条件的用户列表
+     */
     @Path("users")
     @POST
     public PaginationDataVO<List<UserVO>> listUsers(Pagination pagination) {
@@ -103,6 +121,12 @@ public class UserManageResource {
         }
     }
 
+    /**
+     * 获取指定用户代码的用户信息
+     *
+     * @param userCode 用户代码
+     * @return 用户信息对象
+     */
     @Path("users/{userCode}")
     @GET
     public DataVO<UserVO> getUser(@PathParam("userCode") String userCode) {
@@ -119,6 +143,13 @@ public class UserManageResource {
         }
     }
 
+    /**
+     * 修改用户密码
+     *
+     * @param vo       修改密码值对象
+     * @param userCode 操作用户代码
+     * @return 修改成功返回true，否则返回错误信息。
+     */
     @Path("password/change")
     @POST
     public DataVO<Boolean> changePassword(ChangePasswordVO vo, @QueryParam("userCode") String userCode) {
@@ -131,6 +162,12 @@ public class UserManageResource {
         }
     }
 
+    /**
+     * 登入系统
+     *
+     * @param login 用户认证值对象
+     * @return 登录成功返回登录用户信息对象，否则返回错误信息。
+     */
     @Path("login")
     @POST
     public DataVO<UserVO> login(AuthenticateVO login) {
@@ -149,6 +186,12 @@ public class UserManageResource {
         }
     }
 
+    /**
+     * 登出系统
+     *
+     * @param userCode 登出用户代码
+     * @return 登出成功返回true，否则返回错误信息。
+     */
     @Path("logout")
     @POST
     public DataVO<Boolean> logout(@QueryParam("userCode") String userCode) {

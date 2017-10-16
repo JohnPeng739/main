@@ -8,12 +8,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by john on 2017/9/8.
+ * Created by john on .
+ */
+
+/**
+ * 正则表达式校验规则类
+ *
+ * @author : john.peng date : 2017/9/8
  */
 public class RegExpValidateFunc implements ValidateFunc {
     public static final String CODE = "RegExpValidate";
     public static final String NAME = "5. 正则检验";
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see ValidateFunc#validate(RecordColumn, JSONObject, JSONObject)
+     */
     @Override
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {
         if (!data.keySet().contains(column.getName())) {
@@ -25,7 +36,7 @@ public class RegExpValidateFunc implements ValidateFunc {
         String regexp = validateConfig.getString("regexp");
         if (value instanceof String) {
             Pattern pattern = Pattern.compile(regexp);
-            Matcher matcher = pattern.matcher((String)value);
+            Matcher matcher = pattern.matcher((String) value);
             if (matcher.matches()) {
                 return null;
             } else {
