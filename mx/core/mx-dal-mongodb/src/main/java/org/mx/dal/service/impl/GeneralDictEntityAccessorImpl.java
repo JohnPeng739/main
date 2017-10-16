@@ -2,6 +2,7 @@ package org.mx.dal.service.impl;
 
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.GeneralDictEntityAccessor;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -9,10 +10,19 @@ import org.springframework.stereotype.Component;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 /**
- * Created by john on 2017/10/8.
+ * 基于Mongodb实现的基础字典类实体访问实现类
+ *
+ * @author : john.peng date : 2017/10/8
+ * @see GeneralEntityAccessorImpl
+ * @see GeneralDictEntityAccessor
  */
 @Component("generalDictEntityAccessorMongodb")
 public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl implements GeneralDictEntityAccessor {
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralDictEntityAccessor#getByCode(String, Class, boolean)
+     */
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
@@ -27,6 +37,11 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralDictAccessor#getByCode(String, Class)
+     */
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass) throws EntityAccessException {
         return getByCode(code, entityInterfaceClass, true);

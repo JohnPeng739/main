@@ -15,7 +15,10 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 import javax.sql.DataSource;
 
 /**
- * Created by john on 2017/10/7.
+ * 基于Hibernate的DAL基础实现
+ *
+ * @author : john.peng date : 2017/10/7
+ * @see DalConfig
  */
 @Configuration
 @EnableTransactionManagement
@@ -29,10 +32,18 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     @Autowired
     private ApplicationContext context = null;
 
+    /**
+     * 默认的构造函数
+     */
     public DalHibernateConfig() {
         super();
     }
 
+    /**
+     * 创建实体管理器工厂Bean
+     *
+     * @return 实体管理器工厂Bean
+     */
     @Bean
     @DependsOn({"dataSource"})
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
@@ -54,6 +65,11 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
         return emf;
     }
 
+    /**
+     * 创建事务管理器
+     *
+     * @return 事务管理器
+     */
     @Bean()
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -61,6 +77,11 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
         return transactionManager;
     }
 
+    /**
+     * 创建注解驱动的事务管理器
+     *
+     * @return 事务管理器
+     */
     @Override
     public PlatformTransactionManager annotationDrivenTransactionManager() {
         return transactionManager();

@@ -9,7 +9,9 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
- * Created by john on 2017/10/7.
+ * APACHE DBCP2数据库缓存池工厂
+ *
+ * @author : john.peng date : 2017/10/7
  */
 public class Dbcp2DataSourceFactory {
     private static final Log logger = LogFactory.getLog(Dbcp2DataSourceFactory.class);
@@ -17,15 +19,30 @@ public class Dbcp2DataSourceFactory {
     private BasicDataSource pool = null;
     private Environment env = null;
 
+    /**
+     * 默认的构造函数
+     *
+     * @param env 配置信息环境
+     */
     public Dbcp2DataSourceFactory(Environment env) {
         super();
         this.env = env;
     }
 
+    /**
+     * 从缓冲池中获取一个数据库连接
+     *
+     * @return 数据库连接
+     */
     public DataSource getDataSource() {
         return pool;
     }
 
+    /**
+     * 初始化缓冲池
+     *
+     * @throws SQLException 初始化过程中发生的异常
+     */
     public void init() throws SQLException {
         String driver = env.getProperty("db.driver"),
                 url = env.getProperty("db.url"),
@@ -52,6 +69,11 @@ public class Dbcp2DataSourceFactory {
         }
     }
 
+    /**
+     * 关闭缓冲池
+     *
+     * @throws SQLException 关闭过程中发生的异常
+     */
     public void close() throws SQLException {
         try {
             if (pool != null) {

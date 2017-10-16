@@ -9,8 +9,8 @@ import java.util.List;
 
 /**
  * 通用的实体存取接口定义
- * <p>
- * Created by john on 2017/8/18.
+ *
+ * @author : john.peng date : 2017/8/18
  */
 public interface GeneralAccessor {
     /**
@@ -58,7 +58,7 @@ public interface GeneralAccessor {
     /**
      * 根据指定字段的值获取数据记录集合，多个条件采用and组合。
      *
-     * @param tuples                条件元组（包括字段名和字段值）
+     * @param tuples               条件元组（包括字段名和字段值）
      * @param entityInterfaceClass 实体接口类
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 实体对象集合
@@ -71,7 +71,7 @@ public interface GeneralAccessor {
     /**
      * 根据指定字段的值获取一条数据记录，多个条件采用and组合。
      *
-     * @param tuples                条件元组（包括字段名和字段值）
+     * @param tuples               条件元组（包括字段名和字段值）
      * @param entityInterfaceClass 实体接口类
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 实体对象，如果不存在则返回null
@@ -114,14 +114,28 @@ public interface GeneralAccessor {
      */
     <T extends Base> T remove(T t, boolean logicRemove) throws EntityAccessException;
 
+    /**
+     * 查询条件定义
+     *
+     * @author : john.peng date : 2017/8/18
+     */
     class ConditionTuple {
         public String field;
         public Object value;
 
+        /**
+         * 默认的构造函数
+         */
         public ConditionTuple() {
             super();
         }
 
+        /**
+         * 默认的构造函数
+         *
+         * @param field 字段名
+         * @param value 字段值
+         */
         public ConditionTuple(String field, Object value) {
             this();
             this.field = field;

@@ -16,7 +16,10 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * Created by john on 2017/10/6.
+ * Http REST服务器
+ *
+ * @author : john.peng date : 2017/10/6
+ * @see InitializingBean
  */
 @Component("httpServer")
 public class HttpServer implements InitializingBean {
@@ -28,14 +31,28 @@ public class HttpServer implements InitializingBean {
     private ApplicationContext context = null;
     private Server server = null;
 
+    /**
+     * 默认的构造函数
+     */
     public HttpServer() {
         super();
     }
 
+    /**
+     * 获取创建的HTTP服务器
+     *
+     * @return 服务器
+     */
     public Server getServer() {
         return this.server;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see InitializingBean#afterPropertiesSet()
+     */
+    @Override
     public void afterPropertiesSet() throws Exception {
         String serviceClassesDef = "restful.service.classes";
         String restfulServiceClasses = this.env.getProperty(serviceClassesDef);

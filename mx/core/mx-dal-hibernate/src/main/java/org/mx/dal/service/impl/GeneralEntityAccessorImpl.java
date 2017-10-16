@@ -7,6 +7,7 @@ import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralEntityAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by john on 2017/10/6.
+ * 基于Hibernate的JPA实体基础访问的DAL实现
+ *
+ * @author : john.peng date : 2017/10/6
+ * @see GeneralEntityAccessor
  */
 @Component("generalEntityAccessorHibernate")
 public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
@@ -34,17 +38,35 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     @Qualifier("sessionDataThreadLocal")
     protected SessionDataStore sessionDataStore = null;
 
+    /**
+     * 根据指定的实体接口定义类返回对应的实体类定义
+     *
+     * @param entityInterfaceClass 实体接口定义类
+     * @param <T>                  泛型类型
+     * @return 实体类定义
+     * @throws ClassNotFoundException 指定的实体类没有定义
+     */
     protected <T extends Base> Class<T> getEntityClass(Class<T> entityInterfaceClass) throws ClassNotFoundException {
         String entityClassName = String.format("%sEntity", entityInterfaceClass.getName());
         return (Class<T>) Class.forName(entityClassName);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#count(Class)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(Class<T> entityInterfaceClass) throws EntityAccessException {
         return count(entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#count(Class, boolean)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
@@ -65,12 +87,22 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#list(Class)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Class<T> entityInterfaceClass) throws EntityAccessException {
         return list(entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#list(Class, boolean)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
@@ -90,6 +122,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#list(Pagination, Class)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass)
@@ -97,6 +134,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         return list(pagination, entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#list(Pagination, Class, boolean)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> entityClass, boolean isInterfaceClass)
@@ -125,6 +167,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#getById(String, Class, boolean)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> T getById(String id, Class<T> entityClass, boolean isInterfaceClass)
@@ -145,12 +192,22 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#getById(String, Class)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> T getById(String id, Class<T> entityInterfaceClass) throws EntityAccessException {
         return getById(id, entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#find(List, Class)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityInterfaceClass)
@@ -158,6 +215,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         return find(tuples, entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#find(List, Class, boolean)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass)
@@ -166,6 +228,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#findOne(List, Class)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityInterfaceClass)
@@ -173,6 +240,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         return findOne(tuples, entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#findOne(List, Class, boolean)
+     */
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass)
@@ -185,6 +257,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#save(Base)
+     */
     @Transactional()
     @Override
     public <T extends Base> T save(T t) throws EntityAccessException {
@@ -216,16 +293,26 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         return t;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#remove(Base)
+     */
     @Transactional()
     @Override
     public <T extends Base> T remove(T t) throws EntityAccessException {
         return remove(t, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#remove(Base, boolean)
+     */
     @Transactional()
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) throws EntityAccessException {
-        T removeEntity = getById(t.getId(), (Class<T>)t.getClass(), false);
+        T removeEntity = getById(t.getId(), (Class<T>) t.getClass(), false);
         if (logicRemove) {
             // 逻辑删除
             removeEntity.setValid(false);

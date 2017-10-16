@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 日期处理工具类，包括常用的日期数据处理的方法。
  *
- * @author john peng on 2016/05/31
+ * @author ： john peng date ： 2016/05/31
  */
 public class DateUtils {
 
@@ -279,6 +279,12 @@ public class DateUtils {
         return calendar.getTime();
     }
 
+    /**
+     * 将一个日期类型转换为长整型
+     *
+     * @param date 日期
+     * @return 长整型值
+     */
     public static Long date2Long(Date date) {
         if (date == null) {
             return null;
@@ -286,6 +292,12 @@ public class DateUtils {
         return date.getTime();
     }
 
+    /**
+     * 将一个长整数转换为日期类型
+     *
+     * @param time 时间
+     * @return 日期类型的值
+     */
     public static Date long2Date(Long time) {
         if (time == null) {
             return null;
@@ -293,9 +305,38 @@ public class DateUtils {
         return new Date(time);
     }
 
+    /**
+     * 字段类型枚举定义
+     *
+     *
+     * @author : john.peng date : 2017/9/15
+     */
     public enum FieldType {
-        YEAR(Calendar.YEAR), MONTH(Calendar.MONTH), DAY(Calendar.DAY_OF_MONTH), HOUR(Calendar.HOUR_OF_DAY), MINUTE(
-                Calendar.MINUTE), SECOND(Calendar.SECOND);
+        /**
+         * 年
+         */
+        YEAR(Calendar.YEAR),
+        /**
+         * 月
+         */
+        MONTH(Calendar.MONTH),
+        /**
+         * 日
+         */
+        DAY(Calendar.DAY_OF_MONTH),
+        /**
+         * 小时
+         */
+        HOUR(Calendar.HOUR_OF_DAY),
+        /**
+         * 分钟
+         */
+        MINUTE(
+                Calendar.MINUTE),
+        /**
+         * 秒钟
+         */
+        SECOND(Calendar.SECOND);
 
         int field;
 

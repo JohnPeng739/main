@@ -4,7 +4,10 @@ import org.mx.dal.entity.BaseDict;
 import org.mx.dal.exception.EntityAccessException;
 
 /**
- * Created by john on 2017/10/7.
+ * 基于Mongodb实现的基础字典实体访问接口定义
+ *
+ * @author : john.peng date : 2017/10/7
+ * @see GeneralEntityAccessor
  */
 public interface GeneralDictEntityAccessor extends GeneralDictAccessor {
     /**

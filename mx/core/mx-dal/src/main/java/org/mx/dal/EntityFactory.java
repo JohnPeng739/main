@@ -4,9 +4,19 @@ import org.mx.dal.exception.EntityInstantiationException;
 import org.springframework.util.Assert;
 
 /**
- * Created by john on 2017/8/18.
+ * 实体创建工厂类
+ *
+ * @author : john.peng date : 2017/8/18
  */
 public class EntityFactory {
+    /**
+     * 根据指定的实体接口类定义创建一个实体对象
+     *
+     * @param entityInterfaceClass 实体接口类定义
+     * @param <T>                  泛型类型
+     * @return 创建后的实体对象
+     * @throws EntityInstantiationException 创建实体过程中发生的异常
+     */
     public static <T> T createEntity(Class<T> entityInterfaceClass) throws EntityInstantiationException {
         Assert.notNull(entityInterfaceClass, "The class of the entity interface is null.");
         String entityName = String.format("%sEntity", entityInterfaceClass.getName());

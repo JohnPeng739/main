@@ -7,6 +7,7 @@ import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralEntityAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,10 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
 /**
- * Created by john on 2017/10/8.
+ * 基于Mongodb实现的基础实体访问实现类
+ *
+ * @author : john.peng date : 2017/10/8
+ * @see GeneralEntityAccessor
  */
 @Component("generalEntityAccessorMongodb")
 public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
@@ -36,16 +40,34 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     @Qualifier("sessionDataThreadLocal")
     private SessionDataStore sessionDataStore = null;
 
+    /**
+     * 根据指定的实体接口定义返回对应的实体定义类
+     *
+     * @param entityInterfaceClass 实体接口类
+     * @param <T>                  泛型类型
+     * @return 实体类
+     * @throws ClassNotFoundException 实体类型没有定义
+     */
     protected <T extends Base> Class<T> getEntityClass(Class<T> entityInterfaceClass) throws ClassNotFoundException {
         String entityClassName = String.format("%sEntity", entityInterfaceClass.getName());
         return (Class<T>) Class.forName(entityClassName);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#count(Class)
+     */
     @Override
     public <T extends Base> long count(Class<T> entityInterfaceClass) throws EntityAccessException {
         return count(entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#count(Class, boolean)
+     */
     @Override
     public <T extends Base> long count(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
@@ -63,11 +85,21 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#list(Class)
+     */
     @Override
     public <T extends Base> List<T> list(Class<T> entityInterfaceClass) throws EntityAccessException {
         return list(entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#list(Class, boolean)
+     */
     @Override
     public <T extends Base> List<T> list(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
@@ -85,11 +117,21 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#list(Pagination, Class)
+     */
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass) throws EntityAccessException {
         return list(pagination, entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#list(Pagination, Class, boolean)
+     */
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         if (pagination == null) {
@@ -110,11 +152,21 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#getById(String, Class)
+     */
     @Override
     public <T extends Base> T getById(String id, Class<T> entityInterfaceClass) throws EntityAccessException {
         return getById(id, entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#getById(String, Class, boolean)
+     */
     @Override
     public <T extends Base> T getById(String id, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
@@ -129,11 +181,21 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#find(List, Class)
+     */
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityInterfaceClass) throws EntityAccessException {
         return find(tuples, entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#find(List, Class, boolean)
+     */
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
@@ -151,7 +213,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
                     ConditionTuple tuple = tuples.get(0);
                     cd = where(tuple.field).is(tuple.value);
                 default:
-                    for (int index = 1; index < tuples.size(); index ++) {
+                    for (int index = 1; index < tuples.size(); index++) {
                         tuple = tuples.get(index);
                         cd.and(tuple.field).is(tuple.value);
                     }
@@ -165,11 +227,21 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#findOne(List, Class)
+     */
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityInterfaceClass) throws EntityAccessException {
         return findOne(tuples, entityInterfaceClass, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#findOne(List, Class, boolean)
+     */
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         List<T> list = find(tuples, entityClass, isInterfaceClass);
@@ -180,6 +252,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#save(Base)
+     */
     @Override
     public <T extends Base> T save(T t) throws EntityAccessException {
         if (StringUtils.isBlank(t.getId())) {
@@ -202,11 +279,21 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         return template.findById(t.getId(), (Class<T>) t.getClass());
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#remove(Base)
+     */
     @Override
     public <T extends Base> T remove(T t) throws EntityAccessException {
         return remove(t, true);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#remove(Base, boolean)
+     */
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) throws EntityAccessException {
         if (logicRemove) {

@@ -16,7 +16,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Created by john on 2017/10/6.
+ * Http Servlet服务器
+ *
+ * @author : john.peng date : 2017/10/6
+ * @see InitializingBean
  */
 @Component("servletServer")
 public class ServletServer implements InitializingBean {
@@ -27,18 +30,33 @@ public class ServletServer implements InitializingBean {
     private ApplicationContext context = null;
     private Server server = null;
 
+    /**
+     * 默认的构造函数
+     */
     public ServletServer() {
+        super();
     }
 
+    /**
+     * 获取Http Servlet服务器
+     *
+     * @return 服务器
+     */
     public Server getServer() {
         return this.server;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see InitializingBean#afterPropertiesSet()
+     */
+    @Override
     public void afterPropertiesSet() throws Exception {
         String serviceClassesDef = "servlet.service.classes";
         String servletServiceClassesDef = this.env.getProperty(serviceClassesDef);
-        if(StringUtils.isBlank(servletServiceClassesDef)) {
-            if(logger.isWarnEnabled()) {
+        if (StringUtils.isBlank(servletServiceClassesDef)) {
+            if (logger.isWarnEnabled()) {
                 logger.warn(String.format("You not define [%s], will not ", serviceClassesDef));
             }
 
@@ -50,12 +68,12 @@ public class ServletServer implements InitializingBean {
             server.setHandler(contextHandler);
             String[] classesDefs = servletServiceClassesDef.split(",");
 
-            for(String classesDef : classesDefs) {
-                if(!StringUtils.isBlank(classesDef)) {
-                    List<Class<?>> servletClasses = (List)this.context.getBean(classesDef, List.class);
-                    if(servletClasses != null && !servletClasses.isEmpty()) {
+            for (String classesDef : classesDefs) {
+                if (!StringUtils.isBlank(classesDef)) {
+                    List<Class<?>> servletClasses = (List) this.context.getBean(classesDef, List.class);
+                    if (servletClasses != null && !servletClasses.isEmpty()) {
                         servletClasses.forEach((clazz) -> {
-                            BaseHttpServlet servlet = (BaseHttpServlet)this.context.getBean(clazz);
+                            BaseHttpServlet servlet = (BaseHttpServlet) this.context.getBean(clazz);
                             contextHandler.addServlet(new ServletHolder(servlet), servlet.getPathSpec());
                         });
                     }
@@ -63,7 +81,7 @@ public class ServletServer implements InitializingBean {
             }
 
             server.start();
-            if(logger.isInfoEnabled()) {
+            if (logger.isInfoEnabled()) {
                 logger.info(String.format("Start ServletServer success, listen port: %d.", port));
             }
 

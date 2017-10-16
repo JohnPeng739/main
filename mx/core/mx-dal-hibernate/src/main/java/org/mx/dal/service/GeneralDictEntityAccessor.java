@@ -4,7 +4,10 @@ import org.mx.dal.entity.BaseDict;
 import org.mx.dal.exception.EntityAccessException;
 
 /**
- * Created by john on 2017/10/7.
+ * 基于Hibernate的JPA基本字典类实体访问的DAL接口定义
+ *
+ * @author : john.peng date : 2017/10/7
+ * @see GeneralDictAccessor
  */
 public interface GeneralDictEntityAccessor extends GeneralDictAccessor {
     /**

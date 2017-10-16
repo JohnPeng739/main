@@ -7,7 +7,10 @@ import org.mx.dal.exception.EntityAccessException;
 import java.util.List;
 
 /**
- * Created by john on 2017/10/7.
+ * 基于Hibernate的JPA基础类实体访问的DAL接口定义
+ *
+ * @author : john.peng date : 2017/10/7
+ * @see GeneralAccessor
  */
 public interface GeneralEntityAccessor extends GeneralAccessor {
     /**

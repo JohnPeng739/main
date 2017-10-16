@@ -7,7 +7,8 @@ import org.mx.dal.exception.EntityAccessException;
 /**
  * 字典类实体的存取接口定义，实体接口必须继承BaseDict；本接口继承了GeneralEntityAccessor。
  *
- * @see GeneralAccessor Created by john on 2017/8/18.
+ * @author : john.peng date : 2017/8/18
+ * @see GeneralAccessor
  */
 public interface GeneralDictAccessor extends GeneralAccessor {
     /**

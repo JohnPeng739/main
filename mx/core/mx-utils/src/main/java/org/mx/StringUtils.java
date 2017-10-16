@@ -1,15 +1,14 @@
 package org.mx;
 
-import org.mx.base64.Base64;
-
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.StringTokenizer;
 
 /**
  * 字符串工具类，包括一些常用的字符串相关方法。
  *
- * @author john peng on 2016/5/29
+ * @author : john peng date : 2016/5/29
  */
 public class StringUtils {
     /**
@@ -36,7 +35,7 @@ public class StringUtils {
      * @return 编码后的字符串
      */
     public static String byte2Base64String(byte[] value) {
-        return Base64.encodeToString(value, Base64.DEFAULT | Base64.NO_WRAP);
+        return Base64.getEncoder().encodeToString(value);
     }
 
     /**
@@ -46,7 +45,7 @@ public class StringUtils {
      * @return 解码后的字节数据
      */
     public static byte[] Base64String2Byte(String base64Str) {
-        return Base64.decode(base64Str.getBytes(), Base64.DEFAULT | Base64.NO_WRAP);
+        return Base64.getDecoder().decode(base64Str);
     }
 
     /**
@@ -177,7 +176,7 @@ public class StringUtils {
     /**
      * 组合数据对象列表成为一个字符串
      *
-     * @param list      数据对象列表
+     * @param list     数据对象列表
      * @param separate 组合分割符
      * @return 组合后的字符串
      */
@@ -188,7 +187,7 @@ public class StringUtils {
     /**
      * 组合数据对象列表成为一个字符串
      *
-     * @param list      数据对象列表
+     * @param list     数据对象列表
      * @param separate 组合分割符
      * @return 组合后的字符串
      */
