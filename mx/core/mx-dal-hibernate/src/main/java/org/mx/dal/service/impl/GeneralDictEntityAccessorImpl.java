@@ -8,6 +8,7 @@ import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.GeneralDictEntityAccessor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
@@ -28,6 +29,7 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
      *
      * @see GeneralDictAccessor#getByCode(String, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass) throws EntityAccessException {
         return getByCode(code, entityInterfaceClass, true);
@@ -38,6 +40,7 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
      *
      * @see GeneralDictEntityAccessor#getByCode(String, Class, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {

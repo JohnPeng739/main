@@ -16,7 +16,7 @@ public class BaseDictEntity extends BaseEntity implements BaseDict {
     private String code;
     @Column(name = "NAME", length = 100)
     private String name;
-    @Column(name = "DESC")
+    @Column(name = "DESCRIPTION")
     private String desc;
 
     /**
