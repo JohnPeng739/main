@@ -1,8 +1,9 @@
 package org.mx;
 
+import sun.misc.BASE64Encoder;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.UUID;
 
 /**
@@ -52,7 +53,7 @@ public class DigestUtils {
     private static String encodeString(String algorithm, byte[] input) throws NoSuchAlgorithmException {
         switch (algorithm) {
             case "BASE64":
-                Base64.getEncoder().encode(input);
+                return new BASE64Encoder().encode(input);
             case "HEX":
                 return StringUtils.byte2HexString(input);
             default:
