@@ -39,7 +39,7 @@
             <span v-if="scope.row.submitted">已提交集群</span>
             <span v-else style="color: red;">未提交集群</span>
             <el-button class="button" v-if="!scope.row.submitted" size="mini" @click="handleSubmit(scope.row.id, true)">提交集群</el-button>
-            <el-button class="button" v-if="!scope.row.submitted" size="mini" @click="handleSubmit(scope.row.id, false)">本地仿真</el-button>
+            <el-button class="button" v-if="!scope.row.submitted && isDebug" size="mini" @click="handleSubmit(scope.row.id, false)">本地仿真</el-button>
           </template>
         </el-table-column>
         <el-table-column prop="operator" label="操作人员" width="120"></el-table-column>
@@ -54,6 +54,7 @@
   import {info} from '../../assets/notify'
   import {get, post} from '../../assets/ajax'
   import {formatDateTime} from '../../assets/date-utils'
+  import config from '../../modules/manage/config'
   import PanePaginateList from '../../components/pane-paginate-list.vue'
 
   export default {
@@ -71,6 +72,11 @@
         },
         tableData: [],
         selection: null
+      }
+    },
+    computed: {
+      isDebug() {
+        return config.debug
       }
     },
     methods: {

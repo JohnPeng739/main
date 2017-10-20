@@ -35,7 +35,7 @@ import java.util.*;
  * "C": {
  * "type": "JDBC",
  * "dataSource": "dataSource1",
- * "sql": "SELECT code AS C FROM TB_DICT_A WHERE AGE > 10",
+ * "sql": "SELECT code AS C FROM TB_DICT_A WHERE AGE &gt; 10",
  * "intervalSec": 3600
  * }
  * }

@@ -14,7 +14,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VueMarkDown)
 
-if (process.env.NODE_ENV === 'development' && config.mock) {
+if (config.mock) {
   mocks.forEach(m => {
     m.forEach(item => Mock.mock(item.path, item.type, item.data))
   })
