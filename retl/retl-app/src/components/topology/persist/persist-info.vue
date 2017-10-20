@@ -16,11 +16,10 @@
     <el-row type="flex">
       <el-col :span="24">
         <el-form-item label="存储表" prop="tables">
-          <pane-table-config ref="paneTables" :confs="formJdbcPersist.tables"
+          <pane-table-config ref="paneTables" :list="formJdbcPersist.tables"
                                    v-on:delete="handleDeleteTable" v-on:edit="handleEditTable"
                                    v-on:reset="handleResetTableForm" v-on:save="handleSaveTableForm">
-            <form-table-config ref="formTable" slot="form-config">
-            </form-table-config>
+            <form-table-config ref="formTable" slot="form-config"></form-table-config>
           </pane-table-config>
         </el-form-item>
       </el-col>
@@ -29,6 +28,7 @@
 </template>
 
 <script>
+  import {mapGetters, mapActions} from 'vuex'
   import {logger} from 'dsutils'
   import {requiredRule} from '../../../assets/form-validate-rules'
   import {error, formValidateWarn} from '../../../assets/notify'
@@ -37,18 +37,36 @@
 
   export default {
     name: 'topology-persist-info',
-    props: ['topology'],
     components: {PaneTableConfig, FormTableConfig},
     data () {
       return {
-        list: this.topology.jdbcDataSources,
-        formJdbcPersist: {dataSource: '', tables: [], tableEditIndex: null},
+        list: [],
+        formJdbcPersist: {dataSource: '', tables: []},
         rulesJdbcPersist: {
           dataSource: [requiredRule({msg: '必须选择一个数据源', trigger: 'change'})]
         }
       }
     },
+    computed: {
+      ...mapGetters(['jdbcDataSources', 'persist'])
+    },
     methods: {
+      ...mapActions(['setPersist']),
+      validated() {
+        let validated = false
+        this.$refs['formJdbcPersist'].validate(valid => {
+          if (valid) {
+            validated = valid
+          } else {
+            formValidateWarn()
+          }
+        })
+        return validated
+      },
+      cacheData() {
+        let {dataSource, tables} = this.formJdbcPersist
+        this.setPersist({dataSource, tables})
+      },
       handleDeleteTable(indexes) {
         logger.debug('delete table config request: %j.', indexes)
         if (indexes && indexes.length > 0) {
@@ -62,8 +80,6 @@
         }
       },
       handleEditTable(index) {
-        logger.debug('edit table config request, index: %d.', index)
-        this.formJdbcPersist.tableEditIndex = index
         let tables = this.formJdbcPersist.tables
         if (tables && tables[index]) {
           this.$nextTick(_ => {this.$refs['formTable'].setTable(tables[index])})
@@ -78,18 +94,19 @@
       handleSaveTableForm() {
         logger.debug('save table config form.')
         let tables = this.formJdbcPersist.tables
-        let editIndex = this.formJdbcPersist.tableEditIndex
         if (!tables) {
           tables = []
         }
         let table = this.$refs['formTable'].getTable()
+        let selected = this.$refs['paneTables'].getSelected()
         if (table) {
-          if (editIndex !== null) {
+          if (selected && selected && selected.length === 1) {
             // edit
-            tables[editIndex] = table
+            tables[selected[0]] = table
           } else {
             tables.push(table)
           }
+          logger.debug('Save tables: %j.', tables)
           this.setTables(tables)
           this.$refs['paneTables'].handleConfigForm('close')
         }
@@ -101,31 +118,22 @@
         this.formJdbcPersist.tables = tables
         this.formJdbcPersist.tableEditIndex = null
         this.$refs['paneTables'].setList(tables)
-      },
-      getPersistInfo() {
-        let persist = null
-        this.$refs['formJdbcPersist'].validate(valid => {
-          if (valid) {
-            let {dataSource, tables} = this.formJdbcPersist
-            persist = {dataSource, tables}
-          } else {
-            formValidateWarn()
-          }
-        })
-        return persist
-      },
-      setTopology(topology) {
-        if (topology && topology.persist) {
-          let {dataSource, tables} = topology.persist
-          this.formJdbcPersist = {dataSource, tables}
-          this.$refs['paneTables'].setList(tables)
-        }
       }
     },
     mounted() {
-      if (this.topology && this.topology.persist) {
-        this.setTopology(this.topology)
-      }
+      this.$nextTick(_ => {
+        let jdbcDataSources = this.jdbcDataSources
+        if (jdbcDataSources) {
+          this.list = jdbcDataSources
+        }
+        let persist = this.persist
+        if (persist) {
+          let {dataSource, tables} = persist
+          logger.debug('load init data: %j.', tables)
+          this.formJdbcPersist = {dataSource, tables}
+          this.$refs['paneTables'].setList(tables)
+        }
+      })
     }
   }
 </script>

@@ -23,6 +23,20 @@ public interface Topology extends Base {
     void setName(String name);
 
     /**
+     * 获取描述
+     *
+     * @return 描述
+     */
+    String getDescription();
+
+    /**
+     * 设置描述
+     *
+     * @param description 描述
+     */
+    void setDescription(String description);
+
+    /**
      * 获取是否已经提交
      *
      * @return 是否已经提交

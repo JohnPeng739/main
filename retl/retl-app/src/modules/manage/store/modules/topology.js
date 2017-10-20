@@ -5,22 +5,27 @@ const SETDATA = 'SETDATA'
 
 const TOPOLOGY='current-topology'
 
-export const topologySample = {
-  name: 'SampleTopology',
-  type: 'retl',
-  debug: false,
-  messageTimeoutSecs: 3,
-  maxSpoutPending: 1,
-  tarDestinateName: 'sample',
-  tarIsTopic: false,
-  zookeepers: [],
-  jdbcDataSources: [],
-  jmsDataSources: [],
-  spouts: [],
-  columns: [],
-  validates: [],
-  transforms: [],
-  persist: {}
+export const topologySample = function () {
+  return {
+    id: null,
+    name: 'SampleTopology',
+    description: '',
+    type: 'retl',
+    debug: false,
+    messageTimeoutSecs: 3,
+    maxSpoutPending: 1,
+    tarDestinateName: 'sample',
+    tarIsTopic: false,
+    zookeepers: [],
+    jdbcDataSources: [],
+    jmsDataSources: [],
+    caches: [],
+    spouts: [],
+    columns: [],
+    validates: {},
+    transforms: {},
+    persist: {}
+  }
 }
 
 const state = {
@@ -32,6 +37,7 @@ const getters = {
   zookeepers: state => state.topology.zookeepers,
   jdbcDataSources: state => state.topology.jdbcDataSources,
   jmsDataSources: state => state.topology.jmsDataSources,
+  caches: state => state.topology.caches,
   spouts: state => state.topology.spouts,
   columns: state => state.topology.columns,
   validates: state => state.topology.validates,
@@ -48,6 +54,11 @@ const actions = {
   },
   cacheClean({commit, state}) {
     commit(CACHE, 'clean')
+    commit(CACHE, 'load')
+  },
+  setTopology({commit, state}, topology) {
+    commit(SETDATA, {operate: 'topology', data: topology})
+    commit(CACHE, 'save')
   },
   setBaseInfo({commit, state}, baseInfo) {
     commit(SETDATA, {operate: 'baseInfo', data: baseInfo})
@@ -60,6 +71,9 @@ const actions = {
   },
   setJmsDataSources({commit, state}, dataSources) {
     commit(SETDATA, {operate: 'jmsDataSources', data: dataSources})
+  },
+  setCaches({commit, state}, caches) {
+    commit(SETDATA, {operate: 'caches', data: caches})
   },
   setSpouts({commit, state}, spouts) {
     commit(SETDATA, {operate: 'spouts', data: spouts})
@@ -86,6 +100,7 @@ const mutations = {
         logger.debug('Cache topology into local storage success, topology: %j.', state.topology)
         break
       case 'clean':
+        state.topology = {}
         localStorage.removeItem(TOPOLOGY)
         logger.debug('Clean topology success.')
       case 'load':
@@ -94,7 +109,7 @@ const mutations = {
           state.topology = JSON.parse(str)
           logger.debug('Load topology from local storage success, topology: %s.', str)
         } else {
-          state.topology = topologySample
+          state.topology = topologySample()
           logger.debug('Init topology success, topology: %j.', state.topology)
         }
         break
@@ -104,10 +119,14 @@ const mutations = {
   },
   SETDATA(state, {operate, data}) {
     switch (operate) {
+      case 'topology':
+        state.topology = data
+        break
       case 'baseInfo':
-        let {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic} = data
+        let {name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic} = data
         let topology = state.topology
         topology.name = name
+        topology.description = description
         topology.type = type
         topology.debug = debug
         topology.messageTimeoutSecs = messageTimeoutSecs
@@ -125,6 +144,9 @@ const mutations = {
       case 'jmsDataSources':
         state.topology.jmsDataSources = data
         break
+      case 'caches':
+        state.topology.caches = data
+        break
       case 'spouts':
         state.topology.spouts = data
         break
@@ -138,6 +160,8 @@ const mutations = {
         state.topology.transforms = data
         break
       case 'persist':
+        state.topology.validates = {}
+        state.topology.transforms = {}
         state.topology.persist = data
       default:
         return

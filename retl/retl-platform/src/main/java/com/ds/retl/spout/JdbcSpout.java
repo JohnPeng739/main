@@ -1,7 +1,6 @@
 package com.ds.retl.spout;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.jdbc.JdbcManager;
 import com.ds.retl.zookeeper.ZookeeperOperate;
@@ -18,7 +17,6 @@ import org.mx.StringUtils;
 
 import java.sql.*;
 import java.util.*;
-import java.util.Date;
 
 /**
  * Created by john on 2017/9/15.
@@ -29,7 +27,8 @@ public class JdbcSpout extends BaseRichSpout {
     private SpoutOutputCollector collector = null;
     private JSONObject configuration = null;
     private Connection connection = null;
-    private String table, key, timestamp, sqlCount = null, sqlSelectFail = null, sqlSelect = null, ackPath = null;
+    private String table, key, timestamp, timestampNew, ackPath = null;
+    private String sqlCount = null, sqlSelectFail = null, sqlSelect = null;
     private Map<String, String> fieldTransform = null;
     private int windowSize = 100, intervalSec = 10;
     private Queue<JSONObject> cache = null;
@@ -53,7 +52,7 @@ public class JdbcSpout extends BaseRichSpout {
         this.collector = collector;
 
         // 如果可能，初始化Zookeeper
-        String zookeeperStr = (String) conf.get("zookeeper");
+        String zookeeperStr = (String) conf.get("zookeepers");
         if (!StringUtils.isBlank(zookeeperStr)) {
             JSONObject zookeeperConfig = JSON.parseObject(zookeeperStr);
             try {
@@ -67,21 +66,10 @@ public class JdbcSpout extends BaseRichSpout {
         }
 
         // 如果可能，初始化JDBC连接池
-        String dataSourcesStr = (String) conf.get("dataSources");
-        if (!StringUtils.isBlank(dataSourcesStr)) {
-            JSONArray dataSourcesJson = JSON.parseArray(dataSourcesStr);
-            try {
-                JdbcManager.getManager().initManager(dataSourcesJson);
-            } catch (SQLException ex) {
-                String message = String.format("Initialize JDBC Manager fail, from JdbcSpout, dataSources: %s.", dataSourcesStr);
-                if (logger.isErrorEnabled()) {
-                    logger.error(message);
-                }
-                throw new IllegalArgumentException(message);
-            }
-        }
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Initialize JDBC Manager successfully, dataSources: %s.", dataSourcesStr));
+        try {
+            JdbcManager.getManager().initManager(conf);
+        } catch (SQLException ex) {
+            throw new IllegalArgumentException("Initialize JDBC Manager fail.");
         }
 
         String dataSourceName = configuration.getString("dataSource");
@@ -113,7 +101,7 @@ public class JdbcSpout extends BaseRichSpout {
         }
         try {
             sqlCount = String.format("select count(*),min(%s),max(%s),current_timestamp from %s where %s >= ?",
-                    timestamp,timestamp, table, timestamp);
+                    timestamp, timestamp, table, timestamp);
             sqlSelectFail = String.format("select %s from %s where %s = ?",
                     fields, table, key);
             sqlSelect = String.format("select %s from %s where %s >= ? and %s < ?",
@@ -129,6 +117,11 @@ public class JdbcSpout extends BaseRichSpout {
         }
         if (fieldTransform == null) {
             fieldTransform = new HashMap<>();
+        }
+        if (fieldTransform.containsKey(timestamp)) {
+            timestampNew = fieldTransform.get(timestamp);
+        } else {
+            timestampNew = timestamp;
         }
         // 获取上次成功抽取的时间作为初始开始时间
         List<String> timestamps = ZookeeperOperate.getOperate().getChild(String.format("%s/lastFetchTime", ackPath));
@@ -249,8 +242,8 @@ public class JdbcSpout extends BaseRichSpout {
         JSONObject json = cache.poll();
         if (json != null) {
             String messageId = json.getString(key);
-            collector.emit(new Values(managedJson, json.toJSONString()), messageId);
             pending.put(messageId, json);
+            collector.emit(new Values(managedJson, json.toJSONString()), messageId);
         }
     }
 
@@ -283,7 +276,7 @@ public class JdbcSpout extends BaseRichSpout {
             }
             return;
         }
-        long ts = record.getTimestamp(timestamp).getTime();
+        long ts = record.getTimestamp(timestampNew).getTime();
         // 清除旧的时间戳
         List<String> older = ZookeeperOperate.getOperate().getChild(String.format("%s/lastFetchTime", ackPath));
         if (older != null && !older.isEmpty()) {

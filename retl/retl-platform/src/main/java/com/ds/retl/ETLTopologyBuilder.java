@@ -87,6 +87,7 @@ public class ETLTopologyBuilder {
 
         TopologyBuilder builder = new TopologyBuilder();
         String topologyName = json.getString("name");
+        String topologyType = json.getString("type");
         if (StringUtils.isBlank(topologyName)) {
             String message = "Not define the name for the topology.";
             if (logger.isErrorEnabled()) {
@@ -97,7 +98,7 @@ public class ETLTopologyBuilder {
 
         // 创建定义的Spout
         JSONArray spoutArray = json.getJSONArray("spouts");
-        createSpouts(spoutArray, builder);
+        createSpouts(spoutArray, "persist".equals(topologyType), builder);
 
         // 创建定义的Bolt
         JSONArray boltArray = json.getJSONArray("bolts");
@@ -135,7 +136,7 @@ public class ETLTopologyBuilder {
      * @param spoutArray 采集器配置信息
      * @param builder    拓扑创建者对象
      */
-    private void createSpouts(JSONArray spoutArray, TopologyBuilder builder) {
+    private void createSpouts(JSONArray spoutArray, boolean isPersist, TopologyBuilder builder) {
         for (int index = 0; index < spoutArray.size(); index++) {
             JSONObject jsonSpout = spoutArray.getJSONObject(index);
             String name = jsonSpout.getString("name");
@@ -155,15 +156,15 @@ public class ETLTopologyBuilder {
                 }
                 throw new IllegalArgumentException(message);
             }
-            if ("JMS".equalsIgnoreCase(type) || "JMS_PULL".equalsIgnoreCase(type)) {
+            if ("jms".equalsIgnoreCase(type) || "jmsPULL".equalsIgnoreCase(type)) {
                 // JMS Spout
                 String method = jsonSpout.getString("method");
                 JmsManager.Supported supported = JmsManager.Supported.valueOf(method);
                 JSONObject configuration = jsonSpout.getJSONObject("configuration");
                 try {
                     BaseRichSpout spout = "JMS".equalsIgnoreCase(type) ?
-                            JmsManager.createJmsSpout(supported, configuration) :
-                            JmsManager.createJmsPullSpout(supported, configuration);
+                            JmsManager.createJmsSpout(supported, configuration, isPersist) :
+                            JmsManager.createJmsPullSpout(supported, configuration, isPersist);
                     builder.setSpout(name, spout, parallelism);
                 } catch (JMSException ex) {
                     if (logger.isErrorEnabled()) {
@@ -172,7 +173,7 @@ public class ETLTopologyBuilder {
                     }
                     throw new IllegalArgumentException(ex.getMessage(), ex);
                 }
-            } else if ("JDBC".equalsIgnoreCase(type)) {
+            } else if ("jdbc".equalsIgnoreCase(type)) {
                 JSONObject configuration = jsonSpout.getJSONObject("configuration");
                 JdbcSpout spout = new JdbcSpout(configuration);
                 // JdbcSpout的并行度必须设置为1，防止数据库死锁
@@ -340,10 +341,15 @@ public class ETLTopologyBuilder {
         config.setNumAckers(json.getInteger("numAckers") != null ? json.getInteger("numAckers") : 3);
         config.setNumWorkers(json.getInteger("numWorkers") != null ? json.getInteger("numWorkers") : 5);
         config.setTopologyPriority(json.getInteger("priority") != null ? json.getInteger("priority") : 3);
-        // 设置JDBC数据源
-        JSONArray dataSources = json.getJSONArray("dataSources");
-        if (dataSources != null) {
-            config.put("dataSources", dataSources.toJSONString());
+        // 设置数据源
+        JSONArray jdbcDataSources = json.getJSONArray("jdbcDataSources");
+        if (jdbcDataSources != null) {
+            config.put("jdbcDataSources", jdbcDataSources.toJSONString());
+        }
+        // 设置缓存
+        JSONObject caches = json.getJSONObject("caches");
+        if (caches != null) {
+            config.put("caches", caches.toJSONString());
         }
         // 设置数据列和数据列描述
         JSONArray columns = json.getJSONArray("columns");
@@ -351,9 +357,9 @@ public class ETLTopologyBuilder {
             config.put("columns", columns.toJSONString());
         }
         // 设置zookeeper配置
-        JSONObject zookeeper = json.getJSONObject("zookeeper");
-        if (zookeeper != null) {
-            config.put("zookeeper", zookeeper.toJSONString());
+        JSONObject zookeepers = json.getJSONObject("zookeepers");
+        if (zookeepers != null) {
+            config.put("zookeepers", zookeepers.toJSONString());
         }
         // 设置配置的校验规则和转换规则
         JSONObject validates = json.getJSONObject("validates");

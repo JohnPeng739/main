@@ -27,8 +27,8 @@
         <el-form-item label="连接" prop="server">
           <el-input v-model="formJmsDataSource.server">
             <el-select v-model="formJmsDataSource.protocol" slot="prepend"style="width: 80px;">
-              <el-option label="NIO（推荐使用）" value="nio://"></el-option>
-              <el-option label="TCP" value="tcp://"></el-option>
+              <el-option label="NIO" value="nio://"></el-option>
+              <el-option label="TCP（推荐使用）" value="tcp://"></el-option>
               <el-option label="HTTP" value="http://"></el-option>
             </el-select>
           </el-input>
@@ -81,7 +81,7 @@
       }
       return {
         methodSupported: [],
-        formJmsDataSource: {method: 'ACTIVEMQ', name: '', protocol: 'NIO', server: '', trace: true, user: '',
+        formJmsDataSource: {method: 'ACTIVEMQ', name: '', protocol: 'TCP', server: '', trace: true, user: '',
           password: '', jndiName: ''},
         rulesJmsDataSource: {
           name: [requiredRule({msg: '必须输入jms数据源的名称'})],

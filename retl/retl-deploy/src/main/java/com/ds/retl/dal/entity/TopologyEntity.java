@@ -4,6 +4,7 @@ import org.mx.dal.entity.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 /**
@@ -17,13 +18,17 @@ import javax.persistence.Table;
 public class TopologyEntity extends BaseEntity implements Topology {
     @Column(name = "NAME", nullable = false, length = 50)
     private String name;
+    @Column(name = "DESCRIPTION", length = 100)
+    private String description;
     @Column(name = "SUBMITTED_TIME")
     private long submittedTime;
     @Column(name = "SUBMITTED")
     private boolean submitted;
-    @Column(nullable = false, columnDefinition = "clob")
+    @Column(name = "CONFIG_CONTENT", nullable = false)
+    @Lob
     private String topologyContent = "";
-    @Column(nullable = false, columnDefinition = "clob")
+    @Column(name = "SUBMIT_INFO")
+    @Lob
     private String submitInfo = "";
 
     /**
@@ -44,6 +49,26 @@ public class TopologyEntity extends BaseEntity implements Topology {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Topology#getDescription()
+     */
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Topology#setDescription(String)
+     */
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**

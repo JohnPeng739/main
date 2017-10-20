@@ -25,12 +25,12 @@
   <el-form ref="baseInfo" :model="formBasicInfo" :rules="rulesBasicInfo" label-width="100px" class="layout-form">
     <el-row type="flex">
       <el-col :span="14">
-        <el-form-item label="拓扑名称" prop="name">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="formBasicInfo.name"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="10">
-        <el-form-item label="拓扑类型" prop="type">
+        <el-form-item label="类型" prop="type">
           <el-select v-model="formBasicInfo.type">
             <el-option v-for="item in topologyTypes" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
@@ -39,13 +39,20 @@
       </el-col>
     </el-row>
     <el-row type="flex">
-      <el-col :span="7">
+      <el-col :span="24">
+        <el-form-item label="描述" prop="description">
+          <el-input type="textarea" v-model="formBasicInfo.description" :row="2"></el-input>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row type="flex">
+      <el-col :span="10">
         <el-form-item label="消息超时值" prop="messageTimeoutSecs">
           <el-input-number v-model="formBasicInfo.messageTimeoutSecs" :min="1" :max="10"></el-input-number>
           <span>秒</span>
         </el-form-item>
       </el-col>
-      <el-col :span="7" v-if="formBasicInfo.type === 'retl'">
+      <el-col :span="6" v-if="formBasicInfo.type === 'retl'">
         <el-tooltip content="数据存储的队列或订阅主题的名称，默认使用第一个jms数据源。" placement="bottom" :hide-after="2000">
           <el-form-item label="存储名" prop="tarDestinateName">
             <el-input v-model="formBasicInfo.tarDestinateName"></el-input>
@@ -57,34 +64,40 @@
           <el-switch v-model="formBasicInfo.tarIsTopic"></el-switch>
         </el-form-item>
       </el-col>
-      <el-col :span="4">
-        <el-form-item>
-          <el-button class="button" @click="handleCacheClean" size="small">清除缓存</el-button>
-        </el-form-item>
-      </el-col>
     </el-row>
     <el-row type="flex">
       <el-col :span="24">
         <el-form-item label="jdbc源" prop="jdbcDataSources">
-          <pane-data-source-config ref="jdbcDataSources" :list="formBasicInfo.jdbcDataSources"
-                                   v-on:delete="handleDeleteJdbcDataSource" v-on:edit="handleEditJdbcDataSource"
-                                   v-on:reset="handleResetJdbcDataSourceForm"
-                                   v-on:save="handleSaveJdbcDataSourceForm">
+          <pane-listable-config ref="jdbcDataSources" :list="formBasicInfo.jdbcDataSources"
+                                v-on:delete="handleDeleteJdbcDataSource" v-on:edit="handleEditJdbcDataSource"
+                                v-on:reset="handleResetJdbcDataSourceForm"
+                                v-on:save="handleSaveJdbcDataSourceForm">
             <form-jdbc-data-source-config ref="formJdbcDataSource" slot="form-config">
             </form-jdbc-data-source-config>
-          </pane-data-source-config>
+          </pane-listable-config>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row type="flex">
       <el-col :span="24">
         <el-form-item label="jms源" prop="jmsDataSources">
-          <pane-data-source-config ref="jmsDataSources" :list="formBasicInfo.jmsDataSources"
-                                   v-on:delete="handleDeleteJmsDataSource" v-on:edit="handleEditJmsDataSource"
-                                   v-on:reset="handleResetJmsDataSourceForm" v-on:save="handleSaveJmsDataSourceForm">
+          <pane-listable-config ref="jmsDataSources" :list="formBasicInfo.jmsDataSources"
+                                v-on:delete="handleDeleteJmsDataSource" v-on:edit="handleEditJmsDataSource"
+                                v-on:reset="handleResetJmsDataSourceForm" v-on:save="handleSaveJmsDataSourceForm">
             <form-jms-data-source-config ref="formJmsDataSource" slot="form-config">
             </form-jms-data-source-config>
-          </pane-data-source-config>
+          </pane-listable-config>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row type="flex" v-if="formBasicInfo.type === 'retl'">
+      <el-col :span="24">
+        <el-form-item label="缓存数据" prop="caches">
+          <pane-listable-config ref="caches" :list="formBasicInfo.caches"
+                                v-on:delete="handleDeleteCache" v-on:edit="handleEditCache"
+                                v-on:reset="handleResetCacheForm" v-on:save="handleSaveCacheForm">
+            <form-cache-config ref="formCache" slot="form-config"></form-cache-config>
+          </pane-listable-config>
         </el-form-item>
       </el-col>
     </el-row>
@@ -97,14 +110,18 @@
   import {error, formValidateWarn} from '../../assets/notify'
   import DsIcon from '../../components/icon.vue'
   import DsTagNormal from '../ds-tag-normal.vue'
-  import PaneDataSourceConfig from '../pane-listable-config.vue'
+  import PaneListableConfig from '../pane-listable-config.vue'
   import FormJdbcDataSourceConfig from '../datasource/form-jdbc-datasource-config.vue'
   import FormJmsDataSourceConfig from '../datasource/form-jms-datasource-config.vue'
+  import FormCacheConfig from './retl/form-cache-config.vue'
   import {requiredRule, rangeRule, customRule} from '../../assets/form-validate-rules'
 
   export default {
     name: 'topology-basic-infor',
-    components: {DsIcon, DsTagNormal, PaneDataSourceConfig, FormJdbcDataSourceConfig, FormJmsDataSourceConfig},
+    components: {
+      DsIcon, DsTagNormal, PaneListableConfig, FormJdbcDataSourceConfig, FormJmsDataSourceConfig,
+      FormCacheConfig
+    },
     data() {
       let jdbcDataSourcesValidator = (rule, vallue, callback) => {
         let {type, jdbcDataSources} = this.formBasicInfo
@@ -126,11 +143,13 @@
         formBasicInfo: {
           name: '',
           type: '',
+          description: '',
           messageTimeoutSecs: 3,
           tarDestinateName: '',
           tarIsTopic: false,
           jdbcDataSources: [],
-          jmsDataSources: []
+          jmsDataSources: [],
+          caches: []
         },
         rulesBasicInfo: {
           name: [
@@ -148,7 +167,7 @@
       ...mapGetters(['topology', 'topologyTypes'])
     },
     methods: {
-      ...mapActions(['setBaseInfo', 'setZookeepers', 'setJdbcDataSources', 'setJmsDataSources']),
+      ...mapActions(['setBaseInfo', 'setCaches', 'setZookeepers', 'setJdbcDataSources', 'setJmsDataSources']),
       validated() {
         let validated = false
         this.$refs['baseInfo'].validate(valid => {
@@ -161,14 +180,15 @@
         return validated
       },
       cacheData() {
-        let {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic} = this.formBasicInfo
-        this.setBaseInfo({name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic})
+        let {name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic}
+          = this.formBasicInfo
+        this.setBaseInfo({
+          name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic
+        })
         this.setZookeepers(this.formBasicInfo.zookeepers)
         this.setJdbcDataSources(this.formBasicInfo.jdbcDataSources)
         this.setJmsDataSources(this.formBasicInfo.jmsDataSources)
-      },
-      handleCacheClean() {
-        this.$emit('cleanCache')
+        this.setCaches(this.formBasicInfo.caches)
       },
       handleEditJdbcDataSource(index) {
         logger.debug('edit jdbc data source request, index: %d', index)
@@ -188,7 +208,7 @@
             indexes = indexes.sort((a, b) => b - a)
             indexes.forEach(index => dataSources.splice(index, 1))
           }
-          this.setJdbcDataSources(dataSources)
+          this.fillJdbcDataSources(dataSources)
         }
       },
       handleResetJdbcDataSourceForm() {
@@ -205,14 +225,14 @@
         let selected = this.$refs['jdbcDataSources'].getSelected()
         logger.debug('save jdbc data, dataSource: %j, selected: %j.', dataSource, selected)
         if (dataSource) {
-          if (selected && selected.length > 0) {
+          if (selected && selected.length === 1) {
             // edit
             dataSource[selected[0]] = dataSource
           } else {
             // add
             dataSources.push(dataSource)
           }
-          this.setJdbcDataSources(dataSources)
+          this.fillJdbcDataSources(dataSources)
           this.$refs['jdbcDataSources'].handleConfigForm('close')
         }
       },
@@ -234,7 +254,7 @@
             indexes = indexes.sort((a, b) => b - a)
             indexes.forEach(index => dataSources.splice(index, 1))
           }
-          this.setJmsDataSources(dataSources)
+          this.fillJmsDataSources(dataSources)
         }
       },
       handleResetJmsDataSourceForm() {
@@ -258,42 +278,88 @@
             // add
             dataSources.push(dataSource)
           }
-          this.setJmsDataSources(dataSources)
+          this.fillJmsDataSources(dataSources)
           this.$refs['jmsDataSources'].handleConfigForm('close')
         }
       },
-      setJdbcDataSources(dataSources) {
+      handleEditCache(index) {
+        logger.debug('edit cache request, index: %d', index)
+        let caches = this.formBasicInfo.caches
+        if (caches && caches[index]) {
+          this.$nextTick(_ => this.$refs['formCache'].setCache(caches[index]))
+        } else {
+          error('指定的缓存配置不存在!')
+        }
+      },
+      handleDeleteCache(indexes) {
+        logger.debug('delete cache request: %j.', indexes)
+        if (indexes && indexes.length > 0) {
+          let caches = this.formBasicInfo.caches
+          if (caches) {
+            // 倒序一下
+            indexes = indexes.sort((a, b) => b - a)
+            indexes.forEach(index => caches.splice(index, 1))
+          }
+          this.fillCaches(caches)
+        }
+      },
+      handleResetCacheForm() {
+        logger.debug('reset cache form.')
+        this.$refs['formCache'].resetFields()
+      },
+      handleSaveCacheForm() {
+        logger.debug('save cache form.')
+        let caches = this.formBasicInfo.caches
+        if (!caches) {
+          caches = []
+        }
+        let cache = this.$refs['formCache'].getCache()
+        let selected = this.$refs['caches'].getSelected()
+        logger.debug('save cache data, cache: %j, selected: %j.', cache, selected)
+        if (cache) {
+          if (selected && selected.length > 0) {
+            // edit
+            caches[selected[0]] = cache
+          } else {
+            // add
+            caches.push(cache)
+          }
+          this.fillCaches(caches)
+          this.$refs['caches'].handleConfigForm('close')
+        }
+      },
+      fillJdbcDataSources(dataSources) {
         if (!dataSources) {
           dataSources = []
         }
         this.formBasicInfo.jdbcDataSources = dataSources
         this.$refs['jdbcDataSources'].setList(this.formBasicInfo.jdbcDataSources)
+        this.setJdbcDataSources(dataSources)
       },
-      setJmsDataSources(dataSources) {
+      fillJmsDataSources(dataSources) {
         if (!dataSources) {
           dataSources = []
         }
         this.formBasicInfo.jmsDataSources = dataSources
         this.$refs['jmsDataSources'].setList(this.formBasicInfo.jmsDataSources)
+      },
+      fillCaches(caches) {
+        if (!caches) {
+          caches = []
+        }
+        this.formBasicInfo.caches = caches
+        this.$refs['caches'].setList(this.formBasicInfo.caches)
       }
     },
     mounted() {
-      logger.debug(this.topologyTypes)
-      this.$nextTick(_ => {
-        let {name, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources} = this.topology
-        this.formBasicInfo = {
-          name,
-          type,
-          debug,
-          messageTimeoutSecs,
-          maxSpoutPending,
-          tarDestinateName,
-          tarIsTopic,
-          zookeepers,
-          jdbcDataSources,
-          jmsDataSources
-        }
-      })
+      let {
+        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic,
+        zookeepers, jdbcDataSources, jmsDataSources, caches
+      } = this.topology
+      this.formBasicInfo = {
+        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName,
+        tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources, caches
+      }
     }
   }
 </script>

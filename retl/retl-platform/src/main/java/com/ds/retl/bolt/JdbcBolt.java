@@ -1,13 +1,11 @@
 package com.ds.retl.bolt;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.jdbc.JdbcManager;
 import com.ds.retl.jdbc.JdbcOperate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.StringUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -48,23 +46,11 @@ public class JdbcBolt extends BasePersistBolt {
      * @see BasePersistBolt#initialize(Map, JSONObject)
      */
     @Override
-    public void initialize(Map stormConf, JSONObject configuration) {
-        // 初始化数据源（如有必要）
-        String dataSourcesStr = (String) stormConf.get("dataSources");
-        if (!StringUtils.isBlank(dataSourcesStr)) {
-            JSONArray dataSourcesJson = JSON.parseArray(dataSourcesStr);
-            try {
-                JdbcManager.getManager().initManager(dataSourcesJson);
-            } catch (SQLException ex) {
-                String message = String.format("Initialize JDBC Manager fail, from JdbcBolt, dataSources: %s.", dataSourcesStr);
-                if (logger.isErrorEnabled()) {
-                    logger.error(message);
-                }
-                throw new IllegalArgumentException(message);
-            }
-        }
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Initialize JDBC Manager successfully, dataSources: %s.", dataSourcesStr));
+    public void initialize(Map conf, JSONObject configuration) {
+        try {
+            JdbcManager.getManager().initManager(conf);
+        } catch (SQLException ex) {
+            throw new IllegalArgumentException("Initialize JDBC Manager fail.");
         }
 
         String dataSourceName = configuration.getString("dataSource");
@@ -79,8 +65,8 @@ public class JdbcBolt extends BasePersistBolt {
                 }
                 this.errorOperate = JdbcManager.getManager().getErrorOperate(dataSourceName);
             } catch (SQLException ex) {
-                String message = String.format("Initialize JDBC Operate fail, dataSource: %s, configuration: %s.",
-                        dataSourceName, dataSourcesStr);
+                String message = String.format("Initialize JDBC Operate fail, dataSource: %s.",
+                        dataSourceName);
                 if (logger.isErrorEnabled()) {
                     logger.error(message, ex);
                 }
@@ -88,8 +74,8 @@ public class JdbcBolt extends BasePersistBolt {
             }
         }
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Initialize JDBC Operate successfully, dataSource: %s, configuration: %s.",
-                    dataSourceName, dataSourcesStr));
+            logger.debug(String.format("Initialize JDBC Operate successfully, dataSource: %s.",
+                    dataSourceName));
         }
     }
 

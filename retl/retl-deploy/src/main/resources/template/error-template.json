@@ -1,0 +1,20 @@
+{
+  "table": "TB_ERRORS",
+  "key": "ID",
+  "mapping": {
+    "id": "ID",
+    "type": "TYPE",
+    "message": "MESSAGE",
+    "data": "DATA",
+    "fieldName": "FIELD_NAME",
+    "createdTime": "CREATED_TIME",
+    "_structuredTime": "STRUCTURED_TIME",
+    "_validatedTime": "VALIDATED_TIME",
+    "_transformedTime": "TRANSFORMED_TIME",
+    "_errorTime": "ERROR_TIME",
+    "_persistedTime": "PERSISTED_TIME"
+  },
+  "specialTypes": {
+    "createdTime": "TIMESTAMP"
+  }
+}

@@ -163,7 +163,8 @@
             let rules = this.getRules(columnName)
             let index = this.findRule(rules, type)
             if (index >= 0) {
-              warn('字段[' + columnName + ']已经包含了[' + this.validateTypes[type] + ']规则。')
+              logger.debug(this.validateTypes)
+              warn('字段[' + columnName + ']已经包含了"' + getTypeLabel('validateTypes', type) + '"规则。')
               return
             }
             let rule = this.createDefaultRule(type)
@@ -187,6 +188,8 @@
             return {type: type, min: -1, max: -1}
           case 'RegExpValidate':
             return {type: type, regexp: ''}
+          case 'InValidate':
+            return {type: type, category: 'CACHED'}
         }
         return null
       },

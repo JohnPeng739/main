@@ -24,6 +24,7 @@ public enum UserInterfaceErrors implements UserInterfaceError {
     TOPOLOGY_NOT_FOUND(301, "指定的计算拓扑不存在。"),
     TOPOLOGY_VALIDATE_FAIL(302, "校验计算拓扑所使用的资源发生错误。"),
     TOPOLOGY_CONF_JDBC_SPOUT(303, "JDBC类型的采集源配置错误，同一个拓扑中只能且只能配置一个JDBC采集源。"),
+    TOPOLOGY_NO_CONF_PERSIST(304, "持久化计算拓扑没有配置持久化信息。"),
 
     OTHER(9999, "系统未识别的错误。");
 

@@ -20,7 +20,8 @@
     </el-row>
     <el-row type="flex" justify="center">
       <el-col :span="24" class="button">
-        <el-button type="primary" @click="handleSubmitTopooty">提交计算拓扑</el-button>
+        <el-button type="primary" @click="handleSubmit('save')">保存计算拓扑</el-button>
+        <el-button type="primary" @click="handleSubmit('submit')">保存&提交计算拓扑</el-button>
       </el-col>
     </el-row>
   </div>
@@ -46,9 +47,14 @@
     },
     methods: {
       ...mapActions(['cacheClean', 'goto']),
-      handleSubmitTopooty() {
+      handleSubmit(type) {
         let topology = this.topology
-        let url = '/rest/topology/submit'
+        let id = topology.id
+        delete topology.id
+        let url = '/rest/topology/' + (type === 'save' ? 'save' : 'submit')
+        if (id) {
+          url += '?topologyId=' + id
+        }
         logger.debug('send POST "%s"', url)
         post(url, topology, data => {
           if (data) {

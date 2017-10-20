@@ -2,7 +2,6 @@
   @import "../../../style/base.less";
 
   .form-row {
-    height: 50px;
     padding: 0 20px 20px 0;
   }
 </style>

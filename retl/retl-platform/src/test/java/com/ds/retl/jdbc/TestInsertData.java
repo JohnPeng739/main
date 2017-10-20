@@ -27,14 +27,16 @@ public class TestInsertData {
         reader.close();
 
         JSONArray config = json.getJSONArray("dataSources");
-        JdbcManager.getManager().initManager(config);
+        JSONObject caches = json.getJSONObject("caches");
+        JdbcManager.getManager().initManager(config, caches);
         Connection conn = JdbcManager.getManager().getConnection("dataSource1");
-        PreparedStatement ps = conn.prepareStatement("INSERT INTO sample1(id,code,name,families,age,money,birthday,createdtime,updatedtime,email,married,indexNo) " +
-                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO TB_SRC(ID, CODE, NAME, FAMILIES, AGE, MONEY, " +
+                "BIRTHDAY, CREATED_TIME, UPDATED_TIME, EMAIL, MARRIED, INDEX_NO, SEX, DEPARTMENT_CODE, LAST_ORDER_ID) " +
+                "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         ps.setString(1, UUID.randomUUID().toString());
-        ps.setString(2, "john");
-        ps.setString(3, "John Peng");
-        ps.setInt(4, 1);
+        ps.setString(2, "jian");
+        ps.setString(3, "Jian Peng");
+        ps.setInt(4, 0);
         ps.setInt(5, 43);
         ps.setDouble(6, 4567344.33);
         ps.setDate(7, new java.sql.Date(new Date().getTime()));
@@ -43,6 +45,9 @@ public class TestInsertData {
         ps.setString(10, "pengmingxi@dscomm.com.cn");
         ps.setBoolean(11, true);
         ps.setLong(12, 1);
+        ps.setString(13, "MALE");
+        ps.setString(14, "kfsb");
+        ps.setString(15, "ORDER_ID");
         ps.executeUpdate();
         Thread.sleep(10);
         ps.close();
@@ -62,7 +67,8 @@ public class TestInsertData {
         reader.close();
 
         JSONArray config = json.getJSONArray("dataSources");
-        JdbcManager.getManager().initManager(config);
+        JSONObject caches = json.getJSONObject("caches");
+        JdbcManager.getManager().initManager(config, caches);
         Connection conn = JdbcManager.getManager().getConnection("dataSource1");
         PreparedStatement ps = conn.prepareStatement("select indexNo,id from cjd2 order by indexNo");
         ResultSet rs = ps.executeQuery();
@@ -92,7 +98,8 @@ public class TestInsertData {
         reader.close();
 
         JSONArray config = json.getJSONArray("dataSources");
-        JdbcManager.getManager().initManager(config);
+        JSONObject caches = json.getJSONObject("caches");
+        JdbcManager.getManager().initManager(config, caches);
         Connection conn = JdbcManager.getManager().getConnection("dataSource1");
         PreparedStatement ps = conn.prepareStatement(String.format("INSERT INTO %s(ID,CODE,NAME,FAMILIES,AGE,MONEY," +
                 "BIRTHDAY,CREATEDTIME,UPDATEDTIME,EMAIL,MARRIED,INDEXNO) " +

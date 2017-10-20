@@ -9,7 +9,7 @@
   "numWorkers": 1,
   "spouts": [],
   "bolts": [],
-  "zookeeper": [],
+  "zookeepers": {},
   "jdbcDataSources": [],
   "jmsDataSources": [],
   "columns": [],

@@ -3,7 +3,10 @@ export const taskRouters = [{
   component: resolve => require(['../../../pages/task/tasks-list.vue'], resolve)
 }, {
   path: '/tasks/add',
-  component: resolve => require(['../../../pages/task/task-add.vue'], resolve)
+  component: resolve => require(['../../../pages/task/task-operate.vue'], resolve)
+}, {
+  path: '/tasks/edit',
+  component: resolve => require(['../../../pages/task/task-operate.vue'], resolve)
 }]
 
 export const taskNavData = {
@@ -12,11 +15,6 @@ export const taskNavData = {
   title: '任务',
   role: 'all',
   children: [{
-    path: '/tasks/add',
-    icon: 'fiber_new',
-    title: '添加任务...',
-    role: 'manager'
-  }, {
     path: '/tasks/list',
     icon: 'list',
     title: '所有任务',

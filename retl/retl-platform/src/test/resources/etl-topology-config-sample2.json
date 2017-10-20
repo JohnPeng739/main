@@ -143,9 +143,9 @@
   ],
   "dataSources": [
     {
-      "dataSource": "dataSource1",
+      "name": "dataSource1",
       "driver": "com.mysql.jdbc.Driver",
-      "url": "jdbc:mysql://dbserver:3306/sample",
+      "url": "jdbc:mysql://dbserver:3306/retl",
       "user": "root",
       "password": "12345678",
       "initialPoolSize": 3,

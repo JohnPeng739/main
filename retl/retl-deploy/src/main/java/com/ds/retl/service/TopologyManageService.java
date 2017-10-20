@@ -12,32 +12,33 @@ public interface TopologyManageService {
     /**
      * 保存一个输入配置信息的计算拓扑
      *
-     * @param name            拓扑名称
+     * @param id              拓扑关键字ID，如果新增id为null
      * @param topologyJsonStr 拓扑配置信息
      * @return 成功返回拓扑对象，否则抛出异常
      * @throws UserInterfaceErrorException 保存过程中发生的异常
      */
-    Topology save(String name, String topologyJsonStr) throws UserInterfaceErrorException;
+    Topology save(String id, String topologyJsonStr) throws UserInterfaceErrorException;
 
     /**
      * 提交指定关键字ID的计算拓扑到Storm集群
      *
-     * @param id 拓扑关键字ID
+     * @param id         拓扑关键字ID
+     * @param simulation 是否仿真
      * @return 成功返回拓扑对象，否则抛出异常
      * @throws UserInterfaceErrorException 提交过程中发生的异常
      */
-    Topology submit(String id) throws UserInterfaceErrorException;
+    Topology submit(String id, boolean simulation) throws UserInterfaceErrorException;
 
     /**
      * 提交一个输入配置信息的计算拓扑到Storm集群，提交之前会先保存拓扑信息。
      *
-     * @param name            拓扑名称
+     * @param id              拓扑关键字ID，如果是新增，则id为null
      * @param topologyJsonStr 拓扑配置信息
      * @return 成功返回拓扑对象，否则抛出异常
      * @throws UserInterfaceErrorException 提交过程中发生的异常
      * @see #save(String, String)
      */
-    Topology submit(String name, String topologyJsonStr) throws UserInterfaceErrorException;
+    Topology submit(String id, String topologyJsonStr) throws UserInterfaceErrorException;
 
     /**
      * 校验检测配置的ZOOKEEPER服务器是否有效

@@ -11,6 +11,7 @@ import org.mx.dal.service.GeneralAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -29,6 +30,7 @@ public class OperateLogServiceImpl implements OperateLogService {
      *
      * @see OperateLogService#writeLog(String)
      */
+    @Transactional
     @Override
     public void writeLog(String conent) throws UserInterfaceErrorException {
         try {

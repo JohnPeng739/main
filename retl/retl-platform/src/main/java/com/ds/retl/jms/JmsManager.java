@@ -27,17 +27,17 @@ public class JmsManager {
      *
      * @param supported 支持的类型枚举
      * @param config    初始化配置信息
+     * @param isPersist 是否用于存储类拓扑
      * @return 创建好的JmsSpout对象
      * @throws JMSException 创建过程中发生的异常
      */
-    public static JmsSpout createJmsSpout(Supported supported, JSONObject config) throws JMSException {
+    public static JmsSpout createJmsSpout(Supported supported, JSONObject config, boolean isPersist) throws JMSException {
         if (config == null) {
             throw new NullPointerException("The Jms config is null.");
         }
         JmsSpout spout = new JmsSpout();
         spout.setJmsProvider(createProvider(supported, config));
         String producer = config.getString("producer");
-        boolean isPersist = config.getBooleanValue("isPersist");
         if ("JSON".equalsIgnoreCase(producer)) {
             spout.setJmsTupleProducer(isPersist ? new EtlPersistJsonTupleProducer() : new EtlSrcJsonTupleProducer());
         } else {
@@ -52,17 +52,17 @@ public class JmsManager {
      *
      * @param supported 支持的JMS类型
      * @param config    初始化配置信息
+     * @param isPersist 是否用于存储类拓扑
      * @return 创建好的JmsSpout对象
      * @throws JMSException 创建过程中发生的异常
      */
-    public static JmsPullSpout createJmsPullSpout(Supported supported, JSONObject config) throws JMSException {
+    public static JmsPullSpout createJmsPullSpout(Supported supported, JSONObject config, boolean isPersist) throws JMSException {
         if (config == null) {
             throw new NullPointerException("The Jms config is null.");
         }
         JmsPullSpout spout = new JmsPullSpout();
         spout.setJmsProvider(createProvider(supported, config));
         String producer = config.getString("producer");
-        boolean isPersist = config.getBooleanValue("isPersist");
         if ("JSON".equalsIgnoreCase(producer)) {
             spout.setJmsTupleProducer(isPersist ? new EtlPersistJsonTupleProducer() : new EtlSrcJsonTupleProducer());
         } else {

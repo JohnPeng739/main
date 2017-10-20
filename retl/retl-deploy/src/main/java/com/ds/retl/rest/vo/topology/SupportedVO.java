@@ -33,8 +33,9 @@ public class SupportedVO {
                 new LabelValueVO("4. 错误处理","error"),
                 new LabelValueVO("5. JMS存储","jms"),
                 new LabelValueVO("6. 关系型数据库存储","jdbc"));
-        jdbcDriverTypes = Arrays.asList(new LabelValueVO("1. mysql", "com.mysql.jdbc.Driver"),
-                new LabelValueVO("2. h2","org.h2.Driver"));
+        jdbcDriverTypes = Arrays.asList(new LabelValueVO("1. MySQL", "com.mysql.jdbc.Driver"),
+                new LabelValueVO("2. Oracle", "oracle.jdbc.driver.OracleDriver"),
+                new LabelValueVO("3. H2","org.h2.Driver"));
     }
 
     public void setTopologyTypes(List<LabelValueVO> topologyTypes) {

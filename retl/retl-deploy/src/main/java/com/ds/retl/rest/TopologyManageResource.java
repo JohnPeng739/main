@@ -1,7 +1,5 @@
 package com.ds.retl.rest;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.dal.entity.Topology;
 import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.jms.JmsManager;
@@ -86,16 +84,43 @@ public class TopologyManageResource {
      * 提交输入的拓扑配置信息到Storm集群中
      *
      * @param userCode              操作用户代码
+     * @param topologyId            拓扑关键字ID，如果是新增，则为null
      * @param topologyConfigJsonStr 计算拓扑配置信息
      * @return 提交成功返回提交的拓扑对象，否则返回错误信息。
      */
     @Path("topology/submit")
     @POST
-    public DataVO<TopologyVO> submitTopology(@QueryParam("userCode") String userCode, String topologyConfigJsonStr) {
+    public DataVO<TopologyVO> submitTopology(@QueryParam("userCode") String userCode,
+                                             @QueryParam("topologyId") String topologyId,
+                                             String topologyConfigJsonStr) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            JSONObject json = JSON.parseObject(topologyConfigJsonStr);
-            Topology topology = topologyManageService.submit(json.getString("name"), topologyConfigJsonStr);
+            Topology topology = topologyManageService.submit(topologyId, topologyConfigJsonStr);
+            TopologyVO topologyVO = new TopologyVO();
+            TopologyVO.transform(topology, topologyVO);
+            sessionDataStore.removeCurrentUserCode();
+            return new DataVO<>(topologyVO);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
+    }
+
+    /**
+     * 保存输入的拓扑配置信息
+     *
+     * @param userCode              操作用户代码
+     * @param topologyId            拓扑关键字ID，如果是新增，则为null
+     * @param topologyConfigJsonStr 计算拓扑配置信息
+     * @return 保存成功返回提交的拓扑对象，否则返回错误信息。
+     */
+    @Path("topology/save")
+    @POST
+    public DataVO<TopologyVO> saveTopology(@QueryParam("userCode") String userCode,
+                                           @QueryParam("topologyId") String topologyId,
+                                           String topologyConfigJsonStr) {
+        sessionDataStore.setCurrentUserCode(userCode);
+        try {
+            Topology topology = topologyManageService.save(topologyId, topologyConfigJsonStr);
             TopologyVO topologyVO = new TopologyVO();
             TopologyVO.transform(topology, topologyVO);
             sessionDataStore.removeCurrentUserCode();
@@ -108,16 +133,19 @@ public class TopologyManageResource {
     /**
      * 提交指定关键字ID的计算拓扑到Storm集群中
      *
-     * @param userCode 操作用户代码
-     * @param id       拓扑的关键字ID
+     * @param userCode   操作用户代码
+     * @param simulation 设置为true表示本地仿真，否则真正提交集群
+     * @param id         拓扑的关键字ID
      * @return 提交成功返回提交的拓扑对象，否则返回错误信息。
      */
     @Path("topology/submit/{id}")
     @GET
-    public DataVO<TopologyVO> submitTopologyById(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
+    public DataVO<TopologyVO> submitTopology(@QueryParam("userCode") String userCode,
+                                             @QueryParam("simulation") boolean simulation,
+                                             @PathParam("id") String id) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            Topology topology = topologyManageService.submit(id);
+            Topology topology = topologyManageService.submit(id, simulation);
             TopologyVO topologyVO = new TopologyVO();
             TopologyVO.transform(topology, topologyVO);
             return new DataVO<>(topologyVO);
@@ -183,7 +211,7 @@ public class TopologyManageResource {
                     }
                 } catch (Exception ex) {
                     if (logger.isInfoEnabled()) {
-                        logger.info(String.format("Fetch class[%s] info fail.", className), ex);
+                        logger.info(String.format("Fetch class[%s] info fail.", className));
                     }
                 }
             });

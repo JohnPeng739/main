@@ -110,7 +110,7 @@ public class TransformBolt extends BaseRichBolt {
                 TransformFunc func = this.transformRules.get(type);
                 if (func == null) {
                     if (logger.isWarnEnabled()) {
-                        logger.warn(String.format("The TransformFunc[%s] not exist for column[%s].", type, key));
+                        logger.warn(String.format("The TransformFunc[%s] not existInCache for column[%s].", type, key));
                     }
                     errors.add(new TransformError(key, String.format("字段[%s]的转换方法[%s]不存在", key, type)));
                 } else {
@@ -133,7 +133,7 @@ public class TransformBolt extends BaseRichBolt {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Transform fail, stream: %s, task: %d, component: %s, message id: %s.",
                         input.getSourceStreamId(), input.getSourceTask(), input.getSourceComponent(),
-                        input.getMessageId().toString()));
+                        input.getMessageId().toString()), ex);
             }
             this.collector.emit(ErrorOperateBolt.STREAM_NAME, input, new Values(managedJson, data,
                     Arrays.asList(new TransformError(ex.getMessage(), data))

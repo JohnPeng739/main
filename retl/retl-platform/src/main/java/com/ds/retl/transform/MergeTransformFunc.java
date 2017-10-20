@@ -1,5 +1,6 @@
 package com.ds.retl.transform;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.RecordColumn;
 import com.ds.retl.error.TransformError;
@@ -26,15 +27,15 @@ public class MergeTransformFunc implements TransformFunc {
     @Override
     public List<TransformError> transform(Map<String, RecordColumn> columns, RecordColumn currentCol,
                                           JSONObject config, JSONObject data) {
-        String fieldsStr = config.getString("fields");
+        JSONArray fields = config.getJSONArray("fields");
         String separator = config.getString("separator");
         if (StringUtils.isBlank(separator) && !" ".equals(separator)) {
             separator = ",";
         }
-        String[] fields = fieldsStr.split(",");
         StringBuffer sb = new StringBuffer();
         List<TransformError> errors = new ArrayList<>();
-        for (String field : fields) {
+        for (int index = 0; index < fields.size(); index ++) {
+            String field = fields.getString(index);
             if (data.keySet().contains(field)) {
                 Object value = data.get(field);
                 sb.append(String.valueOf(value));

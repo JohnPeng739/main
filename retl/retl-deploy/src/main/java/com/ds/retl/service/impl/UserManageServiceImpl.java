@@ -13,6 +13,7 @@ import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -36,6 +37,7 @@ public class UserManageServiceImpl implements UserManageService {
      *
      * @see UserManageService#initUser()
      */
+    @Transactional
     @Override
     public User initUser() throws UserInterfaceErrorException {
         String userCode = "ds110";
@@ -63,6 +65,7 @@ public class UserManageServiceImpl implements UserManageService {
      *
      * @see UserManageService#saveUser(User)
      */
+    @Transactional
     @Override
     public User saveUser(User user) throws UserInterfaceErrorException {
         try {
@@ -79,6 +82,7 @@ public class UserManageServiceImpl implements UserManageService {
      *
      * @see UserManageService#changePassword(String, String, String)
      */
+    @Transactional
     @Override
     public User changePassword(String userCode, String oldPassword, String newPassword)
             throws UserInterfaceErrorException {
@@ -111,6 +115,7 @@ public class UserManageServiceImpl implements UserManageService {
      *
      * @see UserManageService#login(String, String)
      */
+    @Transactional
     @Override
     public User login(String userCode, String password) throws UserInterfaceErrorException {
         try {
@@ -142,6 +147,7 @@ public class UserManageServiceImpl implements UserManageService {
      *
      * @see UserManageService#logout(String)
      */
+    @Transactional
     @Override
     public void logout(String userCode) throws UserInterfaceErrorException {
         try {

@@ -21,41 +21,44 @@
 </style>
 
 <template>
-  <div class="layout-content">
-    <el-table :max-height="570" :data="tableData" class="layout-table" highlight-current-row>
-      <el-table-column type="expand">
-        <template scope="scope">
-          <el-input type="textarea" :value="JSON.stringify(scope.row.content, null, '    ')"
-                    :rows="15" :disabled="true"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column prop="name" label="名称"></el-table-column>
-      <el-table-column prop="savedTime" label="保存时间" width="180"></el-table-column>
-      <el-table-column prop="submitTime" label="提交时间" width="180"></el-table-column>
-      <el-table-column prop="submited" label="是否提交" width="200">
-        <template scope="scope">
-          <span v-if="scope.row.submitted">已提交集群</span>
-          <span v-else style="color: red;">未提交集群</span>
-          <el-button class="button" v-if="!scope.row.submitted" size="mini" @click="handleSubmit(scope.row.id)">提交集群</el-button>
-        </template>
-      </el-table-column>
-      <el-table-column prop="operator" label="操作人员" width="120"></el-table-column>
-    </el-table>
-    <div class="layout-page">
-      <el-pagination @size-change="handleSizeChange" @current-change="handlePageChange" :total="pagination.total"
-                     :current-page="pagination.page" :page-size="pagination.size" :page-sizes="[10, 20, 50, 100]"
-                     layout="total, sizes, prev, pager, next, jumper"></el-pagination>
-    </div>
+  <div>
+    <pane-paginate-list ref="panePaginateList" v-on:buttonHandle="handleButtonClick" :showDelete="false">
+      <el-table :max-height="570" :data="tableData" class="layout-table" highlight-current-row
+                @current-change="handleCurrentChange">
+        <el-table-column type="expand">
+          <template scope="scope">
+            <el-input type="textarea" :value="JSON.stringify(scope.row.content, null, '    ')"
+                      :rows="15" :disabled="true"></el-input>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="名称"></el-table-column>
+        <el-table-column prop="savedTime" label="保存时间" width="180"></el-table-column>
+        <el-table-column prop="submitTime" label="提交时间" width="180"></el-table-column>
+        <el-table-column prop="submited" label="是否提交" width="200">
+          <template scope="scope">
+            <span v-if="scope.row.submitted">已提交集群</span>
+            <span v-else style="color: red;">未提交集群</span>
+            <el-button class="button" v-if="!scope.row.submitted" size="mini" @click="handleSubmit(scope.row.id, true)">提交集群</el-button>
+            <el-button class="button" v-if="!scope.row.submitted" size="mini" @click="handleSubmit(scope.row.id, false)">本地仿真</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column prop="operator" label="操作人员" width="120"></el-table-column>
+      </el-table>
+    </pane-paginate-list>
   </div>
 </template>
 
 <script>
+  import {mapActions} from 'vuex'
   import {logger} from 'dsutils'
+  import {info} from '../../assets/notify'
   import {get, post} from '../../assets/ajax'
   import {formatDateTime} from '../../assets/date-utils'
+  import PanePaginateList from '../../components/pane-paginate-list.vue'
 
   export default {
     name: 'page-tasks-list',
+    components: {PanePaginateList},
     data() {
       return {
         longDate(time) {
@@ -67,14 +70,11 @@
           }
         },
         tableData: [],
-        pagination: {
-          total: 0,
-          size: 20,
-          page: 1
-        }
+        selection: null
       }
     },
     methods: {
+      ...mapActions(['goto', 'cacheClean', 'setTopology']),
       fillTableData(topologies) {
         let tableData = []
         if (topologies && topologies.length > 0) {
@@ -87,35 +87,56 @@
         }
         this.tableData = tableData
       },
-      refreshData() {
+      handleButtonClick(operate, pagination) {
+        if (operate === 'refresh') {
+          this.handleRefresh(pagination)
+          return
+        } else if (operate === 'add') {
+          this.cacheClean()
+          this.goto({owner: this, path: '/tasks/add', name: '新增拓扑任务'})
+        } else if (operate === 'edit' || operate === 'delete') {
+          // 检查是否已经选择操作项
+          let selection = this.selection
+          if (!selection) {
+            info('请在操作之前选择要操作的记录。')
+          } else {
+            if (operate === 'edit') {
+              let topology = selection.content
+              topology['id'] = selection.id
+              this.setTopology(topology)
+              this.goto({owner: this, path: '/tasks/edit', name: '修改拓扑任务'})
+            }
+          }
+        }
+      },
+      handleRefresh(pagination) {
+        if (!pagination) {
+          pagination = {total: 0, size: 20, page: 1}
+        }
         let url = '/rest/topologies'
         logger.debug('send POST "%s"', url)
-        post(url, this.pagination, ({data, pagination}) => {
+        post(url, pagination, ({data, pagination}) => {
           logger.debug('Response success, data: %j, page: %j.', data, pagination)
-          this.pagination = pagination
+          this.$refs['panePaginateList'].setPagination(pagination)
           this.fillTableData(data)
         })
       },
       handleSubmit(id) {
-        let url = '/rest/topology/submit/' + id
+        let url = '/rest/topology/submit/' + id + '?simulation=true'
         logger.debug('send GET "%s"', url)
         get(url, data => {
           if (data) {
             this.refreshData()
-            info( '提交计算拓扑成功。')
+            info('提交计算拓扑成功。')
           }
         })
       },
-      handleSizeChange(size) {
-        this.pagination.size = size
-      },
-      handlePageChange(page) {
-        this.pagination.page = page
-        this.refreshData()
+      handleCurrentChange(currentRow, oldCurrentRow) {
+        this.selection = currentRow
       }
     },
     mounted() {
-      this.refreshData()
+      this.handleRefresh(null)
     }
   }
 </script>

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.RecordColumn;
 import com.ds.retl.error.ValidateError;
+import com.ds.retl.jdbc.JdbcManager;
 import com.ds.retl.validate.ValidateFunc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +18,7 @@ import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 import org.mx.StringUtils;
 
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -39,11 +41,18 @@ public class ValidateBolt extends BaseRichBolt {
      * @see BaseRichBolt#prepare(Map, TopologyContext, OutputCollector)
      */
     @Override
-    public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+    public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
 
+        // 如果可能，初始化JDBC连接池
+        try {
+            JdbcManager.getManager().initManager(conf);
+        } catch (SQLException ex) {
+            throw new IllegalArgumentException("Initialize JDBC Manager fail.");
+        }
+
         // 记录中每个字段的定义
-        String jsonStr = (String) stormConf.get("columns");
+        String jsonStr = (String) conf.get("columns");
         Map<String, RecordColumn> columns = new HashMap<>();
         if (!StringUtils.isBlank(jsonStr)) {
             JSONArray jsonColumns = JSON.parseArray(jsonStr);
@@ -59,7 +68,7 @@ public class ValidateBolt extends BaseRichBolt {
         // 记录中每个字段的校验定义
         this.validateConfigs = new HashMap<>();
         this.validateRules = new HashMap<>();
-        String validateStr = (String) stormConf.get("validates");
+        String validateStr = (String) conf.get("validates");
         JSONObject validates = JSON.parseObject(validateStr);
         // 从配置中转换并缓存校验器
         if (validates == null || validates.isEmpty()) {
@@ -115,7 +124,7 @@ public class ValidateBolt extends BaseRichBolt {
                     ValidateFunc func = this.validateRules.get(type);
                     if (func == null) {
                         if (logger.isWarnEnabled()) {
-                            logger.warn(String.format("The ValidateFunc[%s] not exist for column[%s].", type, key));
+                            logger.warn(String.format("The ValidateFunc[%s] not existInCache for column[%s].", type, key));
                         }
                         errors.add(new ValidateError(key, String.format("字段[%s]的校验方法[%s]不存在", key, type)));
                     } else {

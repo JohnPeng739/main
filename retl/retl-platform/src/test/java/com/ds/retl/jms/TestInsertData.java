@@ -17,26 +17,29 @@ public class TestInsertData {
     @Test
     public void testSingle() throws Exception {
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("", "",
-                "nio://mqserver:61616?trace=true");
+                "tcp://mqserver:61616?trace=true");
         Connection conn = connectionFactory.createConnection();
         // 这里统一使用CLIENT的确认方式。
         Session session = conn.createSession(false,
                 Session.CLIENT_ACKNOWLEDGE);
-        Destination destination = session.createQueue("src-jjd-queue");
+        Destination destination = session.createQueue("tar-jms-pull-src");
         MessageProducer mp = session.createProducer(destination);
         Map<String, Object> map = new HashMap<String, Object>() {{
             put("id", UUID.randomUUID().toString());
             put("code", "joy");
             put("name", "Joy Peng");
-            put("families", 1);
+            put("families", 5);
             put("age", 16);
             put("money", 38284723.12);
             put("birthday", new Date());
-            put("createdtime", new Date());
-            put("updatedtime", new Date());
+            put("createdTime", new Date());
+            put("updatedTime", new Date());
             put("email", "joy.peng@163.com");
-            put("maried", false);
+            put("married", false);
             put("indexNo", 1);
+            put("sex", "FEMALE");
+            put("departmentCode", "kfsb1");
+            put("lastOrderId", "47852787-90ea-49a2-9eee-0fb0df479612");
         }};
         JSONObject json = new JSONObject(map);
         TextMessage msg = session.createTextMessage(json.toJSONString());

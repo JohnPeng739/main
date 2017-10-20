@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONReader;
+import com.ds.retl.ETLTopologyBuilder;
 import com.ds.retl.cli.RETLStormCli;
 import com.ds.retl.dal.entity.Topology;
 import com.ds.retl.exception.UserInterfaceErrorException;
@@ -23,15 +24,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.JMSException;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 基于Hibernate JPA实现的计算拓扑管理的相关服务实现类
@@ -57,11 +57,23 @@ public class TopologyManageServiceImpl implements TopologyManageService {
      *
      * @see TopologyManageService#save(String, String)
      */
+    @Transactional
     @Override
-    public Topology save(String name, String topologyJsonStr) throws UserInterfaceErrorException {
+    public Topology save(String id, String topologyJsonStr) throws UserInterfaceErrorException {
         try {
-            Topology topology = EntityFactory.createEntity(Topology.class);
+            Topology topology;
+            if (StringUtils.isBlank(id)) {
+                topology = EntityFactory.createEntity(Topology.class);
+            } else {
+                topology = accessor.getById(id, Topology.class);
+                if (topology == null) {
+                    throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_NOT_FOUND);
+                }
+            }
+            JSONObject json = JSON.parseObject(topologyJsonStr);
+            String name = json.getString("name");
             topology.setName(name);
+            topology.setDescription(json.getString("description"));
             topology.setSubmitted(false);
             topology.setSubmitInfo("");
             topology.setTopologyContent(topologyJsonStr);
@@ -79,11 +91,12 @@ public class TopologyManageServiceImpl implements TopologyManageService {
     /**
      * 提交一个拓扑实体对象到Storm集群中
      *
-     * @param topology 拓扑实体对象
+     * @param topology   拓扑实体对象
+     * @param simulation 是否仿真
      * @return 成功返回拓扑实体对象
      * @throws UserInterfaceErrorException 提交过程中发生的异常
      */
-    private Topology submit(Topology topology) throws UserInterfaceErrorException {
+    private Topology submit(Topology topology, boolean simulation) throws UserInterfaceErrorException {
         String topologyName = topology.getName();
         String confStr = topology.getTopologyContent();
         if (StringUtils.isBlank(confStr)) {
@@ -99,51 +112,57 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             }
             throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
         }
-        String stormHome = env.getProperty("storm.home"), stormBin = env.getProperty("storm.bin"),
-                retlHome = env.getProperty("storm.retl"), retlPlatform = env.getProperty("storm.retl.platform"),
-                retlDeps = env.getProperty("storm.retl.deps"), retlConf = env.getProperty("storm.retl.conf");
-        String configName = String.format("%s/%s/%s.json", retlHome, retlConf, topologyName);
-        File file = new File(configName);
-        File parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
-            bw.write(topologyJson.toJSONString());
-        } catch (IOException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
+        if (!simulation) {
+            String stormHome = env.getProperty("storm.home"), stormBin = env.getProperty("storm.bin"),
+                    retlHome = env.getProperty("storm.retl"), retlPlatform = env.getProperty("storm.retl.platform"),
+                    retlDeps = env.getProperty("storm.retl.deps"), retlConf = env.getProperty("storm.retl.conf");
+            String configName = String.format("%s/%s/%s.json", retlHome, retlConf, topologyName);
+            File file = new File(configName);
+            File parent = file.getParentFile();
+            if (!parent.exists()) {
+                parent.mkdirs();
             }
-            throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_FILE_OPERATE_FAIL);
-        }
-        try {
-            String submitInfo = new RETLStormCli(stormHome, stormBin, retlHome, retlPlatform, retlDeps)
-                    .deploy(configName);
-            topology.setSubmitInfo(submitInfo);
-            topology.setSubmitted(true);
-            topology.setSubmittedTime(new Date().getTime());
-            topology = accessor.save(topology);
-            operateLogService.writeLog(String.format("成功提交[%s]计算拓扑。", topologyName));
+            try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
+                bw.write(topologyJson.toJSONString());
+            } catch (IOException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(ex);
+                }
+                throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_FILE_OPERATE_FAIL);
+            }
+            try {
+                String submitInfo = new RETLStormCli(stormHome, stormBin, retlHome, retlPlatform, retlDeps)
+                        .deploy(configName);
+                topology.setSubmitInfo(submitInfo);
+                topology.setSubmitted(true);
+                topology.setSubmittedTime(new Date().getTime());
+                topology = accessor.save(topology);
+                operateLogService.writeLog(String.format("成功提交[%s]计算拓扑。", topologyName));
+                return topology;
+            } catch (EntityAccessException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(ex);
+                }
+                throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+            }
+        } else {
+            // 本地仿真运行
+            new ETLTopologyBuilder().buildTopology(false, topologyJson);
             return topology;
-        } catch (EntityAccessException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
         }
     }
 
     /**
-     * 从预定义模版中加载拓扑骨架配置对象
+     * 从预定义模版中加载JSON对象
      *
-     * @return 成功返回骨架配置对象，否则返回null。
+     * @return 成功返回JSON对象，否则返回null。
      */
-    private JSONObject loadTemplateTopology() {
+    private JSONObject loadTemplateJson(String templateFile) {
         try (JSONReader jr = new JSONReader(new InputStreamReader(
-                TopologyManageServiceImpl.class.getResourceAsStream("/template/topology-template.json")))) {
+                TopologyManageServiceImpl.class.getResourceAsStream(templateFile)))) {
             JSONObject conf = JSON.parseObject(jr.readString());
             if (logger.isDebugEnabled()) {
-                logger.debug("Load topology template from calsspath:/template/topology-template.json success.");
+                logger.debug(String.format("Load topology template from calsspath:%s success.", templateFile));
             }
             return conf;
         } catch (Exception ex) {
@@ -166,7 +185,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         if (conf == null) {
             return null;
         }
-        JSONObject topologyConf = loadTemplateTopology();
+        JSONObject topologyConf = loadTemplateJson("/template/topology-template.json");
         if (topologyConf == null) {
             if (logger.isErrorEnabled()) {
                 logger.error("The inline template config file not found in system.");
@@ -175,31 +194,79 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         }
         // 基础信息
         topologyConf.put("name", conf.getString("name"));
+        topologyConf.put("type", conf.getString("type"));
         topologyConf.put("cluster", true);
         topologyConf.put("debug", conf.getBooleanValue("debug"));
         topologyConf.put("maxSpoutPending", 1);
-        topologyConf.put("maxTaskParallelism", conf.getIntValue("maxTaskParallelism"));
+        //topologyConf.put("maxTaskParallelism", conf.getIntValue("maxTaskParallelism"));
         topologyConf.put("messageTimeoutSecs", conf.getIntValue("messageTimeoutSecs"));
-        topologyConf.put("numAckers", conf.getIntValue("numAckers"));
-        topologyConf.put("numWorkers", conf.getIntValue("numWorkers"));
-        topologyConf.put("zookeepers", conf.getJSONArray("zookeepers"));
+        //topologyConf.put("numAckers", conf.getIntValue("numAckers"));
+        topologyConf.put("numAckers", 1);
+        //topologyConf.put("numWorkers", conf.getIntValue("numWorkers"));
+        // 处理配置的ZOOKEEPER服务器配置
+        JSONArray zookeepers = conf.getJSONArray("zookeepers");
+        JSONObject zookeeper = new JSONObject();
+        StringBuffer serverList = new StringBuffer();
+        for (int index = 0; index < zookeepers.size(); index ++) {
+            serverList.append(zookeepers.getString(index));
+            serverList.append(",");
+        }
+        int length = serverList.length();
+        if (serverList.length() > 0) {
+            length --;
+        }
+        zookeeper.put("serverList", serverList.substring(0, length));
+        topologyConf.put("zookeepers", zookeeper);
 
         // 数据源信息
         topologyConf.put("jdbcDataSources", conf.getJSONArray("jdbcDataSources"));
-        topologyConf.put("jmsDataSources", conf.getJSONArray("jmsDataSources"));
+        JSONArray jmsDataSources = conf.getJSONArray("jmsDataSources");
+
+        // 缓存
+        JSONArray caches = conf.getJSONArray("caches");
+        JSONObject tarCaches = new JSONObject();
+        if (caches != null) {
+            for (int index = 0; index < caches.size(); index++) {
+                JSONObject src = caches.getJSONObject(index);
+                JSONObject tar = new JSONObject();
+                String columnName = src.getString("columnName"), type = src.getString("type");
+                tar.put("type", type);
+                if ("STATIC".equals(type)) {
+                    String dataEnum = src.getString("dataEnum");
+                    tar.put("dataEnum", dataEnum);
+                } else if ("JDBC".equals(type)) {
+                    String dataSource = src.getString("dataSource");
+                    String sql = src.getString("sql");
+                    int intervalSec = src.getIntValue("intervalSec");
+                    tar.put("dataSource", dataSource);
+                    tar.put("sql", sql);
+                    tar.put("intervalSec", intervalSec);
+                } else {
+                    throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
+                }
+                tarCaches.put(columnName, tar);
+            }
+        }
+        topologyConf.put("caches", tarCaches);
 
         // spouts信息
         JSONArray spouts = conf.getJSONArray("spouts");
         // 如果指定了JDBC的Spout，那么必须将并行度全部设置为1
         boolean foundJdbcSpout = false;
+        int defaultParallelism = 0;
         for (int index = 0; index < spouts.size(); index++) {
             JSONObject spout = spouts.getJSONObject(index);
             String type = spout.getString("type");
+            int parallelism = spout.getIntValue("parallelism");
+            defaultParallelism = Math.max(defaultParallelism, parallelism);
             if ("jdbc".equalsIgnoreCase(type)) {
                 spout.put("parallelism", 1);
                 foundJdbcSpout = true;
                 break;
             }
+        }
+        if (defaultParallelism <= 0) {
+            defaultParallelism = 1;
         }
         if (foundJdbcSpout) {
             if (spouts.size() != 1) {
@@ -207,46 +274,169 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             }
             // 发现配置的是JDBC类型的采集源，则只能有一个采集源，并且并行度必须为1
             topologyConf.put("maxTaskParallelism", 1);
-            topologyConf.put("numAckers", 1);
             topologyConf.put("numWorkers", 1);
+        } else {
+            topologyConf.put("maxTaskParallelism", defaultParallelism);
+            topologyConf.put("numWorkers", defaultParallelism);
         }
+        spouts = prepareSpouts(spouts, jmsDataSources);
         topologyConf.put("spouts", spouts);
 
         // bolts信息
-        int defaultParallelism = topologyConf.getIntValue("maxTaskParallelism");
         JSONArray bolts = new JSONArray();
-        JSONObject structureBolt = createBolt("structure-bolt", "STRUCTURE",
-                foundJdbcSpout ? 1 : defaultParallelism);
-        setGroups(structureBolt, spouts.toJavaList(JSONObject.class));
-        JSONObject validateBolt = createBolt("validate-bolt", "VALIDATE",
-                foundJdbcSpout ? 1 : defaultParallelism);
-        setGroups(validateBolt, Arrays.asList(structureBolt));
-        JSONObject transformBolt = createBolt("transform-bolt", "TRANSFORM",
-                foundJdbcSpout ? 1 : defaultParallelism);
-        setGroups(transformBolt, Arrays.asList(validateBolt));
-        JSONObject errorBolt = createBolt("error-bolt", "ERROR", foundJdbcSpout ? 1 : defaultParallelism);
-        setGroups(errorBolt, Arrays.asList(structureBolt, validateBolt, transformBolt));
-        JSONObject jmsBolt = createBolt("jms-bolt", "JMS", foundJdbcSpout ? 1 : defaultParallelism);
-        JSONObject jmsBoltConfig = new JSONObject();
-        jmsBoltConfig.put("dataSource", conf.getJSONArray("jmsDataSources").getJSONObject(0)
-                .getString("name"));
-        jmsBoltConfig.put("destinateName", conf.getString("tarDestinateName"));
-        jmsBoltConfig.put("isTopic", conf.getBooleanValue("tarIsTopic"));
-        jmsBolt.put("configuration", jmsBoltConfig);
-        setGroups(jmsBolt, Arrays.asList(transformBolt, errorBolt));
-        bolts.addAll(Arrays.asList(structureBolt, validateBolt, transformBolt, errorBolt, jmsBolt));
+        String type = conf.getString("type");
+        if ("retl".equals(type)) {
+            JSONObject structureBolt = createBolt("structure-bolt", "STRUCTURE",
+                    foundJdbcSpout ? 1 : defaultParallelism);
+            setGroups(structureBolt, spouts.toJavaList(JSONObject.class));
+            JSONObject validateBolt = createBolt("validate-bolt", "VALIDATE",
+                    foundJdbcSpout ? 1 : defaultParallelism);
+            setGroups(validateBolt, Arrays.asList(structureBolt));
+            JSONObject transformBolt = createBolt("transform-bolt", "TRANSFORM",
+                    foundJdbcSpout ? 1 : defaultParallelism);
+            setGroups(transformBolt, Arrays.asList(validateBolt));
+            JSONObject errorBolt = createBolt("error-bolt", "ERROR", foundJdbcSpout ? 1 : defaultParallelism);
+            setGroups(errorBolt, Arrays.asList(structureBolt, validateBolt, transformBolt), true);
+            JSONObject jmsBolt = createBolt("jms-bolt", "JMS", foundJdbcSpout ? 1 : defaultParallelism);
+            JSONObject jmsBoltConfig = new JSONObject();
+            JSONObject jmsDataSource = conf.getJSONArray("jmsDataSources").getJSONObject(0);
+            jmsBolt.put("method", jmsDataSource.getString("method"));
+            jmsBoltConfig.put("connection", String.format("%s%s?trace=%s", jmsDataSource.getString("protocol"),
+                    jmsDataSource.getString("server"),
+                    jmsDataSource.getBooleanValue("trace") ? "true" : "false"));
+            jmsBoltConfig.put("user", jmsDataSource.getString("user"));
+            jmsBoltConfig.put("password", jmsDataSource.getString("password"));
+            jmsBoltConfig.put("destinateName", conf.getString("tarDestinateName"));
+            jmsBoltConfig.put("isTopic", conf.getBooleanValue("tarIsTopic"));
+            jmsBolt.put("configuration", jmsBoltConfig);
+            setGroups(jmsBolt, Arrays.asList(transformBolt, errorBolt));
+            bolts.addAll(Arrays.asList(structureBolt, validateBolt, transformBolt, errorBolt, jmsBolt));
+        } else if ("persist".equals(type)) {
+            // persist信息
+            JSONObject persist = conf.getJSONObject("persist");
+            if (persist == null) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_NO_CONF_PERSIST);
+            }
+            JSONObject persistBolt = createBolt("persist-bolt", "JDBC", defaultParallelism);
+            persistBolt.put("configuration", persist);
+            setGroups(persistBolt, spouts.toJavaList(JSONObject.class));
+            bolts.add(persistBolt);
+            // 为关联的JDBC数据源添加错误持久化配置信息
+            String dataSourceName = persist.getString("dataSource");
+            JSONArray jdbcDataSources = topologyConf.getJSONArray("jdbcDataSources");
+            JSONObject errorTable = this.loadTemplateJson("/template/error-template.json");
+            for (int index = 0; index < jdbcDataSources.size(); index ++) {
+                JSONObject dataSource = jdbcDataSources.getJSONObject(index);
+                if (dataSourceName.equals(dataSource.getString("name"))) {
+                    dataSource.put("errorTable", errorTable);
+                }
+            }
+            topologyConf.put("jdbcDataSources", jdbcDataSources);
+        } else {
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("Unsupported topology type[%s].", type));
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
+        }
         topologyConf.put("bolts", bolts);
 
         // columns信息
-        topologyConf.put("columns", conf.getJSONArray("columns"));
+        JSONArray columns = conf.getJSONArray("columns");
+        if (columns != null) {
+            topologyConf.put("columns", columns);
+        }
 
         // validates信息
-        topologyConf.put("validates", conf.getJSONObject("validates"));
+        JSONObject validates = conf.getJSONObject("validates");
+        if (validates != null) {
+            topologyConf.put("validates", validates);
+        }
 
         // transforms信息
-        topologyConf.put("transforms", conf.getJSONObject("transforms"));
+        JSONObject transforms = conf.getJSONObject("transforms");
+        if (transforms != null) {
+            topologyConf.put("transforms", transforms);
+        }
 
         return topologyConf;
+    }
+
+    private JSONArray prepareSpouts(JSONArray spouts, JSONArray jmsDataSources) {
+        JSONArray result = new JSONArray();
+        for (int index  = 0; index < spouts.size(); index ++) {
+            JSONObject spout = spouts.getJSONObject(index);
+            if (spout != null) {
+                JSONObject tar = new JSONObject();
+                tar.put("name", spout.getString("name"));
+                String type = spout.getString("type");
+                tar.put("type", type);
+                if ("jdbc".equalsIgnoreCase(type)) {
+                    prepareJdbcSpout(spout, tar);
+                } else if ("jms".equalsIgnoreCase(type) || "jmsPull".equalsIgnoreCase(type)) {
+                    prepareJmsSpout(spout, tar, jmsDataSources);
+                }
+                result.add(tar);
+            }
+        }
+        return result;
+    }
+
+    private void prepareJdbcSpout(JSONObject src, JSONObject tar) {
+        JSONObject srcConf = src.getJSONObject("configuration");
+        JSONObject tarConf = new JSONObject();
+        tarConf.put("dataSource", srcConf.getString("dataSource"));
+        tarConf.put("table", srcConf.getString("table"));
+        tarConf.put("key", srcConf.getString("key"));
+        tarConf.put("timestamp", srcConf.getString("timestamp"));
+        tarConf.put("ackPath", srcConf.getString("ackPath"));
+        tarConf.put("windowSize", srcConf.getIntValue("windowSize"));
+        tarConf.put("intervalSec", srcConf.getIntValue("intervalSecs"));
+        tarConf.put("fields", StringUtils.merge(srcConf.getJSONArray("fields").toArray(new String[0])));
+        tarConf.put("fieldTransform",
+                new JSONObject(transformFieldMapping(srcConf.getJSONArray("fieldsTransform"))));
+        tar.put("configuration", tarConf);
+    }
+
+    private Map<String, Object> transformFieldMapping(JSONArray rows) {
+        Map<String, Object> mapping = new HashMap<>();
+        for (int index = 0; index < rows.size(); index ++) {
+            String row = rows.getString(index);
+            String[] sides = row.split("=>");
+            if (sides.length == 2) {
+                mapping.put(sides[0], sides[1]);
+            }
+        }
+        return mapping;
+    }
+
+    private void prepareJmsSpout(JSONObject src, JSONObject tar, JSONArray jmsDataSources) {
+        JSONObject srcConf = src.getJSONObject("configuration");
+        String dataSource = srcConf.getString("dataSource");
+        JSONObject jmsDataSource = findDataSource(dataSource, jmsDataSources);
+        if (jmsDataSource == null) {
+            throw new IllegalArgumentException(String.format("The Jms DataSource[%s] not found.", dataSource));
+        }
+        tar.put("method", jmsDataSource.getString("method"));
+        JSONObject tarConf = new JSONObject();
+        tarConf.put("connection", String.format("%s%s?trace=%s", jmsDataSource.getString("protocol"),
+                jmsDataSource.getString("server"),
+                jmsDataSource.getBooleanValue("trace") ? "true" : "false"));
+        tarConf.put("user", jmsDataSource.getString("user"));
+        tarConf.put("password", jmsDataSource.getString("password"));
+        tarConf.put("destinateName", srcConf.getString("destinateName"));
+        tarConf.put("isTopic", srcConf.getBooleanValue("isTopic"));
+        tarConf.put("producer", srcConf.getString("producer"));
+        tar.put("configuration", tarConf);
+    }
+
+    private JSONObject findDataSource(String name, JSONArray dataSources) {
+        for (int index = 0; index < dataSources.size(); index ++) {
+            JSONObject dataSource = dataSources.getJSONObject(index);
+            if (name.equals(dataSource.getString("name"))) {
+                return dataSource;
+            }
+        }
+        return null;
     }
 
     /**
@@ -299,16 +489,17 @@ public class TopologyManageServiceImpl implements TopologyManageService {
     /**
      * {@inheritDoc}
      *
-     * @see TopologyManageService#submit(String)
+     * @see TopologyManageService#submit(String, boolean)
      */
+    @Transactional
     @Override
-    public Topology submit(String id) throws UserInterfaceErrorException {
+    public Topology submit(String id, boolean simulation) throws UserInterfaceErrorException {
         try {
             Topology topology = accessor.getById(id, Topology.class);
             if (topology == null) {
                 throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_NOT_FOUND);
             }
-            return submit(topology);
+            return submit(topology, simulation);
         } catch (EntityAccessException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
@@ -322,10 +513,11 @@ public class TopologyManageServiceImpl implements TopologyManageService {
      *
      * @see TopologyManageService#submit(String, String)
      */
+    @Transactional
     @Override
-    public Topology submit(String name, String topologyJsonStr) throws UserInterfaceErrorException {
-        Topology topology = save(name, topologyJsonStr);
-        return submit(topology);
+    public Topology submit(String id, String topologyJsonStr) throws UserInterfaceErrorException {
+        Topology topology = save(id, topologyJsonStr);
+        return submit(topology, true);
     }
 
     /**

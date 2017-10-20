@@ -73,15 +73,10 @@ public class JdbcOperate {
         this.maxCachedSecs = tableJson.getIntValue("maxCachedSecs");
 
         if (specialTypes != null) {
-            specialTypes.keySet().forEach(fieldType -> {
-                String keyFields = specialTypes.getString(fieldType);
-                if (!StringUtils.isBlank(keyFields)) {
-                    String[] fields = keyFields.split(",");
-                    if (fields != null && fields.length > 0) {
-                        for (String field : fields) {
-                            fieldTypes.put(field, fieldType);
-                        }
-                    }
+            specialTypes.keySet().forEach(field -> {
+                String fieldType = specialTypes.getString(field);
+                if (!StringUtils.isBlank(field) && !StringUtils.isBlank(fieldType)) {
+                    fieldTypes.put(field, fieldType);
                 }
             });
         }
@@ -295,6 +290,7 @@ public class JdbcOperate {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("The data is nll. field: %s, data: %s.", field, data.toJSONString()));
             }
+            return null;
         }
         String type = fieldTypes.get(field);
         if (type == null) {

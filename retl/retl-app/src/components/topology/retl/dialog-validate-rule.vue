@@ -10,6 +10,7 @@
     <pane-length-validate v-else-if="type === 'LengthValidate'" ref="paneLengthValidate" :rule="rule" :mode="mode"></pane-length-validate>
     <pane-range-validate v-else-if="type === 'RangeValidate'" ref="paneRangeValidate" :rule="rule" :mode="mode"></pane-range-validate>
     <pane-reg-exp-validate v-else-if="type === 'RegExpValidate'" ref="paneRegExpValidate" :rule="rule" :mode="mode"></pane-reg-exp-validate>
+    <pane-in-validate v-else-if="type === 'InValidate'" ref="paneInValidate" :rule="rule" :mode="mode"></pane-in-validate>
     <div slot="footer" class="dialog-footer">
       <el-button class="button" @click="handleReset" :disabled="mode === 'detail'">重置</el-button>
       <el-button class="button" @click="handleSubmit" :disabled="mode === 'detail'">保存</el-button>
@@ -25,10 +26,12 @@
   import PaneLengthValidate from '../../validate/form-validate-length.vue'
   import PaneRangeValidate from '../../validate/form-validate-range.vue'
   import PaneRegExpValidate from '../../validate/form-validate-regexp.vue'
+  import PaneInValidate from '../../validate/form-validate-in.vue'
 
   export default {
     name: 'dialog-validate-rule',
-    components: {PaneNullValidate, PaneTypeValidate, PaneLengthValidate, PaneRangeValidate, PaneRegExpValidate},
+    components: {PaneNullValidate, PaneTypeValidate, PaneLengthValidate, PaneRangeValidate, PaneRegExpValidate,
+      PaneInValidate},
     data() {
       return {
         visible: false,

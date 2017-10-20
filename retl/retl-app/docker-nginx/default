@@ -11,7 +11,7 @@ server {
         # rewrite ^~/rest/ ;
         # include wsgi_params;
         # proxy_pass http://10.1.183.204:9998/rest;
-        proxy_pass http://192.168.88.12:9998/rest;
-        # proxy_pass http://192.168.0.248:9998/rest;
+        # proxy_pass http://192.168.88.12:9998/rest;
+        proxy_pass http://192.168.0.248:9998/rest;
     }
 }

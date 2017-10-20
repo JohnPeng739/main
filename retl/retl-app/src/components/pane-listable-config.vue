@@ -69,7 +69,7 @@
   import {info} from '../assets/notify'
 
   export default {
-    name: 'pane-dataSource-config',
+    name: 'pane-listable-config',
     components: {DsIcon},
     props: ['list'],
     data() {

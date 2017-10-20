@@ -71,6 +71,7 @@
   import {logger} from 'dsutils'
   import {postWithError, defaultError} from '../../assets/ajax'
   import {warn} from '../../assets/notify'
+  import config from '../../modules/manage/config'
 
   export default {
     name: 'topology-result-info',
@@ -87,7 +88,7 @@
         if (checkResult && checkResult.zookeepers && checkResult.zookeepers.need) {
           state = checkResult.zookeepers.state
         }
-        if (state === 'pass' && checkResult && checkResult.jdbcDataSources) {
+        if ((state === 'pass' || state === 'NA') && checkResult && checkResult.jdbcDataSources) {
           Object.keys(checkResult.jdbcDataSources).forEach(name => {
             let checker = checkResult.jdbcDataSources[name]
             if (checker && checker.need && checker.state !== 'pass') {
@@ -96,7 +97,7 @@
             }
           })
         }
-        if (state === 'pass' && checkResult && checkResult.jmsDataSources) {
+        if ((state === 'pass' || state === 'NA') && checkResult && checkResult.jmsDataSources) {
           Object.keys(checkResult.jmsDataSources).forEach(name => {
             let checker = checkResult.jmsDataSources[name]
             if (checker && checker.need && checker.state !== 'pass') {
@@ -142,7 +143,7 @@
     methods: {
       validated() {
         // 只有校验通过，才能进行下一步操作
-        let valid = (this.state === 'pass')
+        let valid = (this.state === 'pass') || !config.forceValidate
         if (!valid) {
           warn('资源检测没有通过。')
         }
