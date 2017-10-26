@@ -83,7 +83,7 @@
     computed: {
       ...mapGetters(['topology', 'zookeepers', 'jdbcDataSources', 'jmsDataSources']),
       state() {
-        let state = 'NA'
+        let state = 'pass'
         let checkResult = this.checkResult
         if (checkResult && checkResult.zookeepers && checkResult.zookeepers.need) {
           state = checkResult.zookeepers.state
@@ -117,7 +117,8 @@
         result += '## 总体结果：' + this.getStateName(this.state) + '\n'
         result += '---- \n'
         result += '### Zookeepers: \n'
-        result += '- ' + this.getStateName(checkResult.zookeepers.state) + '\n \n'
+        let zookeeperState = checkResult.zookeepers ? checkResult.zookeepers.state : 'NA'
+        result += '- ' + this.getStateName(zookeeperState) + '\n \n'
         result += '### jdbc数据源: \n'
         if (checkResult.jdbcDataSources && Object.keys(checkResult.jdbcDataSources).length > 0) {
           Object.keys(checkResult.jdbcDataSources).forEach((name, index) => {
@@ -174,7 +175,7 @@
         let zookeepers = this.zookeepers
         let jdbcDataSources = this.jdbcDataSources
         let jmsDataSources = this.jmsDataSources
-        if (zookeepers) {
+        if (zookeepers && zookeepers.length > 0) {
           checkResult.zookeepers = this.createChecker('zookeepers', true)
         } else {
           checkResult.zookeepers = this.createChecker('zookeepers', false)
