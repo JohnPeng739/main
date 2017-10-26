@@ -40,7 +40,7 @@ project(':mx-dal') {
 }
 
 project(':mx-dal-hibernate') {
-  version = '1.0.4'
+  version = '1.0.6'
 
   dependencies {
     compile(

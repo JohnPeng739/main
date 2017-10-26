@@ -18,8 +18,8 @@ public class RETLStormCli {
 
     private String stormHome = "/opt/storm";
     private String storm = "storm";
-    private String retlHome = "/opt/storm/retl";
-    private String retlJar = "retlp.jar";
+    private String retlHome = "/opt/retl";
+    private String retlJar = "retl-platform-3.0.1.jar";
     private String deps = "deps";
 
     /**
@@ -116,7 +116,7 @@ public class RETLStormCli {
             logger.debug(String.format("*****************\nStart a inline process:\n%s\n***********************",
                     StringUtils.merge(cmds, " ")));
         }
-        return ProcessRun.runCmd(cmds);
+        return ProcessRun.runCmd(cmds, "提交拓扑成功");
     }
 
     /**

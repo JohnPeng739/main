@@ -83,7 +83,7 @@
       },
       handlePageChange(page) {
         this.pagination.page = page
-        this.handleRefresh()
+        this.$emit('buttonHandle', 'refresh', this.pagination)
       }
     }
   }

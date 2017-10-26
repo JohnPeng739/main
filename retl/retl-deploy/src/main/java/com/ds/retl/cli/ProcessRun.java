@@ -39,6 +39,17 @@ public class ProcessRun {
      * @return 命令运行完毕后输出的数据或者错误信息
      */
     public static String runCmd(List<String> cmds) {
+        return ProcessRun.runCmd(cmds, null);
+    }
+
+    /**
+     * 运行指定的命令，并指定输出信息的结束标志
+     *
+     * @param cmds    命令参数列表
+     * @param endFlag 指定输出信息的结束标志
+     * @return 命令运行完毕后输出的数据或者错误信息
+     */
+    public static String runCmd(List<String> cmds, String endFlag) {
         ProcessBuilder builder = new ProcessBuilder(cmds);
         // 将Error合并到常规输出中
         builder.redirectErrorStream(true);
@@ -50,6 +61,9 @@ public class ProcessRun {
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
                     sb.append("\n");
+                    if (line.startsWith(endFlag)) {
+                        break;
+                    }
                 }
                 return sb.toString();
             }

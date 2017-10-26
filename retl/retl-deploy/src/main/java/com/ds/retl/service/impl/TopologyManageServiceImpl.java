@@ -123,7 +123,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
                 parent.mkdirs();
             }
             try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
-                bw.write(topologyJson.toJSONString());
+                bw.write(JSON.toJSONString(topologyJson, true));
             } catch (IOException ex) {
                 if (logger.isErrorEnabled()) {
                     logger.error(ex);
@@ -370,6 +370,8 @@ public class TopologyManageServiceImpl implements TopologyManageService {
                 tar.put("name", spout.getString("name"));
                 String type = spout.getString("type");
                 tar.put("type", type);
+                int parallelism = spout.getIntValue("parallelism");
+                tar.put("parallelism", parallelism);
                 if ("jdbc".equalsIgnoreCase(type)) {
                     prepareJdbcSpout(spout, tar);
                 } else if ("jms".equalsIgnoreCase(type) || "jmsPull".equalsIgnoreCase(type)) {

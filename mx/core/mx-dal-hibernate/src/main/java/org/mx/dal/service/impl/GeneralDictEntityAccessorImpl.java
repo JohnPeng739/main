@@ -48,7 +48,8 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
             if (isInterfaceClass) {
                 clazz = (Class<T>) super.getEntityClass(entityClass);
             }
-            Query query = entityManager.createQuery(String.format("SELECT dict FROM %s dict WHERE dict.code = :code",
+            Query query = entityManager.createQuery(String.format("SELECT dict FROM %s dict WHERE dict.code = :code " +
+                            "ORDER BY dict.createdTime DESC",
                     clazz.getName()));
             query.setParameter("code", code);
             List<T> result = query.getResultList();

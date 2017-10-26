@@ -111,7 +111,8 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
             if (isInterfaceClass) {
                 clazz = getEntityClass(entityClass);
             }
-            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity", clazz.getName()));
+            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity " +
+                    "ORDER BY entity.createdTime DESC", clazz.getName()));
             List<T> result = query.getResultList();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("List %d entity[%s].", result.size(), clazz.getName()));
@@ -152,7 +153,8 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
                 pagination = new Pagination();
             }
             pagination.setTotal((int) count(clazz, false));
-            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity", clazz.getName()));
+            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity " +
+                    "ORDER BY entity.createdTime DESC", clazz.getName()));
             query.setFirstResult((pagination.getPage() - 1) * pagination.getSize());
             query.setMaxResults(pagination.getSize());
             List<T> result = query.getResultList();
