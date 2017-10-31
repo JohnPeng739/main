@@ -13,11 +13,17 @@
     <el-form-item label="表名" prop="table">
       <el-input v-model="formJdbcSpout.table" :readonly="mode === 'detail'"></el-input>
     </el-form-item>
+    <slot name="fields"></slot>
+    <slot name="fieldsTransform"></slot>
     <el-form-item label="关键字" prop="key">
-      <el-input v-model="formJdbcSpout.key" :readonly="mode === 'detail'"></el-input>
+      <el-select v-model="formJdbcSpout.key" :disabled="mode === 'detail'">
+        <el-option v-for="item in fields" :key="item" :label="item" :value="item"></el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="时间戳" prop="timestamp">
-      <el-input v-model="formJdbcSpout.timestamp" :readonly="mode === 'detail'"></el-input>
+      <el-select v-model="formJdbcSpout.timestamp" :disabled="mode === 'detail'">
+        <el-option v-for="item in fields" :key="item" :label="item" :value="item"></el-option>
+      </el-select>
     </el-form-item>
     <el-form-item label="Zookeepers" prop="zookeepers">
       <ds-tag-normal v-model="formJdbcSpout.zookeepers" type="gray" :disabled="mode === 'detail'"></ds-tag-normal>
@@ -32,12 +38,6 @@
       <el-input-number v-model="formJdbcSpout.intervalSecs" :min="1" :max="30" :disabled="mode === 'detail'"></el-input-number>
       <span>秒</span>
     </el-form-item>
-    <el-form-item label="字段列表" prop="fields">
-      <ds-tag-normal v-model="formJdbcSpout.fields" type="gray" :disabled="mode === 'detail'"></ds-tag-normal>
-    </el-form-item>
-    <el-form-item label="字段改名">
-      <ds-tag-both-sides v-model="formJdbcSpout.fieldsTransform" type="gray" :disabled="mode === 'detail'" sideSeparator="=>"></ds-tag-both-sides>
-    </el-form-item>
   </el-form>
 </template>
 
@@ -49,7 +49,7 @@
 
   export default {
     name: 'pane-spout-jdbc-config',
-    props: ['jdbcDataSources', 'zookeepers', 'configuration', 'mode'],
+    props: ['jdbcDataSources', 'zookeepers', 'configuration', 'mode', 'fields'],
     components: {DsTagNormal, DsTagBothSides},
     data() {
       let dataSourceValidator = (rule, value, callback) => {
@@ -95,9 +95,7 @@
           zookeepers: [],
           ackPath: '',
           windowSize: 1000,
-          intervalSecs: 6,
-          fields: [],
-          fieldsTransform: []
+          intervalSecs: 6
         },
         rulesJdbcSpout: {
           dataSource: [requiredRule({msg: '必须选择一个jdbc数据源', trigger: 'change'}), customRule({validator: dataSourceValidator})],
@@ -105,8 +103,7 @@
           key: [requiredRule({msg: '必须输入关键字字段名'})],
           timestamp: [requiredRule({msg: '必须输入时间戳字段名'})],
           zookeepers: [customRule({validator: zookeepersValidator})],
-          ackPath: [requiredRule({msg: '必须输入ACK缓冲路径'})],
-          fields: [customRule({validator: fieldsValidator})]
+          ackPath: [requiredRule({msg: '必须输入ACK缓冲路径'})]
         }
       }
     },
@@ -125,7 +122,7 @@
     },
     mounted() {
       if (this.configuration !== null && this.configuration !== undefined) {
-        let {dataSource, table, key, timestamp, ackPath, windowsSize, intervalSecs, fields, fieldsTransform} = this.configuration
+        let {dataSource, table, key, timestamp, ackPath, windowsSize, intervalSecs} = this.configuration
         this.formJdbcSpout = {
           dataSource,
           table,
@@ -134,9 +131,7 @@
           zookeepers: this.zookeepers,
           ackPath,
           windowsSize,
-          intervalSecs,
-          fields,
-          fieldsTransform
+          intervalSecs
         }
       }
     }

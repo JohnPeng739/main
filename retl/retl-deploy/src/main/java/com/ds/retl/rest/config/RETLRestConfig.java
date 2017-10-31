@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * RETL REST服务平台应用Java Configure定义
  * 扫描：com.ds.retl.service.impl, com.ds.retl.rest中的组件
- * 加载配置：classpath:deploy.properties
+ * 加载配置：classpath:deploy.properties, classpath:storm.properties
  * 载入：ServerConfig.class, DalHibernateConfig.class
  *
  * @author : john.peng created on date : 2017/10/6
@@ -22,6 +22,7 @@ import java.util.List;
 @Configuration
 @Import({ServerConfig.class, DalHibernateConfig.class})
 @PropertySource({"classpath:deploy.properties"})
+@PropertySource({"classpath:storm.properties"})
 @ComponentScan({
         "com.ds.retl.service.impl",
         "com.ds.retl.rest"

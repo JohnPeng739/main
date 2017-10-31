@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,31 +38,37 @@ public class ProcessRun {
      *
      * @param cmds 命令参数列表
      * @return 命令运行完毕后输出的数据或者错误信息
+     * @see #runCmd(List, String, int)
      */
     public static String runCmd(List<String> cmds) {
-        return ProcessRun.runCmd(cmds, null);
+        return ProcessRun.runCmd(cmds, null, 10);
     }
 
     /**
      * 运行指定的命令，并指定输出信息的结束标志
      *
-     * @param cmds    命令参数列表
-     * @param endFlag 指定输出信息的结束标志
+     * @param cmds       命令参数列表
+     * @param endFlag    指定输出信息的结束标志
+     * @param timeoutSec 操作的最大超时，单位秒
      * @return 命令运行完毕后输出的数据或者错误信息
      */
-    public static String runCmd(List<String> cmds, String endFlag) {
+    public static String runCmd(List<String> cmds, String endFlag, int timeoutSec) {
         ProcessBuilder builder = new ProcessBuilder(cmds);
         // 将Error合并到常规输出中
         builder.redirectErrorStream(true);
         try {
             Process process = builder.start();
+            long t0 = new Date().getTime();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line = null;
+                String line;
                 StringBuffer sb = new StringBuffer();
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
                     sb.append("\n");
                     if (line.startsWith(endFlag)) {
+                        break;
+                    }
+                    if (new Date().getTime() - t0 > timeoutSec * 1000) {
                         break;
                     }
                 }

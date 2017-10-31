@@ -10,6 +10,7 @@ import com.ds.retl.dal.entity.Topology;
 import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.service.OperateLogService;
+import com.ds.retl.service.StormRestfulServiceClient;
 import com.ds.retl.service.TopologyManageService;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.logging.Log;
@@ -52,6 +53,9 @@ public class TopologyManageServiceImpl implements TopologyManageService {
     @Autowired
     private OperateLogService operateLogService = null;
 
+    @Autowired
+    private StormRestfulServiceClient stormClient = null;
+
     /**
      * {@inheritDoc}
      *
@@ -76,6 +80,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             topology.setDescription(json.getString("description"));
             topology.setSubmitted(false);
             topology.setSubmitInfo("");
+            topology.setTopologyId(null);
             topology.setTopologyContent(topologyJsonStr);
             topology = accessor.save(topology);
             operateLogService.writeLog(String.format("成功保存[%s]计算拓扑。", name));
@@ -89,6 +94,70 @@ public class TopologyManageServiceImpl implements TopologyManageService {
     }
 
     /**
+     * {@inheritDoc}
+     * @see TopologyManageServiceImpl#kill(String)
+     */
+    @Override
+    public Topology kill(String id) throws UserInterfaceErrorException {
+        try {
+            Topology topology = accessor.getById(id, Topology.class);
+            if (topology == null) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_NOT_FOUND);
+            }
+            if (StringUtils.isBlank(topology.getTopologyId()) || !topology.isSubmitted()) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_NOT_SUBMITTED);
+            }
+            JSONObject result = stormClient.getTopology(topology.getTopologyId());
+            if (result == null) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_NOT_SUBMITTED);
+            }
+            result = stormClient.kill(topology.getTopologyId());
+            if (result == null || !"success".equals(result.getString("status"))) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_KILL_FAIL);
+            }
+            topology.setSubmitted(false);
+            topology.setSubmitInfo(null);
+            topology.setTopologyId(null);
+            topology = accessor.save(topology);
+            operateLogService.writeLog(String.format("杀死计算拓扑[%s]操作成功。", topology.getName()));
+            return topology;
+        } catch (EntityAccessException ex) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see TopologyManageService#delete(String)
+     */
+    @Override
+    public void delete(String id) throws UserInterfaceErrorException {
+        try {
+            Topology topology = accessor.getById(id, Topology.class);
+            if (topology == null) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_NOT_FOUND);
+            }
+            accessor.remove(topology);
+            operateLogService.writeLog(String.format("删除计算拓扑[%s]操作成功。", topology.getName()));
+        } catch (EntityAccessException ex) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
+    }
+
+    private JSONObject foundSubmitedTopology(String name) throws UserInterfaceErrorException {
+        JSONArray topologies = stormClient.getToptologies();
+        if (topologies != null && topologies.size() > 0) {
+            for (int index = 0; index < topologies.size(); index++) {
+                JSONObject item = topologies.getJSONObject(index);
+                if (item != null && name.equals(item.getString("name"))) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * 提交一个拓扑实体对象到Storm集群中
      *
      * @param topology   拓扑实体对象
@@ -98,6 +167,21 @@ public class TopologyManageServiceImpl implements TopologyManageService {
      */
     private Topology submit(Topology topology, boolean simulation) throws UserInterfaceErrorException {
         String topologyName = topology.getName();
+        // 检查拓扑名字是否已经被部署到Storm集群中
+        JSONObject found = foundSubmitedTopology(topologyName);
+        if (found != null) {
+            try {
+                topology.setSubmitted(false);
+                topology.setSubmittedTime(new Date().getTime());
+                topology.setSubmitInfo("同名的计算拓扑已经被部署到集群中，不能重复部署。");
+                accessor.save(topology);
+            } catch (EntityAccessException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("Save submit information fail.", ex);
+                }
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_ALREADY_SUBMITTED);
+        }
         String confStr = topology.getTopologyContent();
         if (StringUtils.isBlank(confStr)) {
             if (logger.isErrorEnabled()) {
@@ -132,12 +216,21 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             }
             try {
                 String submitInfo = new RETLStormCli(stormHome, stormBin, retlHome, retlPlatform, retlDeps)
-                        .deploy(configName);
+                        .deploy(configName, 10);
                 topology.setSubmitInfo(submitInfo);
-                topology.setSubmitted(true);
                 topology.setSubmittedTime(new Date().getTime());
-                topology = accessor.save(topology);
-                operateLogService.writeLog(String.format("成功提交[%s]计算拓扑。", topologyName));
+                JSONObject submittedTopology = foundSubmitedTopology(topologyName);
+                if (submittedTopology != null) {
+                    String topologyId = submittedTopology.getString("id");
+                    topology.setTopologyId(topologyId);
+                    topology.setSubmitted(true);
+                    topology = accessor.save(topology);
+                    operateLogService.writeLog(String.format("成功提交[%s]计算拓扑。", topologyName));
+                } else {
+                    topology.setSubmitted(false);
+                    topology = accessor.save(topology);
+                    operateLogService.writeLog(String.format("提交[%s]计算拓扑未成功。", topologyName));
+                }
                 return topology;
             } catch (EntityAccessException ex) {
                 if (logger.isErrorEnabled()) {
@@ -207,13 +300,13 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         JSONArray zookeepers = conf.getJSONArray("zookeepers");
         JSONObject zookeeper = new JSONObject();
         StringBuffer serverList = new StringBuffer();
-        for (int index = 0; index < zookeepers.size(); index ++) {
+        for (int index = 0; index < zookeepers.size(); index++) {
             serverList.append(zookeepers.getString(index));
             serverList.append(",");
         }
         int length = serverList.length();
         if (serverList.length() > 0) {
-            length --;
+            length--;
         }
         zookeeper.put("serverList", serverList.substring(0, length));
         topologyConf.put("zookeepers", zookeeper);
@@ -325,7 +418,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             String dataSourceName = persist.getString("dataSource");
             JSONArray jdbcDataSources = topologyConf.getJSONArray("jdbcDataSources");
             JSONObject errorTable = this.loadTemplateJson("/template/error-template.json");
-            for (int index = 0; index < jdbcDataSources.size(); index ++) {
+            for (int index = 0; index < jdbcDataSources.size(); index++) {
                 JSONObject dataSource = jdbcDataSources.getJSONObject(index);
                 if (dataSourceName.equals(dataSource.getString("name"))) {
                     dataSource.put("errorTable", errorTable);
@@ -363,7 +456,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
 
     private JSONArray prepareSpouts(JSONArray spouts, JSONArray jmsDataSources) {
         JSONArray result = new JSONArray();
-        for (int index  = 0; index < spouts.size(); index ++) {
+        for (int index = 0; index < spouts.size(); index++) {
             JSONObject spout = spouts.getJSONObject(index);
             if (spout != null) {
                 JSONObject tar = new JSONObject();
@@ -401,7 +494,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
 
     private Map<String, Object> transformFieldMapping(JSONArray rows) {
         Map<String, Object> mapping = new HashMap<>();
-        for (int index = 0; index < rows.size(); index ++) {
+        for (int index = 0; index < rows.size(); index++) {
             String row = rows.getString(index);
             String[] sides = row.split("=>");
             if (sides.length == 2) {
@@ -428,11 +521,14 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         tarConf.put("destinateName", srcConf.getString("destinateName"));
         tarConf.put("isTopic", srcConf.getBooleanValue("isTopic"));
         tarConf.put("producer", srcConf.getString("producer"));
+        tarConf.put("fields", StringUtils.merge(srcConf.getJSONArray("fields").toArray(new String[0])));
+        tarConf.put("fieldTransform",
+                new JSONObject(transformFieldMapping(srcConf.getJSONArray("fieldsTransform"))));
         tar.put("configuration", tarConf);
     }
 
     private JSONObject findDataSource(String name, JSONArray dataSources) {
-        for (int index = 0; index < dataSources.size(); index ++) {
+        for (int index = 0; index < dataSources.size(); index++) {
             JSONObject dataSource = dataSources.getJSONObject(index);
             if (name.equals(dataSource.getString("name"))) {
                 return dataSource;
@@ -519,7 +615,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
     @Override
     public Topology submit(String id, String topologyJsonStr) throws UserInterfaceErrorException {
         Topology topology = save(id, topologyJsonStr);
-        return submit(topology, true);
+        return submit(topology, false);
     }
 
     /**
@@ -601,6 +697,9 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         String connStr = String.format("%s%s?trace=%s", protocol, server, trace ? "true" : "false");
         if ("ACTIVEMQ".equals(method)) {
             try {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("validate JMS connection: %s.", connStr));
+                }
                 ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(user, password, connStr);
                 javax.jms.Connection conn = factory.createConnection();
                 conn.getClientID();

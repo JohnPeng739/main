@@ -1,5 +1,6 @@
 package com.ds.retl.spout;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.storm.Config;
@@ -48,6 +49,14 @@ public class JmsPullSpout extends BaseRichSpout {
     private boolean hasFailures = false;
     private Timer recoveryTimer = null;
     private long recoveryPeriodMs = -1;
+
+    public JmsPullSpout() {
+        super();
+    }
+
+    public JmsPullSpout(JSONObject config) {
+        this();
+    }
 
     /**
      * 转换消息消费确认模式

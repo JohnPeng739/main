@@ -65,6 +65,20 @@ public interface Topology extends Base {
     void setSubmittedTime(long submittedTime);
 
     /**
+     * 获取拓扑在集群中的ID
+     *
+     * @return 集群中的拓扑ID
+     */
+    String getTopologyId();
+
+    /**
+     * 设置拓扑在集群中的ID
+     *
+     * @param id 集群中的拓扑ID
+     */
+    void setTopologyId(String id);
+
+    /**
      * 获取提交信息
      *
      * @return 提交信息

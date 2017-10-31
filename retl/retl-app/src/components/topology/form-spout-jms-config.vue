@@ -7,7 +7,7 @@
     <el-form-item label="数据源" prop="dataSource">
       <el-select v-model="formJmsSpout.dataSource" :disabled="mode === 'detail'">
         <el-option v-for="item in list" :key="item.name" :value="item.name"
-                   :label="item.protocol + item.server"></el-option>
+                   :label="item.protocol + '://' + item.server"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="目标名" prop="destinateName">
@@ -16,6 +16,8 @@
     <el-form-item label="是否主题" prop="isTopic">
       <el-switch v-model="formJmsSpout.isTopic" on-text="是" off-text="否" :disabled="mode === 'detail'"></el-switch>
     </el-form-item>
+    <slot name="fields"></slot>
+    <slot name="fieldsTransform"></slot>
   </el-form>
 </template>
 

@@ -10,6 +10,15 @@ import org.mx.rest.error.UserInterfaceException;
  */
 public class UserInterfaceErrorException extends UserInterfaceException {
     /**
+     * 默认的构造函数
+     *
+     * @param message 错误消息
+     */
+    public UserInterfaceErrorException(String message) {
+        super(9999, message);
+    }
+
+    /**
      * 构造函数
      *
      * @param error 人机界面错误枚举

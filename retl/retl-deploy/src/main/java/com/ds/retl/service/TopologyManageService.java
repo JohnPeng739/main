@@ -20,6 +20,23 @@ public interface TopologyManageService {
     Topology save(String id, String topologyJsonStr) throws UserInterfaceErrorException;
 
     /**
+     * 杀死指定ID的计算拓扑
+     *
+     * @param id 拓扑关键字ID
+     * @return 成功返回拓扑对象，否则抛出异常
+     * @throws UserInterfaceErrorException 操作过程中发生的异常
+     */
+    Topology kill(String id) throws UserInterfaceErrorException;
+
+    /**
+     * 逻辑删除指定的计算拓扑
+     *
+     * @param id 拓扑关键字ID
+     * @throws UserInterfaceErrorException 操作过程中发生的异常
+     */
+    void delete(String id) throws UserInterfaceErrorException;
+
+    /**
      * 提交指定关键字ID的计算拓扑到Storm集群
      *
      * @param id         拓扑关键字ID

@@ -1,12 +1,16 @@
 package com.ds.retl.rest;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.dal.entity.Topology;
 import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.jms.JmsManager;
 import com.ds.retl.rest.error.UserInterfaceErrors;
 import com.ds.retl.rest.vo.LabelValueVO;
 import com.ds.retl.rest.vo.topology.SupportedVO;
+import com.ds.retl.rest.vo.topology.TopologyRealStatusVO;
 import com.ds.retl.rest.vo.topology.TopologyVO;
+import com.ds.retl.service.StormRestfulServiceClient;
 import com.ds.retl.service.TopologyManageService;
 import com.ds.retl.validate.TypeValidateFunc;
 import org.apache.commons.logging.Log;
@@ -50,6 +54,9 @@ public class TopologyManageResource {
     private TopologyManageService topologyManageService = null;
 
     @Autowired
+    private StormRestfulServiceClient stormClient = null;
+
+    @Autowired
     private SessionDataStore sessionDataStore = null;
 
     /**
@@ -66,6 +73,7 @@ public class TopologyManageResource {
         }
         try {
             List<Topology> topologies = accessor.list(pagination, Topology.class);
+            // TODO 获取拓扑实时状态
             List<TopologyVO> list = new ArrayList<>();
             if (topologies != null && !topologies.isEmpty()) {
                 topologies.forEach(topology -> {
@@ -77,6 +85,72 @@ public class TopologyManageResource {
             return new PaginationDataVO<>(pagination, list);
         } catch (EntityAccessException ex) {
             return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
+        }
+    }
+
+    @Path("topologies/realStatus")
+    @GET
+    public DataVO<List<TopologyRealStatusVO>> getTopologyRealStatus(@QueryParam("topologyIds") String topologyIds) {
+        if (StringUtils.isBlank(topologyIds)) {
+            return new DataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM));
+        }
+        try {
+            String[] ids = topologyIds.split(",");
+            JSONArray topologies = stormClient.getToptologies();
+            List<TopologyRealStatusVO> list = new ArrayList<>();
+            if (topologies != null && topologies.size() > 0) {
+                for (String id : ids) {
+                    for (int index = 0; index < topologies.size(); index++) {
+                        JSONObject item = topologies.getJSONObject(index);
+                        if (item == null) {
+                            continue;
+                        }
+                        if (id.equals(item.getString("id"))) {
+                            list.add(new TopologyRealStatusVO(item));
+                        }
+                    }
+                }
+            }
+            return new DataVO<>(list);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
+    }
+
+    @Path("topology/delete")
+    @GET
+    public DataVO<Boolean> deleteTopology(@QueryParam("userCode") String userCode,
+                                          @QueryParam("topologyId") String topologyId) {
+        sessionDataStore.setCurrentUserCode(userCode);
+        try {
+            topologyManageService.delete(topologyId);
+            sessionDataStore.removeCurrentUserCode();
+            return new DataVO<>(true);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
+    }
+
+    /**
+     * 杀死集群中的计算拓扑
+     *
+     * @param userCode   操作用户代码
+     * @param topologyId 拓扑关键字ID
+     * @return 操作成功后的拓扑对象
+     */
+    @Path("topology/kill")
+    @GET
+    public DataVO<TopologyVO> killTopology(@QueryParam("userCode") String userCode,
+                                           @QueryParam("topologyId") String topologyId) {
+        sessionDataStore.setCurrentUserCode(userCode);
+        try {
+            Topology topology = topologyManageService.kill(topologyId);
+            TopologyVO topologyVO = new TopologyVO();
+            TopologyVO.transform(topology, topologyVO);
+            sessionDataStore.removeCurrentUserCode();
+            return new DataVO<>(topologyVO);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
         }
     }
 

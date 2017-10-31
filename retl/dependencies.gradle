@@ -21,9 +21,9 @@ ext.versions = [
   zookeeper	: '3.4.9',
   'mx-utils'	: '2.0.7',
   'mx-rest-utils'	: '1.1.6',
-  'mx-dal'	: '1.0.1',
-  'mx-dal-hibernate'	: '1.0.6',
-  'mx-dal-mongodb'	: '1.0.1'
+  'mx-dal'	: '1.0.2',
+  'mx-dal-hibernate'	: '1.0.8',
+  'mx-dal-mongodb'	: '1.0.2'
 ]
 
 ext.libs = [

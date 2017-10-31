@@ -98,7 +98,7 @@ public class RETLStormCli {
      * @param topologyConfigJsonFile 拓扑配置文件路径
      * @return 部署过程中的命令行输出信息
      */
-    public String deploy(String topologyConfigJsonFile) {
+    public String deploy(String topologyConfigJsonFile, int timeoutSec) {
         List<String> cmds = new ArrayList<>();
         cmds.add(String.format("%s/bin/%s", stormHome, storm));
         cmds.add("jar");
@@ -116,7 +116,7 @@ public class RETLStormCli {
             logger.debug(String.format("*****************\nStart a inline process:\n%s\n***********************",
                     StringUtils.merge(cmds, " ")));
         }
-        return ProcessRun.runCmd(cmds, "提交拓扑成功");
+        return ProcessRun.runCmd(cmds, "提交拓扑成功", timeoutSec);
     }
 
     /**

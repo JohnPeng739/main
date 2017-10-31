@@ -19,6 +19,9 @@
       }
     }
   }
+  .tag-row {
+    display: inline-block;
+  }
 </style>
 
 <template>
@@ -39,9 +42,25 @@
                          :disabled="mode === 'detail' || jdbcConfig"></el-input-number>
       </el-form-item>
       <form-spout-jms-config v-if="jmsConfig" ref="formSpoutJmsConfig" :jmsDataSources="jmsDataSources"
-                             :configuration="formSpout.configuration" :mode="mode"></form-spout-jms-config>
+                             :configuration="formSpout.configuration" :mode="mode">
+        <el-form-item v-if="canFieldTransform" slot="fields" label="字段列表" prop="fields">
+          <ds-tag-normal v-model="formSpout.fields" type="gray" :disabled="mode === 'detail'" class="tag-row"></ds-tag-normal>
+          <el-button v-if="canSampleData" @click="handleOperateSampleJmsData" size="small" class="tag-row tag-button">样本数据</el-button>
+          <el-input v-if="showSampleJmsData" type="textarea" :row="4" v-model="sampleJmsData"></el-input>
+        </el-form-item>
+        <el-form-item v-if="canFieldTransform" slot="fieldsTransform" label="字段改名">
+          <ds-tag-both-sides v-model="formSpout.fieldsTransform" type="gray" :disabled="mode === 'detail'" sideSeparator="=>"></ds-tag-both-sides>
+        </el-form-item>
+      </form-spout-jms-config>
       <form-spout-jdbc-config v-if="jdbcConfig" ref="formSpoutJdbcConfig"  :zookeepers="zookeepers" :jdbcDataSources="jdbcDataSources"
-                              :configuration="formSpout.configuration" :mode="mode"></form-spout-jdbc-config>
+                              :fields="formSpout.fields" :configuration="formSpout.configuration" :mode="mode">
+        <el-form-item v-if="canFieldTransform" slot="fields" label="字段列表" prop="fields">
+          <ds-tag-normal v-model="formSpout.fields" type="gray" :disabled="mode === 'detail'"></ds-tag-normal>
+        </el-form-item>
+        <el-form-item v-if="canFieldTransform" slot="fieldsTransform" label="字段改名">
+          <ds-tag-both-sides v-model="formSpout.fieldsTransform" type="gray" :disabled="mode === 'detail'" sideSeparator="=>"></ds-tag-both-sides>
+        </el-form-item>
+      </form-spout-jdbc-config>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button class="button" @click="handleReset" :disabled="mode === 'detail'">重置</el-button>
@@ -54,20 +73,24 @@
 <script>
   import {mapGetters} from 'vuex'
   import {logger} from 'dsutils'
-  import {formValidateWarn} from '../../assets/notify'
+  import {formValidateWarn, warn} from '../../assets/notify'
   import {requiredRule, rangeRule} from '../../assets/form-validate-rules'
   import DsIcon from '../icon.vue'
   import FormSpoutJmsConfig from './form-spout-jms-config.vue'
   import FormSpoutJdbcConfig from './retl/form-spout-jdbc-config.vue'
+  import DsTagNormal from '../ds-tag-normal.vue'
+  import DsTagBothSides from '../ds-tag-both-sides.vue'
 
   export default {
     name: 'dialog-spout-info',
     components: {
-      DsIcon, FormSpoutJmsConfig, FormSpoutJdbcConfig
+      DsIcon, FormSpoutJmsConfig, FormSpoutJdbcConfig, DsTagNormal, DsTagBothSides
     },
     data() {
       return {
         visible: false,
+        showSampleJmsData: false,
+        sampleJmsData: '',
         spoutTypeDisabled(value) {
           let topologyType = this.topologyType
           if (topologyType === 'persist' && value === 'jdbc') {
@@ -80,7 +103,7 @@
         zookeepers: [],
         jdbcDataSources: [],
         jmsDataSources: [],
-        formSpout: {name: '', type: 'jmsPull', parallelism: 1},
+        formSpout: {name: '', type: 'jmsPull', parallelism: 1, fields: [], fieldsTransform: []},
         rulesSpout: {
           name: [
             requiredRule({msg: '请输入采集源的名称'}),
@@ -93,6 +116,13 @@
     },
     computed: {
       ...mapGetters(['spoutTypes']),
+      canSampleData() {
+        return !(this.formSpout.fields && this.formSpout.fields.length > 0)
+      },
+      canFieldTransform() {
+        let {type} = this.formSpout
+        return type === 'jmsPull' || type === 'jdbc'
+      },
       title() {
         switch (this.mode) {
           case 'add':
@@ -126,8 +156,30 @@
         this.jdbcDataSources = jdbcDataSources
         this.jmsDataSources = jmsDataSources
         let {name, type, parallelism, configuration} = spout
-        this.formSpout = {name, type, parallelism, configuration}
+        if (configuration) {
+          let {fields, fieldsTransform} = configuration
+          this.formSpout = {name, type, parallelism, fields, fieldsTransform, configuration}
+        } else {
+          this.formSpout = {name, type, parallelism, fields: [], fieldsTransform: [], configuration}
+        }
         this.visible = true
+      },
+      handleOperateSampleJmsData() {
+        if (this.showSampleJmsData) {
+          if (this.sampleJmsData && this.sampleJmsData.length > 0) {
+            try {
+              let json = JSON.parse(this.sampleJmsData)
+              let fields = []
+              Object.keys(json).forEach(key => fields.push(key))
+              this.formSpout.fields = fields
+            } catch (error) {
+              console.log(error)
+              warn('输入的数据不符合JSON格式要求。')
+              return
+            }
+          }
+        }
+        this.showSampleJmsData = !this.showSampleJmsData
       },
       handleSubmit() {
         // 获取pane中的数据
@@ -136,9 +188,11 @@
           conf = this.$refs['formSpoutJmsConfig'].getConfiguration()
         } else if (this.jdbcConfig) {
           conf = this.$refs['formSpoutJdbcConfig'].getConfiguration()
-          let zookeepers = conf.zookeepers
-          this.$emit('saveZookeepers', zookeepers)
-          delete conf.zookeepers
+          if (conf && conf.zookeepers) {
+            let zookeepers = conf.zookeepers
+            this.$emit('saveZookeepers', zookeepers)
+            delete conf.zookeepers
+          }
         }
         if (conf) {
           this.formSpout.configuration = conf
@@ -147,7 +201,10 @@
         }
         this.$refs['formSpout'].validate(valid => {
           if (valid) {
-            this.$emit('submit', this.mode, this.formSpout)
+            let {name, type, parallelism, fields, fieldsTransform, configuration} = this.formSpout
+            configuration.fields = fields
+            configuration.fieldsTransform = fieldsTransform
+            this.$emit('submit', this.mode, {name, type, parallelism, configuration})
             this.handleClose()
           } else {
             formValidateWarn()

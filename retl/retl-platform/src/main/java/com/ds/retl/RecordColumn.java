@@ -6,7 +6,7 @@ package com.ds.retl;
  * @author : john.peng created on date : 2017/19/7
  */
 public class RecordColumn {
-    private String name, desc;
+    private String name, desc, tarName;
 
     /**
      * 获取数据列名称
@@ -24,6 +24,24 @@ public class RecordColumn {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * 获取数据列名称（转换后）
+     *
+     * @return 数据列名称（转换后）
+     */
+    public String getTarName() {
+        return tarName;
+    }
+
+    /**
+     * 设置数据列名称（转换后）
+     *
+     * @param tarName 数据列名称（转换后）
+     */
+    public void setTarName(String tarName) {
+        this.tarName = tarName;
     }
 
     /**

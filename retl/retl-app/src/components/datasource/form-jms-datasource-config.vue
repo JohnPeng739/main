@@ -81,7 +81,7 @@
       }
       return {
         methodSupported: [],
-        formJmsDataSource: {method: 'ACTIVEMQ', name: '', protocol: 'TCP', server: '', trace: true, user: '',
+        formJmsDataSource: {method: 'ACTIVEMQ', name: '', protocol: 'tcp://', server: '', trace: true, user: '',
           password: '', jndiName: ''},
         rulesJmsDataSource: {
           name: [requiredRule({msg: '必须输入jms数据源的名称'})],

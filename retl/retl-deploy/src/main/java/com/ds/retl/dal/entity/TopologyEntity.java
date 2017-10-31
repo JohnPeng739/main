@@ -24,6 +24,8 @@ public class TopologyEntity extends BaseEntity implements Topology {
     private long submittedTime;
     @Column(name = "SUBMITTED")
     private boolean submitted;
+    @Column(name = "TOPOLOGY_ID")
+    private String topologyId;
     @Column(name = "CONFIG_CONTENT", nullable = false)
     @Lob
     private String topologyContent = "";
@@ -129,6 +131,26 @@ public class TopologyEntity extends BaseEntity implements Topology {
     @Override
     public void setSubmitted(boolean submitted) {
         this.submitted = submitted;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Topology#getTopologyId()
+     */
+    @Override
+    public String getTopologyId() {
+        return topologyId;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Topology#setTopologyId(String)
+     */
+    @Override
+    public void setTopologyId(String topologyId) {
+        this.topologyId = topologyId;
     }
 
     /**

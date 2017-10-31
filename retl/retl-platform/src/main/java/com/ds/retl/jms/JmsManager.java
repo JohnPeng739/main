@@ -64,7 +64,7 @@ public class JmsManager {
         spout.setJmsProvider(createProvider(supported, config));
         String producer = config.getString("producer");
         if ("JSON".equalsIgnoreCase(producer)) {
-            spout.setJmsTupleProducer(isPersist ? new EtlPersistJsonTupleProducer() : new EtlSrcJsonTupleProducer());
+            spout.setJmsTupleProducer(isPersist ? new EtlPersistJsonTupleProducer() : new EtlSrcJsonTupleProducer(config));
         } else {
             throw new UnsupportedOperationException(String.format("Not supported producer: %s.", producer));
         }

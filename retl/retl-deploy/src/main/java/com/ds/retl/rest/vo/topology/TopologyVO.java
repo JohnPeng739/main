@@ -9,7 +9,7 @@ import org.mx.rest.vo.BaseVO;
 public class TopologyVO extends BaseVO {
     private boolean submitted;
     private long submittedTime;
-    private String name, topologyContent, submitInfo, operator;
+    private String name, topologyContent, submitInfo, operator, topologyId;
 
     public static void transform(Topology topology, TopologyVO topologyVO) {
         if (topology == null || topologyVO == null) {
@@ -22,55 +22,64 @@ public class TopologyVO extends BaseVO {
         topologyVO.topologyContent = topology.getTopologyContent();
         topologyVO.submitInfo = topology.getSubmitInfo();
         topologyVO.operator = topology.getOperator();
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setTopologyContent(String topologyContent) {
-        this.topologyContent = topologyContent;
-    }
-
-    public void setSubmitted(boolean submitted) {
-        this.submitted = submitted;
-    }
-
-    public void setSubmittedTime(long submittedTime) {
-        this.submittedTime = submittedTime;
-    }
-
-    public void setSubmitInfo(String submitInfo) {
-        this.submitInfo = submitInfo;
-    }
-
-    @Override
-    public void setOperator(String operator) {
-        this.operator = operator;
+        topologyVO.topologyId = topology.getTopologyId();
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getTopologyContent() {
         return topologyContent;
+    }
+
+    public void setTopologyContent(String topologyContent) {
+        this.topologyContent = topologyContent;
     }
 
     public boolean isSubmitted() {
         return submitted;
     }
 
+    public void setSubmitted(boolean submitted) {
+        this.submitted = submitted;
+    }
+
     public long getSubmittedTime() {
         return submittedTime;
+    }
+
+    public void setSubmittedTime(long submittedTime) {
+        this.submittedTime = submittedTime;
     }
 
     public String getSubmitInfo() {
         return submitInfo;
     }
 
+    public void setSubmitInfo(String submitInfo) {
+        this.submitInfo = submitInfo;
+    }
+
+    public String getTopologyId() {
+        return topologyId;
+    }
+
+    public void setTopologyId(String topologyId) {
+        this.topologyId = topologyId;
+    }
+
     @Override
     public String getOperator() {
         return operator;
+    }
+
+    @Override
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 }
