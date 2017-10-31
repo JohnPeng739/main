@@ -1,0 +1,17 @@
+{
+  "data.indexNo":1,
+  "data.lastOrderId":"47852787-90ea-49a2-9eee-0fb0df479612",
+  "data.age":16,
+  "data.money":3.828472312E7,
+  "data.createdTime":1509434424549,
+  "data.families":5,
+  "data.code":"joy",
+  "data.name":"Joy Peng",
+  "data.married":false,
+  "data.sex":"FEMALE",
+  "data.id":"ed4840d7-3a51-420f-b80a-f6f33b88393b",
+  "data.departmentCode":"kfsb",
+  "data.updatedTime":1509434424549,
+  "data.email":"joy.peng@163.com",
+  "data.birthday":1509434424549
+}

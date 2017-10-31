@@ -28,6 +28,7 @@ public enum UserInterfaceErrors implements UserInterfaceError {
     TOPOLOGY_ALREADY_SUBMITTED(305, "指定的拓扑已经被部署，不能重复提交部署。"),
     TOPOLOGY_NOT_SUBMITTED(306, "指定的拓扑并没有提交到STORM集群中。"),
     TOPOLOGY_KILL_FAIL(307, "杀死指定的拓扑失败。"),
+    TOPOLOGY_SUBMIT_FAIL(308, "提交计算拓扑到STORM集群失败。"),
 
     STORM_URL_BLANK(401, "输入的STORM API地址为空。"),
 

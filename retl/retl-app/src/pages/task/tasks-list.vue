@@ -76,7 +76,7 @@
 <script>
   import {mapActions} from 'vuex'
   import {logger} from 'dsutils'
-  import {info, warn} from '../../assets/notify'
+  import {info, warn, confirm} from '../../assets/notify'
   import {get, post} from '../../assets/ajax'
   import {formatDateTime} from '../../assets/date-utils'
   import config from '../../modules/manage/config'
@@ -152,23 +152,25 @@
           if (!selection) {
             info('请在操作之前选择要操作的记录。')
           } else {
+            if (selection.submitted) {
+              warn('不能修改或删除已经提交到STORM集群中的计算拓扑。')
+              return
+            }
             if (operate === 'edit') {
               let topology = selection.content
               topology['id'] = selection.id
               this.setTopology(topology)
               this.goto({owner: this, path: '/tasks/edit', name: '修改拓扑任务'})
             } else {
-              if (selection.submitted) {
-                warn('不能删除已经提交到STORM集群中的计算拓扑。')
-                return
-              }
-              let url = '/rest/topology/delete?topologyId=' + selection.id
-              logger.debug('send GET "%s"', url)
-              get(url, data => {
-                if (data) {
-                  this.handleRefresh(null)
-                  info('删除计算拓扑成功。')
-                }
+              confirm('你真的要删除计算拓扑[' + selection.name + ']吗？删除后不可恢复！', _ => {
+                let url = '/rest/topology/delete?topologyId=' + selection.id
+                logger.debug('send GET "%s"', url)
+                get(url, data => {
+                  if (data) {
+                    this.handleRefresh(null)
+                    info('删除计算拓扑成功。')
+                  }
+                })
               })
             }
           }

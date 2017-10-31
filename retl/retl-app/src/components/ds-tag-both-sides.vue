@@ -8,7 +8,7 @@
 
 <template>
   <div>
-    <el-tag class="tag tag-row" v-for="item in tags" :key="item" :closable="!disabled" :close-transition="false" :type="type"
+    <el-tag class="tag" v-for="item in tags" :key="item" :closable="!disabled" :close-transition="false" :type="type"
             @close="handleDeleteTag(item)" @dblclick.native="handleEditTag(item)">{{item}}
     </el-tag>
     <div v-if="tagInputVisible" class="tag-row">

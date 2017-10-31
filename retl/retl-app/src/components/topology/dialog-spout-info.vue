@@ -45,8 +45,8 @@
                              :configuration="formSpout.configuration" :mode="mode">
         <el-form-item v-if="canFieldTransform" slot="fields" label="字段列表" prop="fields">
           <ds-tag-normal v-model="formSpout.fields" type="gray" :disabled="mode === 'detail'" class="tag-row"></ds-tag-normal>
-          <el-button v-if="canSampleData" @click="handleOperateSampleJmsData" size="small" class="tag-row tag-button">样本数据</el-button>
-          <el-input v-if="showSampleJmsData" type="textarea" :row="4" v-model="sampleJmsData"></el-input>
+          <el-button v-if="canSampleData" @click="handleOperateSampleJmsData" size="mini" class="tag-row">样本数据</el-button>
+          <el-input v-if="showSampleJmsData" type="textarea" :rows="6" v-model="sampleJmsData"></el-input>
         </el-form-item>
         <el-form-item v-if="canFieldTransform" slot="fieldsTransform" label="字段改名">
           <ds-tag-both-sides v-model="formSpout.fieldsTransform" type="gray" :disabled="mode === 'detail'" sideSeparator="=>"></ds-tag-both-sides>
@@ -121,7 +121,7 @@
       },
       canFieldTransform() {
         let {type} = this.formSpout
-        return type === 'jmsPull' || type === 'jdbc'
+        return (type === 'jmsPull' || type === 'jdbc') && this.topologyType === 'retl'
       },
       title() {
         switch (this.mode) {

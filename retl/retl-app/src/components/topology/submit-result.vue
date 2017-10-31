@@ -21,7 +21,7 @@
     <el-row type="flex" justify="center">
       <el-col :span="24" class="button">
         <el-button type="primary" @click="handleSubmit('save')">保存计算拓扑</el-button>
-        <el-button type="primary" @click="handleSubmit('submit')">保存&提交计算拓扑</el-button>
+        <!--el-button type="primary" @click="handleSubmit('submit')">保存&提交计算拓扑</el-button-->
       </el-col>
     </el-row>
   </div>

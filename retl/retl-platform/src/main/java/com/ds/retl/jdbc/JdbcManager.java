@@ -163,7 +163,7 @@ public class JdbcManager {
             return;
         }
         synchronized (JdbcManager.this.loadCacheMutex) {
-            String[] sides = fields.split(",");
+            Object[] sides = fields.split(",");
             caches.put(columnName, Arrays.asList(sides));
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("Load static cache data, column: %s, enums: %s.", columnName, fields));

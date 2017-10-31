@@ -95,6 +95,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
 
     /**
      * {@inheritDoc}
+     *
      * @see TopologyManageServiceImpl#kill(String)
      */
     @Override
@@ -128,6 +129,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
 
     /**
      * {@inheritDoc}
+     *
      * @see TopologyManageService#delete(String)
      */
     @Override
@@ -218,20 +220,34 @@ public class TopologyManageServiceImpl implements TopologyManageService {
                 String submitInfo = new RETLStormCli(stormHome, stormBin, retlHome, retlPlatform, retlDeps)
                         .deploy(configName, 10);
                 topology.setSubmitInfo(submitInfo);
-                topology.setSubmittedTime(new Date().getTime());
-                JSONObject submittedTopology = foundSubmitedTopology(topologyName);
-                if (submittedTopology != null) {
-                    String topologyId = submittedTopology.getString("id");
-                    topology.setTopologyId(topologyId);
-                    topology.setSubmitted(true);
-                    topology = accessor.save(topology);
-                    operateLogService.writeLog(String.format("成功提交[%s]计算拓扑。", topologyName));
-                } else {
-                    topology.setSubmitted(false);
-                    topology = accessor.save(topology);
-                    operateLogService.writeLog(String.format("提交[%s]计算拓扑未成功。", topologyName));
+                for (int index = 0; index < 10; index++) {
+                    JSONObject submittedTopology = foundSubmitedTopology(topologyName);
+                    if (submittedTopology != null) {
+                        topology.setSubmittedTime(new Date().getTime());
+                        String topologyId = submittedTopology.getString("id");
+                        topology.setTopologyId(topologyId);
+                        topology.setSubmitted(true);
+                        topology = accessor.save(topology);
+                        operateLogService.writeLog(String.format("成功提交[%s]计算拓扑。", topologyName));
+                        return topology;
+                    } else {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException ex) {
+                            if (logger.isErrorEnabled()) {
+                                logger.error(ex);
+                            }
+                        }
+                    }
                 }
-                return topology;
+                if (logger.isWarnEnabled()) {
+                    logger.warn("The topology can be found in cluster after wait 10s.");
+                }
+                topology.setSubmittedTime(new Date().getTime());
+                topology.setSubmitted(false);
+                accessor.save(topology);
+                operateLogService.writeLog(String.format("提交[%s]计算拓扑未成功。", topologyName));
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_SUBMIT_FAIL);
             } catch (EntityAccessException ex) {
                 if (logger.isErrorEnabled()) {
                     logger.error(ex);

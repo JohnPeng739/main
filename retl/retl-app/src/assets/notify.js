@@ -1,4 +1,4 @@
-import {Message} from 'element-ui'
+import {Message, MessageBox} from 'element-ui'
 import {Notification} from 'element-ui'
 
 let error =(message) => {
@@ -16,6 +16,18 @@ let info = (message, duration) => {
   Notification({title: '提示', message, duration: duration})
 }
 
+let confirm = (message, fnOk) => {
+  MessageBox.confirm(message, '请确认', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    if (fnOk && typeof fnOk === "function") {
+      fnOk()
+    }
+  }).catch(() => {})
+}
+
 let formValidateWarn = _ => warn('表单数据校验失败，请检查输入的数据。')
 
-export {error, warn, info, formValidateWarn}
+export {error, warn, info, confirm, formValidateWarn}

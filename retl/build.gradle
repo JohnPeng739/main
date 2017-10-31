@@ -37,7 +37,7 @@ project(':retl-platform') {
 }
 
 project(':retl-deploy') {
-  version = '3.0.3'
+  version = '3.0.4'
 
   dependencies {
     compile(

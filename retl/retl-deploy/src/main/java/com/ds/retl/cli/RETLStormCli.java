@@ -96,6 +96,7 @@ public class RETLStormCli {
      * 部署指定RETL拓扑到集群
      *
      * @param topologyConfigJsonFile 拓扑配置文件路径
+     * @param timeoutSec             运行命令等待输出的超时值，单位为秒。
      * @return 部署过程中的命令行输出信息
      */
     public String deploy(String topologyConfigJsonFile, int timeoutSec) {
