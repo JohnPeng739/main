@@ -21,10 +21,10 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
     /**
      * {@inheritDoc}
      *
-     * @see GeneralDictEntityAccessor#getByCode(String, Class, boolean)
+     * @see GeneralDictEntityAccessor#getByCode2(String, Class, boolean)
      */
     @Override
-    public <T extends BaseDict> T getByCode(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+    public <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
             Class<T> clazz = entityClass;
             if (isInterfaceClass) {
@@ -44,6 +44,6 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
      */
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass) throws EntityAccessException {
-        return getByCode(code, entityInterfaceClass, true);
+        return getByCode2(code, entityInterfaceClass, true);
     }
 }

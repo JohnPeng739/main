@@ -24,6 +24,17 @@ public interface GeneralAccessor {
     <T extends Base> long count(Class<T> entityInterfaceClass) throws EntityAccessException;
 
     /**
+     * 对指定的实体类型进行计数，实体接口必须继承Base接口。
+     *
+     * @param entityInterfaceClass 实体接口类型
+     * @param isValid              如果设置为true，仅返回有效的记录；否则对所有记录计数。
+     * @param <T>                  实现Base接口的泛型对象类型
+     * @return 指定实体的数量
+     * @throws EntityAccessException 计数过程中发生的异常
+     */
+    <T extends Base> long count(Class<T> entityInterfaceClass, boolean isValid) throws EntityAccessException;
+
+    /**
      * 获取指定实体类型的数据集合，实体接口必须继承Base接口。
      *
      * @param entityInterfaceClass 实体接口类型
@@ -32,6 +43,17 @@ public interface GeneralAccessor {
      * @throws EntityAccessException 获取过程中发生的异常
      */
     <T extends Base> List<T> list(Class<T> entityInterfaceClass) throws EntityAccessException;
+
+    /**
+     * 获取指定实体类型的数据集合，实体接口必须继承Base接口。
+     *
+     * @param entityInterfaceClass 实体接口类型
+     * @param isValid              如果设置为true，仅返回有效的记录；否则返回所有记录。
+     * @param <T>                  实现Base接口的泛型对象类型
+     * @return 指定实体对象类别
+     * @throws EntityAccessException 获取过程中发生的异常
+     */
+    <T extends Base> List<T> list(Class<T> entityInterfaceClass, boolean isValid) throws EntityAccessException;
 
     /**
      * 根据分页信息获取指定实体类型的数据子集合，实体接口必须继承Base接口。
@@ -43,6 +65,18 @@ public interface GeneralAccessor {
      * @throws EntityAccessException 获取过程中发生的异常
      */
     <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass) throws EntityAccessException;
+
+    /**
+     * 根据分页信息获取指定实体类型的数据子集合，实体接口必须继承Base接口。
+     *
+     * @param pagination           分页信息
+     * @param entityInterfaceClass 实体接口类型
+     * @param isValid              如果设置为true，仅返回有效的记录；否则返回所有记录。
+     * @param <T>                  实现Base接口的泛型对象类型
+     * @return 指定实体对象集合
+     * @throws EntityAccessException 获取过程中发生的异常
+     */
+    <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass, boolean isValid) throws EntityAccessException;
 
     /**
      * 根据实体ID和实体接口类型获取实体，实体接口必须继承Base接口。

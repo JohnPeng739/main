@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,33 +56,130 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
 
     /**
      * {@inheritDoc}
-     *
-     * @see GeneralAccessor#count(Class)
+     * @see GeneralAccessor#count(Class, boolean)
      */
     @Override
-    public <T extends Base> long count(Class<T> entityInterfaceClass) throws EntityAccessException {
-        return count(entityInterfaceClass, true);
+    public <T extends Base> long count(Class<T> entityInterfaceClass, boolean isValid) throws EntityAccessException {
+        return count2(entityInterfaceClass, true, isValid);
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @see GeneralEntityAccessor#count(Class, boolean)
+     * @see GeneralEntityAccessor#count2(Class, boolean, boolean)
      */
     @Override
-    public <T extends Base> long count(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+    public <T extends Base> long count2(Class<T> entityClass, boolean isInterfaceClass, boolean isValid) throws EntityAccessException {
         try {
             Class<T> clazz = entityClass;
             if (isInterfaceClass) {
                 clazz = getEntityClass(clazz);
             }
-            long count = template.count(new Query(), clazz);
+            long count = 0;
+            if (isValid) {
+                count = template.count(query(where("valid").is(true)), clazz);
+            } else {
+                count = template.count(new Query(), clazz);
+            }
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Count %d entity[%s].", count, entityClass.getName()));
+                logger.debug(String.format("Count %d %s entity[%s].", count, isValid ? "valid" : "", entityClass.getName()));
             }
             return count;
         } catch (ClassNotFoundException ex) {
             throw new EntityAccessException(String.format("Count entity[%s] fail.", entityClass.getName()), ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#count(Class)
+     */
+    @Override
+    public <T extends Base> long count(Class<T> entityInterfaceClass) throws EntityAccessException {
+        return count2(entityInterfaceClass, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralEntityAccessor#count2(Class, boolean)
+     */
+    @Override
+    public <T extends Base> long count2(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+        return count2(entityClass, isInterfaceClass, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see GeneralAccessor#list(Class, boolean)
+     */
+    @Override
+    public <T extends Base> List<T> list(Class<T> entityInterfaceClass, boolean isValid) throws EntityAccessException {
+        return list2(entityInterfaceClass, true, isValid);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see GeneralEntityAccessor#list2(Class, boolean, boolean)
+     */
+    @Override
+    public <T extends Base> List<T> list2(Class<T> entityClass, boolean isInterfaceClass, boolean isValid) throws EntityAccessException {
+        try {
+            Class<T> clazz = entityClass;
+            if (isInterfaceClass) {
+                clazz = getEntityClass(clazz);
+            }
+            List<T> result;
+            if (isValid) {
+                List<ConditionTuple> tuples = new ArrayList<>();
+                tuples.add(new ConditionTuple("valid", true));
+                result = find2(tuples, clazz, false);
+            } else {
+                result = template.findAll(clazz);
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("List %d entity[%s].", result.size(), entityClass.getName()));
+            }
+            return result;
+        } catch (ClassNotFoundException ex) {
+            throw new EntityAccessException(String.format("List entity[%s] fail.", entityClass.getName()), ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see GeneralAccessor#list(Pagination, Class, boolean)
+     */
+    @Override
+    public <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass, boolean isValid) throws EntityAccessException {
+        return list2(pagination, entityInterfaceClass, true, isValid);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see GeneralEntityAccessor#list2(Pagination, Class, boolean, boolean)
+     */
+    @Override
+    public <T extends Base> List<T> list2(Pagination pagination, Class<T> entityClass, boolean isInterfaceClass, boolean isValid) throws EntityAccessException {
+        if (pagination == null) {
+            pagination = new Pagination();
+        }
+        try {
+            Class<T> clazz = entityClass;
+            if (isInterfaceClass) {
+                clazz = getEntityClass(clazz);
+            }
+            pagination.setTotal((int) count2(clazz, false, isValid));
+            int skip = (pagination.getPage() - 1) * pagination.getSize();
+            int limit = pagination.getSize();
+            if (isValid) {
+                return template.find(query(where("valid").is(true)).skip(skip).limit(limit), entityClass);
+            } else {
+                return template.find(new Query().skip(skip).limit(limit), entityClass);
+            }
+        } catch (ClassNotFoundException ex) {
+            throw new EntityAccessException(String.format("Pagination list entity[%s] fail, page: %s.",
+                    entityClass.getName(), pagination), ex);
         }
     }
 
@@ -98,23 +196,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     /**
      * {@inheritDoc}
      *
-     * @see GeneralEntityAccessor#list(Class, boolean)
+     * @see GeneralEntityAccessor#list2(Class, boolean)
      */
     @Override
-    public <T extends Base> List<T> list(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
-        try {
-            Class<T> clazz = entityClass;
-            if (isInterfaceClass) {
-                clazz = getEntityClass(clazz);
-            }
-            List<T> result = template.findAll(clazz);
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("List %d entity[%s].", result.size(), entityClass.getName()));
-            }
-            return result;
-        } catch (ClassNotFoundException ex) {
-            throw new EntityAccessException(String.format("List entity[%s] fail.", entityClass.getName()), ex);
-        }
+    public <T extends Base> List<T> list2(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+        return list2(entityClass, isInterfaceClass, true);
     }
 
     /**
@@ -130,26 +216,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     /**
      * {@inheritDoc}
      *
-     * @see GeneralEntityAccessor#list(Pagination, Class, boolean)
+     * @see GeneralEntityAccessor#list2(Pagination, Class, boolean)
      */
     @Override
-    public <T extends Base> List<T> list(Pagination pagination, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
-        if (pagination == null) {
-            pagination = new Pagination();
-        }
-        try {
-            Class<T> clazz = entityClass;
-            if (isInterfaceClass) {
-                clazz = getEntityClass(clazz);
-            }
-            pagination.setTotal((int) count(clazz, false));
-            int skip = (pagination.getPage() - 1) * pagination.getSize();
-            int limit = pagination.getSize();
-            return template.find(new Query().skip(skip).limit(limit), entityClass);
-        } catch (ClassNotFoundException ex) {
-            throw new EntityAccessException(String.format("Pagination list entity[%s] fail, page: %s.",
-                    entityClass.getName(), pagination), ex);
-        }
+    public <T extends Base> List<T> list2(Pagination pagination, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+        return list2(pagination, entityClass, isInterfaceClass, true);
     }
 
     /**
@@ -159,16 +230,16 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      */
     @Override
     public <T extends Base> T getById(String id, Class<T> entityInterfaceClass) throws EntityAccessException {
-        return getById(id, entityInterfaceClass, true);
+        return getById2(id, entityInterfaceClass, true);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see GeneralEntityAccessor#getById(String, Class, boolean)
+     * @see GeneralEntityAccessor#getById2(String, Class, boolean)
      */
     @Override
-    public <T extends Base> T getById(String id, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+    public <T extends Base> T getById2(String id, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
             Class<T> clazz = entityClass;
             if (isInterfaceClass) {
@@ -188,16 +259,16 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      */
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityInterfaceClass) throws EntityAccessException {
-        return find(tuples, entityInterfaceClass, true);
+        return find2(tuples, entityInterfaceClass, true);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see GeneralEntityAccessor#find(List, Class, boolean)
+     * @see GeneralEntityAccessor#find2(List, Class, boolean)
      */
     @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+    public <T extends Base> List<T> find2(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
             Class<T> clazz = entityClass;
             if (isInterfaceClass) {
@@ -234,17 +305,17 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      */
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityInterfaceClass) throws EntityAccessException {
-        return findOne(tuples, entityInterfaceClass, true);
+        return findOne2(tuples, entityInterfaceClass, true);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see GeneralEntityAccessor#findOne(List, Class, boolean)
+     * @see GeneralEntityAccessor#findOne2(List, Class, boolean)
      */
     @Override
-    public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
-        List<T> list = find(tuples, entityClass, isInterfaceClass);
+    public <T extends Base> T findOne2(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+        List<T> list = find2(tuples, entityClass, isInterfaceClass);
         if (list.isEmpty()) {
             return null;
         } else {
@@ -292,7 +363,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     /**
      * {@inheritDoc}
      *
-     * @see GeneralEntityAccessor#remove(Base, boolean)
+     * @see GeneralAccessor#remove(Base, boolean)
      */
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) throws EntityAccessException {

@@ -32,17 +32,17 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
     @Transactional(readOnly = true)
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass) throws EntityAccessException {
-        return getByCode(code, entityInterfaceClass, true);
+        return getByCode2(code, entityInterfaceClass, true);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see GeneralDictEntityAccessor#getByCode(String, Class, boolean)
+     * @see GeneralDictEntityAccessor#getByCode2(String, Class, boolean)
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends BaseDict> T getByCode(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+    public <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         try {
             Class<T> clazz = entityClass;
             if (isInterfaceClass) {

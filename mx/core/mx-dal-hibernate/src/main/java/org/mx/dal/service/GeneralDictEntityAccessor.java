@@ -20,5 +20,5 @@ public interface GeneralDictEntityAccessor extends GeneralDictAccessor {
      * @return 实体对象，如果不存在，则返回null。
      * @throws EntityAccessException 获取过程中发生的异常
      */
-    <T extends BaseDict> T getByCode(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException;
+    <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException;
 }
