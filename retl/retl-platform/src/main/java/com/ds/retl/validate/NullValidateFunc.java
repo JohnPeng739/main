@@ -23,7 +23,7 @@ public class NullValidateFunc implements ValidateFunc {
         boolean nullable = validateConfig.getBoolean("nullable");
         if (!data.keySet().contains(column.getName())) {
             // 指定的字段不存在
-            return new ValidateError(column.getName(), String.format("字段[%s：%s]不存在，空值校验失败。",
+            return new ValidateError(column.getName(), String.format("字段[%s：%s]为空，空值校验失败。",
                     column.getName(), column.getDesc()), data);
         }
         Object value = data.get(column.getName());

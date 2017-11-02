@@ -51,10 +51,6 @@
                 <el-input type="textarea" :value="JSON.stringify(scope.row.content, null, '    ')"
                           :rows="15" :disabled="true"></el-input>
               </el-form-item>
-              <el-form-item label="提交信息">
-                <el-input type="textarea" :value="scope.row.submitInfo"
-                          :rows="15" :disabled="true"></el-input>
-              </el-form-item>
             </el-form>
           </template>
         </el-table-column>
@@ -140,7 +136,15 @@
         }
       },
       handleButtonClick(operate, pagination) {
-        if (operate === 'refresh') {
+        if (operate === 'detail') {
+          let selection = this.selection
+          if (!selection) {
+            info('请在操作之前选择要操作的记录。')
+          } else {
+            let {id} = selection
+            this.$router.push('/tasks/task/' + id)
+          }
+        } else if (operate === 'refresh') {
           this.handleRefresh(pagination)
           return
         } else if (operate === 'add') {

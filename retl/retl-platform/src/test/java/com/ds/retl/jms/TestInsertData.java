@@ -22,7 +22,7 @@ public class TestInsertData {
         // 这里统一使用CLIENT的确认方式。
         Session session = conn.createSession(false,
                 Session.CLIENT_ACKNOWLEDGE);
-        Destination destination = session.createQueue("tar-jms-pull-src");
+        Destination destination = session.createQueue("src-jms2");
         MessageProducer mp = session.createProducer(destination);
         Map<String, Object> map = new HashMap<String, Object>() {{
             put("id", UUID.randomUUID().toString());
@@ -38,7 +38,7 @@ public class TestInsertData {
             put("married", false);
             put("indexNo", 1);
             put("sex", "FEMALE");
-            put("departmentCode", "kfsb1");
+            put("departmentCode", "kfyb");
             put("lastOrderId", "47852787-90ea-49a2-9eee-0fb0df479612");
         }};
         JSONObject json = new JSONObject(map);
@@ -58,7 +58,7 @@ public class TestInsertData {
         // 这里统一使用CLIENT的确认方式。
         Session session = conn.createSession(false,
                 Session.CLIENT_ACKNOWLEDGE);
-        Destination destination = session.createQueue("src-jms-new");
+        Destination destination = session.createQueue("src-jms1");
         MessageProducer mp = session.createProducer(destination);
         Map<String, Object> map = new HashMap<String, Object>() {{
             put("data.id", UUID.randomUUID().toString());

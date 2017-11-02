@@ -20,6 +20,8 @@
             <ds-icon class="button-icon" name="edit"></ds-icon>修改</el-button>
           <el-button v-if="showDelete" class="button" :plain="true" type="text" @click="handleOperate('delete')">
             <ds-icon class="button-icon" name="delete"></ds-icon>删除</el-button>
+          <el-button v-if="showDetail" class="button" :plain="true" type="text" @click="handleOperate('detail')">
+            <ds-icon class="button-icon" name="details"></ds-icon>详情</el-button>
           <el-button v-if="showRefresh" class="button" :plain="true" type="text" @click="handleOperate('refresh')">
             <ds-icon class="button-icon" name="refresh"></ds-icon>刷新</el-button>
         </span>
@@ -54,6 +56,9 @@
         default: true
       },
       showDelete: {
+        default: true
+      },
+      showDetail: {
         default: true
       },
       showRefresh: {

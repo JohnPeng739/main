@@ -7,6 +7,9 @@ export const taskRouters = [{
 }, {
   path: '/tasks/edit',
   component: resolve => require(['../../../pages/task/task-operate.vue'], resolve)
+}, {
+  path: '/tasks/task/:topologyId',
+  component: resolve => require(['../../../pages/task/task-detail.vue'],resolve)
 }]
 
 export const taskNavData = {

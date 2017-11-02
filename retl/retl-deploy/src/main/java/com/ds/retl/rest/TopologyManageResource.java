@@ -88,6 +88,25 @@ public class TopologyManageResource {
         }
     }
 
+    /**
+     * 根据拓扑数据库ID获取拓扑信息
+     *
+     * @param topologyId 关键字ID，不是集群中的ID
+     * @return 拓扑值对象
+     */
+    @Path("topology")
+    @GET
+    public DataVO<TopologyVO> getTopology(@QueryParam("topologyId") String topologyId) {
+        try {
+            Topology topology = accessor.getById(topologyId, Topology.class);
+            TopologyVO vo = new TopologyVO();
+            TopologyVO.transform(topology, vo);
+            return new DataVO<>(vo);
+        } catch (EntityAccessException ex) {
+            return new DataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
+        }
+    }
+
     @Path("topologies/realStatus")
     @GET
     public DataVO<List<TopologyRealStatusVO>> getTopologyRealStatus(@QueryParam("topologyIds") String topologyIds) {

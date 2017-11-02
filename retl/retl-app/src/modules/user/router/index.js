@@ -28,6 +28,9 @@ const router = new Router({
   }, {
     path: '/tasks/list',
     component: resolve => require(['../../../pages/task/tasks-list-by-users.vue'], resolve)
+  }, {
+    path: '/tasks/task/:topologyId',
+    component: resolve => require(['../../../pages/task/task-detail.vue'],resolve)
   }]
 })
 export default router

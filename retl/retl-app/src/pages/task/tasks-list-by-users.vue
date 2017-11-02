@@ -21,13 +21,8 @@
   <div>
     <pane-paginate-list ref="panePaginateList" v-on:buttonHandle="handleButtonClick" :showAdd="false" :showEdit="false"
                         :showDelete="false">
-      <el-table :max-height="570" :data="tableData" class="layout-table" highlight-current-row>
-        <el-table-column type="expand">
-          <template scope="scope">
-            <el-input type="textarea" :value="JSON.stringify(scope.row.content, null, '    ')"
-                      :rows="15" :disabled="true"></el-input>
-          </template>
-        </el-table-column>
+      <el-table :max-height="570" :data="tableData" class="layout-table" highlight-current-row
+                @current-change="handleCurrentChange">
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="savedTime" label="保存时间" width="180"></el-table-column>
         <el-table-column prop="submitTime" label="提交时间" width="180"></el-table-column>
@@ -63,7 +58,8 @@
             return ''
           }
         },
-        tableData: []
+        tableData: [],
+        selection: null
       }
     },
     methods: {
@@ -80,7 +76,15 @@
         this.tableData = tableData
       },
       handleButtonClick(operate, pagination) {
-        if (operate === 'refresh') {
+        if (operate === 'detail') {
+          let selection = this.selection
+          if (!selection) {
+            info('请在操作之前选择要操作的记录。')
+          } else {
+            let {id} = selection
+            this.$router.push('/tasks/task/' + id)
+          }
+        } else if (operate === 'refresh') {
           if (!pagination) {
             pagination = {total: 0, size: 20, page: 1}
           }
@@ -93,6 +97,9 @@
             info('刷新数据成功。')
           })
         }
+      },
+      handleCurrentChange(currentRow, oldCurrentRow) {
+        this.selection = currentRow
       }
     },
     mounted() {

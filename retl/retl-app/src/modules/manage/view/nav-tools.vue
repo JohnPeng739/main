@@ -3,7 +3,7 @@
 
   .toolbar {
     float: right;
-    padding-right: 10px;
+    padding-right: 20px;
     .tools {
       text-align: center;
       width: @button-width - 30px;
