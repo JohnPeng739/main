@@ -1,3 +1,7 @@
+plugins {
+  id 'com.jfrog.bintray' version '1.4'
+}
+
 apply from: 'dependencies.gradle'
 
 allprojects {
@@ -5,6 +9,8 @@ allprojects {
   apply plugin: 'maven'
   apply plugin: 'idea'
   apply plugin: 'eclipse'
+  apply plugin: 'maven-publish'
+  apply plugin: 'com.jfrog.bintray'
 
   group = 'org.mx'
 
@@ -98,22 +104,6 @@ subprojects { subprj ->
     excludes = []
   }
 
-//  javadoc {
-//    options.addStringOption "tag", "date:a:' date'"
-//  }
-/*
-  task generateJavadoc(type: Javadoc) {
-    maxMemory = '512m'
-    destinationDir = javadocBuildDir.dir
-    configure(options) {
-//      tag = "date:a:' date'"
-      verbose = true
-      use = true
-      windowTitle = "$project.name API Documentation"
-      docTitle = "$project.name API JavaDoc ($project.version)"
-    }
-  }
-*/
   task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from "$buildDir/docs/javadoc"
@@ -146,6 +136,64 @@ subprojects { subprj ->
     testCompile(
       libs.'junit'
     )
+  }
+
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        groupId subprj.group
+        artifactId subprj.name
+        version subprj.version
+
+        from components.java
+        artifact sourcesJar
+        artifact javadocJar
+
+        pom.withXml {
+          Node root = asNode()
+          root.appendNode('name', subprj.name)
+          root.appendNode('description', POM_DESCRIPTION)
+          root.appendNode('url', POM_URL)
+
+          def issues = root.appendNode('issueManagement')
+          issues.appendNode('system', 'github')
+          issues.appendNode('url', ISSUE_URL)
+
+          def scm = root.appendNode('scm')
+          scm.appendNode('url', POM_SCM_URL)
+          scm.appendNode('connection', POM_SCM_CONNECTION)
+          scm.appendNode('developerConnection', POM_SCM_DEV_CONNECTION)
+
+          def license = root.appendNode('licenses').appendNode('license')
+          license.appendNode('name', POM_LICENCE_NAME)
+          license.appendNode('url', POM_LICENCE_URL)
+          license.appendNode('distribution', POM_LICENCE_DIST)
+        }
+      }
+    }
+  }
+
+  bintray {
+    user = BINTRAY_USER
+    key = BINTRAY_APIKEY
+    publications = ['mavenJava']
+    dryRun = false
+    publish = true
+    pkg {
+      repo = subprj.group
+      name = subprj.name
+      desc = POM_DESCRIPTION
+      websiteUrl = POM_URL
+      issueTrackerUrl = ISSUE_URL
+      vcsUrl = GIT_URL
+      licenses = ['Apache-2.0']
+      labels = ['gradle', 'johnpeng739', 'org.mx']
+      publicDownloadNumbers = true
+      version {
+        name = subprj.version
+        desc = POM_DESCRIPTION
+      }
+    }
   }
 
   uploadArchives {
