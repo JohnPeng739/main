@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.vo.server.LocalServerInfoVO;
 import com.ds.retl.service.ServerManageService;
+import org.mx.dal.session.SessionDataStore;
 import org.mx.rest.vo.DataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,9 @@ import java.util.Map;
 public class ServerManageResource {
     @Autowired
     private ServerManageService serverManageService = null;
+
+    @Autowired
+    private SessionDataStore sessionDataStore = null;
 
     @Path("servers")
     @GET
@@ -64,9 +68,11 @@ public class ServerManageResource {
 
     @Path("server")
     @POST
-    public DataVO<LocalServerInfoVO> saveLocalServerInfo(String info) {
+    public DataVO<LocalServerInfoVO> saveLocalServerInfo(@QueryParam("userCode") String userCode, String info) {
+        sessionDataStore.setCurrentUserCode(userCode);
         try {
             JSONObject json = serverManageService.saveLocalServerConfigInfo(info);
+            sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(new LocalServerInfoVO(json));
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);

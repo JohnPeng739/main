@@ -15,8 +15,8 @@
         </el-col>
         <el-col :span="4" class="layout-buttons">
           <el-button v-if="!canEdit" type="text" @click="handleEditable('local')">配置本机地址</el-button>
-          <el-button v-if="localEditable" type="text" @click="handleCancel">取消</el-button>
-          <el-button v-if="localEditable" type="text" @click="handleSave('local')">保存本机地址</el-button>
+          <el-button v-if="localEditable" type="text" @click="handleSave()">保存本机地址</el-button>
+          <el-button v-if="!canEdit" type="text" @click="handleSubmitConfigInfo()">提交本机配置</el-button>
         </el-col>
       </el-row>
       <el-row type="flex">
@@ -40,8 +40,7 @@
         </el-col>
         <el-col :span="4" class="layout-buttons">
           <el-button v-if="!canEdit" type="text" @click="handleEditable('zookeeper')">调整ZK配置</el-button>
-          <el-button v-if="zookeeperEditable" type="text" @click="handleCancel">取消</el-button>
-          <el-button v-if="zookeeperEditable" type="text" @click="handleSave('zookeeper')">保存ZK配置</el-button>
+          <el-button v-if="zookeeperEditable" type="text" @click="handleSave()">保存ZK配置</el-button>
         </el-col>
       </el-row>
       <el-row type="flex" v-if="isZookeeper">
@@ -89,8 +88,7 @@
         </el-col>
         <el-col :span="4" class="layout-buttons">
           <el-button v-if="!canEdit" type="text" @click="handleEditable('storm')">调整Storm配置</el-button>
-          <el-button v-if="stormEditable" type="text" @click="handleCancel">取消</el-button>
-          <el-button v-if="stormEditable" type="text" @click="handleSave('storm')">保存Storm配置</el-button>
+          <el-button v-if="stormEditable" type="text" @click="handleSave()">保存Storm配置</el-button>
         </el-col>
       </el-row>
       <el-row type="flex" v-if="isStorm">
@@ -201,7 +199,7 @@
             break;
         }
       },
-      handleSave(type) {
+      handleSubmitConfigInfo() {
         let {machineName, machineIp, zookeeper, storm} = this
         let url = '/rest/server'
         logger.debug('send POST "%s"', url)
@@ -212,7 +210,7 @@
           }
         })
       },
-      handleCancel() {
+      handleSave() {
         this.localEditable = false
         this.zookeeperEditable = false
         this.stormEditable = false

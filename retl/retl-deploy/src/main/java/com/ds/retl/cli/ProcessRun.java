@@ -65,7 +65,7 @@ public class ProcessRun {
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
                     sb.append("\n");
-                    if (line.startsWith(endFlag)) {
+                    if (!StringUtils.isBlank(endFlag) && line.startsWith(endFlag)) {
                         break;
                     }
                     if (new Date().getTime() - t0 > timeoutSec * 1000) {
