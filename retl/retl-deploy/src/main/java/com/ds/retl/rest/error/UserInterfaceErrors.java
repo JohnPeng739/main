@@ -12,8 +12,11 @@ public enum UserInterfaceErrors implements UserInterfaceError {
     SYSTEM_ILLEGAL_PARAM(1, "输入的参数错误，请联系开发人员。"),
     SYSTEM_UNSUPPORTED_OPERATE(2, "不支持的操作方法，请联系开发人员。"),
     SYSTEM_FILE_OPERATE_FAIL(3, "文件操作失败。"),
+    SYSTEM_HOST_EXCEPTION(4, "获取本机信息失败。"),
+    SYSTEM_CONFIG_NOT_FOUND(5, "指定的系统配置项不存在。"),
 
     DB_OPERATE_FAIL(51, "数据库操作失败。"),
+    DB_ENTITY_INSTANCE_FAIL(52, "创建指定的实体对象失败。"),
 
     USER_NOT_FOUND(101, "指定的用户不存在。"),
     USER_PASSWORD_UNMATCH(102, "输入的密码不正确。"),
@@ -31,6 +34,11 @@ public enum UserInterfaceErrors implements UserInterfaceError {
     TOPOLOGY_SUBMIT_FAIL(308, "提交计算拓扑到STORM集群失败。"),
 
     STORM_URL_BLANK(401, "输入的STORM API地址为空。"),
+
+    SERVICE_ZK_ZOOCFG_FAIL(501, "操作ZOOKEEPER服务失败：预处理配置文件。"),
+    SERVICE_ZK_SERVICE_FAIL(502, "操作ZOOKEEPER服务失败：预处理服务描述文件。"),
+    SERVICE_STORM_ZOOCFG_FAIL(503, "操作STORM服务失败：预处理配置文件。"),
+    SERVICE_STORM_SERVICE_FAIL(504, "操作STORM服务失败：预处理服务描述文件。"),
 
     OTHER(9999, "系统未识别的错误。");
 
