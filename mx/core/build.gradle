@@ -73,7 +73,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-rest-utils') {
-  version = '1.1.6'
+  version = '1.1.7'
 
   dependencies {
     compile(
@@ -84,7 +84,8 @@ project(':mx-rest-utils') {
       libs.'jersey-media-jackson',
       libs.'jersey-jetty-http',
       libs.'jetty-server',
-      libs.'jetty-servlet'
+      libs.'jetty-servlet',
+      libs.'jetty-websocket'
     )
   }
 }

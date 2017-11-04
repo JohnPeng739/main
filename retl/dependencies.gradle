@@ -19,7 +19,7 @@ ext.versions = [
   junit		: '4.12',
   'mongodb-driver'	: '3.5.0',
   zookeeper	: '3.4.9',
-  'mx-utils'	: '2.0.7',
+  'mx-utils'	: '2.0.8',
   'mx-rest-utils'	: '1.1.6',
   'mx-dal'	: '1.0.2',
   'mx-dal-hibernate'	: '1.0.8',

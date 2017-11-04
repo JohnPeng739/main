@@ -7,52 +7,32 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.mx.StringUtils;
 import org.mx.rest.server.servlet.BaseHttpServlet;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- * Http Servlet服务器
+ * 基于Jetty的Servlet服务器工厂类
  *
- * @author : john.peng date : 2017/10/6
- * @see InitializingBean
+ * @author : john.peng created on date : 2017/10/6
  */
-@Component("servletServer")
-public class ServletServer implements InitializingBean {
-    private static final Log logger = LogFactory.getLog(ServletServer.class);
+public class ServletServerFactory extends AbstractServerFactory {
+    private static final Log logger = LogFactory.getLog(ServletServerFactory.class);
+
     @Autowired
     private Environment env = null;
     @Autowired
     private ApplicationContext context = null;
-    private Server server = null;
-
-    /**
-     * 默认的构造函数
-     */
-    public ServletServer() {
-        super();
-    }
-
-    /**
-     * 获取Http Servlet服务器
-     *
-     * @return 服务器
-     */
-    public Server getServer() {
-        return this.server;
-    }
 
     /**
      * {@inheritDoc}
      *
-     * @see InitializingBean#afterPropertiesSet()
+     * @see AbstractServerFactory#init()
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void init() throws Exception {
         String serviceClassesDef = "servlet.service.classes";
         String servletServiceClassesDef = this.env.getProperty(serviceClassesDef);
         if (StringUtils.isBlank(servletServiceClassesDef)) {
@@ -80,12 +60,12 @@ public class ServletServer implements InitializingBean {
                 }
             }
 
+            super.setServer(server);
+
             server.start();
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Start ServletServer success, listen port: %d.", port));
             }
-
         }
     }
 }
-
