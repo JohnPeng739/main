@@ -57,7 +57,7 @@ public class DateUtils {
      * @return 输出的时间对象
      * @throws ParseException 日期解析异常
      */
-    public static Date parce(String dateString, String pattern) throws ParseException {
+    public static Date parse(String dateString, String pattern) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.parse(dateString);
     }
