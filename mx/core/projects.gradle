@@ -1,0 +1,71 @@
+project(':mx-utils') {
+    version = '2.0.8'
+
+    dependencies {
+        compile(
+                libs.'fastjson',
+                libs.'log4j-api',
+                libs.'log4j-core',
+                libs.'log4j-jcl',
+                libs.'log4j-slf4j-impl',
+                libs.'slf4j-api'
+        )
+    }
+}
+
+project(':mx-dal') {
+    version = '1.0.2'
+
+    dependencies {
+        compile(
+                project(':mx-utils'),
+                libs.'spring-context',
+                libs.'commons-dbcp2'
+        )
+    }
+}
+
+project(':mx-dal-hibernate') {
+    version = '1.0.9'
+
+    dependencies {
+        compile(
+                project(':mx-dal'),
+                libs.'h2database',
+                libs.'commons-dbcp2',
+                libs.'spring-tx',
+                libs.'spring-data-jpa',
+                libs.'hibernate-entitymanager',
+                libs.'mysql'
+        )
+    }
+}
+
+project(':mx-dal-mongodb') {
+    version = '1.0.2'
+
+    dependencies {
+        compile(
+                project(':mx-dal'),
+                libs.'spring-data-mongodb'
+        )
+    }
+}
+
+project(':mx-rest-utils') {
+    version = '1.1.7'
+
+    dependencies {
+        compile(
+                project(':mx-utils'),
+                project(':mx-dal'),
+                libs.'spring-context',
+                libs.'jersey-server',
+                libs.'jersey-media-jackson',
+                libs.'jersey-jetty-http',
+                libs.'jetty-server',
+                libs.'jetty-servlet',
+                libs.'jetty-websocket'
+        )
+    }
+}
