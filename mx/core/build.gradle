@@ -2,139 +2,80 @@ plugins {
   id 'com.jfrog.bintray' version '1.4'
 }
 
-apply from: 'dependencies.gradle'
+apply from: '../../dependencies.gradle'
 
-allprojects {
-  apply plugin: 'java'
-  apply plugin: 'maven'
-  apply plugin: 'idea'
-  apply plugin: 'eclipse'
-  apply plugin: 'maven-publish'
-  apply plugin: 'com.jfrog.bintray'
+apply from: '../../allprojects.gradle'
 
-  group = 'org.mx'
-
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
-}
-
-apply from: 'projects.gradle'
-
-subprojects { subprj ->
-  repositories {
-    mavenCentral()
-    maven {
-      url 'http://repo.clojars.org/'
-    }
-    jcenter()
-    mavenLocal()
-  }
-
-  jar {
-    manifest.attributes provider: 'MX Foundation.'
-    excludes = []
-  }
-
-  task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from "$buildDir/docs/javadoc"
-  }
-
-  task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-  }
-
-  task copyDependencies(type: Copy) {
-    into "$buildDir/dependencies"
-    from configurations.runtime
-  }
-
-  [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-
-  artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-  }
-
-  configurations {
-    provided
-    deployerJars
-  }
+project(':mx-utils') {
+  version = '2.0.8'
 
   dependencies {
-    testCompile(
-      libs.'junit'
+    compile(
+      libs.'fastjson',
+      libs.'log4j-api',
+      libs.'log4j-core',
+      libs.'log4j-jcl',
+      libs.'log4j-slf4j-impl',
+      libs.'slf4j-api'
     )
   }
-
-  publishing {
-    publications {
-      mavenJava(MavenPublication) {
-        groupId subprj.group
-        artifactId subprj.name
-        version subprj.version
-
-        from components.java
-        artifact sourcesJar
-        artifact javadocJar
-
-        pom.withXml {
-          Node root = asNode()
-          root.appendNode('name', subprj.name)
-          root.appendNode('description', POM_DESCRIPTION)
-          root.appendNode('url', POM_URL)
-
-          def issues = root.appendNode('issueManagement')
-          issues.appendNode('system', 'github')
-          issues.appendNode('url', ISSUE_URL)
-
-          def scm = root.appendNode('scm')
-          scm.appendNode('url', POM_SCM_URL)
-          scm.appendNode('connection', POM_SCM_CONNECTION)
-          scm.appendNode('developerConnection', POM_SCM_DEV_CONNECTION)
-
-          def license = root.appendNode('licenses').appendNode('license')
-          license.appendNode('name', POM_LICENCE_NAME)
-          license.appendNode('url', POM_LICENCE_URL)
-          license.appendNode('distribution', POM_LICENCE_DIST)
-        }
-      }
-    }
-  }
-
-  bintray {
-    user = BINTRAY_USER
-    key = BINTRAY_APIKEY
-    publications = ['mavenJava']
-    dryRun = false
-    publish = true
-    pkg {
-      repo = subprj.group
-      name = subprj.name
-      desc = POM_DESCRIPTION
-      websiteUrl = POM_URL
-      issueTrackerUrl = ISSUE_URL
-      vcsUrl = GIT_URL
-      licenses = ['Apache-2.0']
-      labels = ['gradle', 'johnpeng739', 'org.mx']
-      publicDownloadNumbers = true
-      version {
-        name = subprj.version
-        desc = POM_DESCRIPTION
-      }
-    }
-  }
-
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        repository(url: 'file://localhost/Users/john/.m2/repository')
-        pom.groupId = subprj.group
-        pom.artifactId = subprj.name
-        pom.version = subprj.version
-      }
-    }
-  } 
 }
+
+project(':mx-dal') {
+  version = '1.0.2'
+
+  dependencies {
+    compile(
+      project(':mx-utils'),
+      libs.'spring-context',
+      libs.'commons-dbcp2'
+    )
+  }
+}
+
+project(':mx-dal-hibernate') {
+  version = '1.0.9'
+
+  dependencies {
+    compile(
+      project(':mx-dal'),
+      libs.'h2database',
+      libs.'commons-dbcp2',
+      libs.'spring-tx',
+      libs.'spring-data-jpa',
+      libs.'hibernate-entitymanager',
+      libs.'mysql'
+    )
+  }
+}
+
+project(':mx-dal-mongodb') {
+  version = '1.0.2'
+
+  dependencies {
+    compile(
+      project(':mx-dal'),
+      libs.'spring-data-mongodb'
+    )
+  }
+}
+
+project(':mx-rest-utils') {
+  version = '1.1.7'
+
+  dependencies {
+    compile(
+      project(':mx-utils'),
+      project(':mx-dal'),
+      libs.'spring-context',
+      libs.'jersey-server',
+      libs.'jersey-media-jackson',
+      libs.'jersey-jetty-http',
+      libs.'jetty-server',
+      libs.'jetty-servlet',
+      libs.'jetty-websocket'
+    )
+  }
+}
+
+apply from: '../../subproject.gradle'

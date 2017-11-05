@@ -21,8 +21,11 @@ ext.versions = [
   junit		: '4.12',
   'mongodb-driver'	: '3.5.0',
   zookeeper	: '3.4.9',
-  'mx-utils'	: '2.0.5',
-  'mx-rest-utils'	: '1.1.4'
+  'mx-utils'    : '2.0.8',
+  'mx-rest-utils'       : '1.1.7',
+  'mx-dal'      : '1.0.2',
+  'mx-dal-hibernate'    : '1.0.9',
+  'mx-dal-mongodb'      : '1.0.2'
 ]
 
 ext.libs = [
@@ -83,6 +86,9 @@ ext.libs = [
 
   zookeeper		: "org.apache.zookeeper:zookeeper:${versions.zookeeper}",
 
-  "mx-utils"		: "org.mx:mx-utils:${versions.'mx-utils'}",
-  "mx-rest-utils"	: "org.mx:mx-rest-utils:${versions.'mx-rest-utils'}"
+  "mx-utils"            : "org.mx:mx-utils:${versions.'mx-utils'}",
+  "mx-rest-utils"       : "org.mx:mx-rest-utils:${versions.'mx-rest-utils'}",
+  "mx-dal"              : "org.mx:mx-dal:${versions.'mx-dal'}",
+  "mx-dal-hibernate"    : "org.mx:mx-dal-hibernate:${versions.'mx-dal-hibernate'}",
+  "mx-dal-mongodb"      : "org.mx:mx-dal-mongodb:${versions.'mx-dal-mongodb'}"
 ]
