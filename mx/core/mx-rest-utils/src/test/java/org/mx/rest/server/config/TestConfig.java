@@ -23,7 +23,6 @@ public class TestConfig {
 
     @Bean(name = "servletClassesTest")
     public List<Class<?>> servletClassesIprm() {
-        // TODO 加入知识产权管理的每个Servlet类
         return Arrays.asList();
     }
 }

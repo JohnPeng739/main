@@ -7,10 +7,11 @@ import org.mx.dal.entity.BaseDict;
 import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.GeneralDictEntityAccessor;
+import org.mx.dal.service.GeneralEntityAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,10 +40,28 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
      * {@inheritDoc}
      *
      * @see GeneralDictEntityAccessor#getByCode2(String, Class, boolean)
+     * @see GeneralEntityAccessor#find2(List, Class, boolean)
      */
     @Transactional(readOnly = true)
     @Override
     public <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+        List<ConditionTuple> tuples = new ArrayList<>();
+        tuples.add(new ConditionTuple("code", code));
+        List<T> result = super.find2(tuples, entityClass, isInterfaceClass);
+        if (result != null && result.size() > 0) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Found %d dict entity, entity: %s, code: %s.",
+                        result.size(), entityClass.getName(), code));
+            }
+            return result.get(0);
+        } else {
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("The dict entity not found, entity: %s, code: %s.",
+                        entityClass.getName(), code));
+            }
+            return null;
+        }
+        /*
         try {
             Class<T> clazz = entityClass;
             if (isInterfaceClass) {
@@ -70,5 +89,6 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
             throw new EntityAccessException(String.format("Get dict entity[%s] by code[%s] fail.",
                     entityClass.getName(), code), ex);
         }
+        */
     }
 }

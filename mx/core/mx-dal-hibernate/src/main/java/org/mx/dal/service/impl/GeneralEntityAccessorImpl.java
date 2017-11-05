@@ -18,6 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,11 +59,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     /**
      * {@inheritDoc}
      *
-     * @see GeneralEntityAccessor#count2(Class, boolean)
+     * @see GeneralAccessor#count(Class, boolean)
      */
     @Override
-    public <T extends Base> long count2(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
-        return count2(entityClass, isInterfaceClass, true);
+    public <T extends Base> long count(Class<T> entityClass, boolean isValid) throws EntityAccessException {
+        return count2(entityClass, true, isValid);
     }
 
     /**
@@ -175,11 +180,11 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#count(Class, boolean)
+     * @see GeneralEntityAccessor#count2(Class, boolean)
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends Base> long count(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+    public <T extends Base> long count2(Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
         return count2(entityClass, isInterfaceClass, true);
     }
 
@@ -286,8 +291,25 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     @Override
     public <T extends Base> List<T> find2(List<ConditionTuple> tuples, Class<T> entityClass, boolean isInterfaceClass)
             throws EntityAccessException {
-        // TODO 根据条件进行查询
-        return null;
+        try {
+            Class<T> clazz = entityClass;
+            if (isInterfaceClass) {
+                clazz = getEntityClass(entityClass);
+            }
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<T> criteriaQuery = cb.createQuery(clazz);
+            Root<T> root = criteriaQuery.from(clazz);
+            List<Predicate> conditions = new ArrayList<>();
+            if (tuples != null && tuples.size() > 0) {
+                tuples.forEach(tuple -> conditions.add(cb.equal(root.get(tuple.field), tuple.value)));
+            }
+            criteriaQuery.where(conditions.toArray(new Predicate[0]));
+            Query query = entityManager.createQuery(criteriaQuery);
+            List<T> result = query.getResultList();
+            return result;
+        } catch (ClassNotFoundException ex) {
+            throw new EntityAccessException(String.format("Find entity fail, entity: %s.", entityClass.getName()), ex);
+        }
     }
 
     /**
