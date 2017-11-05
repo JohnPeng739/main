@@ -407,4 +407,37 @@ public class ServerManageServiceImpl implements ServerManageService {
                 throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_UNSUPPORTED_OPERATE);
         }
     }
+
+    /**
+     * {@inheritDoc}
+     * @see ServerManageService#serviceStatus(String)
+     */
+    @Override
+    public ServiceStatus serviceStatus(String service) throws UserInterfaceErrorException {
+        if (StringUtils.isBlank(service)) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
+        }
+        if (!service.endsWith(".service")) {
+            service = String.format("%s.service", service);
+        }
+        boolean enabled = false, actived = false;
+        String result = systemctl("is-enabled", service);
+        enabled = ("enabled".equals(result));
+        if (enabled) {
+            result = systemctl("is-active", service);
+            actived = ("active".equals(result));
+        }
+        final boolean serviceEnabled = enabled, serviceActived = actived;
+        return new ServiceStatus() {
+            @Override
+            public boolean isEnabled() {
+                return serviceEnabled;
+            }
+
+            @Override
+            public boolean isActived() {
+                return serviceActived;
+            }
+        };
+    }
 }

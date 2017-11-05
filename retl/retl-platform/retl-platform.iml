@@ -15,11 +15,11 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.0.8/109a66847116f553177e9043391dfbd4bbf564bb/mx-utils-2.0.8.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.0.8/51b0082966b6727eadaec3c79957d026a9203082/mx-utils-2.0.8-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -442,11 +442,11 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.0.8/109a66847116f553177e9043391dfbd4bbf564bb/mx-utils-2.0.8.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.0.8/51b0082966b6727eadaec3c79957d026a9203082/mx-utils-2.0.8-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -869,11 +869,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.0.8/109a66847116f553177e9043391dfbd4bbf564bb/mx-utils-2.0.8.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.6/mx-utils-2.0.6-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.0.8/51b0082966b6727eadaec3c79957d026a9203082/mx-utils-2.0.8-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

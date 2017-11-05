@@ -71,11 +71,11 @@
       </el-row>
       <el-row type="flex" v-if="isZookeeper">
         <el-col :span="24" style="text-align: center;">
-          <el-button class="button" type="primary" @click="systemctl('enable', 'zookeeper')" :disabled="zookeeperRunning">启用</el-button>
-          <el-button class="button" type="primary" @click="systemctl('disable', 'zookeeper')" :disabled="zookeeperRunning">禁用</el-button>
-          <el-button class="button" type="primary" @click="systemctl('start', 'zookeeper')" :disabled="zookeeperRunning">启动</el-button>
-          <el-button class="button" type="primary" @click="systemctl('stop', 'zookeeper')" :disabled="!zookeeperRunning">停止</el-button>
-          <el-button class="button" type="primary" @click="systemctl('restart', 'zookeeper')" :disabled="!zookeeperRunning">重新启动</el-button>
+          <el-button class="button" type="primary" @click="systemctl('enable', 'zookeeper')" :disabled="!status.zookeeper.enabled">启用</el-button>
+          <el-button class="button" type="primary" @click="systemctl('disable', 'zookeeper')" :disabled="status.zookeeper.enabled">禁用</el-button>
+          <el-button class="button" type="primary" @click="systemctl('start', 'zookeeper')" :disabled="!status.zookeeper.actived">启动</el-button>
+          <el-button class="button" type="primary" @click="systemctl('stop', 'zookeeper')" :disabled="status.zookeeper.actived">停止</el-button>
+          <el-button class="button" type="primary" @click="systemctl('restart', 'zookeeper')" :disabled="status.zookeeper.actived">重新启动</el-button>
           <el-button class="button" type="primary" @click="systemctl('reload', 'zookeeper')">重新加载</el-button>
         </el-col>
       </el-row>
@@ -141,11 +141,11 @@
       </el-row>
       <el-row type="flex" v-if="isStorm">
         <el-col :span="24" style="text-align: center;">
-          <el-button class="button" type="primary" @click="systemctl('enable', 'storm')" :disabled="stormRunning">启用</el-button>
-          <el-button class="button" type="primary" @click="systemctl('disable', 'storm')" :disabled="stormRunning">禁用</el-button>
-          <el-button class="button" type="primary" @click="systemctl('start', 'storm')" :disabled="stormRunning">启动</el-button>
-          <el-button class="button" type="primary" @click="systemctl('stop', 'storm')" :disabled="!stormRunning">停止</el-button>
-          <el-button class="button" type="primary" @click="systemctl('restart', 'storm')" :disabled="!stormRunning">重新启动</el-button>
+          <el-button class="button" type="primary" @click="systemctl('enable', 'storm')" :disabled="!status.zookeeper.enabled">启用</el-button>
+          <el-button class="button" type="primary" @click="systemctl('disable', 'storm')" :disabled="status.zookeeper.enabled">禁用</el-button>
+          <el-button class="button" type="primary" @click="systemctl('start', 'storm')" :disabled="!status.zookeeper.actived">启动</el-button>
+          <el-button class="button" type="primary" @click="systemctl('stop', 'storm')" :disabled="status.zookeeper.actived">停止</el-button>
+          <el-button class="button" type="primary" @click="systemctl('restart', 'storm')" :disabled="status.zookeeper.actived">重新启动</el-button>
           <el-button class="button" type="primary" @click="systemctl('reload', 'storm')">重新加载</el-button>
         </el-col>
       </el-row>
@@ -167,8 +167,11 @@
       DsTagNormal},
     data() {
       return {
-        zookeeperRunning: false,
-        stormRunning: false,
+        interval: null,
+        status: {
+          zookeeper: {enabled: false, actived: false},
+          storm: {enabled: false, actived: false}
+        },
         localEditable: false,
         zookeeperEditable: false,
         stormEditable: false,
@@ -224,6 +227,15 @@
           }
         })
       },
+      refreshServiceStatus() {
+        let url = '/rest/server/service/status'
+        logger.debug('send GET "%s"', url)
+        get(url, data => {
+          if (data) {
+            this.status = data
+          }
+        })
+      },
       systemctl(operate, serviceName) {
         let url = '/rest/server/systemctl?cmd=' + operate + '&service=' + serviceName
         logger.debug('send GET "%s"', url)
@@ -247,6 +259,12 @@
     },
     mounted() {
       this.refresh()
+      this.interval = setInterval( _ => this.refreshServiceStatus(), 5000)
+    },
+    destroyed() {
+      if (this.interval) {
+        clearInterval(this.interval)
+      }
     }
   }
 </script>

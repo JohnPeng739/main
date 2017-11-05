@@ -3,6 +3,7 @@ package com.ds.retl.rest;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.vo.server.LocalServerInfoVO;
+import com.ds.retl.rest.vo.server.ServicesStatusVO;
 import com.ds.retl.service.ServerManageService;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.rest.vo.DataVO;
@@ -74,6 +75,17 @@ public class ServerManageResource {
             JSONObject json = serverManageService.saveLocalServerConfigInfo(info);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(new LocalServerInfoVO(json));
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
+    }
+
+    @Path("server/service/status")
+    @GET
+    public DataVO<ServicesStatusVO> getServicesStatus() {
+        try {
+            return new DataVO<>(new ServicesStatusVO(serverManageService.serviceStatus("zookeeper.service"),
+                    serverManageService.serviceStatus("storm.service")));
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
         }
