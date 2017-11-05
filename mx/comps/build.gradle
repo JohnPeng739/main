@@ -1,0 +1,20 @@
+plugins {
+  id 'com.jfrog.bintray' version '1.4'
+}
+
+apply from: '../../dependencies.gradle'
+
+apply from: '../../allprojects.gradle'
+
+project(':mx-comps-rbac') {
+  version = '3.0.0'
+
+  dependencies {
+    compile(
+      libs.'mx-dal-hibernate',
+      libs.'mx-rest-utils'
+    )
+  }
+}
+
+apply from: '../../subproject.gradle'

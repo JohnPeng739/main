@@ -1,0 +1,3 @@
+rootProject.name = 'comps'
+
+include 'mx-comps-rbac'
