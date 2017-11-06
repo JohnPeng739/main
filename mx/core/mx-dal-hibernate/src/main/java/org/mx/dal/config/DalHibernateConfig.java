@@ -47,11 +47,14 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     @Bean
     @DependsOn({"dataSource"})
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
-        String database = env.getProperty("jpa.database", String.class, "test");
+        String database = env.getProperty("jpa.database", String.class, "H2");
+        String databasePlatform = env.getProperty("jpa.databasePlatform", String.class,
+                "org.hibernate.dialect.H2Dialect");
         boolean generateDDL = env.getProperty("jpa.generateDDL", Boolean.class, true);
         boolean showSQL = env.getProperty("jpa.showSQL", Boolean.class, true);
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         adapter.setDatabase(Database.valueOf(database));
+        adapter.setDatabasePlatform(databasePlatform);
         adapter.setGenerateDdl(generateDDL);
         adapter.setShowSql(showSQL);
         adapter.setPrepareConnection(true);
