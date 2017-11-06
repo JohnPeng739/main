@@ -16,7 +16,7 @@ import javax.persistence.Table;
 public class UserEntity extends BaseDictEntity implements User {
     @Column(name = "PASSWORD", nullable = false, length = 64)
     private String password;
-    @Column(name = "ONLINE")
+    @Column(name = "ONLINE_STATUS")
     private boolean online = false;
     @Column(name = "FAVORITE")
     private String favorite;
