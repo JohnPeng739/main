@@ -71,7 +71,7 @@
           if (storm && storm.services && storm.services.length > 0) {
             storm.services.forEach(service => {
               switch (service) {
-                case 'nimubs':
+                case 'nimbus':
                   services.push('STORM主控服务')
                   break;
                 case 'ui':
