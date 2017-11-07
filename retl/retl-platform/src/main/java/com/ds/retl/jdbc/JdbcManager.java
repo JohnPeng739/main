@@ -254,7 +254,8 @@ public class JdbcManager {
      * @param columnName 指定的列名
      * @param value      数据值
      * @param dataSource 查询的JDBC数据源
-     * @param sql        检测的SQL，其中必须返回列名对应的数据。例如：columnName = "A", 则可能是：sql = "SELECT code AS A FROM table"
+     * @param sql        检测的SQL，其中必须返回列名对应的数据。例如：columnName = "code",
+     *                   则可能是：sql = "SELECT CODE AS code FROM TB_TABLE WHERE CODE = ?"
      * @return 如果数据值在指定的返回列中，返回true；否则返回false。
      */
     public final boolean existInReal(String columnName, Object value, String dataSource, String sql) {
@@ -266,6 +267,7 @@ public class JdbcManager {
         try {
             Connection conn = this.getConnection(dataSource);
             PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setObject(1, value);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Object tar = rs.getObject(columnName);

@@ -13,7 +13,7 @@ allprojects {
 }
 
 project(':retl-platform') {
-  version = '3.0.2'
+  version = '3.0.4'
 
   dependencies {
     compile(
@@ -37,7 +37,7 @@ project(':retl-platform') {
 }
 
 project(':retl-deploy') {
-  version = '3.0.7'
+  version = '3.0.11'
 
   dependencies {
     compile(
