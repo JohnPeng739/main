@@ -37,6 +37,14 @@ public class SystemCtlCli {
         return runCmd("status", serviceName);
     }
 
+    public static String isEnabled(String serviceName) {
+        return runCmd("is-enabled", serviceName);
+    }
+
+    public static String isActive(String serviceName) {
+        return runCmd("is-active", serviceName);
+    }
+
     public static String reload(String serviceName) {
         return runCmd("reload", serviceName);
     }

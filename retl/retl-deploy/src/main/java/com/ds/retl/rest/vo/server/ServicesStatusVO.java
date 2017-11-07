@@ -6,28 +6,28 @@ import com.ds.retl.service.ServerManageService;
  * Created by john on 2017/11/5.
  */
 public class ServicesStatusVO {
-    private ServerManageService.ServiceStatus zookeeperStatus;
-    private ServerManageService.ServiceStatus stormStatus;
+    private ServerManageService.ServiceStatus zookeeper;
+    private ServerManageService.ServiceStatus storm;
 
-    public ServicesStatusVO(ServerManageService.ServiceStatus zookeeperStatus, ServerManageService.ServiceStatus stormStatus) {
+    public ServicesStatusVO(ServerManageService.ServiceStatus zookeeper, ServerManageService.ServiceStatus storm) {
         super();
-        this.zookeeperStatus = zookeeperStatus;
-        this.stormStatus = stormStatus;
+        this.zookeeper = zookeeper;
+        this.storm = storm;
     }
 
-    public void setZookeeperStatus(ServerManageService.ServiceStatus zookeeperStatus) {
-        this.zookeeperStatus = zookeeperStatus;
+    public void setZookeeper(ServerManageService.ServiceStatus zookeeper) {
+        this.zookeeper = zookeeper;
     }
 
-    public void setStormStatus(ServerManageService.ServiceStatus stormStatus) {
-        this.stormStatus = stormStatus;
+    public void setStorm(ServerManageService.ServiceStatus storm) {
+        this.storm = storm;
     }
 
-    public ServerManageService.ServiceStatus getZookeeperStatus() {
-        return zookeeperStatus;
+    public ServerManageService.ServiceStatus getZookeeper() {
+        return zookeeper;
     }
 
-    public ServerManageService.ServiceStatus getStormStatus() {
-        return stormStatus;
+    public ServerManageService.ServiceStatus getStorm() {
+        return storm;
     }
 }

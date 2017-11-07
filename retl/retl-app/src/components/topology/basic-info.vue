@@ -55,7 +55,7 @@
       <el-col :span="6" v-if="formBasicInfo.type === 'retl'">
         <el-tooltip content="数据存储的队列或订阅主题的名称，默认使用第一个jms数据源。" placement="bottom" :hide-after="2000">
           <el-form-item label="存储名" prop="tarDestinateName">
-            <el-input v-model="formBasicInfo.tarDestinateName"></el-input>
+            <ds-tag-normal v-model="formBasicInfo.tarDestinateNames" type="gray"></ds-tag-normal>
           </el-form-item>
         </el-tooltip>
       </el-col>
@@ -123,6 +123,14 @@
       FormCacheConfig
     },
     data() {
+      let tarDestinateNamesValidator = (rule, value, callback) => {
+        value = this.formBasicInfo.tarDestinateNames
+        if (value && value.length > 0) {
+          callback()
+        } else {
+          callback(new Error('必须输入存储JMS目标名称'))
+        }
+      }
       let jdbcDataSourcesValidator = (rule, vallue, callback) => {
         let {type, jdbcDataSources} = this.formBasicInfo
         if (type === 'persist' && (jdbcDataSources && jdbcDataSources.length <= 0)) {
@@ -145,7 +153,7 @@
           type: '',
           description: '',
           messageTimeoutSecs: 3,
-          tarDestinateName: '',
+          tarDestinateNames: [],
           tarIsTopic: false,
           jdbcDataSources: [],
           jmsDataSources: [],
@@ -157,7 +165,7 @@
             rangeRule({min: 6, max: 50})
           ],
           type: [requiredRule({msg: '请选择计算拓扑的类型', trigger: 'change'})],
-          tarDestinateName: [requiredRule({msg: '请输入数据存储的目标（队列或订阅主题）的名称'})],
+          tarDestinateNames: [customRule({validator: tarDestinateNamesValidator})],
           jdbcDataSources: [customRule({validator: jdbcDataSourcesValidator})],
           jmsDataSources: [customRule({validator: jmsDataSourcesValidator})]
         }
@@ -180,10 +188,10 @@
         return validated
       },
       cacheData() {
-        let {name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic}
+        let {name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames, tarIsTopic}
           = this.formBasicInfo
         this.setBaseInfo({
-          name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic
+          name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames, tarIsTopic
         })
         this.setZookeepers(this.formBasicInfo.zookeepers)
         this.setJdbcDataSources(this.formBasicInfo.jdbcDataSources)
@@ -353,11 +361,11 @@
     },
     mounted() {
       let {
-        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic,
+        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames, tarIsTopic,
         zookeepers, jdbcDataSources, jmsDataSources, caches
       } = this.topology
       this.formBasicInfo = {
-        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName,
+        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames,
         tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources, caches
       }
     }

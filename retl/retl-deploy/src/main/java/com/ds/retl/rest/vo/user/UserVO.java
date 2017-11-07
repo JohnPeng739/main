@@ -16,6 +16,18 @@ public class UserVO extends BaseDictVO {
     private List<String> tools, roles;
     private boolean online;
 
+    public static List<UserVO> transform(List<User> users) {
+        List<UserVO> list = new ArrayList<>();
+        if (users != null && users.size() > 0) {
+            users.forEach(user -> {
+                UserVO userVO = new UserVO();
+                UserVO.transform(user, userVO);
+                list.add(userVO);
+            });
+        }
+        return list;
+    }
+
     public static void transform(User user, UserVO userVO) {
         if (user == null || userVO == null) {
             return;

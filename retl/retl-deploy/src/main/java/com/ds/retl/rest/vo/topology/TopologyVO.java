@@ -3,6 +3,9 @@ package com.ds.retl.rest.vo.topology;
 import com.ds.retl.dal.entity.Topology;
 import org.mx.rest.vo.BaseVO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by john on 2017/10/10.
  */
@@ -10,6 +13,18 @@ public class TopologyVO extends BaseVO {
     private boolean submitted;
     private long submittedTime;
     private String name, topologyContent, submitInfo, operator, topologyId;
+
+    public static List<TopologyVO> transform(List<Topology> topologies) {
+        List<TopologyVO> list = new ArrayList<>();
+        if (topologies != null && !topologies.isEmpty()) {
+            topologies.forEach(topology -> {
+                TopologyVO vo = new TopologyVO();
+                TopologyVO.transform(topology, vo);
+                list.add(vo);
+            });
+        }
+        return list;
+    }
 
     public static void transform(Topology topology, TopologyVO topologyVO) {
         if (topology == null || topologyVO == null) {

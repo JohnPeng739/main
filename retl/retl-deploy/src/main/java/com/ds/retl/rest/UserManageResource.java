@@ -9,6 +9,9 @@ import com.ds.retl.rest.vo.user.ChangePasswordVO;
 import com.ds.retl.rest.vo.user.OperateLogVO;
 import com.ds.retl.rest.vo.user.UserVO;
 import com.ds.retl.service.UserManageService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.zookeeper.Op;
 import org.mx.StringUtils;
 import org.mx.dal.Pagination;
 import org.mx.dal.exception.EntityAccessException;
@@ -35,6 +38,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserManageResource {
+    private static final Log logger = LogFactory.getLog(UserManageResource.class);
+
     @Autowired
     @Qualifier("generalDictEntityAccessorHibernate")
     private GeneralDictAccessor accessor = null;
@@ -65,6 +70,20 @@ public class UserManageResource {
         }
     }
 
+    @Path("user/logs")
+    @GET
+    public DataVO<List<OperateLogVO>> listUserOperateLogs() {
+        try {
+            List<UserOperateLog> logs = accessor.list(UserOperateLog.class);
+            return new DataVO<>(OperateLogVO.transform(logs));
+        } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
+        }
+    }
+
     /**
      * 按页列举用户操作日志
      *
@@ -79,16 +98,25 @@ public class UserManageResource {
         }
         try {
             List<UserOperateLog> logs = accessor.list(pagination, UserOperateLog.class);
-            List<OperateLogVO> list = new ArrayList<>();
-            if (logs != null && logs.size() > 0) {
-                logs.forEach(log -> {
-                    OperateLogVO vo = new OperateLogVO();
-                    OperateLogVO.transform(log, vo);
-                    list.add(vo);
-                });
-            }
-            return new PaginationDataVO<>(pagination, list);
+            return new PaginationDataVO<>(pagination, OperateLogVO.transform(logs));
         } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
+        }
+    }
+
+    @Path("users")
+    @GET
+    public DataVO<List<UserVO>> listUsers() {
+        try {
+            List<User> users = accessor.list(User.class);
+            return new DataVO<>(UserVO.transform(users));
+        } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
             return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
         }
     }
@@ -107,16 +135,11 @@ public class UserManageResource {
         }
         try {
             List<User> users = accessor.list(pagination, User.class);
-            List<UserVO> list = new ArrayList<>();
-            if (users != null && users.size() > 0) {
-                users.forEach(user -> {
-                    UserVO userVO = new UserVO();
-                    UserVO.transform(user, userVO);
-                    list.add(userVO);
-                });
-            }
-            return new PaginationDataVO<>(pagination, list);
+            return new PaginationDataVO<>(pagination, UserVO.transform(users));
         } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
             return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
         }
     }
@@ -139,6 +162,9 @@ public class UserManageResource {
             UserVO.transform(user, userVO);
             return new DataVO<>(userVO);
         } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
             return new DataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
         }
     }

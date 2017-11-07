@@ -71,11 +71,11 @@
       </el-row>
       <el-row type="flex" v-if="isZookeeper">
         <el-col :span="24" style="text-align: center;">
-          <el-button class="button" type="primary" @click="systemctl('enable', 'zookeeper')" :disabled="!status.zookeeper.enabled">启用</el-button>
-          <el-button class="button" type="primary" @click="systemctl('disable', 'zookeeper')" :disabled="status.zookeeper.enabled">禁用</el-button>
-          <el-button class="button" type="primary" @click="systemctl('start', 'zookeeper')" :disabled="!status.zookeeper.actived">启动</el-button>
-          <el-button class="button" type="primary" @click="systemctl('stop', 'zookeeper')" :disabled="status.zookeeper.actived">停止</el-button>
-          <el-button class="button" type="primary" @click="systemctl('restart', 'zookeeper')" :disabled="status.zookeeper.actived">重新启动</el-button>
+          <el-button class="button" type="primary" @click="systemctl('enable', 'zookeeper')" :disabled="status.zookeeper.enabled">启用</el-button>
+          <el-button class="button" type="primary" @click="systemctl('disable', 'zookeeper')" :disabled="!status.zookeeper.enabled">禁用</el-button>
+          <el-button class="button" type="primary" @click="systemctl('start', 'zookeeper')" :disabled="status.zookeeper.active">启动</el-button>
+          <el-button class="button" type="primary" @click="systemctl('stop', 'zookeeper')" :disabled="!status.zookeeper.active">停止</el-button>
+          <el-button class="button" type="primary" @click="systemctl('restart', 'zookeeper')" :disabled="!status.zookeeper.active">重新启动</el-button>
           <el-button class="button" type="primary" @click="systemctl('reload', 'zookeeper')">重新加载</el-button>
         </el-col>
       </el-row>
@@ -141,11 +141,11 @@
       </el-row>
       <el-row type="flex" v-if="isStorm">
         <el-col :span="24" style="text-align: center;">
-          <el-button class="button" type="primary" @click="systemctl('enable', 'storm')" :disabled="!status.zookeeper.enabled">启用</el-button>
-          <el-button class="button" type="primary" @click="systemctl('disable', 'storm')" :disabled="status.zookeeper.enabled">禁用</el-button>
-          <el-button class="button" type="primary" @click="systemctl('start', 'storm')" :disabled="!status.zookeeper.actived">启动</el-button>
-          <el-button class="button" type="primary" @click="systemctl('stop', 'storm')" :disabled="status.zookeeper.actived">停止</el-button>
-          <el-button class="button" type="primary" @click="systemctl('restart', 'storm')" :disabled="status.zookeeper.actived">重新启动</el-button>
+          <el-button class="button" type="primary" @click="systemctl('enable', 'storm')" :disabled="status.storm.enabled">启用</el-button>
+          <el-button class="button" type="primary" @click="systemctl('disable', 'storm')" :disabled="!status.storm.enabled">禁用</el-button>
+          <el-button class="button" type="primary" @click="systemctl('start', 'storm')" :disabled="status.storm.active">启动</el-button>
+          <el-button class="button" type="primary" @click="systemctl('stop', 'storm')" :disabled="!status.storm.active">停止</el-button>
+          <el-button class="button" type="primary" @click="systemctl('restart', 'storm')" :disabled="!status.storm.active">重新启动</el-button>
           <el-button class="button" type="primary" @click="systemctl('reload', 'storm')">重新加载</el-button>
         </el-col>
       </el-row>
@@ -169,8 +169,8 @@
       return {
         interval: null,
         status: {
-          zookeeper: {enabled: false, actived: false},
-          storm: {enabled: false, actived: false}
+          zookeeper: {enabled: false, active: false},
+          storm: {enabled: false, active: false}
         },
         localEditable: false,
         zookeeperEditable: false,

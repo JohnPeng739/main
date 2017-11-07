@@ -406,20 +406,26 @@ public class TopologyManageServiceImpl implements TopologyManageService {
             setGroups(transformBolt, Arrays.asList(validateBolt));
             JSONObject errorBolt = createBolt("error-bolt", "ERROR", foundJdbcSpout ? 1 : defaultParallelism);
             setGroups(errorBolt, Arrays.asList(structureBolt, validateBolt, transformBolt), true);
-            JSONObject jmsBolt = createBolt("jms-bolt", "JMS", foundJdbcSpout ? 1 : defaultParallelism);
-            JSONObject jmsBoltConfig = new JSONObject();
-            JSONObject jmsDataSource = conf.getJSONArray("jmsDataSources").getJSONObject(0);
-            jmsBolt.put("method", jmsDataSource.getString("method"));
-            jmsBoltConfig.put("connection", String.format("%s%s?trace=%s", jmsDataSource.getString("protocol"),
-                    jmsDataSource.getString("server"),
-                    jmsDataSource.getBooleanValue("trace") ? "true" : "false"));
-            jmsBoltConfig.put("user", jmsDataSource.getString("user"));
-            jmsBoltConfig.put("password", jmsDataSource.getString("password"));
-            jmsBoltConfig.put("destinateName", conf.getString("tarDestinateName"));
-            jmsBoltConfig.put("isTopic", conf.getBooleanValue("tarIsTopic"));
-            jmsBolt.put("configuration", jmsBoltConfig);
-            setGroups(jmsBolt, Arrays.asList(transformBolt, errorBolt));
-            bolts.addAll(Arrays.asList(structureBolt, validateBolt, transformBolt, errorBolt, jmsBolt));
+            bolts.addAll(Arrays.asList(structureBolt, validateBolt, transformBolt, errorBolt));
+            // 根据配置的JMS存储目标名称个数，初始化相应的JMS存储Bolt
+            List<String> jmsTars = conf.getJSONArray("tarDestinateNames").toJavaList(String.class);
+            for (String tarDestinateName : jmsTars) {
+                JSONObject jmsBolt = createBolt(String.format("jms-bolt-%s", tarDestinateName), "JMS",
+                        foundJdbcSpout ? 1 : defaultParallelism);
+                JSONObject jmsBoltConfig = new JSONObject();
+                JSONObject jmsDataSource = conf.getJSONArray("jmsDataSources").getJSONObject(0);
+                jmsBolt.put("method", jmsDataSource.getString("method"));
+                jmsBoltConfig.put("connection", String.format("%s%s?trace=%s", jmsDataSource.getString("protocol"),
+                        jmsDataSource.getString("server"),
+                        jmsDataSource.getBooleanValue("trace") ? "true" : "false"));
+                jmsBoltConfig.put("user", jmsDataSource.getString("user"));
+                jmsBoltConfig.put("password", jmsDataSource.getString("password"));
+                jmsBoltConfig.put("destinateName", tarDestinateName);
+                jmsBoltConfig.put("isTopic", conf.getBooleanValue("tarIsTopic"));
+                jmsBolt.put("configuration", jmsBoltConfig);
+                setGroups(jmsBolt, Arrays.asList(transformBolt, errorBolt));
+                bolts.add(jmsBolt);
+            }
         } else if ("persist".equals(type)) {
             // persist信息
             JSONObject persist = conf.getJSONObject("persist");

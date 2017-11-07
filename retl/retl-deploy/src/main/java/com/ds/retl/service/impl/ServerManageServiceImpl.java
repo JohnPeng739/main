@@ -377,6 +377,10 @@ public class ServerManageServiceImpl implements ServerManageService {
                 return SystemCtlCli.reload(service);
             case "status":
                 return SystemCtlCli.status(service);
+            case "is-enabled":
+                return SystemCtlCli.isEnabled(service);
+            case "is-active":
+                return SystemCtlCli.isActive(service);
             default:
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("Unsupported systemctl cmd type: %s.", cmd));
@@ -391,7 +395,7 @@ public class ServerManageServiceImpl implements ServerManageService {
      * @see ServerManageService#service(ServiceType, String, String)
      */
     @Override
-    public void service(ServiceType type, String cmd, String service) throws UserInterfaceErrorException {
+    public String service(ServiceType type, String cmd, String service) throws UserInterfaceErrorException {
         switch (type) {
             case SYSTEMCTL:
                 String info = systemctl(cmd, service);
@@ -399,7 +403,7 @@ public class ServerManageServiceImpl implements ServerManageService {
                     logger.debug(String.format("Run systemctl success, cmd: %s, service: %s, result: %s.",
                             cmd, service, info));
                 }
-                break;
+                return info;
             default:
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("Unsupported service's type: %s.", type.name()));
@@ -420,24 +424,16 @@ public class ServerManageServiceImpl implements ServerManageService {
         if (!service.endsWith(".service")) {
             service = String.format("%s.service", service);
         }
-        boolean enabled = false, actived = false;
-        String result = systemctl("is-enabled", service);
-        enabled = ("enabled".equals(result));
+        boolean enabled, active = false;
+        String result = service(ServiceType.SYSTEMCTL, "is-enabled", service);
+        enabled = result.startsWith("enabled");
         if (enabled) {
-            result = systemctl("is-active", service);
-            actived = ("active".equals(result));
+            result = service(ServiceType.SYSTEMCTL, "is-active", service);
+            active = result.startsWith("active");
         }
-        final boolean serviceEnabled = enabled, serviceActived = actived;
-        return new ServiceStatus() {
-            @Override
-            public boolean isEnabled() {
-                return serviceEnabled;
-            }
-
-            @Override
-            public boolean isActived() {
-                return serviceActived;
-            }
-        };
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Service: %s, enabled: %s, active: %s.", service, enabled, active));
+        }
+        return new ServiceStatus(enabled, active);
     }
 }

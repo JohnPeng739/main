@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Field;
@@ -59,6 +60,20 @@ public class TopologyManageResource {
     @Autowired
     private SessionDataStore sessionDataStore = null;
 
+    @Path("topologies")
+    @GET
+    public DataVO<List<TopologyVO>> list() {
+        try {
+            List<Topology> topologies = accessor.list(Topology.class);
+            return new DataVO<>(TopologyVO.transform(topologies));
+        } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
+        }
+    }
+
     /**
      * 按页列举RETL计算拓扑列表
      *
@@ -74,16 +89,11 @@ public class TopologyManageResource {
         try {
             List<Topology> topologies = accessor.list(pagination, Topology.class);
             // TODO 获取拓扑实时状态
-            List<TopologyVO> list = new ArrayList<>();
-            if (topologies != null && !topologies.isEmpty()) {
-                topologies.forEach(topology -> {
-                    TopologyVO vo = new TopologyVO();
-                    TopologyVO.transform(topology, vo);
-                    list.add(vo);
-                });
-            }
-            return new PaginationDataVO<>(pagination, list);
+            return new PaginationDataVO<>(pagination, TopologyVO.transform(topologies));
         } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
             return new PaginationDataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
         }
     }
@@ -103,6 +113,9 @@ public class TopologyManageResource {
             TopologyVO.transform(topology, vo);
             return new DataVO<>(vo);
         } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
             return new DataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL));
         }
     }

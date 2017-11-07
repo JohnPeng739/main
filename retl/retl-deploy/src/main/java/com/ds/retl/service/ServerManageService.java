@@ -12,9 +12,34 @@ import java.util.Map;
 public interface ServerManageService {
     enum ServiceType {SYSTEMCTL};
 
-    interface ServiceStatus {
-        boolean isEnabled();
-        boolean isActived();
+    public class ServiceStatus {
+        private boolean enabled, active;
+
+        public ServiceStatus() {
+            super();
+        }
+
+        public ServiceStatus(boolean enabled, boolean active) {
+            this();
+            this.enabled = enabled;
+            this.active = active;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public void setActive(boolean active) {
+            this.active = active;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public boolean isActive() {
+            return active;
+        }
     }
 
     JSONObject getLocalServerConfigInfo() throws UserInterfaceErrorException;
@@ -23,7 +48,7 @@ public interface ServerManageService {
 
     Map<String, JSONObject> getServerConfigInfos() throws UserInterfaceErrorException;
 
-    void service(ServiceType type, String cmd, String service)  throws UserInterfaceErrorException;
+    String service(ServiceType type, String cmd, String service)  throws UserInterfaceErrorException;
 
     ServiceStatus serviceStatus(String service) throws UserInterfaceErrorException;
 }

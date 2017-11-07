@@ -14,7 +14,7 @@ export const topologySample = function () {
     debug: false,
     messageTimeoutSecs: 3,
     maxSpoutPending: 1,
-    tarDestinateName: 'sample',
+    tarDestinateNames: ['tar-sample'],
     tarIsTopic: false,
     zookeepers: [],
     jdbcDataSources: [],
@@ -123,7 +123,7 @@ const mutations = {
         state.topology = data
         break
       case 'baseInfo':
-        let {name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateName, tarIsTopic} = data
+        let {name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames, tarIsTopic} = data
         let topology = state.topology
         topology.name = name
         topology.description = description
@@ -131,7 +131,7 @@ const mutations = {
         topology.debug = debug
         topology.messageTimeoutSecs = messageTimeoutSecs
         topology.maxSpoutPending = maxSpoutPending
-        topology.tarDestinateName = tarDestinateName
+        topology.tarDestinateNames = tarDestinateNames
         topology.tarIsTopic = tarIsTopic
         state.topology = topology
         break

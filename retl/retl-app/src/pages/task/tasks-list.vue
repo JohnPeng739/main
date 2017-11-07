@@ -91,6 +91,7 @@
             return ''
           }
         },
+        queryByPage: false,
         tableData: [],
         selection: null
       }
@@ -181,16 +182,25 @@
         }
       },
       handleRefresh(pagination) {
-        if (!pagination) {
-          pagination = {total: 0, size: 20, page: 1}
-        }
         let url = '/rest/topologies'
-        logger.debug('send POST "%s"', url)
-        post(url, pagination, ({data, pagination}) => {
-          logger.debug('Response success, data: %j, page: %j.', data, pagination)
-          this.$refs['panePaginateList'].setPagination(pagination)
-          this.fillTableData(data)
-        })
+        if (this.queryByPage) {
+          if (!pagination) {
+            pagination = {total: 0, size: 20, page: 1}
+          }
+          logger.debug('send POST "%s", page: %j.', url, pagination)
+          post(url, pagination, ({data, pagination}) => {
+            logger.debug('Response success, data: %j, page: %j.', data, pagination)
+            this.$refs['panePaginateList'].setPagination(pagination)
+            this.fillTableData(data)
+            info('刷新数据成功。')
+          })
+        } else {
+          logger.debug('send GET "%s"', url)
+          get(url, data => {
+            this.fillTableData(data)
+            info('刷新数据成功。')
+          })
+        }
       },
       handleRebalance(id) {
         let url = '/api/v1/topology/' + id + '/rebalance/3'

@@ -44,7 +44,8 @@
 
 <script>
   import {logger} from 'dsutils'
-  import {post} from '../../assets/ajax'
+  import {get, post} from '../../assets/ajax'
+  import {info} from '../../assets/notify'
   import {formatDateTime} from '../../assets/date-utils'
   import PanePaginateList from '../../components/pane-paginate-list.vue'
 
@@ -57,21 +58,31 @@
           let datetime = new Date(time)
           return formatDateTime(datetime)
         },
+        queryByPage: false,
         tableData: []
       }
     },
     methods: {
       refreshData(pagination) {
-        if (!pagination) {
-          pagination = {total: 0, size: 20, page: 1}
-        }
         let url = '/rest/users'
-        logger.debug('send POST "%s"', url)
-        post(url, pagination, ({data, pagination}) => {
-          logger.debug('Response success, data: %j, page: %j.', data, pagination)
-          this.$refs['panePaginateList'].setPagination(pagination)
-          this.tableData = data
-        })
+        if (this.queryByPage) {
+          if (!pagination) {
+            pagination = {total: 0, size: 20, page: 1}
+          }
+          logger.debug('send POST "%s", page: %j.', url, pagination)
+          post(url, pagination, ({data, pagination}) => {
+            logger.debug('Response success, data: %j, page: %j.', data, pagination)
+            this.$refs['panePaginateList'].setPagination(pagination)
+            this.tableData = data
+            info('刷新数据成功。')
+          })
+        } else {
+          logger.debug('send GET "%s"', url)
+          get(url, data => {
+            this.tableData = data
+            info('刷新数据成功。')
+          })
+        }
       },
       handleButtonClick(operate, pagination) {
         if (operate === 'refresh') {
