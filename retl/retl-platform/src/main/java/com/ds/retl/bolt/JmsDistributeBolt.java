@@ -26,6 +26,7 @@ import java.util.Map;
  * {
  * conditions: [{
  * destinateName: "tar-jjd",
+ * isTopic: false,
  * condition: {
  * field: "tableName",
  * operate: "equals",
@@ -34,6 +35,7 @@ import java.util.Map;
  * includes: ["data", "managedJson"],
  * }, {
  * destinateName: "tar-cjd",
+ * isTopic: false,
  * condition: {
  * field: "tableName",
  * operate: "startsWith",
