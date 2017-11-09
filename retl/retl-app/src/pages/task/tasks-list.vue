@@ -108,7 +108,9 @@
         let topologyIds = []
         if (topologies && topologies.length > 0) {
           topologies.forEach(topology => {
+            console.log(topology)
             let {id, name, updatedTime, submitted, submitInfo, submittedTime, topologyContent, operator, topologyId} = topology
+            console.log(topologyContent)
             let contentJson = JSON.parse(topologyContent)
             tableData.push({id, name, savedTime: this.longDate(updatedTime), submitInfo, submitTime: this.longDate(submittedTime),
               submitted, content: contentJson, operator, topologyId})
@@ -118,6 +120,7 @@
           })
         }
         this.tableData = tableData
+        /*
         if (topologyIds.length > 0) {
           let url = '/rest/topologies/realStatus?topologyIds=' + topologyIds.join(',')
           logger.debug('send GET "%s"', url)
@@ -135,6 +138,7 @@
             }
           })
         }
+        */
       },
       handleButtonClick(operate, pagination) {
         if (operate === 'detail') {

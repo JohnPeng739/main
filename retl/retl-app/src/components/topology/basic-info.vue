@@ -24,14 +24,14 @@
 <template>
   <el-form ref="baseInfo" :model="formBasicInfo" :rules="rulesBasicInfo" label-width="100px" class="layout-form">
     <el-row type="flex">
-      <el-col :span="14">
+      <el-col :span="16">
         <el-form-item label="名称" prop="name">
           <el-input v-model="formBasicInfo.name"></el-input>
         </el-form-item>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="8">
         <el-form-item label="类型" prop="type">
-          <el-select v-model="formBasicInfo.type">
+          <el-select v-model="formBasicInfo.type" style="width: 100%;">
             <el-option v-for="item in topologyTypes" :key="item.value" :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
@@ -46,22 +46,21 @@
       </el-col>
     </el-row>
     <el-row type="flex">
-      <el-col :span="10">
+      <el-col :span="24">
         <el-form-item label="消息超时值" prop="messageTimeoutSecs">
           <el-input-number v-model="formBasicInfo.messageTimeoutSecs" :min="1" :max="10"></el-input-number>
           <span>秒</span>
         </el-form-item>
       </el-col>
-      <el-col :span="6" v-if="formBasicInfo.type === 'retl'">
-        <el-tooltip content="数据存储的队列或订阅主题的名称，默认使用第一个jms数据源。" placement="bottom" :hide-after="2000">
-          <el-form-item label="存储名" prop="tarDestinateName">
-            <ds-tag-normal v-model="formBasicInfo.tarDestinateNames" type="gray"></ds-tag-normal>
-          </el-form-item>
-        </el-tooltip>
-      </el-col>
-      <el-col :span="4" v-if="formBasicInfo.type === 'retl'">
-        <el-form-item label="是否主题" prop="tarIsTopic">
-          <el-switch v-model="formBasicInfo.tarIsTopic"></el-switch>
+    </el-row>
+    <el-row type="flex">
+      <el-col :span=24 v-if="formBasicInfo.type === 'retl'">
+        <el-form-item label="存储目标" prop="destinations">
+          <pane-listable-config ref="destinations" :list="formBasicInfo.destinations"
+                                v-on:delete="handleDeleteDestinations" v-on:edit="handleEditDestinations"
+                                v-on:reset="handleResetDestinationForm" v-on:save="handleSaveDestinationForm">
+            <form-destination-config ref="formDestination" slot="form-config"></form-destination-config>
+          </pane-listable-config>
         </el-form-item>
       </el-col>
     </el-row>
@@ -70,10 +69,8 @@
         <el-form-item label="jdbc源" prop="jdbcDataSources">
           <pane-listable-config ref="jdbcDataSources" :list="formBasicInfo.jdbcDataSources"
                                 v-on:delete="handleDeleteJdbcDataSource" v-on:edit="handleEditJdbcDataSource"
-                                v-on:reset="handleResetJdbcDataSourceForm"
-                                v-on:save="handleSaveJdbcDataSourceForm">
-            <form-jdbc-data-source-config ref="formJdbcDataSource" slot="form-config">
-            </form-jdbc-data-source-config>
+                                v-on:reset="handleResetJdbcDataSourceForm" v-on:save="handleSaveJdbcDataSourceForm">
+            <form-jdbc-data-source-config ref="formJdbcDataSource" slot="form-config"></form-jdbc-data-source-config>
           </pane-listable-config>
         </el-form-item>
       </el-col>
@@ -84,8 +81,7 @@
           <pane-listable-config ref="jmsDataSources" :list="formBasicInfo.jmsDataSources"
                                 v-on:delete="handleDeleteJmsDataSource" v-on:edit="handleEditJmsDataSource"
                                 v-on:reset="handleResetJmsDataSourceForm" v-on:save="handleSaveJmsDataSourceForm">
-            <form-jms-data-source-config ref="formJmsDataSource" slot="form-config">
-            </form-jms-data-source-config>
+            <form-jms-data-source-config ref="formJmsDataSource" slot="form-config"></form-jms-data-source-config>
           </pane-listable-config>
         </el-form-item>
       </el-col>
@@ -111,6 +107,7 @@
   import DsIcon from '../../components/icon.vue'
   import DsTagNormal from '../ds-tag-normal.vue'
   import PaneListableConfig from '../pane-listable-config.vue'
+  import FormDestinationConfig from './form-destination-config.vue'
   import FormJdbcDataSourceConfig from '../datasource/form-jdbc-datasource-config.vue'
   import FormJmsDataSourceConfig from '../datasource/form-jms-datasource-config.vue'
   import FormCacheConfig from './retl/form-cache-config.vue'
@@ -119,60 +116,66 @@
   export default {
     name: 'topology-basic-infor',
     components: {
-      DsIcon, DsTagNormal, PaneListableConfig, FormJdbcDataSourceConfig, FormJmsDataSourceConfig,
+      DsIcon, DsTagNormal, PaneListableConfig, FormDestinationConfig, FormJdbcDataSourceConfig, FormJmsDataSourceConfig,
       FormCacheConfig
     },
     data() {
-      let tarDestinateNamesValidator = (rule, value, callback) => {
-        value = this.formBasicInfo.tarDestinateNames
-        if (value && value.length > 0) {
-          callback()
-        } else {
-          callback(new Error('必须输入存储JMS目标名称'))
-        }
-      }
-      let jdbcDataSourcesValidator = (rule, vallue, callback) => {
-        let {type, jdbcDataSources} = this.formBasicInfo
-        if (type === 'persist' && (jdbcDataSources && jdbcDataSources.length <= 0)) {
-          callback(new Error('数据存储类计算拓扑必须配置jdbc数据源。'))
-        } else {
-          callback()
-        }
-      }
-      let jmsDataSourcesValidator = (rule, value, callback) => {
-        let {jmsDataSources} = this.formBasicInfo
-        if (jmsDataSources && jmsDataSources.length > 0) {
-          callback()
-        } else {
-          callback(new Error('必须要配置jms数据源。'))
-        }
-      }
       return {
         formBasicInfo: {
           name: '',
           type: '',
           description: '',
           messageTimeoutSecs: 3,
-          tarDestinateNames: [],
+          destinations: [],
           tarIsTopic: false,
           jdbcDataSources: [],
           jmsDataSources: [],
           caches: []
-        },
-        rulesBasicInfo: {
+        }
+      }
+    },
+    computed: {
+      ...mapGetters(['topology', 'topologyTypes']),
+      rulesBasicInfo() {
+        let destinationsValidator = (rule, value, callback) => {
+          value = this.formBasicInfo.destinations
+          if (value && value.length > 0) {
+            callback()
+          } else {
+            callback(new Error('实时抽取类计算拓扑必须配置存储JMS目标'))
+          }
+        }
+        let jdbcDataSourcesValidator = (rule, vallue, callback) => {
+          let {type, jdbcDataSources} = this.formBasicInfo
+          if (type === 'persist' && (jdbcDataSources && jdbcDataSources.length <= 0)) {
+            callback(new Error('数据存储类计算拓扑必须配置jdbc数据源。'))
+          } else {
+            callback()
+          }
+        }
+        let jmsDataSourcesValidator = (rule, value, callback) => {
+          let {jmsDataSources} = this.formBasicInfo
+          if (jmsDataSources && jmsDataSources.length > 0) {
+            callback()
+          } else {
+            callback(new Error('必须要配置jms数据源。'))
+          }
+        }
+        let rules = {
           name: [
             requiredRule({msg: '请输入计算拓扑的名称'}),
             rangeRule({min: 6, max: 50})
           ],
           type: [requiredRule({msg: '请选择计算拓扑的类型', trigger: 'change'})],
-          tarDestinateNames: [customRule({validator: tarDestinateNamesValidator})],
-          jdbcDataSources: [customRule({validator: jdbcDataSourcesValidator})],
           jmsDataSources: [customRule({validator: jmsDataSourcesValidator})]
         }
+        if (this.formBasicInfo.type === 'retl') {
+          rules['destinations'] = [customRule({validator: destinationsValidator})]
+        } else {
+          rules['jdbcDataSources'] = [customRule({validator: jdbcDataSourcesValidator})]
+        }
+        return rules
       }
-    },
-    computed: {
-      ...mapGetters(['topology', 'topologyTypes'])
     },
     methods: {
       ...mapActions(['setBaseInfo', 'setCaches', 'setZookeepers', 'setJdbcDataSources', 'setJmsDataSources']),
@@ -197,6 +200,52 @@
         this.setJdbcDataSources(this.formBasicInfo.jdbcDataSources)
         this.setJmsDataSources(this.formBasicInfo.jmsDataSources)
         this.setCaches(this.formBasicInfo.caches)
+      },
+      handleDeleteDestinations(indexes) {
+        logger.debug('delete jms destination request: %j.', indexes)
+        if (indexes && indexes.length > 0) {
+          let destinations = this.formBasicInfo.destinations
+          if (destinations) {
+            // 倒序一下
+            indexes = indexes.sort((a, b) => b - a)
+            indexes.forEach(index => destinations.splice(index, 1))
+          }
+          this.fillDestinations(destinations)
+        }
+      },
+      handleEditDestinations(index) {
+        logger.debug('edit jms destination request, index: %d', index)
+        let destinations = this.formBasicInfo.destinations
+        if (destinations && destinations[index]) {
+          this.$nextTick(_ => this.$refs['formDestination'].setDestination(destinations[index]))
+        } else {
+          error('指定的JMS存储目标不存在!')
+        }
+      },
+      handleResetDestinationForm() {
+        logger.debug('reset jms destination form.')
+        this.$refs['formDestination'].resetFields()
+      },
+      handleSaveDestinationForm() {
+        logger.debug('save jms destination form.')
+        let destinations = this.formBasicInfo.destinations
+        if (!destinations) {
+          destinations = []
+        }
+        let destination = this.$refs['formDestination'].getDestination()
+        let selected = this.$refs['destinations'].getSelected()
+        logger.debug('save jms destination data, destination: %j, selected: %j.', destination, selected)
+        if (destination) {
+          if (selected && selected.length === 1) {
+            // edit
+            destinations[selected[0]] = destination
+          } else {
+            // add
+            destinations.push(destination)
+          }
+          this.fillDestinations(destinations)
+          this.$refs['destinations'].handleConfigForm('close')
+        }
       },
       handleEditJdbcDataSource(index) {
         logger.debug('edit jdbc data source request, index: %d', index)
@@ -235,7 +284,7 @@
         if (dataSource) {
           if (selected && selected.length === 1) {
             // edit
-            dataSource[selected[0]] = dataSource
+            dataSources[selected[0]] = dataSource
           } else {
             // add
             dataSources.push(dataSource)
@@ -336,6 +385,14 @@
           this.$refs['caches'].handleConfigForm('close')
         }
       },
+      fillDestinations(destinations) {
+        if (!destinations) {
+          destinations = []
+        }
+        this.formBasicInfo.destinations = destinations
+        this.$refs['destinations'].setList(this.formBasicInfo.destinations)
+        this.cacheData()
+      },
       fillJdbcDataSources(dataSources) {
         if (!dataSources) {
           dataSources = []
@@ -361,12 +418,12 @@
     },
     mounted() {
       let {
-        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames, tarIsTopic,
+        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, destinations,
         zookeepers, jdbcDataSources, jmsDataSources, caches
       } = this.topology
       this.formBasicInfo = {
-        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames,
-        tarIsTopic, zookeepers, jdbcDataSources, jmsDataSources, caches
+        name, description, type, debug, messageTimeoutSecs, maxSpoutPending, destinations,
+        zookeepers, jdbcDataSources, jmsDataSources, caches
       }
     }
   }

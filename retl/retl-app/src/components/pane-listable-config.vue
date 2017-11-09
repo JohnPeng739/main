@@ -3,8 +3,11 @@
 
   .layout-list {
     border: 1px solid @button-color;
-    .list-row {
-      word-wrap: break-word;
+    .item-row {
+      background: linear-gradient(to bottom, white, lighten(@header-hover-color, 35%) 20%, lighten(@header-hover-color, 28%));
+      .list-row {
+        word-wrap: break-word;
+      }
     }
   }
 </style>
@@ -53,7 +56,7 @@
       </el-col>
     </el-row>
     <el-row v-for="item in list" :key="item.dataSource" type="flex" justify="center"
-            align="middle">
+            align="middle" class="item-row">
       <el-col :span="1">
         <el-checkbox ref="listCheckbox" :key="item.dataSource" class="list-row"></el-checkbox>
       </el-col>

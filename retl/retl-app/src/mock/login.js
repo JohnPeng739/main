@@ -34,18 +34,46 @@ let user = {
 }
 
 export default [{
-  path: /\/rest\/login(\?\w=\w)*/,
-  type: 'post',
+  path: /\/rest\/init/,
+  type: 'get',
   data: {
     data: user
   }
 }, {
-  path: /\/rest\/logout\?userCode=\w/,
+  path: /\/rest\/user\/logs\?userCode=\w/,
+  type: 'get',
+  data: {
+    'data|5-100': [{
+      'id': '@guid',
+      'message': '@csentence',
+      'operator': '@ctitle',
+      'createdTime': '@integer'
+    }]
+  }
+}, {
+  path: /\/rest\/user\/logs\?userCode=\w/,
   type: 'post',
   data: {
-    data: {
-      'success|5-5': true
-    }
+    'pagination': {total: 60, size: 20, page: 1},
+    'data|5-100': [{
+      'id': '@guid',
+      'message': '@csentence',
+      'operator': '@ctitle',
+      'createdTime': '@integer'
+    }]
+  }
+}, {
+  path: /\/rest\/users\?userCode=\w/,
+  type: 'get',
+  data: {
+    'data|5-100': [user]
+  }
+}, {
+  path: /\/rest\/users\?userCode=\w/,
+  type: 'post',
+  data: {
+    'pagination': {total: 100, size: 20, page: 1},
+    'data|5-100': [user]
   }
 }, {
   path: /\/rest\/users\/\w(\?userCode=\w)*/,
@@ -60,22 +88,17 @@ export default [{
     data: user
   }
 }, {
-  path: /\/rest\/users\?userCode=\w/,
+  path: /\/rest\/login(\?\w=\w)*/,
   type: 'post',
   data: {
-    'pagination': {total: 100, size: 20, page: 1},
-    'data|5-100': [user]
+    data: user
   }
 }, {
-  path: /\/rest\/user\/logs\?userCode=\w/,
+  path: /\/rest\/logout\?userCode=\w/,
   type: 'post',
   data: {
-    'pagination': {total: 60, size: 20, page: 1},
-    'data|5-100': [{
-      'id': '@id',
-      'message': '@csentence',
-      'operator': '@ctitle',
-      'createdTime': '@integer'
-    }]
+    data: {
+      'success|1': true
+    }
   }
 }]
