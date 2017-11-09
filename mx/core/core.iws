@@ -65,21 +65,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="DalHibernateConfig.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx/dal/config/DalHibernateConfig.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="57" column="44" lean-forward="true" selection-start-line="57" selection-start-column="44" selection-end-line="57" selection-end-column="44" />
-              <folding>
-                <element signature="e#3132#3133#0" expanded="true" />
-                <element signature="e#3175#3176#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -162,10 +148,9 @@
     <option name="LAST_EDITED_TAB_NAME" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="413" />
-    <option name="y" value="208" />
-    <option name="width" value="1027" />
-    <option name="height" value="650" />
+    <option name="y" value="23" />
+    <option name="width" value="1440" />
+    <option name="height" value="835" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -1045,7 +1030,7 @@
       <workItem from="1509851613435" duration="6000" />
       <workItem from="1509851730064" duration="8000" />
       <workItem from="1509879014583" duration="1653000" />
-      <workItem from="1509963539410" duration="1872000" />
+      <workItem from="1509963539410" duration="2004000" />
     </task>
     <servers />
   </component>
@@ -1082,7 +1067,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="93088000" />
+    <option name="totallyTimeSpent" value="93220000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1094,8 +1079,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="413" y="208" width="1027" height="650" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="23" width="1440" height="835" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -1485,8 +1469,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx/dal/config/DalHibernateConfig.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="57" column="44" lean-forward="true" selection-start-line="57" selection-start-column="44" selection-end-line="57" selection-end-column="44" />
+        <state relative-caret-position="377">
+          <caret line="66" column="41" lean-forward="true" selection-start-line="66" selection-start-column="41" selection-end-line="66" selection-end-column="41" />
           <folding>
             <element signature="e#3132#3133#0" expanded="true" />
             <element signature="e#3175#3176#0" expanded="true" />
