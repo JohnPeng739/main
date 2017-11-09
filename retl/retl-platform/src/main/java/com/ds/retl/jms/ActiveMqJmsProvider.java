@@ -10,6 +10,9 @@ import org.apache.storm.jms.JmsProvider;
 import org.mx.StringUtils;
 
 import javax.jms.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 用于直接连接ActiveMQ提供的JMS功能的Provider，使用了ActiveMQ提供的API。
@@ -17,25 +20,15 @@ import javax.jms.*;
  *
  * @author : john.peng created on date : 2017/9/10
  */
-public class ActiveMqJmsProvider implements JmsProvider {
+public class ActiveMqJmsProvider implements JmsMultiProvider {
     private static final Log logger = LogFactory
             .getLog(ActiveMqJmsProvider.class);
     private ConnectionFactory connectionFactory = null;
-    private Destination destination = null;
+    private List<Destination> destinations = null;
 
-
-    /**
-     * 构造函数
-     *
-     * @param connection    JMS连接字符串
-     * @param user          用户名
-     * @param password      密码
-     * @param destinateName 连接目标点（队列或主题）
-     * @throws JMSException 初始化过程中发生的异常
-     */
-    public ActiveMqJmsProvider(String connection, String user, String password,
-                               String destinateName) throws JMSException {
-        this(connection, user, password, destinateName, false);
+    public ActiveMqJmsProvider() {
+        super();
+        this.destinations = new ArrayList<>();
     }
 
     /**
@@ -44,12 +37,63 @@ public class ActiveMqJmsProvider implements JmsProvider {
      * @param connection    JMS连接字符串
      * @param user          用户名
      * @param password      密码
-     * @param destinateName 连接目标点（队列或主题）
-     * @param isTopic       如果设置为true，表示目标点为发布订阅主题；否则为点对点队列
+     * @param destinateName 连接目标点（队列或主题）名称
      * @throws JMSException 初始化过程中发生的异常
      */
     public ActiveMqJmsProvider(String connection, String user, String password,
-                               String destinateName, Boolean isTopic) throws JMSException {
+                               String destinateName) throws JMSException {
+        this(connection, user, password, new String[]{destinateName});
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param connection     JMS连接字符串
+     * @param user           用户名
+     * @param password       密码
+     * @param destinateNames 连接目标点（队列或主题）名称数组
+     * @throws JMSException 初始化过程中发生的异常
+     */
+    public ActiveMqJmsProvider(String connection, String user, String password,
+                               String[] destinateNames) throws JMSException {
+        super();
+        boolean[] isTopics = new boolean[destinateNames.length];
+        Arrays.fill(isTopics, false);
+        this.init(connection, user, password, destinateNames, isTopics);
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param connection    JMS连接字符串
+     * @param user          用户名
+     * @param password      密码
+     * @param destinateName 连接目标点（队列或主题）名称
+     * @param isTopics      对应destinateName的位置的值如果设置为true，表示目标点为发布订阅主题；否则为点对点队列
+     * @throws JMSException 初始化过程中发生的异常
+     */
+    public ActiveMqJmsProvider(String connection, String user, String password,
+                               String destinateName, boolean[] isTopics) throws JMSException {
+        this(connection, user, password, new String[]{destinateName}, isTopics);
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param connection     JMS连接字符串
+     * @param user           用户名
+     * @param password       密码
+     * @param destinateNames 连接目标点（队列或主题）名称数组
+     * @param isTopics       对应destinateName的位置的值如果设置为true，表示目标点为发布订阅主题；否则为点对点队列
+     * @throws JMSException 初始化过程中发生的异常
+     */
+    public ActiveMqJmsProvider(String connection, String user, String password,
+                               String[] destinateNames, boolean[] isTopics) throws JMSException {
+        init(connection, user, password, destinateNames, isTopics);
+    }
+
+    private void init(String connection, String user, String password,
+                      String[] destinateNames, boolean[] isTopics) throws JMSException {
         if (StringUtils.isBlank(connection)) {
             String msg = "The Connection String is blank.";
             if (logger.isErrorEnabled()) {
@@ -57,8 +101,8 @@ public class ActiveMqJmsProvider implements JmsProvider {
             }
             throw new ResourceAllocationException(msg);
         }
-        if (StringUtils.isBlank(destinateName)) {
-            String msg = "The DestinateName is blank.";
+        if (destinateNames == null || destinateNames.length <= 0) {
+            String msg = "The JMS destinate name array is null or is empty.";
             if (logger.isErrorEnabled()) {
                 logger.error(msg);
             }
@@ -72,21 +116,32 @@ public class ActiveMqJmsProvider implements JmsProvider {
             // 这里统一使用CLIENT的确认方式。
             Session session = conn.createSession(false,
                     Session.CLIENT_ACKNOWLEDGE);
-            if (isTopic) {
-                destination = session.createTopic(destinateName);
-            } else {
-                destination = session.createQueue(destinateName);
-            }
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Initialize ActiveMqJmsProvider success, connection: %s, user: %s, " +
-                                "password: %s, destinateName: %s, isTopic: %s",
-                        connection, user, password, destinateName, isTopic ? "topic" : "queue"));
+            Destination destination;
+            for (int index = 0; index < destinateNames.length; index++) {
+                String destinateName = destinateNames[index];
+                boolean isTopic = isTopics[index];
+                if (StringUtils.isBlank(destinateName)) {
+                    continue;
+                }
+                if (isTopic) {
+                    destination = session.createTopic(destinateName);
+                } else {
+                    destination = session.createQueue(destinateName);
+                }
+                if (destination != null) {
+                    this.destinations.add(destination);
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Initialize ActiveMqJmsProvider success, connection: %s, user: %s, " +
+                                    "password: %s, destinateName: %s, isTopic: %s",
+                            connection, user, password, destinateName, isTopic ? "topic" : "queue"));
+                }
             }
         } catch (JMSException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Initialize ActiveMqJmsProvider fail, connection: %s, user: %s, " +
-                                "password: %s, destinateName: %s, isTopic: %s",
-                        connection, user, password, destinateName, isTopic ? "topic" : "queue"));
+                                "password: %s, destinateName: %s",
+                        connection, user, password, StringUtils.merge(destinateNames)), ex);
             }
             throw ex;
         }
@@ -109,7 +164,20 @@ public class ActiveMqJmsProvider implements JmsProvider {
      */
     @Override
     public Destination destination() throws Exception {
-        return destination;
+        if (destinations != null && !destinations.isEmpty()) {
+            return destinations.get(0);
+        } else {
+            return null;
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see JmsMultiProvider#destinations()
+     */
+    @Override
+    public List<Destination> destinations() throws Exception {
+        return destinations;
+    }
 }

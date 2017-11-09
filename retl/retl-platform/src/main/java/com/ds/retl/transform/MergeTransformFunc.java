@@ -13,6 +13,12 @@ import java.util.Map;
 /**
  * 字段合并转换规则类，将多个字段使用连接字符串进行连接合并。
  *
+ * 配置信息：
+ * {
+ *     fields: 'code,name',
+ *     separator: ','
+ * }
+ *
  * @author : john.peng created on date : 2017/9/8
  */
 public class MergeTransformFunc implements TransformFunc {

@@ -11,6 +11,7 @@ import javax.jms.JMSException;
 import javax.jms.ResourceAllocationException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.util.List;
 
 /**
  * 用于由容器提供的JMS功能的Provider，使用通用的JNDI方式连接MQ服务器。
@@ -18,10 +19,10 @@ import javax.naming.NamingException;
  * @author : john.peng created on date : 2014/12/19
  */
 @SuppressWarnings("serial")
-public class JndiJmsProvider implements JmsProvider {
+public class JndiJmsProvider implements JmsMultiProvider {
     private static final Log logger = LogFactory.getLog(JndiJmsProvider.class);
     private ConnectionFactory connectionFactory = null;
-    private Destination destination = null;
+    private List<Destination> destinations = null;
 
     /**
      * 默认的构造函数
@@ -32,6 +33,18 @@ public class JndiJmsProvider implements JmsProvider {
      */
     public JndiJmsProvider(String connectionFactoryName, String destinateName)
             throws JMSException {
+        this(connectionFactoryName, new String[]{destinateName});
+    }
+
+    /**
+     * 默认的构造函数
+     *
+     * @param connectionFactoryName 连接MQ服务器的连接工厂名字，配置在JNDI中。
+     * @param destinateNames        连接MQ服务器上的队列（<code>Queue</code>）或者主题（<code>Topic</code> ）的名字数组，配置在JNDI中。
+     * @throws JMSException 初始化JMS连接代理发生的异常。
+     */
+    public JndiJmsProvider(String connectionFactoryName, String[] destinateNames)
+            throws JMSException {
         if (StringUtils.isBlank(connectionFactoryName)) {
             String msg = "The ConnectionFactoryName is blank.";
             if (logger.isErrorEnabled()) {
@@ -39,8 +52,8 @@ public class JndiJmsProvider implements JmsProvider {
             }
             throw new ResourceAllocationException(msg);
         }
-        if (StringUtils.isBlank(destinateName)) {
-            String msg = "The DestinateName is blank.";
+        if (destinateNames == null || destinateNames.length <= 0) {
+            String msg = "The JMS destinate name array is null or is empty.";
             if (logger.isErrorEnabled()) {
                 logger.error(msg);
             }
@@ -51,15 +64,23 @@ public class JndiJmsProvider implements JmsProvider {
             // 获取QueueConnectionFactory对象
             connectionFactory = (ConnectionFactory) context
                     .lookup(connectionFactoryName);
-            // 获取Destination对象
-            destination = (Destination) context.lookup(destinateName);
+            for (String destinateName : destinateNames) {
+                if (StringUtils.isBlank(destinateName)) {
+                    continue;
+                }
+                Destination destination;
+                // 获取Destination对象
+                destination = (Destination) context.lookup(destinateName);
+                if (destination != null)
+                    destinations.add(destination);
+            }
             if (logger.isErrorEnabled()) {
                 logger.debug(String.format("Initialize JndiJmsProvider success，ConnectionFactoryName: %s, DestinateName: %s.",
-                        connectionFactoryName, destinateName));
+                        connectionFactoryName, StringUtils.merge(destinateNames)));
             }
         } catch (NamingException ex) {
             String msg = String.format("Initialize JndiJmsProvider fail，ConnectionFactoryName: %s, DestinateName: %s.",
-                    connectionFactoryName, destinateName);
+                    connectionFactoryName, StringUtils.merge(destinateNames));
             if (logger.isErrorEnabled()) {
                 logger.error(msg, ex);
             }
@@ -84,7 +105,15 @@ public class JndiJmsProvider implements JmsProvider {
      */
     @Override
     public Destination destination() throws Exception {
-        return destination;
+        if (destinations != null && !destinations.isEmpty()) {
+            return destinations.get(0);
+        } else {
+            return null;
+        }
     }
 
+    @Override
+    public List<Destination> destinations() throws Exception {
+        return destinations;
+    }
 }

@@ -61,10 +61,6 @@ public class StructureBolt extends BaseRichBolt {
 
         JSONObject data = JSON.parseObject(json);
         try {
-            // 可能json中还包括其他数据，或者数据被封装到下一个层级，需要进行特殊处理
-            if (data.getJSONObject("data") != null) {
-                data = data.getJSONObject("data");
-            }
             managedJson.put("_structuredTime", new Date().getTime());
             this.collector.emit(input, new Values(managedJson, data));
         } catch (Exception ex) {

@@ -13,7 +13,7 @@ allprojects {
 }
 
 project(':retl-platform') {
-  version = '3.0.4'
+  version = '3.0.5'
 
   dependencies {
     compile(
@@ -33,6 +33,22 @@ project(':retl-platform') {
       exclude group: 'org.slf4j'
       exclude group: 'log4j'
     }
+  }
+}
+
+project(':retl-distribute') {
+  dependencies {
+    compile(
+      project(':retl-platform')
+    )
+  }
+}
+
+project(':retl-spanregion') {
+  dependencies {
+    compile(
+      project(':retl-platform')
+    )
   }
 }
 

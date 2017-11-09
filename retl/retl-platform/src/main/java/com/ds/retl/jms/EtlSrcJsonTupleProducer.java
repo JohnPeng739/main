@@ -28,6 +28,7 @@ public class EtlSrcJsonTupleProducer implements JmsTupleProducer {
 
     private JSONObject managedJson = null;
 
+    private String root = "";
     private Set<String> fields = null;
     private Map<String, String> fieldsTransform = null;
 
@@ -50,6 +51,7 @@ public class EtlSrcJsonTupleProducer implements JmsTupleProducer {
     public EtlSrcJsonTupleProducer(JSONObject config) {
         this();
 
+        this.root = config.getString("root");
         if (config.containsKey("fields")) {
             String fieldsStr = config.getString("fields");
             if (!StringUtils.isBlank(fieldsStr)) {
@@ -73,6 +75,10 @@ public class EtlSrcJsonTupleProducer implements JmsTupleProducer {
      */
     private String preparedJsonData(String json) throws Exception {
         JSONObject src = JSON.parseObject(json);
+        if (!StringUtils.isBlank(root)) {
+            // 设置过数据根节点，进行节点特殊处理
+            src = src.getJSONObject(root);
+        }
         JSONObject tar = new JSONObject();
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("src JSON String: %s.", json));

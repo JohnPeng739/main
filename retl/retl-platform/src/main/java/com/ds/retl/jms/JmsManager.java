@@ -1,6 +1,8 @@
 package com.ds.retl.jms;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ds.retl.bolt.JmsDistributeBolt;
 import com.ds.retl.spout.JmsPullSpout;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -8,6 +10,7 @@ import org.apache.storm.jms.JmsMessageProducer;
 import org.apache.storm.jms.JmsProvider;
 import org.apache.storm.jms.bolt.JmsBolt;
 import org.apache.storm.jms.spout.JmsSpout;
+import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.ITuple;
 
 import javax.jms.JMSException;
@@ -80,30 +83,40 @@ public class JmsManager {
      * @return 创建好的数据持久化器Bolt
      * @throws JMSException 创建过程中发生的异常
      */
-    public static JmsBolt createJmsBolt(Supported supported, JSONObject config) throws JMSException {
+    public static BaseRichBolt createJmsBolt(Supported supported, JSONObject config) throws JMSException {
         if (config == null) {
             throw new NullPointerException("The Jms config is null.");
         }
-        JmsBolt bolt = new JmsBolt();
-        bolt.setJmsProvider(createProvider(supported, config));
-        bolt.setJmsMessageProducer(new JmsMessageProducer() {
-            @Override
-            public Message toMessage(Session session, ITuple input) throws JMSException {
-                // 从元组中读取json字段的值，然后作为一个TextMessage发送
-                JSONObject managedJson = (JSONObject) input.getValueByField("managedJson");
-                JSONObject data = (JSONObject) input.getValueByField("data");
-                if (managedJson == null || data == null) {
-                    if (logger.isWarnEnabled()) {
-                        logger.warn("The ManagedJson or Data is null.");
+        // TODO 根据destinations的不同内容创建JmsBolt或JmsDistributeBolt
+        JSONArray destinations = config.getJSONArray("destinations");
+        BaseRichBolt bolt;
+        if (destinations.size() > 1) {
+            // 创建JmsDistributeBolt
+            bolt = new JmsDistributeBolt(destinations);
+            ((JmsDistributeBolt)bolt).setJmsMultiProvider(createProvider(supported, config));
+        } else {
+            // 创建JmsBolt
+            bolt = new JmsBolt();
+            ((JmsBolt)bolt).setJmsProvider(createProvider(supported, config));
+            ((JmsBolt)bolt).setJmsMessageProducer(new JmsMessageProducer() {
+                @Override
+                public Message toMessage(Session session, ITuple input) throws JMSException {
+                    // 从元组中读取json字段的值，然后作为一个TextMessage发送
+                    JSONObject managedJson = (JSONObject) input.getValueByField("managedJson");
+                    JSONObject data = (JSONObject) input.getValueByField("data");
+                    if (managedJson == null || data == null) {
+                        if (logger.isWarnEnabled()) {
+                            logger.warn("The ManagedJson or Data is null.");
+                        }
+                        return null;
                     }
-                    return null;
+                    JSONObject json = new JSONObject();
+                    json.put("managedJson", managedJson);
+                    json.put("data", data);
+                    return session.createTextMessage(json.toJSONString());
                 }
-                JSONObject json = new JSONObject();
-                json.put("managedJson", managedJson);
-                json.put("data", data);
-                return session.createTextMessage(json.toJSONString());
-            }
-        });
+            });
+        }
         return bolt;
     }
 
@@ -115,7 +128,7 @@ public class JmsManager {
      * @return 创建好的JMS提供者
      * @throws JMSException 创建过程中发生的异常
      */
-    private static JmsProvider createProvider(Supported supported, JSONObject config) throws JMSException {
+    private static JmsMultiProvider createProvider(Supported supported, JSONObject config) throws JMSException {
         switch (supported) {
             case ACTIVEMQ:
                 return createActiveMQProvider(config);
@@ -133,13 +146,19 @@ public class JmsManager {
      * @return 创建好的JMS提供者对象
      * @throws JMSException 创建过程中发生的异常
      */
-    private static JmsProvider createActiveMQProvider(JSONObject config) throws JMSException {
+    private static JmsMultiProvider createActiveMQProvider(JSONObject config) throws JMSException {
         String connection = config.getString("connection"),
                 user = config.getString("user"),
-                password = config.getString("password"),
-                destinateName = config.getString("destinateName");
-        boolean isTopic = config.getBoolean("isTopic");
-        return new ActiveMqJmsProvider(connection, user, password, destinateName, isTopic);
+                password = config.getString("password");
+        JSONArray destinations = config.getJSONArray("destincations");
+        String[] destinateNames = new String[destinations.size()];
+        boolean[] isTopics = new boolean[destinations.size()];
+        for (int index = 0; index < destinations.size(); index ++ ){
+            JSONObject jsonDestinate = destinations.getJSONObject(index);
+            destinateNames[index] = jsonDestinate.getString("destinateName");
+            isTopics[index] = jsonDestinate.getBooleanValue("isTopic");
+        }
+        return new ActiveMqJmsProvider(connection, user, password, destinateNames, isTopics);
     }
 
     /**
@@ -149,10 +168,14 @@ public class JmsManager {
      * @return 创建好的JMS提供者对象
      * @throws JMSException 创建过程中发生的异常
      */
-    private static JmsProvider createJndiProvider(JSONObject config) throws JMSException {
-        String connectionFactoryName = config.getString("connectionFactoryName"),
-                destinateName = config.getString("destinateName");
-        return new JndiJmsProvider(connectionFactoryName, destinateName);
+    private static JmsMultiProvider createJndiProvider(JSONObject config) throws JMSException {
+        String connectionFactoryName = config.getString("connectionFactoryName");
+        JSONArray destinations = config.getJSONArray("destincations");
+        String[] destinateNames = new String[destinations.size()];
+        for (int index = 0; index < destinations.size(); index ++ ){
+            destinateNames[index] = destinations.getJSONObject(index).getString("destinateName");
+        }
+        return new JndiJmsProvider(connectionFactoryName, destinateNames);
     }
 
     /**
