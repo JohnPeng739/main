@@ -72,6 +72,9 @@ export default [{
       }, {
         label: '字段合并(Merge)',
         value: 'MergeTransform'
+      }, {
+        label: '子串截取(SubString)',
+        value: 'SubStringTransform'
       }]
     }
   }

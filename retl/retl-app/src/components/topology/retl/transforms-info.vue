@@ -117,6 +117,8 @@
             return {columnName: '', type, calculate: ''}
           case 'MergeTransform':
             return {columnName: '', type, fields: [], separator: ','}
+          case 'SubStringTransform':
+            return {columnName: '', type, field: '', startPos: 0, endPos: -1}
         }
         return null
       },

@@ -55,7 +55,7 @@
       </el-col>
       <el-col :span="8">
         <el-form-item label="最大连接数" prop="maxPoolSize">
-          <el-input-number v-model="formDataSource.maxPoolSize" :min="10" :max="100" :step="10"></el-input-number>
+          <el-input-number v-model="formDataSource.maxPoolSize" :min="5" :max="100" :step="10"></el-input-number>
         </el-form-item>
       </el-col>
     </el-row>
