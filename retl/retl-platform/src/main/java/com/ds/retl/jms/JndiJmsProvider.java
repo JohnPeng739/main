@@ -11,7 +11,8 @@ import javax.jms.JMSException;
 import javax.jms.ResourceAllocationException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用于由容器提供的JMS功能的Provider，使用通用的JNDI方式连接MQ服务器。
@@ -22,7 +23,16 @@ import java.util.List;
 public class JndiJmsProvider implements JmsMultiProvider {
     private static final Log logger = LogFactory.getLog(JndiJmsProvider.class);
     private ConnectionFactory connectionFactory = null;
-    private List<Destination> destinations = null;
+    private String defaultName = null;
+    private Map<String, Destination> destinations = null;
+
+    /**
+     * 默认的构造函数
+     */
+    public JndiJmsProvider() {
+        super();
+        this.destinations = new HashMap<>();
+    }
 
     /**
      * 默认的构造函数
@@ -45,6 +55,7 @@ public class JndiJmsProvider implements JmsMultiProvider {
      */
     public JndiJmsProvider(String connectionFactoryName, String[] destinateNames)
             throws JMSException {
+        this();
         if (StringUtils.isBlank(connectionFactoryName)) {
             String msg = "The ConnectionFactoryName is blank.";
             if (logger.isErrorEnabled()) {
@@ -68,11 +79,14 @@ public class JndiJmsProvider implements JmsMultiProvider {
                 if (StringUtils.isBlank(destinateName)) {
                     continue;
                 }
+                if (StringUtils.isBlank(defaultName)) {
+                    defaultName = destinateName;
+                }
                 Destination destination;
                 // 获取Destination对象
                 destination = (Destination) context.lookup(destinateName);
                 if (destination != null)
-                    destinations.add(destination);
+                    destinations.put(destinateName, destination);
             }
             if (logger.isErrorEnabled()) {
                 logger.debug(String.format("Initialize JndiJmsProvider success，ConnectionFactoryName: %s, DestinateName: %s.",
@@ -105,15 +119,15 @@ public class JndiJmsProvider implements JmsMultiProvider {
      */
     @Override
     public Destination destination() throws Exception {
-        if (destinations != null && !destinations.isEmpty()) {
-            return destinations.get(0);
+        if (destinations != null && !destinations.isEmpty() && !StringUtils.isBlank(defaultName)) {
+            return destinations.get(defaultName);
         } else {
             return null;
         }
     }
 
     @Override
-    public List<Destination> destinations() throws Exception {
+    public Map<String, Destination> destinations() throws Exception {
         return destinations;
     }
 }

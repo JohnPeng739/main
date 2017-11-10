@@ -10,9 +10,9 @@ import org.apache.storm.jms.JmsProvider;
 import org.mx.StringUtils;
 
 import javax.jms.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用于直接连接ActiveMQ提供的JMS功能的Provider，使用了ActiveMQ提供的API。
@@ -24,11 +24,12 @@ public class ActiveMqJmsProvider implements JmsMultiProvider {
     private static final Log logger = LogFactory
             .getLog(ActiveMqJmsProvider.class);
     private ConnectionFactory connectionFactory = null;
-    private List<Destination> destinations = null;
+    private String defaultName = null;
+    private Map<String, Destination> destinations = null;
 
     public ActiveMqJmsProvider() {
         super();
-        this.destinations = new ArrayList<>();
+        this.destinations = new HashMap<>();
     }
 
     /**
@@ -56,7 +57,7 @@ public class ActiveMqJmsProvider implements JmsMultiProvider {
      */
     public ActiveMqJmsProvider(String connection, String user, String password,
                                String[] destinateNames) throws JMSException {
-        super();
+        this();
         boolean[] isTopics = new boolean[destinateNames.length];
         Arrays.fill(isTopics, false);
         this.init(connection, user, password, destinateNames, isTopics);
@@ -89,6 +90,7 @@ public class ActiveMqJmsProvider implements JmsMultiProvider {
      */
     public ActiveMqJmsProvider(String connection, String user, String password,
                                String[] destinateNames, boolean[] isTopics) throws JMSException {
+        this();
         init(connection, user, password, destinateNames, isTopics);
     }
 
@@ -123,13 +125,16 @@ public class ActiveMqJmsProvider implements JmsMultiProvider {
                 if (StringUtils.isBlank(destinateName)) {
                     continue;
                 }
+                if (StringUtils.isBlank(defaultName)) {
+                    defaultName = destinateName;
+                }
                 if (isTopic) {
                     destination = session.createTopic(destinateName);
                 } else {
                     destination = session.createQueue(destinateName);
                 }
                 if (destination != null) {
-                    this.destinations.add(destination);
+                    this.destinations.put(destinateName, destination);
                 }
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Initialize ActiveMqJmsProvider success, connection: %s, user: %s, " +
@@ -164,8 +169,8 @@ public class ActiveMqJmsProvider implements JmsMultiProvider {
      */
     @Override
     public Destination destination() throws Exception {
-        if (destinations != null && !destinations.isEmpty()) {
-            return destinations.get(0);
+        if (destinations != null && !destinations.isEmpty() && !StringUtils.isBlank(defaultName)) {
+            return destinations.get(defaultName);
         } else {
             return null;
         }
@@ -177,7 +182,7 @@ public class ActiveMqJmsProvider implements JmsMultiProvider {
      * @see JmsMultiProvider#destinations()
      */
     @Override
-    public List<Destination> destinations() throws Exception {
+    public Map<String, Destination> destinations() throws Exception {
         return destinations;
     }
 }

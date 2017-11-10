@@ -123,11 +123,11 @@
             operate = condition.operate
             value = condition.value
           }
-          this.formJmsDataSource = {destinateName, isTopic, hasCondition, field, operate, value, includes}
+          this.formDestination = {destinateName, isTopic, hasCondition, field, operate, value, includes}
         }
       },
       resetFields() {
-        this.$refs['formCondition'].resetFields()
+        this.$refs['formDestination'].resetFields()
       }
     }
   }

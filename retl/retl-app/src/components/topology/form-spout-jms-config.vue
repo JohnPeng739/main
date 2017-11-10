@@ -61,7 +61,8 @@
         let spout = null
         this.$refs['formJmsSpout'].validate(valid => {
           if (valid) {
-            spout = this.formJmsSpout
+            let {dataSource, destinateName, isTopic, producer} = this.formJmsSpout
+            spout = {dataSource, destinations: [{destinateName, isTopic}], producer}
           } else {
             formValidateWarn()
           }
@@ -71,7 +72,13 @@
     },
     mounted () {
       if (this.configuration) {
-        let {dataSource, destinateName, isTopic, producer} = this.configuration
+        let {dataSource, destinations, producer} = this.configuration
+        let destinateName = ''
+        let isTopic = false
+        if (destinations && destinations.length > 0) {
+          destinateName = destinations[0].destinateName
+          isTopic = destinations[0].isTopic
+        }
         this.formJmsSpout = {dataSource, destinateName, isTopic, producer}
       }
     }

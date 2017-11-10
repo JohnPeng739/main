@@ -42,7 +42,7 @@
       </el-col>
       <el-col :span="8">
         <el-form-item label="初始连接数" prop="initialPoolSize">
-          <el-input-number v-model="formDataSource.initialPoolSize" :min="3" :max="10"></el-input-number>
+          <el-input-number v-model="formDataSource.initialPoolSize" :min="1" :max="10"></el-input-number>
         </el-form-item>
       </el-col>
     </el-row>

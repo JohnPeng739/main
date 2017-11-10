@@ -191,10 +191,10 @@
         return validated
       },
       cacheData() {
-        let {name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames, tarIsTopic}
+        let {name, type, description, debug, messageTimeoutSecs, maxSpoutPending, destinations}
           = this.formBasicInfo
         this.setBaseInfo({
-          name, type, description, debug, messageTimeoutSecs, maxSpoutPending, tarDestinateNames, tarIsTopic
+          name, type, description, debug, messageTimeoutSecs, maxSpoutPending, destinations
         })
         this.setZookeepers(this.formBasicInfo.zookeepers)
         this.setJdbcDataSources(this.formBasicInfo.jdbcDataSources)

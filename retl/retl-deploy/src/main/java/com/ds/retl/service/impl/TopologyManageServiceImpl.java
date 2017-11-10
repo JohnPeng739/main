@@ -535,8 +535,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
                 jmsDataSource.getBooleanValue("trace") ? "true" : "false"));
         tarConf.put("user", jmsDataSource.getString("user"));
         tarConf.put("password", jmsDataSource.getString("password"));
-        tarConf.put("destinateName", srcConf.getString("destinateName"));
-        tarConf.put("isTopic", srcConf.getBooleanValue("isTopic"));
+        tarConf.put("destinations", srcConf.getJSONArray("destinations"));
         tarConf.put("producer", srcConf.getString("producer"));
         tarConf.put("fields", StringUtils.merge(srcConf.getJSONArray("fields").toArray(new String[0])));
         tarConf.put("fieldTransform",

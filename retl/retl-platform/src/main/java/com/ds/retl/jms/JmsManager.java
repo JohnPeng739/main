@@ -150,7 +150,7 @@ public class JmsManager {
         String connection = config.getString("connection"),
                 user = config.getString("user"),
                 password = config.getString("password");
-        JSONArray destinations = config.getJSONArray("destincations");
+        JSONArray destinations = config.getJSONArray("destinations");
         String[] destinateNames = new String[destinations.size()];
         boolean[] isTopics = new boolean[destinations.size()];
         for (int index = 0; index < destinations.size(); index ++ ){

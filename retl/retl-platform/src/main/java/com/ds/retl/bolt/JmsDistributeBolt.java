@@ -15,6 +15,7 @@ import org.apache.storm.tuple.Tuple;
 import org.mx.StringUtils;
 
 import javax.jms.*;
+import java.io.Serializable;
 import java.lang.IllegalStateException;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ public class JmsDistributeBolt extends BaseRichBolt {
 
     private Map<String, MessageDistinateConfig> destinateConfigs;
 
-    public class MessageDistinateConfig {
+    public class MessageDistinateConfig implements Serializable {
         private String destinateName;
         private MessageProducer producer;
         private JmsMessageProducer jmsProducer;
@@ -117,8 +118,6 @@ public class JmsDistributeBolt extends BaseRichBolt {
                         }
                         return null;
                     }
-                    JSONObject json = new JSONObject();
-                    json.put("managedJson", managedJson);
                     JSONObject preparedData = new JSONObject();
                     final List<String> includes = distinateConfig.includes;
                     data.keySet().forEach(key -> {
@@ -126,8 +125,8 @@ public class JmsDistributeBolt extends BaseRichBolt {
                             preparedData.put(key, data.get(key));
                         }
                     });
-                    json.put("data", preparedData);
-                    return session.createTextMessage(json.toJSONString());
+                    preparedData.put("managedJson", managedJson);
+                    return session.createTextMessage(preparedData.toJSONString());
                 }
             };
             this.destinateConfigs.put(destinateName, distinateConfig);
