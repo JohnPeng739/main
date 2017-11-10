@@ -1,6 +1,5 @@
 rootProject.name = 'retl'
 
 include 'retl-platform'
-include 'retl-distribute'
 include 'retl-spanregion'
 include 'retl-deploy'
