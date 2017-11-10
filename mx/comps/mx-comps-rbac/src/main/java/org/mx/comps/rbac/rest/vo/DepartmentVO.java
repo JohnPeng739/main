@@ -49,26 +49,21 @@ public class DepartmentVO extends BaseDictTreeVO {
         if (department == null || departmentVO == null) {
             return;
         }
+        BaseDictTreeVO.transform(departmentVO, department);
         if (departmentVO.getManager() != null) {
             try {
                 User manager = EntityFactory.createEntity(User.class);
                 UserVO.transform(departmentVO.getManager(), manager);
                 department.setManager(manager);
             } catch (EntityInstantiationException ex) {
-                //
+                if (logger.isErrorEnabled()) {
+                    logger.error(ex);
+                }
             }
         }
         List<UserVO> employeeVOs = departmentVO.getEmployees();
         if (employeeVOs != null || employeeVOs.isEmpty()) {
-            List<User> employees = new ArrayList<>();
-            employeeVOs.forEach(employeeVO -> {
-                if (employeeVO != null) {
-                    User employee = EntityFactory.createEntity(User.class);
-                    UserVO.transform(employeeVO, employee);
-                    employees.add(employee);
-                }
-            });
-            department.setEmployees(employees);
+            department.setEmployees(UserVO.transform(employeeVOs));
         }
     }
 
