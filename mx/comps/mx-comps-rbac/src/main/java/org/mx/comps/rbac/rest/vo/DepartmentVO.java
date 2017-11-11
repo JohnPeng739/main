@@ -33,15 +33,7 @@ public class DepartmentVO extends BaseDictTreeVO {
         }
         List<User> employees = department.getEmployees();
         if (employees != null && !employees.isEmpty()) {
-            List<UserVO> employeesVO = new ArrayList<>();
-            employees.forEach(employee -> {
-                if (employee != null) {
-                    UserVO vo = new UserVO();
-                    UserVO.transform(employee, vo);
-                    employeesVO.add(vo);
-                }
-            });
-            departmentVO.employees = employeesVO;
+            departmentVO.employees = UserVO.transformUserVOs(employees);
         }
     }
 
@@ -63,7 +55,7 @@ public class DepartmentVO extends BaseDictTreeVO {
         }
         List<UserVO> employeeVOs = departmentVO.getEmployees();
         if (employeeVOs != null || employeeVOs.isEmpty()) {
-            department.setEmployees(UserVO.transform(employeeVOs));
+            department.setEmployees(UserVO.transformUsers(employeeVOs));
         }
     }
 
