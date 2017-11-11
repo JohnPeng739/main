@@ -1,3 +1,4 @@
 rootProject.name = 'comps'
 
-include 'mx-comps-rbac'
+include 'mx-comps-rbac-hibernate'
+include 'mx-comps-rbac-service'
