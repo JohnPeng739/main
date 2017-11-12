@@ -380,6 +380,32 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     /**
      * {@inheritDoc}
      *
+     * @see GeneralAccessor#remove(String, Class)
+     */
+    @Override
+    public <T extends Base> T remove(String id, Class<T> entityInterfaceClass) throws EntityAccessException {
+        return remove(id, entityInterfaceClass, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#remove(String, Class, boolean)
+     */
+    @Override
+    public <T extends Base> T remove(String id, Class<T> entityInterfaceClass, boolean logicRemove)
+            throws EntityAccessException {
+        T t = getById(id, entityInterfaceClass);
+        if (t == null) {
+            throw new EntityAccessException(String.format("The %s entity[%s] not found.",
+                    entityInterfaceClass.getName(), id));
+        }
+        return remove(t, logicRemove);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see GeneralAccessor#remove(Base)
      */
     @Transactional()

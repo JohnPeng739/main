@@ -127,6 +127,30 @@ public interface GeneralAccessor {
     <T extends Base> T save(T t) throws EntityAccessException;
 
     /**
+     * 逻辑删除指定关键字ID的数据实体
+     *
+     * @param id                   关键字ID
+     * @param entityInterfaceClass 实体接口类
+     * @param <T>                  实现Base接口的泛型对象类型
+     * @return 删除的实体
+     * @throws EntityAccessException 删除过程中发生的异常
+     */
+    <T extends Base> T remove(String id, Class<T> entityInterfaceClass) throws EntityAccessException;
+
+    /**
+     * 逻辑删除指定关键字ID的数据实体
+     *
+     * @param id                   关键字ID
+     * @param entityInterfaceClass 实体接口类
+     * @param logicRemove          设置为true表示逻辑删除，否则物理删除。
+     * @param <T>                  实现Base接口的泛型对象类型
+     * @return 删除的实体
+     * @throws EntityAccessException 删除过程中发生的异常
+     */
+    <T extends Base> T remove(String id, Class<T> entityInterfaceClass, boolean logicRemove)
+            throws EntityAccessException;
+
+    /**
      * 逻辑删除指定的实体
      *
      * @param t   实体对象
