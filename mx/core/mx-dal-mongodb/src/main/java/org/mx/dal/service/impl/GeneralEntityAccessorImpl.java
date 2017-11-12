@@ -7,6 +7,7 @@ import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.exception.EntityNotFoundException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralEntityAccessor;
 import org.mx.dal.session.SessionDataStore;
@@ -342,7 +343,8 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         } else {
             T old = this.getById(t.getId(), (Class<T>) t.getClass());
             if (old == null) {
-                throw new EntityAccessException(String.format("The entity[%s] not found.", t.getId()));
+                throw new EntityNotFoundException(String.format("The %s entity[%s] not found.",
+                        t.getClass().getName(), t.getId()));
             }
             t.setCreatedTime(old.getCreatedTime());
             // 修改操作不能修改代码字段
@@ -376,7 +378,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
             throws EntityAccessException {
         T t = getById(id, entityInterfaceClass);
         if (t == null) {
-            throw new EntityAccessException(String.format("The %s entity[%s] not found.",
+            throw new EntityNotFoundException(String.format("The %s entity[%s] not found.",
                     entityInterfaceClass.getName(), id));
         }
         return remove(t, logicRemove);

@@ -1,9 +1,8 @@
 package org.mx;
 
-import sun.misc.BASE64Encoder;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.UUID;
 
 /**
@@ -23,6 +22,32 @@ public class DigestUtils {
      */
     public static String uuid() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * 将输入的字节数组使用Base64编码成一个字符串
+     *
+     * @param input 待编码的字节数组
+     * @return Base64编码的字符串
+     */
+    public static String toBase64(byte[] input) {
+        if (input == null || input.length <= 0) {
+            return "";
+        }
+        return Base64.getEncoder().encodeToString(input);
+    }
+
+    /**
+     * 将输入的Base64编码的字符串解码
+     *
+     * @param base64 待解码的Base64字符串
+     * @return 解码后的数据
+     */
+    public static byte[] fromBase64(String base64) {
+        if (StringUtils.isBlank(base64)) {
+            return new byte[0];
+        }
+        return Base64.getDecoder().decode(base64);
     }
 
     /**
@@ -53,7 +78,7 @@ public class DigestUtils {
     private static String encodeString(String algorithm, byte[] input) throws NoSuchAlgorithmException {
         switch (algorithm) {
             case "BASE64":
-                return new BASE64Encoder().encode(input);
+                return Base64.getEncoder().encodeToString(input);
             case "HEX":
                 return StringUtils.byte2HexString(input);
             default:
