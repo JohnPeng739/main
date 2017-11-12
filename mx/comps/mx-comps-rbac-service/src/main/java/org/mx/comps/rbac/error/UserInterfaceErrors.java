@@ -14,9 +14,15 @@ public enum UserInterfaceErrors implements UserInterfaceError {
 
     DB_OPERATE_FAIL(51, "数据库操作失败。"),
 
+    ENTITY_INSTANCE_FAIL(71, "创建实体失败。"),
+
     USER_NOT_FOUND(101, "指定的用户不存在。"),
 
     ACCOUNT_NOT_FOUND(131, "指定的账户不存在。"),
+    ACCOUNT_PASSWORD_NOT_MATCHED(132, "输入的账户密码不正确。"),
+    ACCOUNT_DIGEST_PASSWORD_FAIL(133, "加密账户密码失败。"),
+    ACCOUNT_ALREADY_LOGINED(134, "指定的账户已经登录，请不要重复登录。"),
+    ACCOUNT_NOT_LOGIN(135, "账户尚未登录。"),
 
     ROLE_NOT_FOUND(151, "指定的角色不存在。"),
 

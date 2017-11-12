@@ -22,6 +22,8 @@ project(':mx-comps-rbac-service') {
 
   dependencies {
     compile(
+      libs.'mx-utils',
+      libs.'mx-dal',
       libs.'mx-rest-utils'
     )
   }
