@@ -540,6 +540,7 @@ public class TopologyManageServiceImpl implements TopologyManageService {
         tarConf.put("fields", StringUtils.merge(srcConf.getJSONArray("fields").toArray(new String[0])));
         tarConf.put("fieldTransform",
                 new JSONObject(transformFieldMapping(srcConf.getJSONArray("fieldsTransform"))));
+        tarConf.put("root", srcConf.getString("root"));
         tar.put("configuration", tarConf);
     }
 

@@ -59,55 +59,15 @@ public class JmsDistributeBolt extends BaseRichBolt {
 
     private Map<String, MessageDistinateConfig> destinateConfigs;
 
-    public class MessageDistinateConfig implements Serializable {
-        private String destinateName;
-        private MessageProducer producer;
-        private JmsMessageProducer jmsProducer;
-        private JSONObject condition;
-        private List<String> includes;
-
-        public MessageDistinateConfig(JSONObject config) {
-            super();
-            this.destinateName = config.getString("destinateName");
-            this.condition = config.getJSONObject("condition");
-            this.includes = config.getJSONArray("includes").toJavaList(String.class);
-        }
-
-        public boolean needDistributed(JSONObject data) {
-            if (this.condition == null) {
-                return true;
-            }
-            String field = this.condition.getString("field"),
-                    operate = this.condition.getString("operate"),
-                    value = this.condition.getString("value");
-            if (StringUtils.isBlank(field) || StringUtils.isBlank(operate)) {
-                return true;
-            }
-            String dataValue = data.getString(field);
-            if (dataValue == null) {
-                dataValue = "";
-            }
-            switch (operate) {
-                case "equals":
-                    return dataValue.equals(value);
-                case "startsWith":
-                    return dataValue.startsWith(value);
-                case "endsWith":
-                    return dataValue.endsWith(value);
-                default:
-                    return false;
-            }
-        }
-    }
-
     public JmsDistributeBolt(JSONArray destinations) {
         super();
         this.destinateConfigs = new HashMap<>();
-        for (int index = 0; index < destinations.size(); index ++) {
+        for (int index = 0; index < destinations.size(); index++) {
             JSONObject config = destinations.getJSONObject(index);
             String destinateName = config.getString("destinateName");
             MessageDistinateConfig distinateConfig = new MessageDistinateConfig(config);
             distinateConfig.jmsProducer = new JmsMessageProducer() {
+
                 @Override
                 public Message toMessage(Session session, ITuple input) throws JMSException {
                     JSONObject managedJson = (JSONObject) input.getValueByField("managedJson");
@@ -120,13 +80,19 @@ public class JmsDistributeBolt extends BaseRichBolt {
                     }
                     JSONObject preparedData = new JSONObject();
                     final List<String> includes = distinateConfig.includes;
-                    data.keySet().forEach(key -> {
+                    for(String key : data.keySet()) {
                         if (includes.isEmpty() || includes.contains(key)) {
                             preparedData.put(key, data.get(key));
+                        } else if (includes.contains(String.format("%s.*", key))) {
+                            // 将下级所有的数据加入到数据对象中，级别升一级
+                            Map<String, Object> map = data.getObject(key, Map.class);
+                            preparedData.putAll(map);
                         }
-                    });
-                    preparedData.put("managedJson", managedJson);
-                    return session.createTextMessage(preparedData.toJSONString());
+                    }
+                    data = new JSONObject();
+                    data.put("data", preparedData);
+                    data.put("managedJson", managedJson);
+                    return session.createTextMessage(data.toJSONString());
                 }
             };
             this.destinateConfigs.put(destinateName, distinateConfig);
@@ -185,26 +151,19 @@ public class JmsDistributeBolt extends BaseRichBolt {
         try {
             JSONObject managedJson = (JSONObject) input.getValueByField("managedJson");
             JSONObject data = (JSONObject) input.getValueByField("data");
-            this.destinateConfigs.values().forEach(config -> {
+            for (MessageDistinateConfig config : this.destinateConfigs.values()) {
                 if (config.needDistributed(data)) {
-                    try {
-                        Message msg = config.jmsProducer.toMessage(this.session, input);
-                        if (msg != null) {
-                            config.producer.send(msg);
-                        }
-                    } catch (JMSException ex) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error("Operate input fail, " + input, ex);
-                        }
-                        this.collector.fail(input);
+                    Message msg = config.jmsProducer.toMessage(this.session, input);
+                    if (msg != null) {
+                        config.producer.send(msg);
                     }
                 }
-            });
+            }
             if (logger.isDebugEnabled()) {
                 logger.debug("ACKing tuple: " + input);
             }
             this.collector.ack(input);
-        } catch (Exception ex) {
+        } catch (JMSException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error("Operate input fail, " + input, ex);
             }
@@ -240,5 +199,46 @@ public class JmsDistributeBolt extends BaseRichBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         // do nothing
+    }
+
+    public class MessageDistinateConfig implements Serializable {
+        private String destinateName;
+        private MessageProducer producer;
+        private JmsMessageProducer jmsProducer;
+        private JSONObject condition;
+        private List<String> includes;
+
+        public MessageDistinateConfig(JSONObject config) {
+            super();
+            this.destinateName = config.getString("destinateName");
+            this.condition = config.getJSONObject("condition");
+            this.includes = config.getJSONArray("includes").toJavaList(String.class);
+        }
+
+        public boolean needDistributed(JSONObject data) {
+            if (this.condition == null) {
+                return true;
+            }
+            String field = this.condition.getString("field"),
+                    operate = this.condition.getString("operate"),
+                    value = this.condition.getString("value");
+            if (StringUtils.isBlank(field) || StringUtils.isBlank(operate)) {
+                return true;
+            }
+            String dataValue = data.getString(field);
+            if (dataValue == null) {
+                dataValue = "";
+            }
+            switch (operate) {
+                case "equals":
+                    return dataValue.equals(value);
+                case "startsWith":
+                    return dataValue.startsWith(value);
+                case "endsWith":
+                    return dataValue.endsWith(value);
+                default:
+                    return false;
+            }
+        }
     }
 }

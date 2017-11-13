@@ -18,6 +18,7 @@
     </el-form-item>
     <slot name="fields"></slot>
     <slot name="fieldsTransform"></slot>
+    <slot name="dataRoot"></slot>
   </el-form>
 </template>
 

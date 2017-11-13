@@ -51,6 +51,9 @@
         <el-form-item v-if="canFieldTransform" slot="fieldsTransform" label="字段改名">
           <ds-tag-both-sides v-model="formSpout.fieldsTransform" type="gray" :disabled="mode === 'detail'" sideSeparator="=>"></ds-tag-both-sides>
         </el-form-item>
+        <el-form-item slot="dataRoot" label="数据根名">
+          <el-input v-model="formSpout.root" :readonly="mode === 'detail'"></el-input>
+        </el-form-item>
       </form-spout-jms-config>
       <form-spout-jdbc-config v-if="jdbcConfig" ref="formSpoutJdbcConfig"  :zookeepers="zookeepers" :jdbcDataSources="jdbcDataSources"
                               :fields="formSpout.fields" :configuration="formSpout.configuration" :mode="mode">
@@ -103,7 +106,7 @@
         zookeepers: [],
         jdbcDataSources: [],
         jmsDataSources: [],
-        formSpout: {name: '', type: 'jmsPull', parallelism: 1, fields: [], fieldsTransform: []},
+        formSpout: {name: '', type: 'jmsPull', parallelism: 1, fields: [], fieldsTransform: [], root: ''},
         rulesSpout: {
           name: [
             requiredRule({msg: '请输入采集源的名称'}),
@@ -157,10 +160,10 @@
         this.jmsDataSources = jmsDataSources
         let {name, type, parallelism, configuration} = spout
         if (configuration) {
-          let {fields, fieldsTransform} = configuration
-          this.formSpout = {name, type, parallelism, fields, fieldsTransform, configuration}
+          let {fields, fieldsTransform, root} = configuration
+          this.formSpout = {name, type, parallelism, fields, fieldsTransform, root, configuration}
         } else {
-          this.formSpout = {name, type, parallelism, fields: [], fieldsTransform: [], configuration}
+          this.formSpout = {name, type, parallelism, fields: [], fieldsTransform: [], root: '', configuration}
         }
         this.visible = true
       },
@@ -201,9 +204,10 @@
         }
         this.$refs['formSpout'].validate(valid => {
           if (valid) {
-            let {name, type, parallelism, fields, fieldsTransform, configuration} = this.formSpout
+            let {name, type, parallelism, fields, fieldsTransform, root, configuration} = this.formSpout
             configuration.fields = fields
             configuration.fieldsTransform = fieldsTransform
+            configuration.root = root
             this.$emit('submit', this.mode, {name, type, parallelism, configuration})
             this.handleClose()
           } else {
