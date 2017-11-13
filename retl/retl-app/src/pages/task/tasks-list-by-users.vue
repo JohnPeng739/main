@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {info} from '../../assets/notify'
   import {get, post} from '../../assets/ajax'
   import {formatDateTime} from '../../assets/date-utils'

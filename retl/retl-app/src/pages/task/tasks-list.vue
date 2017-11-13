@@ -71,7 +71,7 @@
 
 <script>
   import {mapActions} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {info, warn, confirm} from '../../assets/notify'
   import {get, post} from '../../assets/ajax'
   import {formatDateTime} from '../../assets/date-utils'

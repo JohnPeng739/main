@@ -59,7 +59,7 @@
   import {mapGetters, mapActions} from 'vuex'
   import {getTypeLabel} from '../../../modules/manage/store/modules/types'
   import DsIcon from "../../icon.vue"
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {get} from '../../../assets/ajax'
   import {error, info} from '../../../assets/notify'
   import DialogTransformInfo from './dialog-transform-rule.vue'

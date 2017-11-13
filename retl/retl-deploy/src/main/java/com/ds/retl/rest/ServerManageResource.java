@@ -2,7 +2,7 @@ package com.ds.retl.rest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.exception.UserInterfaceErrorException;
-import com.ds.retl.rest.vo.server.LocalServerInfoVO;
+import com.ds.retl.rest.vo.server.ServerInfoVO;
 import com.ds.retl.rest.vo.server.ServicesStatusVO;
 import com.ds.retl.service.ServerManageService;
 import org.mx.dal.session.SessionDataStore;
@@ -34,11 +34,11 @@ public class ServerManageResource {
 
     @Path("servers")
     @GET
-    public DataVO<List<LocalServerInfoVO>> getServers() {
+    public DataVO<List<ServerInfoVO>> getServers() {
         try {
-            Map<String, JSONObject> map = serverManageService.getServerConfigInfos();
-            List<LocalServerInfoVO> list = new ArrayList<>();
-            map.values().forEach(json -> list.add(new LocalServerInfoVO(json)));
+            Map<String, JSONObject> map = serverManageService.getServerInfos();
+            List<ServerInfoVO> list = new ArrayList<>();
+            map.values().forEach(json -> list.add(new ServerInfoVO(json)));
             return new DataVO<>(list);
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
@@ -56,12 +56,12 @@ public class ServerManageResource {
         }
     }
 
-    @Path("server")
+    @Path("server/{machineName}")
     @GET
-    public DataVO<LocalServerInfoVO> getLocalServerInfo() {
+    public DataVO<ServerInfoVO> getServerInfo(@PathParam("machineName")String machineName) {
         try {
-            JSONObject json = serverManageService.getLocalServerConfigInfo();
-            return new DataVO<>(new LocalServerInfoVO(json));
+            JSONObject json = serverManageService.getServerInfo(machineName);
+            return new DataVO<>(new ServerInfoVO(json));
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
         }
@@ -69,12 +69,26 @@ public class ServerManageResource {
 
     @Path("server")
     @POST
-    public DataVO<LocalServerInfoVO> saveLocalServerInfo(@QueryParam("userCode") String userCode, String info) {
+    public DataVO<ServerInfoVO> saveServerInfo(@QueryParam("userCode") String userCode, String info) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            JSONObject json = serverManageService.saveLocalServerConfigInfo(info);
+            JSONObject json = serverManageService.saveServerInfo(info);
             sessionDataStore.removeCurrentUserCode();
-            return new DataVO<>(new LocalServerInfoVO(json));
+            return new DataVO<>(new ServerInfoVO(json));
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
+    }
+
+    @Path("server/{machineName}")
+    @DELETE
+    public DataVO<ServerInfoVO> deleteServerInfo(@QueryParam("userCode") String userCode,
+                                                 @PathParam("machineName")String machineName) {
+        sessionDataStore.setCurrentUserCode(userCode);
+        try {
+            JSONObject json = serverManageService.deleteServerInfo(machineName);
+            sessionDataStore.removeCurrentUserCode();
+            return new DataVO<>(new ServerInfoVO(json));
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
         }

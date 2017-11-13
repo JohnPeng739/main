@@ -18,10 +18,17 @@ let localServerInfo = {
 }
 
 export default [{
-  path: /\/rest\/servers/,
+  path: /\/rest\/servers(\?\w=\w(&\w=\w)*)?/,
   type: 'get',
   data: {
     'data|1-10': [localServerInfo]
+  }
+}, {
+  path :/\/rest\/servers(\?\w=\w(&\w=\w)*)?/,
+  type: 'post',
+  data: {
+    'pagination': {total: 60, size: 20, page: 1},
+    'data|1-20': [localServerInfo]
   }
 }, {
   path: /\/rest\/server\/systemctl\?cmd=\w&service=\w(&\w=\w)*/,

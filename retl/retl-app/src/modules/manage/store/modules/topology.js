@@ -1,4 +1,4 @@
-import {logger} from 'dsutils'
+import {logger} from 'mx-app-utils'
 
 const CACHE = 'CACHE'
 const SETDATA = 'SETDATA'

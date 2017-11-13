@@ -49,7 +49,7 @@
 <script>
   import {mapGetters, mapActions} from 'vuex'
   import {getTypeLabel} from '../../../modules/manage/store/modules/types'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {get} from '../../../assets/ajax'
   import {error, warn} from '../../../assets/notify'
   import DialogValidateRule from './dialog-validate-rule.vue'

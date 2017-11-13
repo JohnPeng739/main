@@ -72,7 +72,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {warn, info} from '../../assets/notify'
   import DsIcon from '../icon.vue'
   import DialogSpoutInfo from './dialog-spout-info.vue'

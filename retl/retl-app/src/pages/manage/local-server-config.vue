@@ -154,7 +154,7 @@
 </template>
 
 <script>
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {get, post} from '../../assets/ajax'
   import {info} from '../../assets/notify'
   import DsTagNormal from '../../components/ds-tag-normal.vue'

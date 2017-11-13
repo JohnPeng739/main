@@ -102,7 +102,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {error, formValidateWarn} from '../../assets/notify'
   import DsIcon from '../../components/icon.vue'
   import DsTagNormal from '../ds-tag-normal.vue'

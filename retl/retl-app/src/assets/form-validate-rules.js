@@ -1,4 +1,4 @@
-import {logger} from 'dsutils'
+import {logger} from 'mx-app-utils'
 import {parseDate} from './date-utils'
 
 export const requiredRule = ({type, msg, trigger}) => {

@@ -21,7 +21,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import DsIcon from '@/components/icon.vue'
   import NavSubMenu from './nav-sub-menu.vue'
   import {navData} from '../router'

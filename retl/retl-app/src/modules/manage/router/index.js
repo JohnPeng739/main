@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import {logger} from 'dsutils'
+import {logger} from 'mx-app-utils'
 import {manageNavData, manageRouters} from './manage-routers'
 import {taskNavData, taskRouters} from './task-routers'
 

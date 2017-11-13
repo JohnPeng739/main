@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import PaneNullValidate from '../../validate/form-validate-null.vue'
   import PaneTypeValidate from '../../validate/form-validate-type.vue'
   import PaneLengthValidate from '../../validate/form-validate-length.vue'

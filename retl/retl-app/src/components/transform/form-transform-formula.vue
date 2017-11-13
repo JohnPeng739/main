@@ -20,7 +20,7 @@
 <script>
   import {requiredRule, customRule} from '../../assets/form-validate-rules'
   import {formValidateWarn} from '../../assets/notify'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
 
   export default {
     name: 'pane-type-validate',

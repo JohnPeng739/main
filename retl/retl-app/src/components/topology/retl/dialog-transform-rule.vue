@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import PaneFormulaTransform from '../../transform/form-transform-formula.vue'
   import PaneMergeTransform from '../../transform/form-transform-merge.vue'
   import PaneSubStringTransform from '../../transform/form-transform-substring.vue'

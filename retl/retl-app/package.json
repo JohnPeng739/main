@@ -10,7 +10,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "dsutils": "^1.1.8",
+    "mx-app-utils": "^1.1.9",
     "echarts": "^3.7.2",
     "element-ui": "^1.4.6",
     "marked": "^0.3.6",

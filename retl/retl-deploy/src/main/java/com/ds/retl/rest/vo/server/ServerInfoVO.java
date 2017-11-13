@@ -1,6 +1,5 @@
 package com.ds.retl.rest.vo.server;
 
-import clojure.lang.IFn;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/11/2
  */
-public class LocalServerInfoVO {
+public class ServerInfoVO {
     private String machineName, machineIp;
     private Zookeeper zookeeper;
     private Storm storm;
@@ -152,11 +151,11 @@ public class LocalServerInfoVO {
         }
     }
 
-    public LocalServerInfoVO() {
+    public ServerInfoVO() {
         super();
     }
 
-    public LocalServerInfoVO(JSONObject json) {
+    public ServerInfoVO(JSONObject json) {
         this();
         if (json != null) {
             this.machineName = json.getString("machineName");

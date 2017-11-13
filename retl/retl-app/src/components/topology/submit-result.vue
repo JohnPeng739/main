@@ -29,7 +29,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {info} from '../../assets/notify'
   import {post} from '../../assets/ajax'
 

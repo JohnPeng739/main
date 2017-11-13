@@ -69,7 +69,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {copyData} from '../../assets/utils'
   import {warn} from '../../assets/notify'
   import DsIcon from "../../components/icon.vue"

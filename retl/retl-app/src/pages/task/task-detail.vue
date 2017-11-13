@@ -65,7 +65,7 @@
 
 <script>
   import echarts from 'echarts'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {get} from '../../assets/ajax'
   import {createGraphOption} from '../../assets/echarts-utils'
   import {formatDateTime} from '../../assets/date-utils'

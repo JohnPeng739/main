@@ -58,7 +58,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {get} from '../../../assets/ajax'
   import {formValidateWarn} from '../../../assets/notify'
   import {requiredRule, customRule} from '../../../assets/form-validate-rules'

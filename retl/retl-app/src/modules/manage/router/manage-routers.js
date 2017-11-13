@@ -9,7 +9,7 @@ export const manageRouters = [{
   component: resolve => require(['../../../pages/manage/local-server-config.vue'], resolve)
 }, {
   path: '/manage/servers',
-  component: resolve => require(['../../../pages/manage/servers.vue'], resolve)
+  component: resolve => require(['../../../pages/manage/servers-list.vue'], resolve)
 }]
 
 export const manageNavData = {

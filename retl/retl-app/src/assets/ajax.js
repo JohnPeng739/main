@@ -1,4 +1,4 @@
-import {ajax, logger} from 'dsutils'
+import {ajax, logger} from 'mx-app-utils'
 import { Message } from 'element-ui'
 
 const defaultError = errorMessage => {
@@ -36,4 +36,8 @@ const put = (url, data, success) => ajax.put(preurl(url), data, success, default
 
 const putWithError = (url, data, success, error) => ajax.put(preurl(url), data, success, error)
 
-export {get, post, put, getWithError, postWithError, putWithError, defaultError}
+const del = (url, success) => ajax.del(preurl(url), success, defaultError)
+
+const delWithError = (rul, success, error) => ajax.delete(preurl(url), success, error)
+
+export {get, post, put, del, getWithError, postWithError, putWithError, delWithError, defaultError}

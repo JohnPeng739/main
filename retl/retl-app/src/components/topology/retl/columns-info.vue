@@ -13,7 +13,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {warn} from '../../../assets/notify'
   import DsTagBothSides from '../../ds-tag-both-sides.vue'
 

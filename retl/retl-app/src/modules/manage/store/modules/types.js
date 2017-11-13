@@ -1,4 +1,4 @@
-import {logger} from 'dsutils'
+import {logger} from 'mx-app-utils'
 import {get} from '../../../../assets/ajax'
 
 const LOAD_TYPES = 'LOAD_TYPES'

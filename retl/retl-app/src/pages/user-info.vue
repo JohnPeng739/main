@@ -70,7 +70,7 @@
 </template>
 
 <script>
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {get, post} from '../assets/ajax'
   import {info, formValidateWarn} from '../assets/notify'
   import {requiredRule, rangeRule, customRule} from '../assets/form-validate-rules'

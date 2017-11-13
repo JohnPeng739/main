@@ -1,4 +1,4 @@
-import {logger} from 'dsutils'
+import {logger} from 'mx-app-utils'
 import {post} from '../../../../assets/ajax'
 
 export const LOGIN = 'LOGIN'

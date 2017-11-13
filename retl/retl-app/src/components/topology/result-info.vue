@@ -68,7 +68,7 @@
 <script>
   import {mapGetters} from 'vuex'
   import marked from 'marked'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {postWithError, defaultError} from '../../assets/ajax'
   import {warn} from '../../assets/notify'
   import config from '../../modules/manage/config'

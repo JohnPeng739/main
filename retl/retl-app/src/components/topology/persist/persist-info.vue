@@ -29,7 +29,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {requiredRule} from '../../../assets/form-validate-rules'
   import {error, formValidateWarn} from '../../../assets/notify'
   import PaneTableConfig from '../../pane-listable-config.vue'

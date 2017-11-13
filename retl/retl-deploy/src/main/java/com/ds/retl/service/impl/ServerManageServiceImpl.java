@@ -23,8 +23,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -52,40 +50,33 @@ public class ServerManageServiceImpl implements ServerManageService {
         return field;
     }
 
+    private JSONObject parseJson(String json) throws UserInterfaceErrorException {
+        try {
+            return JSON.parseObject(json);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Parse json fail.", json), ex);
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
+        }
+    }
+
     /**
      * {@inheritDoc}
      *
-     * @see ServerManageService#getLocalServerConfigInfo()
+     * @see ServerManageService#getServerInfo(String)
      */
     @Override
-    public JSONObject getLocalServerConfigInfo() throws UserInterfaceErrorException {
+    public JSONObject getServerInfo(String machineName) throws UserInterfaceErrorException {
         try {
-            // 获取本机机器名
-            InetAddress addr = InetAddress.getLocalHost();
-            String machineName = addr.getHostName(), machineIp = addr.getHostAddress();
-            try {
-                ConfigJson config = accessor.getByCode(createMachineConfigField(machineName), ConfigJson.class);
-                JSONObject json;
-                if (config == null || StringUtils.isBlank(config.getConfigContent())) {
-                    json = new JSONObject();
-                    json.put("machineName", machineName);
-                    json.put("machineIp", machineIp);
-                } else {
-                    try {
-                        json = JSON.parseObject(config.getConfigContent());
-                    } catch (Exception ex) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(String.format("Parse json fail.", config.getConfigContent()), ex);
-                        }
-                        throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
-                    }
-                }
-                return json;
-            } catch (EntityAccessException ex) {
-                throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+            ConfigJson config = accessor.getByCode(createMachineConfigField(machineName), ConfigJson.class);
+            if (config == null || StringUtils.isBlank(config.getConfigContent())) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_CONFIG_NOT_FOUND);
+            } else {
+                return parseJson(config.getConfigContent());
             }
-        } catch (UnknownHostException ex) {
-            throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_HOST_EXCEPTION);
+        } catch (EntityAccessException ex) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
         }
     }
 
@@ -223,7 +214,7 @@ public class ServerManageServiceImpl implements ServerManageService {
             ps.println("storm.zookeeper.servers:");
             zookeepers.forEach(server -> ps.println(String.format("  - \"%s\"", server)));
             ps.println();
-            for (int index = 0; index < nimbuses.size(); index ++) {
+            for (int index = 0; index < nimbuses.size(); index++) {
                 nimbuses.set(index, String.format("\"%s\"", nimbuses.get(index)));
             }
             ps.println(String.format("nimbus.seeds: [%s]", StringUtils.merge(nimbuses, ", ")));
@@ -231,7 +222,7 @@ public class ServerManageServiceImpl implements ServerManageService {
             ps.println(String.format("storm.local.dir: \"%s\"", dataDir));
             ps.println();
             ps.println("supervisor.slots.ports:");
-            for (int index = 0; index < slots; index ++) {
+            for (int index = 0; index < slots; index++) {
                 ps.println(String.format("  - %d", startPort + index));
             }
             ps.println();
@@ -283,10 +274,10 @@ public class ServerManageServiceImpl implements ServerManageService {
     /**
      * {@inheritDoc}
      *
-     * @see ServerManageService#saveLocalServerConfigInfo(String)
+     * @see ServerManageService#saveServerInfo(String)
      */
     @Override
-    public JSONObject saveLocalServerConfigInfo(String info) throws UserInterfaceErrorException {
+    public JSONObject saveServerInfo(String info) throws UserInterfaceErrorException {
         if (StringUtils.isBlank(info)) {
             throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
         }
@@ -306,8 +297,6 @@ public class ServerManageServiceImpl implements ServerManageService {
             }
             throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
         }
-        prepareZookeeperService(json.getJSONObject("zookeeper"));
-        prepareStormService(json.getJSONObject("storm"));
         try {
             ConfigJson config = accessor.getByCode(createMachineConfigField(machineName), ConfigJson.class);
             if (config == null) {
@@ -320,7 +309,7 @@ public class ServerManageServiceImpl implements ServerManageService {
             if (config == null) {
                 throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_CONFIG_NOT_FOUND);
             }
-            operateLogService.writeLog(String.format("保存本机[name=%s, ip=%s]配置信息成功。", machineName, machineIp));
+            operateLogService.writeLog(String.format("保存服务器[name=%s, ip=%s]配置信息成功。", machineName, machineIp));
             return JSON.parseObject(config.getConfigContent());
         } catch (EntityAccessException ex) {
             throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
@@ -332,10 +321,33 @@ public class ServerManageServiceImpl implements ServerManageService {
     /**
      * {@inheritDoc}
      *
-     * @see ServerManageService#getServerConfigInfos()
+     * @see ServerManageService#deleteServerInfo(String)
      */
     @Override
-    public Map<String, JSONObject> getServerConfigInfos() throws UserInterfaceErrorException {
+    public JSONObject deleteServerInfo(String machineName) throws UserInterfaceErrorException {
+        try {
+            ConfigJson config = accessor.getByCode(createMachineConfigField(machineName), ConfigJson.class);
+            if (config == null) {
+                throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_CONFIG_NOT_FOUND);
+            } else {
+                JSONObject json = parseJson(config.getConfigContent());
+                String machineIp = json.getString("machineIp");
+                accessor.remove(config);
+                operateLogService.writeLog(String.format("删除服务器[name=%s, ip=%s]成功。", machineName, machineIp));
+                return json;
+            }
+        } catch (EntityAccessException ex) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ServerManageService#getServerInfos()
+     */
+    @Override
+    public Map<String, JSONObject> getServerInfos() throws UserInterfaceErrorException {
         try {
             List<ConfigJson> list = accessor.list(ConfigJson.class);
             Map<String, JSONObject> map = new HashMap<>();
@@ -414,6 +426,7 @@ public class ServerManageServiceImpl implements ServerManageService {
 
     /**
      * {@inheritDoc}
+     *
      * @see ServerManageService#serviceStatus(String)
      */
     @Override

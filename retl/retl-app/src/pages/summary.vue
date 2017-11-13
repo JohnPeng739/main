@@ -37,7 +37,7 @@
 
 <script>
   import echarts from 'echarts'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {get} from '../assets/ajax'
   import {createGaugeOption, createPieOption} from '../assets/echarts-utils'
 

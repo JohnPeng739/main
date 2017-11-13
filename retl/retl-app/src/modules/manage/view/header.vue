@@ -66,7 +66,7 @@
 </template>
 
 <script>
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import DsIcon from '../../../components/icon.vue'
 
   export default {

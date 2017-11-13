@@ -75,7 +75,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  import {logger} from 'dsutils'
+  import {logger} from 'mx-app-utils'
   import {formValidateWarn, warn} from '../../assets/notify'
   import {requiredRule, rangeRule} from '../../assets/form-validate-rules'
   import DsIcon from '../icon.vue'

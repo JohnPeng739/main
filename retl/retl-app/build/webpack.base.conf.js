@@ -37,7 +37,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test'), resolve('node_modules/dsutils')]
+        include: [resolve('src'), resolve('test'), resolve('node_modules/mx-app-utils')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
