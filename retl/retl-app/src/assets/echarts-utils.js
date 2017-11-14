@@ -76,11 +76,11 @@ const etlBolts = [
 const etlRelations = [
   {source: '归一化', target: '校验', value: 'default', label: {normal: {show: true, formatter: '{c}'}}},
   {source: '校验', target: '转换', value: 'default', label: {normal: {show: true, formatter: '{c}'}}},
-  {source: '转换', target: 'JMS缓存', value: 'default', label: {normal: {show: true, formatter: '{c}'}}},
+  {source: '转换', target: 'JMS存储', value: 'default', label: {normal: {show: true, formatter: '{c}'}}},
   {source: '归一化', target: '错误处理', value: 'error-stream', label: {normal: {show: true, formatter: '{c}'}}},
   {source: '校验', target: '错误处理', value: 'error-stream', label: {normal: {show: true, formatter: '{c}'}}},
   {source: '转换', target: '错误处理', value: 'error-stream', label: {normal: {show: true, formatter: '{c}'}}},
-  {source: '错误处理', target: 'JMS缓存', value: 'default', label: {normal: {show: true, formatter: '{c}'}}}
+  {source: '错误处理', target: 'JMS存储', value: 'default', label: {normal: {show: true, formatter: '{c}'}}}
 ]
 
 const createGraphOption = function (title, topology) {

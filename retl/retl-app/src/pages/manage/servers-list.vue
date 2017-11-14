@@ -1,5 +1,10 @@
 <style rel="stylesheet/less" lang="less" scoped>
   @import "../../style/base.less";
+
+  .title {
+    font-weight: 800;
+    padding-right: 20px;
+  }
 </style>
 
 <template>
@@ -7,16 +12,49 @@
     <pane-paginate-list ref="panePaginateList" v-on:buttonHandle="handleButtonClick">
       <el-table :max-height="570" :data="tableData" class="layout-table" highlight-current-row
                 @current-change="handleCurrentChange">
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <el-row type="flex" v-if="scope.row.zookeeper">
+              <el-col :span="24">
+                <span class="title">服务状态：</span>
+                <el-button @click="handleService('zookeeper', 'enable')" size="mini">启用</el-button>
+                <el-button @click="handleService('zookeeper', 'disable')" size="mini">禁用</el-button>
+                <el-button @click="handleService('zookeeper', 'start')" size="mini">启动</el-button>
+                <el-button @click="handleService('zookeeper', 'stop')" size="mini">停止</el-button>
+                <el-button @click="handleService('zookeeper', 'reload')" size="mini">重载</el-button>
+                <el-button @click="handleService('zookeeper', 'restart')" size="mini">重启</el-button>
+              </el-col>
+            </el-row>
+            <el-row type="flex" v-if="scope.row.storm">
+              <el-col :span="24">
+                <span class="title">服务状态：</span>
+                <el-button @click="handleService('storm', 'enable')" size="mini">启用</el-button>
+                <el-button @click="handleService('storm', 'disable')" size="mini">禁用</el-button>
+                <el-button @click="handleService('storm', 'start')" size="mini">启动</el-button>
+                <el-button @click="handleService('storm', 'stop')" size="mini">停止</el-button>
+                <el-button @click="handleService('storm', 'reload')" size="mini">重载</el-button>
+                <el-button @click="handleService('storm', 'restart')" size="mini">重启</el-button>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
         <el-table-column prop="machineName" label="服务器" width="100"></el-table-column>
         <el-table-column prop="machineIp" label="IP地址" width="200"></el-table-column>
         <el-table-column prop="zookeeper" label="ZOOKEEPER服务">
           <template slot-scope="scope">
-            <span>{{JSON.stringify(scope.row.zookeeper)}}</span>
+            <span v-if="scope.row.zookeeper">
+              <span class="title">{{scope.row.zookeeper.cluster ? '集群' : '单机'}}</span>
+              <span class="title">序号：</span>{{scope.row.zookeeper.serverNo}}
+            </span>
           </template>
         </el-table-column>
         <el-table-column prop="storm" label="STORM服务">
           <template slot-scope="scope">
-            <span>{{JSON.stringify(scope.row.storm)}}</span>
+            <span v-if="scope.row.storm">
+              <span class="title">插槽数：</span>{{scope.row.storm.slots}}个
+              <span class="title">起始端口：</span>{{scope.row.storm.startPort}}
+              <span class="title">服务：</span>{{getServices(scope.row.storm.services)}}
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -47,6 +85,33 @@
       }
     },
     methods: {
+      getServiceName(service) {
+        switch (service) {
+          case 'nimubs':
+            return '主控'
+          case 'ui':
+            return 'UI'
+          case 'supervisor':
+            return '计算'
+          case 'logviewer':
+            return '日志'
+          default:
+            return 'NA'
+        }
+      },
+      getServices(services) {
+        if (services && services.length > 0) {
+          let names = []
+          services.forEach(service => names.push(this.getServiceName(service)))
+          return names.join(", ")
+        } else {
+          return ''
+        }
+      },
+      handleService(service, operate) {
+        logger.debug('%s the service: %s.', operate, service)
+        // TODO
+      },
       handleButtonClick(operate, pagination) {
         if (operate === 'detail' || operate === 'edit' || operate === 'delete') {
           let selection = this.selection
