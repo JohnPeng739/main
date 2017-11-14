@@ -5,8 +5,10 @@ import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.vo.server.ServerInfoVO;
 import com.ds.retl.rest.vo.server.ServicesStatusVO;
 import com.ds.retl.service.ServerManageService;
+import org.mx.dal.Pagination;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.rest.vo.DataVO;
+import org.mx.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +44,22 @@ public class ServerManageResource {
             return new DataVO<>(list);
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
+        }
+    }
+
+    @Path("servers")
+    @POST
+    public PaginationDataVO<List<ServerInfoVO>> getServers(Pagination pagination) {
+        if (pagination == null) {
+            pagination = new Pagination();
+        }
+        try {
+            Map<String, JSONObject> map = serverManageService.getServerInfos(pagination);
+            List<ServerInfoVO> list = new ArrayList<>();
+            map.values().forEach(json -> list.add(new ServerInfoVO(json)));
+            return new PaginationDataVO<>(pagination, list);
+        } catch (UserInterfaceErrorException ex) {
+            return new PaginationDataVO<>(ex);
         }
     }
 

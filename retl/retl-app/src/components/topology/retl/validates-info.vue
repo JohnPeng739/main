@@ -6,7 +6,7 @@
   <div>
     <el-table :data="tableData" :row-key="getRowKeys" :expand-row-keys="expands" style="width: 100%">
       <el-table-column type="expand">
-        <template scope="props">
+        <template slot-scope="props">
           <el-row type="flex" class="inline-table-row">
             <el-col :span="4">类型</el-col>
             <el-col :span="16">内容</el-col>
@@ -26,7 +26,7 @@
       <el-table-column label="字段列" width="200" prop="name"></el-table-column>
       <el-table-column label="字段描述" prop="desc"></el-table-column>
       <el-table-column label="状态" width="200">
-        <template scope="props">
+        <template slot-scope="props">
           <span>{{getRowState(props.row)}}</span>
           <el-dropdown trigger="click" @command="handleAddRule" style="padding-left: 10px;">
             <el-button type="text">添加校验</el-button>

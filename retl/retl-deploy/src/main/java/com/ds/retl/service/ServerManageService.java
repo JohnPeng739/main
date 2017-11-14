@@ -2,6 +2,7 @@ package com.ds.retl.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.exception.UserInterfaceErrorException;
+import org.mx.dal.Pagination;
 
 import java.util.Map;
 
@@ -18,6 +19,8 @@ public interface ServerManageService {
     JSONObject deleteServerInfo(String machineName) throws UserInterfaceErrorException;
 
     Map<String, JSONObject> getServerInfos() throws UserInterfaceErrorException;
+
+    Map<String, JSONObject> getServerInfos(Pagination pagination) throws UserInterfaceErrorException;
 
     String service(ServiceType type, String cmd, String service) throws UserInterfaceErrorException;
 

@@ -27,7 +27,7 @@
         <el-table-column prop="savedTime" label="保存时间" width="180"></el-table-column>
         <el-table-column prop="submitTime" label="提交时间" width="180"></el-table-column>
         <el-table-column prop="submited" label="是否提交" width="200">
-          <template scope="scope">
+          <template slot-scope="scope">
             <span v-if="scope.row.submitted">已提交集群</span>
             <span v-else style="color: red;">未提交集群</span>
           </template>
@@ -58,7 +58,7 @@
             return ''
           }
         },
-        queryByPage: false,
+        queryByPage: true,
         tableData: [],
         selection: null
       }

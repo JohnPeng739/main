@@ -55,7 +55,7 @@
                   style="width: 100%">
           <el-table-column prop="name" label="名称" width="200"></el-table-column>
           <el-table-column prop="type" label="类型" width="150">
-            <template scope="scope">
+            <template slot-scope="scope">
               {{spoutTypes[scope.row.type]}}
             </template>
           </el-table-column>

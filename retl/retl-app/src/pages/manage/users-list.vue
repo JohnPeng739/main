@@ -25,17 +25,17 @@
         <el-table-column prop="code" label="代码" width="100"></el-table-column>
         <el-table-column prop="name" label="姓名" width="200"></el-table-column>
         <el-table-column prop="valid" label="是否有效" width="100">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-checkbox v-model="scope.row.valid" :disabled="true"></el-checkbox>
           </template>
         </el-table-column>
         <el-table-column prop="online" label="是否在线" width="100">
-          <template scope="scope">
+          <template slot-scope="scope">
             <el-checkbox v-model="scope.row.online" :disabled="true"></el-checkbox>
           </template>
         </el-table-column>
         <el-table-column prop="updatedTime" label="登录时间">
-          <template scope="scope">{{longDate(scope.row.updatedTime)}}</template>
+          <template slot-scope="scope">{{longDate(scope.row.updatedTime)}}</template>
         </el-table-column>
       </el-table>
     </pane-paginate-list>
@@ -58,7 +58,7 @@
           let datetime = new Date(time)
           return formatDateTime(datetime)
         },
-        queryByPage: false,
+        queryByPage: true,
         tableData: []
       }
     },

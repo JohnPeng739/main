@@ -10,12 +10,12 @@
         <el-table-column prop="machineName" label="服务器" width="100"></el-table-column>
         <el-table-column prop="machineIp" label="IP地址" width="200"></el-table-column>
         <el-table-column prop="zookeeper" label="ZOOKEEPER服务">
-          <template scope="scope">
+          <template slot-scope="scope">
             <span>{{JSON.stringify(scope.row.zookeeper)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="storm" label="STORM服务">
-          <template scope="scope">
+          <template slot-scope="scope">
             <span>{{JSON.stringify(scope.row.storm)}}</span>
           </template>
         </el-table-column>
@@ -42,7 +42,7 @@
       return {
         tableData: [],
         selection: null,
-        queryByPage: false,
+        queryByPage: true,
         dialogDestroyed: false
       }
     },
@@ -97,11 +97,15 @@
       refreshData(pagination) {
         let url = '/rest/servers'
         if (this.queryByPage) {
-          logger.debug('send POST "%s"', url)
+          if (!pagination) {
+            pagination = {total: 0, size: 20, page: 1}
+          }
+          logger.debug('send POST "%s", page: %j.', url, pagination)
           post(url, pagination, ({data, pagination}) => {
             logger.debug('POST response success, data: %j, page: %j.', data, pagination)
             this.$refs['panePaginateList'].setPagination(pagination)
             this.tableData = data
+            info('刷新数据成功。')
           })
         } else {
           logger.debug('send GET "%s"', url)

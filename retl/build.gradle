@@ -1,16 +1,10 @@
-apply from: 'dependencies.gradle'
-
-allprojects {
-  apply plugin: 'java'
-  apply plugin: 'maven'
-  apply plugin: 'idea'
-  apply plugin: 'eclipse'
-
-  group = 'com.ds.retl'
-
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
+plugins {
+    id 'com.jfrog.bintray' version '1.4'
 }
+
+apply from: '../dependencies.gradle'
+
+apply from: '../allprojects.gradle'
 
 project(':retl-platform') {
   version = '3.0.6'
@@ -33,6 +27,9 @@ project(':retl-platform') {
       exclude group: 'org.slf4j'
       exclude group: 'log4j'
     }
+    provided(
+      fileTree(dir: 'libs', include: ['*.jar'])
+    )
   }
 }
 
@@ -46,7 +43,7 @@ project(':retl-spanregion') {
 }
 
 project(':retl-deploy') {
-  version = '3.0.12'
+  version = '3.0.13'
 
   dependencies {
     compile(
@@ -64,67 +61,10 @@ project(':retl-deploy') {
       exclude group: 'org.slf4j'
       exclude group: 'log4j'
     }
-  }
-}
-
-subprojects { subprj ->
-  repositories {
-    mavenCentral()
-    maven {
-      url 'http://repo.clojars.org/'
-    }
-    jcenter()
-    mavenLocal()
-  }
-
-  jar {
-    manifest.attributes provider: 'MX Foundation.'
-    excludes = []
-  }
-
-  task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from "$buildDir/docs/javadoc"
-  }
-
-  task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-  }
-
-  task copyDependencies(type: Copy) {
-    into "$buildDir/dependencies"
-    from configurations.runtime
-  }
-
-  [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-
-  artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-  }
-
-  configurations {
-    provided
-    deployerJars
-  }
-
-  dependencies {
-    testCompile(
-      libs.'junit'
+    compile(
+      fileTree(dir: 'libs', include: ['*.jar'])
     )
   }
-
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        repository(url: 'file://localhost/Users/john/.m2/repository')
-        pom.groupId = subprj.group
-        pom.artifactId = subprj.name
-        pom.version = subprj.version
-      }
-    }
-  }
 }
 
+apply from: '../subproject.gradle'

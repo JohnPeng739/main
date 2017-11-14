@@ -5,9 +5,6 @@ export const manageRouters = [{
   path: '/manage/users',
   component: resolve => require(['../../../pages/manage/users-list.vue'], resolve)
 }, {
-  path: '/manage/local',
-  component: resolve => require(['../../../pages/manage/local-server-config.vue'], resolve)
-}, {
   path: '/manage/servers',
   component: resolve => require(['../../../pages/manage/servers-list.vue'], resolve)
 }]
@@ -26,11 +23,6 @@ export const manageNavData = {
     path: '/manage/users',
     icon: 'supervisor_account',
     title: '用户列表',
-    role: 'manager',
-  }, {
-    path: '/manage/local',
-    icon: 'computer',
-    title: '本机设置',
     role: 'manager',
   }, {
     path: '/manage/servers',

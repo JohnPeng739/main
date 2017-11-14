@@ -12,6 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
+import org.mx.dal.Pagination;
 import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.dal.service.GeneralDictAccessor;
@@ -341,6 +342,27 @@ public class ServerManageServiceImpl implements ServerManageService {
         }
     }
 
+    private Map<String, JSONObject> dowithServerInfos(List<ConfigJson> list) {
+        Map<String, JSONObject> map = new HashMap<>();
+        if (list != null && list.size() > 0) {
+            list.forEach(config -> {
+                if (config.getCode().startsWith(RETL_SERVERS_PREFIX)) {
+                    String info = config.getConfigContent();
+                    try {
+                        JSONObject json = JSON.parseObject(info);
+                        String machineName = json.getString("machineName");
+                        map.put(machineName, json);
+                    } catch (Exception ex) {
+                        if (logger.isErrorEnabled()) {
+                            logger.error(String.format("Parse json fail, %s.", info), ex);
+                        }
+                    }
+                }
+            });
+        }
+        return map;
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -350,24 +372,21 @@ public class ServerManageServiceImpl implements ServerManageService {
     public Map<String, JSONObject> getServerInfos() throws UserInterfaceErrorException {
         try {
             List<ConfigJson> list = accessor.list(ConfigJson.class);
-            Map<String, JSONObject> map = new HashMap<>();
-            if (list != null && list.size() > 0) {
-                list.forEach(config -> {
-                    if (config.getCode().startsWith(RETL_SERVERS_PREFIX)) {
-                        String info = config.getConfigContent();
-                        try {
-                            JSONObject json = JSON.parseObject(info);
-                            String machineName = json.getString("machineName");
-                            map.put(machineName, json);
-                        } catch (Exception ex) {
-                            if (logger.isErrorEnabled()) {
-                                logger.error(String.format("Parse json fail, %s.", info), ex);
-                            }
-                        }
-                    }
-                });
-            }
-            return map;
+            return dowithServerInfos(list);
+        } catch (EntityAccessException ex) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ServerManageService#getServerInfos(Pagination)
+     */
+    @Override
+    public Map<String, JSONObject> getServerInfos(Pagination pagination) throws UserInterfaceErrorException {
+        try {
+            List<ConfigJson> list = accessor.list(pagination, ConfigJson.class);
+            return dowithServerInfos(list);
         } catch (EntityAccessException ex) {
             throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
         }

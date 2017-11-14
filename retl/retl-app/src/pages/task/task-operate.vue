@@ -26,6 +26,7 @@
     text-align: center;
   }
 </style>
+
 <template>
   <div>
     <el-row type="flex" justify="center">

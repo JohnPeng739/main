@@ -25,7 +25,7 @@
         <el-table-column prop="message" label="操作内容"></el-table-column>
         <el-table-column prop="operator" label="操作人" width="120"></el-table-column>
         <el-table-column prop="createdTime" label="操作时间" width="200">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{longDate(scope.row.createdTime)}}
           </template>
         </el-table-column>
@@ -51,7 +51,7 @@
           return formatDateTime(datetime)
         },
         tableData: [],
-        queryByPage: false,
+        queryByPage: true,
         pagination: {
           total: 0,
           size: 20,

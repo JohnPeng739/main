@@ -51,6 +51,7 @@
       <module filepath="$PROJECT_DIR$/retl.iml" fileurl="file://$PROJECT_DIR$/retl.iml"/>
       <module filepath="$PROJECT_DIR$/retl-deploy/retl-deploy.iml" fileurl="file://$PROJECT_DIR$/retl-deploy/retl-deploy.iml"/>
       <module filepath="$PROJECT_DIR$/retl-platform/retl-platform.iml" fileurl="file://$PROJECT_DIR$/retl-platform/retl-platform.iml"/>
+      <module filepath="$PROJECT_DIR$/retl-spanregion/retl-spanregion.iml" fileurl="file://$PROJECT_DIR$/retl-spanregion/retl-spanregion.iml"/>
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" assert-keyword="true" jdk-15="true" project-jdk-type="JavaSDK" assert-jdk-15="true" project-jdk-name="1.8">

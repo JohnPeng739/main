@@ -24,7 +24,7 @@ ext.versions = [
   'mx-utils'    : '2.0.9',
   'mx-rest-utils'       : '1.1.7',
   'mx-dal'      : '1.0.4',
-  'mx-dal-hibernate'    : '1.0.12',
+  'mx-dal-hibernate'    : '1.0.13',
   'mx-dal-mongodb'      : '1.0.4'
 ]
 

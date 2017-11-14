@@ -12,6 +12,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.gradle"/>
     </content>
     <orderEntry type="sourceFolder" forTests="false"/>
+    <orderEntry module-name="retl-platform" type="module" scope="PROVIDED"/>
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
@@ -439,6 +440,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry module-name="retl-platform" type="module" scope="RUNTIME"/>
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
@@ -866,116 +868,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.9/mx-utils-2.0.9.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.9/mx-utils-2.0.9-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/redis.clients/jedis/2.9.0/292bc9cc26553acd3cccc26f2f95620bf88a04c2/jedis-2.9.0.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/redis.clients/jedis/2.9.0/6d75e2498cd82c02665df5f9d7a77d0b5e398157/jedis-2.9.0-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-client/5.9.1/9e7a03ecd7d9554a318aeb610f976dc30014ac05/activemq-client-5.9.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-client/5.9.1/5f8c1089d3a35b3c861ddd31dbc991d2542b1320/activemq-client-5.9.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/c4f4a76171671ccf293be8995a498eab7fa8ed24/commons-dbcp2-2.1.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/e312d6c766f8b2a95dee5d9335e5dbe40a304621/commons-dbcp2-2.1.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/46deba4adbdb4967367b013cbc67b7f7373da60a/mysql-connector-java-5.1.34.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/240221147d8f9e26b25625bc3c4660cfb8ac92ac/mysql-connector-java-5.1.34-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mongodb/mongodb-driver/3.5.0/9d6e31e3073aa8c999ba609aa76185e46f226bdb/mongodb-driver-3.5.0.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mongodb/mongodb-driver/3.5.0/6d8dc279f4dc1f4574e9659f8cbc9abc43db8aea/mongodb-driver-3.5.0-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-core/1.1.1/86febcd11bcd5ae544d901d52f525afc891ae11/storm-core-1.1.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-core/1.1.1/3e7df2cd7861494a0ac698b21e6399af403bccb6/storm-core-1.1.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-jdbc/1.1.1/1b37ac43fc28a1ee67a0f610a14e082dd782d4d2/storm-jdbc-1.1.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-jdbc/1.1.1/12a163278d97de7acc286640bd33d771fdf0763a/storm-jdbc-1.1.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-jms/1.1.1/f3e1219b06389267ea1ef4c564595529d0d113a7/storm-jms-1.1.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-jms/1.1.1/4b3a53e3a536a83305982d92793942a231591ba7/storm-jms-1.1.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.zookeeper/zookeeper/3.4.9/cbd9135689d6622a411e1e9b0ce880b502be5277/zookeeper-3.4.9.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.zookeeper/zookeeper/3.4.9/91765ea1668836155040b0e7b13428618fd8fb36/zookeeper-3.4.9-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry module-name="retl-platform" type="module" scope="TEST"/>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
@@ -990,6 +883,127 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.9/mx-utils-2.0.9.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.0.9/mx-utils-2.0.9-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/redis.clients/jedis/2.9.0/292bc9cc26553acd3cccc26f2f95620bf88a04c2/jedis-2.9.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/redis.clients/jedis/2.9.0/6d75e2498cd82c02665df5f9d7a77d0b5e398157/jedis-2.9.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-client/5.9.1/9e7a03ecd7d9554a318aeb610f976dc30014ac05/activemq-client-5.9.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.activemq/activemq-client/5.9.1/5f8c1089d3a35b3c861ddd31dbc991d2542b1320/activemq-client-5.9.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/c4f4a76171671ccf293be8995a498eab7fa8ed24/commons-dbcp2-2.1.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/e312d6c766f8b2a95dee5d9335e5dbe40a304621/commons-dbcp2-2.1.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/46deba4adbdb4967367b013cbc67b7f7373da60a/mysql-connector-java-5.1.34.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/240221147d8f9e26b25625bc3c4660cfb8ac92ac/mysql-connector-java-5.1.34-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mongodb/mongodb-driver/3.5.0/9d6e31e3073aa8c999ba609aa76185e46f226bdb/mongodb-driver-3.5.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mongodb/mongodb-driver/3.5.0/6d8dc279f4dc1f4574e9659f8cbc9abc43db8aea/mongodb-driver-3.5.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-core/1.1.1/86febcd11bcd5ae544d901d52f525afc891ae11/storm-core-1.1.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-core/1.1.1/3e7df2cd7861494a0ac698b21e6399af403bccb6/storm-core-1.1.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-jdbc/1.1.1/1b37ac43fc28a1ee67a0f610a14e082dd782d4d2/storm-jdbc-1.1.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-jdbc/1.1.1/12a163278d97de7acc286640bd33d771fdf0763a/storm-jdbc-1.1.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-jms/1.1.1/f3e1219b06389267ea1ef4c564595529d0d113a7/storm-jms-1.1.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.storm/storm-jms/1.1.1/4b3a53e3a536a83305982d92793942a231591ba7/storm-jms-1.1.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.zookeeper/zookeeper/3.4.9/cbd9135689d6622a411e1e9b0ce880b502be5277/zookeeper-3.4.9.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.zookeeper/zookeeper/3.4.9/91765ea1668836155040b0e7b13428618fd8fb36/zookeeper-3.4.9-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/2878958d7631337dcfe3bb4e541aa34478367e66/fastjson-1.2.29.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1257,17 +1271,6 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/io.netty/netty/3.10.5.Final/708a85b2e402ebf37245e1d676f3e0aa42f7803f/netty-3.10.5.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
