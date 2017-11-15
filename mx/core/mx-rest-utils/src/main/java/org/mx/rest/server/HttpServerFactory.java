@@ -49,7 +49,8 @@ public class HttpServerFactory extends AbstractServerFactory {
                     }
                 }
             }
-            String uri = this.env.getProperty("http.server", "http://localhost:9998/");
+            int port = this.env.getProperty("restful.port", Integer.class, 9999);
+            String uri = String.format("http://localhost:%d/", port);
             URI baseUri = new URI(uri);
             super.setServer(JettyHttpContainerFactory.createServer(baseUri, config));
             if (logger.isInfoEnabled()) {
