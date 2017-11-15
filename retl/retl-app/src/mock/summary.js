@@ -31,7 +31,7 @@ export default [{
     'data|1-20': [localServerInfo]
   }
 }, {
-  path: /\/rest\/server\/systemctl\?cmd=\w&service=\w(&\w=\w)*/,
+  path: /\/rest\/server\/service\?cmd=\w&service=\w&machineIp=\w(&\w=\w)*/,
   type: 'get',
   data: {
     'data|1': true
@@ -49,7 +49,7 @@ export default [{
     data: localServerInfo
   }
 }, {
-  path: /\/rest\/server\/service\/status/,
+  path: /\/rest\/server\/status\?machineIp=\w/,
   type: 'get',
   data: {
     data: {

@@ -16,8 +16,11 @@ import org.mx.dal.Pagination;
 import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.dal.service.GeneralDictAccessor;
+import org.mx.rest.client.RestClientInvoke;
+import org.mx.rest.client.RestInvokeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -42,6 +45,8 @@ public class ServerManageServiceImpl implements ServerManageService {
     private GeneralDictAccessor accessor = null;
     @Autowired
     private OperateLogService operateLogService = null;
+    @Autowired
+    private Environment env = null;
 
     private String createMachineConfigField(String machineName) {
         String field = String.format("%s.%s", RETL_SERVERS_PREFIX, machineName);
@@ -422,11 +427,37 @@ public class ServerManageServiceImpl implements ServerManageService {
 
     /**
      * {@inheritDoc}
-     *
-     * @see ServerManageService#service(ServiceType, String, String)
+     * @see ServerManageService#serviceRest(String, String, String)
      */
     @Override
-    public String service(ServiceType type, String cmd, String service) throws UserInterfaceErrorException {
+    public boolean serviceRest(String cmd, String service, String machineIp) throws UserInterfaceErrorException {
+        if (StringUtils.isBlank(cmd) || StringUtils.isBlank(service) || StringUtils.isBlank(machineIp)) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
+        }
+        RestClientInvoke invoke = new RestClientInvoke();
+        try {
+            int restPort = env.getProperty("restful.port", Integer.class, 9999);
+            JSONObject json = invoke.get(String.format("http://%s:%d/rest/server/service/local?cmd=%s&service=%s",
+                    machineIp, restPort, cmd, service),
+                    JSONObject.class);
+            return json.getBooleanValue("data");
+        } catch (RestInvokeException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.SERVICE_STATUS_FAIL);
+        } finally {
+            invoke.close();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ServerManageService#serviceLocal(ServiceType, String, String)
+     */
+    @Override
+    public String serviceLocal(ServiceType type, String cmd, String service) throws UserInterfaceErrorException {
         switch (type) {
             case SYSTEMCTL:
                 String info = systemctl(cmd, service);
@@ -446,10 +477,47 @@ public class ServerManageServiceImpl implements ServerManageService {
     /**
      * {@inheritDoc}
      *
-     * @see ServerManageService#serviceStatus(String)
+     * @see ServerManageService#serviceStatusRest(String)
      */
     @Override
-    public ServiceStatus serviceStatus(String service) throws UserInterfaceErrorException {
+    public Map<String, ServiceStatus> serviceStatusRest(String machineIp) throws UserInterfaceErrorException {
+        if (StringUtils.isBlank(machineIp)) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
+        }
+        RestClientInvoke invoke = new RestClientInvoke();
+        try {
+            int restPort = env.getProperty("restful.port", Integer.class, 9999);
+            JSONObject json = invoke.get(String.format("http://%s:%d/rest/server/status/local", machineIp, restPort),
+                    JSONObject.class);
+            JSONObject data = json.getJSONObject("data");
+            Map<String, ServiceStatus> status = new HashMap<>();
+            if (data.containsKey("zookeeper")) {
+                JSONObject zookeeper = data.getJSONObject("zookeeper");
+                status.put("zookeeper", new ServiceStatus(zookeeper.getBooleanValue("enabled"),
+                        zookeeper.getBooleanValue("active")));
+            }
+            if (data.containsKey("storm")) {
+                JSONObject storm = data.getJSONObject("storm");
+                status.put("storm", new ServiceStatus(storm.getBooleanValue("enabled"),
+                        storm.getBooleanValue("active")));
+            }
+            return status;
+        } catch (RestInvokeException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.SERVICE_STATUS_FAIL);
+        } finally {
+            invoke.close();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ServerManageService#serviceStatusLocal(String)
+     */
+    @Override
+    public ServiceStatus serviceStatusLocal(String service) throws UserInterfaceErrorException {
         if (StringUtils.isBlank(service)) {
             throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
         }
@@ -457,10 +525,10 @@ public class ServerManageServiceImpl implements ServerManageService {
             service = String.format("%s.service", service);
         }
         boolean enabled, active = false;
-        String result = service(ServiceType.SYSTEMCTL, "is-enabled", service);
+        String result = serviceLocal(ServiceType.SYSTEMCTL, "is-enabled", service);
         enabled = result.startsWith("enabled");
         if (enabled) {
-            result = service(ServiceType.SYSTEMCTL, "is-active", service);
+            result = serviceLocal(ServiceType.SYSTEMCTL, "is-active", service);
             active = result.startsWith("active");
         }
         if (logger.isDebugEnabled()) {

@@ -39,6 +39,7 @@ public enum UserInterfaceErrors implements UserInterfaceError {
     SERVICE_ZK_SERVICE_FAIL(502, "操作ZOOKEEPER服务失败：预处理服务描述文件。"),
     SERVICE_STORM_ZOOCFG_FAIL(503, "操作STORM服务失败：预处理配置文件。"),
     SERVICE_STORM_SERVICE_FAIL(504, "操作STORM服务失败：预处理服务描述文件。"),
+    SERVICE_STATUS_FAIL(505, "获取服务器运行状态失败。"),
 
     OTHER(9999, "系统未识别的错误。");
 

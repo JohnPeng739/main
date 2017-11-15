@@ -63,11 +63,23 @@ public class ServerManageResource {
         }
     }
 
-    @Path("server/systemctl")
+    @Path("server/service")
     @GET
-    public DataVO<Boolean> systemctl(@QueryParam("cmd") String cmd, @QueryParam("service") String service) {
+    public DataVO<Boolean> service(@QueryParam("cmd") String cmd, @QueryParam("service") String service,
+                                   @QueryParam("machineIp") String machineIp) {
         try {
-            serverManageService.service(ServerManageService.ServiceType.SYSTEMCTL, cmd, service);
+            serverManageService.serviceRest(cmd, service, machineIp);
+            return new DataVO<>(true);
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
+    }
+
+    @Path("server/service/local")
+    @GET
+    public DataVO<Boolean> serviceLocal(@QueryParam("cmd") String cmd, @QueryParam("service") String service) {
+        try {
+            serverManageService.serviceLocal(ServerManageService.ServiceType.SYSTEMCTL, cmd, service);
             return new DataVO<>(true);
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
@@ -76,7 +88,7 @@ public class ServerManageResource {
 
     @Path("server/{machineName}")
     @GET
-    public DataVO<ServerInfoVO> getServerInfo(@PathParam("machineName")String machineName) {
+    public DataVO<ServerInfoVO> getServerInfo(@PathParam("machineName") String machineName) {
         try {
             JSONObject json = serverManageService.getServerInfo(machineName);
             return new DataVO<>(new ServerInfoVO(json));
@@ -101,7 +113,7 @@ public class ServerManageResource {
     @Path("server/{machineName}")
     @DELETE
     public DataVO<ServerInfoVO> deleteServerInfo(@QueryParam("userCode") String userCode,
-                                                 @PathParam("machineName")String machineName) {
+                                                 @PathParam("machineName") String machineName) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             JSONObject json = serverManageService.deleteServerInfo(machineName);
@@ -112,12 +124,25 @@ public class ServerManageResource {
         }
     }
 
-    @Path("server/service/status")
+    @Path("server/status")
     @GET
-    public DataVO<ServicesStatusVO> getServicesStatus() {
+    public DataVO<ServicesStatusVO> getServicesStatus(@QueryParam("machineIp") String machineIp) {
         try {
-            return new DataVO<>(new ServicesStatusVO(serverManageService.serviceStatus("zookeeper.service"),
-                    serverManageService.serviceStatus("storm.service")));
+            Map<String, ServerManageService.ServiceStatus> status = serverManageService.serviceStatusRest(machineIp);
+            ServerManageService.ServiceStatus zkStatus = status.get("zookeeper");
+            ServerManageService.ServiceStatus stormStatus = status.get("storm");
+            return new DataVO<>(new ServicesStatusVO(zkStatus, stormStatus));
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO<>(ex);
+        }
+    }
+
+    @Path("server/status/local")
+    @GET
+    public DataVO<ServicesStatusVO> getLocalServicesStatus() {
+        try {
+            return new DataVO<>(new ServicesStatusVO(serverManageService.serviceStatusLocal("zookeeper.service"),
+                    serverManageService.serviceStatusLocal("storm.service")));
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
         }

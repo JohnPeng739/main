@@ -3,7 +3,10 @@
 
   .title {
     font-weight: 800;
-    padding-right: 20px;
+    padding-left: 10px;
+  }
+  .row-status {
+    margin-top: 15px;
   }
 </style>
 
@@ -11,39 +14,39 @@
   <div>
     <pane-paginate-list ref="panePaginateList" v-on:buttonHandle="handleButtonClick">
       <el-table :max-height="570" :data="tableData" class="layout-table" highlight-current-row
-                @current-change="handleCurrentChange">
+                @current-change="handleCurrentChange" @expand="handleExpand">
         <el-table-column type="expand">
           <template slot-scope="scope">
-            <el-row type="flex" v-if="scope.row.zookeeper">
+            <el-row type="flex" v-if="scope.row.zookeeper" class="row-status">
               <el-col :span="24">
                 <span class="title">服务状态：</span>
-                <el-button @click="handleService('zookeeper', 'enable')" size="mini">启用</el-button>
-                <el-button @click="handleService('zookeeper', 'disable')" size="mini">禁用</el-button>
-                <el-button @click="handleService('zookeeper', 'start')" size="mini">启动</el-button>
-                <el-button @click="handleService('zookeeper', 'stop')" size="mini">停止</el-button>
-                <el-button @click="handleService('zookeeper', 'reload')" size="mini">重载</el-button>
-                <el-button @click="handleService('zookeeper', 'restart')" size="mini">重启</el-button>
+                <el-button :disabled="isEnabled(scope.row.status, 'zookeeper')" @click="handleService('zookeeper', 'enable', scope.row.machineIp)" type="primary" size="small">启用</el-button>
+                <el-button :disabled="!isEnabled(scope.row.status, 'zookeeper')" @click="handleService('zookeeper', 'disable', scope.row.machineIp)" type="primary" size="small">禁用</el-button>
+                <el-button :disabled="isActive(scope.row.status, 'zookeeper')" @click="handleService('zookeeper', 'start', scope.row.machineIp)" type="primary" size="small">启动</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('zookeeper', 'stop', scope.row.machineIp)" type="primary" size="small">停止</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('zookeeper', 'reload', scope.row.machineIp)" type="primary" size="small">重载</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('zookeeper', 'restart', scope.row.machineIp)" type="primary" size="small">重启</el-button>
               </el-col>
             </el-row>
-            <el-row type="flex" v-if="scope.row.storm">
+            <el-row type="flex" v-if="scope.row.storm" class="row-status">
               <el-col :span="24">
                 <span class="title">服务状态：</span>
-                <el-button @click="handleService('storm', 'enable')" size="mini">启用</el-button>
-                <el-button @click="handleService('storm', 'disable')" size="mini">禁用</el-button>
-                <el-button @click="handleService('storm', 'start')" size="mini">启动</el-button>
-                <el-button @click="handleService('storm', 'stop')" size="mini">停止</el-button>
-                <el-button @click="handleService('storm', 'reload')" size="mini">重载</el-button>
-                <el-button @click="handleService('storm', 'restart')" size="mini">重启</el-button>
+                <el-button :disabled="isEnabled(scope.row.status, 'storm')" @click="handleService('storm', 'enable', scope.row.machineIp)" type="primary" size="small">启用</el-button>
+                <el-button :disabled="!isEnabled(scope.row.status, 'storm')" @click="handleService('storm', 'disable', scope.row.machineIp)" type="primary" size="small">禁用</el-button>
+                <el-button :disabled="isActive(scope.row.status, 'zookeeper')" @click="handleService('storm', 'start', scope.row.machineIp)" type="primary" size="small">启动</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('storm', 'stop', scope.row.machineIp)" type="primary" size="small">停止</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('storm', 'reload', scope.row.machineIp)" type="primary" size="small">重载</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('storm', 'restart', scope.row.machineIp)" type="primary" size="small">重启</el-button>
               </el-col>
             </el-row>
           </template>
         </el-table-column>
         <el-table-column prop="machineName" label="服务器" width="100"></el-table-column>
         <el-table-column prop="machineIp" label="IP地址" width="200"></el-table-column>
-        <el-table-column prop="zookeeper" label="ZOOKEEPER服务">
+        <el-table-column prop="zookeeper" label="ZOOKEEPER服务" width="200">
           <template slot-scope="scope">
             <span v-if="scope.row.zookeeper">
-              <span class="title">{{scope.row.zookeeper.cluster ? '集群' : '单机'}}</span>
+              <span class="title">{{scope.row.zookeeper.cluster ? '加入集群' : '单机运行'}}</span>
               <span class="title">序号：</span>{{scope.row.zookeeper.serverNo}}
             </span>
           </template>
@@ -51,9 +54,9 @@
         <el-table-column prop="storm" label="STORM服务">
           <template slot-scope="scope">
             <span v-if="scope.row.storm">
-              <span class="title">插槽数：</span>{{scope.row.storm.slots}}个
-              <span class="title">起始端口：</span>{{scope.row.storm.startPort}}
-              <span class="title">服务：</span>{{getServices(scope.row.storm.services)}}
+              <span class="title">插槽数量：</span>{{scope.row.storm.slots}}个
+              <span class="title">起始端口：</span>{{scope.row.storm.startPort}}<br/>
+              <span class="title">运行服务：</span>{{getServices(scope.row.storm.services)}}
             </span>
           </template>
         </el-table-column>
@@ -85,9 +88,25 @@
       }
     },
     methods: {
+      isActive(status, service) {
+        if (status) {
+          if (status[service] && status[service].active) {
+            return status[service].active
+          }
+        }
+        return false
+      },
+      isEnabled(status, service) {
+        if (status) {
+          if (status[service] && status[service].enabled) {
+            return status[service].enabled
+          }
+        }
+        return false
+      },
       getServiceName(service) {
         switch (service) {
-          case 'nimubs':
+          case 'nimbus':
             return '主控'
           case 'ui':
             return 'UI'
@@ -108,9 +127,25 @@
           return ''
         }
       },
-      handleService(service, operate) {
-        logger.debug('%s the service: %s.', operate, service)
-        // TODO
+      handleService(service, cmd, machineIp) {
+        logger.debug('%s the service: %s.', cmd, service)
+        let url = '/rest/server/service?cmd=' + cmd + '&service=' + service + '&machineIp=' + machineIp
+        logger.debug('send GET "%s"', url)
+        get(url, data => {
+          if (data) {
+            info(cmd + '服务[' + service + ']成功。')
+          }
+        })
+      },
+      handleExpand(row, expanded) {
+        if (expanded) {
+          let url = '/rest/server/status?machineIp=' + row.machineIp
+          logger.debug('send GET "%s"', url)
+          get(url, data => {
+            row.status = data
+            logger.debug(row)
+          })
+        }
       },
       handleButtonClick(operate, pagination) {
         if (operate === 'detail' || operate === 'edit' || operate === 'delete') {

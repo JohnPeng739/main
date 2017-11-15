@@ -22,9 +22,13 @@ public interface ServerManageService {
 
     Map<String, JSONObject> getServerInfos(Pagination pagination) throws UserInterfaceErrorException;
 
-    String service(ServiceType type, String cmd, String service) throws UserInterfaceErrorException;
+    boolean serviceRest(String cmd, String service, String machineIp) throws UserInterfaceErrorException;
 
-    ServiceStatus serviceStatus(String service) throws UserInterfaceErrorException;
+    String serviceLocal(ServiceType type, String cmd, String service) throws UserInterfaceErrorException;
+
+    Map<String, ServiceStatus> serviceStatusRest(String machineIp) throws UserInterfaceErrorException;
+
+    ServiceStatus serviceStatusLocal(String service) throws UserInterfaceErrorException;
 
     enum ServiceType {SYSTEMCTL}
 
