@@ -172,10 +172,6 @@
           warn('对话框提交的数据为空，请联系开发人员。')
           return
         }
-        if (spout && spout.zookeepers) {
-          // TODO
-          logger.debug('commit zookeepers: %j.', spout.zookeepers)
-        }
         if (mode === 'add') {
           this.list.unshift(spout)
           this.fillTableData()
