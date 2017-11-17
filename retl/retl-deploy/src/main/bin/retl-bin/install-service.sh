@@ -1,32 +1,80 @@
 #!/bin/bash
 
-read -p "Enter the machine's name: " machineName
-read -p "Enter the machine's IP: " machineIp
-read -p "Enter the machine's netmask: " netmask
-read -p "Enter the machine's gateway: " gateway
-read -p "Enter the machine's DNS: " dns
+@echo off
+clear
+retl=/opt/retl
 
-#sed -i "s/localhost.localdomain/${machineName}/g" /etc/hostname
-mv /etc/hostname /etc/hostname.bak
-echo "${machineName}" > /etc/hostname
-cp /etc/sysconfig/network-scripts/ifcfg-enp0s3 /etc/sysconfig/network-scripts/ifcfg-enp0s3.bak
-sed -i "s/IPADDR=\"192.168.2.111\"/IPADDR=\"${machineIp}\"/g" /etc/sysconfig/network-scripts/ifcfg-enp0s3
-sed -i "s/NETMASK=\"255.255.255.0\"/NETMASK=\"${netmask}\"/g" /etc/sysconfig/network-scripts/ifcfg-enp0s3
-sed -i "s/GATEWAY=\"192.168.0.1\"/GATEWAY=\"${gateway}\"/g" /etc/sysconfig/network-scripts/ifcfg-enp0s3
-sed -i "s/DNS1=\"192.168.0.6\"/DSN1=\"${dns}\"/g" /etc/sysconfig/network-scripts/ifcfg-enp0s3
-#sed -i "s/nameserver 192.168.0.6/nameserver {dns}" /etc/resolv.conf
-mv /etc/resolv.conf /etc/resolv.conf.bak
-echo "nameserver ${dns}" > /etc/resolv.conf
+# Configure
+dbnames=("ORACLE" "MYSQL" "H2")
+dbdrivers=("oracle.jdbc.driver.OracleDriver" "com.mysql.jdbc.Driver" "org.h2.Driver")
+dbdialects=("org.hibernate.dialect.Oracle10gDialect" "org.hibernate.dialect.MySQL55Dialect" "org.hibernate.dialect.H2Dialect")
 
-cd /opt/retl
+echo "****************************************************************"
+echo -n "Enter the HTTP RESTful service's port: [9999] "
+read port
 
-mv bin/retl.service /usr/lib/systemd/system
-systemctl enable retl
-ln -s /opt/retl/conf/web-app.conf /etc/nginx/conf.d/web-app.conf
+while (true)
+do
+  echo "---------------------------------------------------------------"
+  echo "Supported database:"
+  for ((i=1;i<=3;++i))
+  do
+    echo "    $i. ${dbnames[i-1]}"
+  done
+  echo -n "Please select a database:[1-3] "
+  read database
+  if [ $database -ge 1 -a $database -le 3 ]; then
+    break
+  fi
+done
+echo -n "Enter the database's url:[jdbc:oracle:thin:@192.168.7.190:7110:dsdb] "
+read dburl
+echo -n "Enter the database's user: "
+read dbuser
+echo -n "Enter the database's password: "
+read dbpassword
 
-systemctl start retl
-systemctl reload nginx
-systemctl restart retl
+echo "*****************************************************************"
+echo "**"
+echo "** The HTTP RESTful service's port: $port"
+echo "**"
+echo "** You selected database:  ${dbnames[database-1]}"
+echo "** The database's url:     $dburl"
+echo "** The database's user:    $dbuser"
+echo "** The database's passwod: $dbpassword"
+echo "**"
+echo "##"
+echo -n "## All the information are correct?[yes/NO] "
+read confirm
 
-echo "System will restart..."
-init 6
+if [ "$confirm " == "yes " ]; then
+  echo ""
+  echo "Modify the configuration file......"
+
+  sed -i 's/^restful.port/#restful.port/g' ${retl}/conf/server.properties
+  sed -i "/^restful.service.classes/i\restful.port=${port}" ${retl}/conf/server.properties
+
+  sed -i 's/^db.driver/#db.driver/g' ${retl}/conf/database.properties
+  sed -i 's/^db.url/#db.url/g' ${retl}/conf/database.properties
+  sed -i 's/^db.user/#db.user/g' ${retl}/conf/database.properties
+  sed -i 's/^db.password/#db.password/g' ${retl}/conf/database.properties
+  sed -i "/^db.initialSize/i\db.driver=${dbdrivers[database-1]}" ${retl}/conf/database.properties
+  sed -i "/^db.initialSize/i\db.url=$dburl" ${retl}/conf/database.properties
+  sed -i "/^db.initialSize/i\db.user=$dbuser" ${retl}/conf/database.properties
+  sed -i "/^db.initialSize/i\db.password=$dbpassword" ${retl}/conf/database.properties
+
+  sed -i 's/^jpa.database/#jpa.database/g' ${retl}/conf/jpa.properties
+  sed -i 's/^jpa.databasePlatform/#jpa.databasePlatform/g' ${retl}/conf/jpa.properties
+  sed -i "/^jpa.generateDDL/i\jpa.database=${dbnames[database-1]}" ${retl}/conf/jpa.properties
+  sed -i "/^jpa.generateDDL/i\jpa.databasePlatform=${dbdialects[database-1]}" ${retl}/conf/jpa.properties
+  sed -i 's/^jpa.generateDDL=false/jpa.generateDDL=true/g' ${retl}/conf/jpa.properties
+
+  echo "Prepare the service...."
+  cp ${retl}/bin/retl.service /usr/lib/systemd/system
+  systemctl enable retl
+
+  systemctl start retl
+  systemctl reload nginx
+  systemctl restart retl
+  echo "Service start successfully."
+fi
