@@ -16,7 +16,7 @@ echo "Configure the static hosts:"
 
 while(true)
 do
-  echo -n "How many servers you want configure? [number]"
+  echo -n "How many servers you want configure? [number] "
   read num
   if [ $num -gt 0 ]; then
     break
@@ -24,7 +24,7 @@ do
 done
 for ((i=1; i<=$num; ++i))
 do
-  echo -n "Enter server $i static DNS: [192.168.2.121 storm1]"
+  echo -n "Enter server $i static DNS: [192.168.2.121 storm1] "
   read hosts[$i-1]
 done
 

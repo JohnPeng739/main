@@ -13,7 +13,7 @@ ext.versions = [
   jetty		: '9.2.14.v20151106',
   activiti	: '6.0.0',
   storm		: '1.1.1',
-  activemq	: '5.9.1',
+  activemq	: '5.15.2',
   h2database	: '1.4.196',
   mysql		: '5.1.34',
   ojdbc14	: '10.2.0.1',
