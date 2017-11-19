@@ -6,10 +6,12 @@ import org.mx.StringUtils;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
+import org.mx.dal.entity.OperateLog;
 import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.exception.EntityNotFoundException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralEntityAccessor;
+import org.mx.dal.service.OperateLogService;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,6 +45,9 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     @Autowired
     @Qualifier("sessionDataThreadLocal")
     protected SessionDataStore sessionDataStore = null;
+
+    @Autowired
+    private OperateLogService operateLogService = null;
 
     /**
      * 根据指定的实体接口定义类返回对应的实体类定义
@@ -350,6 +355,17 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     @Transactional()
     @Override
     public <T extends Base> T save(T t) throws EntityAccessException {
+        return save(t, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#save(Base, boolean)
+     */
+    @Transactional
+    @Override
+    public <T extends Base> T save(T t, boolean saveOperateog) throws EntityAccessException {
         t.setUpdatedTime(new Date().getTime());
         t.setOperator(sessionDataStore.getCurrentUserCode());
         if (StringUtils.isBlank(t.getId())) {
@@ -358,6 +374,9 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
             t.setCreatedTime(new Date().getTime());
             entityManager.persist(t);
             entityManager.flush();
+            if (saveOperateog) {
+                writeOperateLog(t, String.format("新增了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
+            }
         } else {
             // 修改操作
             T old = getById2(t.getId(), (Class<T>) t.getClass(), false);
@@ -370,6 +389,9 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
                 ((BaseDict) t).setCode(((BaseDict) old).getCode());
             }
             entityManager.merge(t);
+            if (saveOperateog) {
+                writeOperateLog(t, String.format("修改了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
+            }
         }
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save entity success, entity: %s.", t));
@@ -428,12 +450,22 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         if (logicRemove) {
             // 逻辑删除
             removeEntity.setValid(false);
-            return save(removeEntity);
+            t = save(removeEntity);
+            writeOperateLog(t, String.format("逻辑删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
+            return t;
         } else {
             // 物理删除
             entityManager.remove(removeEntity);
             entityManager.flush();
+            writeOperateLog(t, String.format("物理删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
             return t;
         }
+    }
+
+    private <T> void writeOperateLog(T t, String content) throws EntityAccessException {
+        if (operateLogService == null || t instanceof OperateLog) {
+            return;
+        }
+        operateLogService.writeLog(content);
     }
 }

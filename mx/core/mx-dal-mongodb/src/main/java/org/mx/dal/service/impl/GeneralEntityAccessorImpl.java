@@ -6,10 +6,12 @@ import org.mx.StringUtils;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
+import org.mx.dal.entity.OperateLog;
 import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.exception.EntityNotFoundException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralEntityAccessor;
+import org.mx.dal.service.OperateLogService;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,6 +43,9 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
     @Autowired
     @Qualifier("sessionDataThreadLocal")
     private SessionDataStore sessionDataStore = null;
+
+    @Autowired
+    private OperateLogService operateLogService = null;
 
     /**
      * 根据指定的实体接口定义返回对应的实体定义类
@@ -337,9 +342,20 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      */
     @Override
     public <T extends Base> T save(T t) throws EntityAccessException {
+        return save(t, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see GeneralAccessor#save(Base, boolean)
+     */
+    @Override
+    public <T extends Base> T save(T t, boolean saveOperateLog) throws EntityAccessException {
+        boolean isNew = false;
         if (StringUtils.isBlank(t.getId())) {
             // new
             t.setCreatedTime(new Date().getTime());
+            isNew = true;
         } else {
             T old = this.getById(t.getId(), (Class<T>) t.getClass());
             if (old == null) {
@@ -355,7 +371,12 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         t.setUpdatedTime(new Date().getTime());
         t.setOperator(sessionDataStore.getCurrentUserCode());
         template.save(t);
-        return template.findById(t.getId(), (Class<T>) t.getClass());
+        t = template.findById(t.getId(), (Class<T>) t.getClass());
+        if (saveOperateLog) {
+            writeOperateLog(t, String.format("%s了%s实体[%s]。",
+                    isNew ? "新增" : "修改", t.getClass().getSimpleName(), t.getId()));
+        }
+        return t;
     }
 
     /**
@@ -404,11 +425,21 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         if (logicRemove) {
             // logically remove
             t.setValid(false);
-            return save(t);
+            t = save(t);
+            writeOperateLog(t, String.format("逻辑删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
+            return t;
         } else {
             // physically remove
             template.remove(t);
+            writeOperateLog(t, String.format("物理删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
             return t;
         }
+    }
+
+    private <T> void writeOperateLog(T t, String content) throws EntityAccessException {
+        if (operateLogService == null || t instanceof OperateLog) {
+            return;
+        }
+        operateLogService.writeLog(content);
     }
 }
