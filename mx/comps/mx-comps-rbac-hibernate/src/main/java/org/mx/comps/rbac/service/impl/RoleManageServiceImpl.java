@@ -43,7 +43,7 @@ public class RoleManageServiceImpl extends GeneralDictEntityAccessorImpl impleme
             checked.setDesc(role.getDesc());
             checked.setName(role.getName());
             checked.setPrivileges(role.getPrivileges());
-            role = super.save(checked);
+            role = super.save(checked, false);
             if (operateLogService != null) {
                 operateLogService.writeLog(String.format("保存角色[code=%s, name=%s]信息成功。",
                         role.getCode(), role.getName()));

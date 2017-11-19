@@ -56,7 +56,7 @@ public class AccountManageServiceImpl extends GeneralDictEntityAccessorImpl impl
             checked.setOwner(account.getOwner());
             checked.setDesc(account.getDesc());
             checked.setRoles(account.getRoles());
-            account = super.save(checked);
+            account = super.save(checked, false);
             if (operateLogService != null) {
                 operateLogService.writeLog(String.format("保存账户[code=%s, name=%s]成功。",
                         account.getCode(), account.getName()));
@@ -88,7 +88,7 @@ public class AccountManageServiceImpl extends GeneralDictEntityAccessorImpl impl
                 if (account.getPassword().equals(DigestUtils.md5(oldPassword))) {
                     // the old password is matched.
                     account.setPassword(DigestUtils.md5(newPassword));
-                    account = super.save(account);
+                    account = super.save(account, false);
                     if (operateLogService != null) {
                         operateLogService.writeLog(String.format("修改账户[code=%s, name=%s]的密码成功。",
                                 account.getCode(), account.getName()));
@@ -150,7 +150,7 @@ public class AccountManageServiceImpl extends GeneralDictEntityAccessorImpl impl
             }
             loginHistory.setLoginTime(new Date().getTime());
             loginHistory.setOnline(true);
-            loginHistory = super.save(loginHistory);
+            loginHistory = super.save(loginHistory, false);
             if (operateLogService != null) {
                 operateLogService.writeLog(String.format("账户[code=%s, name=%s]登录系统成功。",
                         account.getCode(), account.getName()));
@@ -195,7 +195,7 @@ public class AccountManageServiceImpl extends GeneralDictEntityAccessorImpl impl
                 LoginHistory loginHistory = loginHistories.get(0);
                 loginHistory.setLogoutTime(new Date().getTime());
                 loginHistory.setOnline(false);
-                loginHistory = super.save(loginHistory);
+                loginHistory = super.save(loginHistory, false);
                 if (operateLogService != null) {
                     operateLogService.writeLog(String.format("账户[code=%s, name=%s]登出系统成功。",
                             account.getCode(), account.getName()));

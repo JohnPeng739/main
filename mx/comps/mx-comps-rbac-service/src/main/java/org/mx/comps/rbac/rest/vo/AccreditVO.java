@@ -9,6 +9,7 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.rest.vo.BaseVO;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -78,6 +79,18 @@ public class AccreditVO extends BaseVO {
         if (roleVOs != null && !roleVOs.isEmpty()) {
             accredit.setRoles(RoleVO.transformRoles(roleVOs));
         }
+    }
+
+    public static List<AccreditVO> transformAccreditVOs(List<Accredit> accredits) {
+        List<AccreditVO> list = new ArrayList<>();
+        if (accredits != null && !accredits.isEmpty()) {
+            for (Accredit accredit : accredits) {
+                AccreditVO vo = new AccreditVO();
+                AccreditVO.transform(accredit, vo);
+                list.add(vo);
+            }
+        }
+        return list;
     }
 
     public void setSrc(AccountVO src) {

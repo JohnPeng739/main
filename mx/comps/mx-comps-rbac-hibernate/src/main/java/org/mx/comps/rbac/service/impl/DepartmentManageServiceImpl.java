@@ -44,7 +44,7 @@ public class DepartmentManageServiceImpl extends GeneralDictEntityAccessorImpl i
             checked.setName(department.getName());
             checked.setManager(department.getManager());
             checked.setEmployees(department.getEmployees());
-            department = super.save(checked);
+            department = super.save(checked, false);
             if (operateLogService != null) {
                 operateLogService.writeLog(String.format("保存部门[code=%s, name=%s]信息成功。",
                         department.getCode(), department.getName()));

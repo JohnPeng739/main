@@ -43,7 +43,7 @@ public class UserManageServiceImpl extends GeneralDictEntityAccessorImpl impleme
             checked.setSex(user.getSex());
             checked.setStation(user.getStation());
             checked.setSubordinates(user.getSubordinates());
-            user = super.save(checked);
+            user = super.save(checked, false);
             if (operateLogService != null) {
                 operateLogService.writeLog(String.format("修改用户[name=%s]信息成功。", user.getFullName()));
             }
