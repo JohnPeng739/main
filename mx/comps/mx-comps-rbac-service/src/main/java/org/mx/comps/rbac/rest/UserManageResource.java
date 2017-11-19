@@ -35,6 +35,7 @@ public class UserManageResource {
     @Autowired
     private SessionDataStore sessionDataStore = null;
 
+
     @Path("users")
     @GET
     public DataVO<List<UserVO>> listUsers() {
@@ -84,9 +85,9 @@ public class UserManageResource {
         }
     }
 
-    @Path("user")
+    @Path("users/{userId}")
     @POST
-    public DataVO<UserVO> saveUser(@QueryParam("userCode") String userCode, UserVO userVO) {
+    public DataVO<UserVO> newUser(@QueryParam("userCode")String userCode, UserVO userVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             User user = EntityFactory.createEntity(User.class);
@@ -102,9 +103,29 @@ public class UserManageResource {
         }
     }
 
-    @Path("user")
+    @Path("users/{userId}")
+    @PUT
+    public DataVO<UserVO> saveUser(@QueryParam("userCode") String userCode, @PathParam("userId") String userId, UserVO userVO) {
+        sessionDataStore.setCurrentUserCode(userCode);
+        try {
+            User user = EntityFactory.createEntity(User.class);
+            UserVO.transform(userVO, user);
+            user = userManageService.save(userId, user);
+            UserVO.transform(user, userVO);
+            return new DataVO<>(userVO);
+        } catch (EntityInstantiationException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new DataVO<>(new UserInterfaceErrorException(UserInterfaceErrors.ENTITY_INSTANCE_FAIL));
+        } catch (UserInterfaceErrorException ex) {
+            return new DataVO(ex);
+        }
+    }
+
+    @Path("users/{userId}")
     @DELETE
-    public DataVO<UserVO> deleteUser(@QueryParam("userCode") String userCode, @QueryParam("userId") String userId) {
+    public DataVO<UserVO> deleteUser(@QueryParam("userCode") String userCode, @PathParam("userId") String userId) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             User user = userManageService.remove(userId, User.class);

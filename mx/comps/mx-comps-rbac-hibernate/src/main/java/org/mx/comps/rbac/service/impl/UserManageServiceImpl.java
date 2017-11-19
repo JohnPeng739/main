@@ -7,11 +7,9 @@ import org.mx.comps.rbac.error.UserInterfaceErrorException;
 import org.mx.comps.rbac.error.UserInterfaceErrors;
 import org.mx.comps.rbac.service.UserManageService;
 import org.mx.dal.exception.EntityAccessException;
-import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.service.GeneralEntityAccessor;
+import org.mx.dal.service.OperateLogService;
 import org.mx.dal.service.impl.GeneralDictEntityAccessorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,4 +20,39 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserManageServiceImpl extends GeneralDictEntityAccessorImpl implements UserManageService {
     private static final Log logger = LogFactory.getLog(UserManageServiceImpl.class);
+
+    @Autowired
+    private OperateLogService operateLogService = null;
+
+    @Override
+    public User save(String userId, User user) throws UserInterfaceErrorException {
+        try {
+            User checked = super.getById(userId, User.class);
+            if (checked == null) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The User entity[%s] not found.", userId));
+                }
+                throw new UserInterfaceErrorException(UserInterfaceErrors.USER_NOT_FOUND);
+            }
+            checked.setBirthday(user.getBirthday());
+            checked.setDepartment(user.getDepartment());
+            checked.setDesc(user.getDesc());
+            checked.setFirstName(user.getFirstName());
+            checked.setMiddleName(user.getMiddleName());
+            checked.setLastName(user.getLastName());
+            checked.setSex(user.getSex());
+            checked.setStation(user.getStation());
+            checked.setSubordinates(user.getSubordinates());
+            user = super.save(checked);
+            if (operateLogService != null) {
+                operateLogService.writeLog(String.format("修改用户[name=%s]信息成功。", user.getFullName()));
+            }
+            return user;
+        } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
+    }
 }

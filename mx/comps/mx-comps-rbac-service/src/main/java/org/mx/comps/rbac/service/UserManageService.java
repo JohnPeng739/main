@@ -10,5 +10,13 @@ import org.mx.dal.service.GeneralDictAccessor;
  * @author : john.peng created on date : 2017/11/10
  */
 public interface UserManageService extends GeneralDictAccessor {
-
+    /**
+     * 修改用户信息
+     *
+     * @param userId 待修改用户ID
+     * @param user   用户实体
+     * @return 修改后的用户实体
+     * @throws UserInterfaceErrorException 修改过程中发生的异常
+     */
+    User save(String userId, User user) throws UserInterfaceErrorException;
 }

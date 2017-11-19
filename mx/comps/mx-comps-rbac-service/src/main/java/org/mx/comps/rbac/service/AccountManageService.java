@@ -12,6 +12,16 @@ import org.mx.dal.service.GeneralDictAccessor;
  */
 public interface AccountManageService extends GeneralDictAccessor {
     /**
+     * 修改账户信息
+     *
+     * @param id      待修改账户实体ID
+     * @param account 账户实体
+     * @return 修改成功后的账户实体
+     * @throws UserInterfaceErrorException 修改过程中发生的异常
+     */
+    Account save(String id, Account account) throws UserInterfaceErrorException;
+
+    /**
      * 修改账户密码
      *
      * @param accountId   账户ID

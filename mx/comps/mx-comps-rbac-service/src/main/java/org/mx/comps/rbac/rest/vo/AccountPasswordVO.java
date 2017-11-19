@@ -5,6 +5,7 @@ package org.mx.comps.rbac.rest.vo;
  */
 public class AccountPasswordVO {
     private String accountCode, password;
+    private boolean forced = false;
 
     public void setAccountCode(String accountCode) {
         this.accountCode = accountCode;
@@ -14,11 +15,19 @@ public class AccountPasswordVO {
         this.password = password;
     }
 
+    public void setForced(boolean forced) {
+        this.forced = forced;
+    }
+
     public String getAccountCode() {
         return accountCode;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean isForced() {
+        return forced;
     }
 }
