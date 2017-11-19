@@ -59,6 +59,18 @@ public class DepartmentVO extends BaseDictTreeVO {
         }
     }
 
+    public static List<DepartmentVO> transformDepartmentVOs(List<Department> departments) {
+        List<DepartmentVO> list = new ArrayList<>();
+        if (departments != null && !departments.isEmpty()) {
+            for (Department department : departments) {
+                DepartmentVO vo = new DepartmentVO();
+                DepartmentVO.transform(department, vo);
+                list.add(vo);
+            }
+        }
+        return list;
+    }
+
     public void setManager(UserVO manager) {
         this.manager = manager;
     }
