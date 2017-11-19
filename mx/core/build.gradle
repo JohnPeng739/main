@@ -22,7 +22,7 @@ project(':mx-utils') {
 }
 
 project(':mx-dal') {
-  version = '1.0.4'
+  version = '1.0.5'
 
   dependencies {
     compile(
@@ -34,7 +34,7 @@ project(':mx-dal') {
 }
 
 project(':mx-dal-hibernate') {
-  version = '1.0.13'
+  version = '1.0.14'
 
   dependencies {
     compile(
@@ -50,7 +50,7 @@ project(':mx-dal-hibernate') {
 }
 
 project(':mx-dal-mongodb') {
-  version = '1.0.4'
+  version = '1.0.5'
 
   dependencies {
     compile(
