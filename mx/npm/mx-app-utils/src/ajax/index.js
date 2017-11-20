@@ -10,8 +10,10 @@ let fnSuccess = (success, res, error) => {
   if (data.errorCode && data.errorCode !== 0) {
     fnError(error, data.errorMessage)
     return
-  } else {
+  } else if (data.pagination) {
     pagination = data.pagination
+  }
+  if (data.data) {
     data = data.data
   }
   if (success && typeof success === 'function') {

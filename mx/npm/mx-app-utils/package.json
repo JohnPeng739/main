@@ -1,6 +1,6 @@
 {
   "name": "mx-app-utils",
-  "version": "1.1.9",
+  "version": "1.2.1",
   "description": "Web前端开发工具类模块",
   "main": "src/index.js",
   "scripts": {
