@@ -76,10 +76,11 @@ public class ServerManageResource {
     }
 
     @Path("server/service/local")
-    @GET
-    public DataVO<Boolean> serviceLocal(@QueryParam("cmd") String cmd, @QueryParam("service") String service) {
+    @POST
+    public DataVO<Boolean> serviceLocal(@QueryParam("cmd") String cmd, @QueryParam("service") String service,
+                                        JSONObject serviceConfig) {
         try {
-            serverManageService.serviceLocal(ServerManageService.ServiceType.SYSTEMCTL, cmd, service);
+            serverManageService.serviceLocal(ServerManageService.ServiceType.SYSTEMCTL, cmd, service, serviceConfig);
             return new DataVO<>(true);
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);

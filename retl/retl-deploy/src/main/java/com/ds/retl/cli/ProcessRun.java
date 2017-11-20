@@ -62,7 +62,13 @@ public class ProcessRun {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 StringBuffer sb = new StringBuffer();
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Commands console: ");
+                }
                 while ((line = reader.readLine()) != null) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(line);
+                    }
                     sb.append(line);
                     sb.append("\n");
                     if (!StringUtils.isBlank(endFlag) && line.startsWith(endFlag)) {
@@ -72,6 +78,7 @@ public class ProcessRun {
                         break;
                     }
                 }
+                process.destroy();
                 return sb.toString();
             }
         } catch (IOException ex) {

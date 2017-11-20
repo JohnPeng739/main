@@ -12,8 +12,6 @@ import java.util.Map;
 public interface ServerManageService {
     JSONObject getServerInfo(String machineName) throws UserInterfaceErrorException;
 
-    ;
-
     JSONObject saveServerInfo(String info) throws UserInterfaceErrorException;
 
     JSONObject deleteServerInfo(String machineName) throws UserInterfaceErrorException;
@@ -24,7 +22,8 @@ public interface ServerManageService {
 
     boolean serviceRest(String cmd, String service, String machineIp) throws UserInterfaceErrorException;
 
-    String serviceLocal(ServiceType type, String cmd, String service) throws UserInterfaceErrorException;
+    String serviceLocal(ServiceType type, String cmd, String service, JSONObject serviceConfig)
+            throws UserInterfaceErrorException;
 
     Map<String, ServiceStatus> serviceStatusRest(String machineIp) throws UserInterfaceErrorException;
 
@@ -32,8 +31,12 @@ public interface ServerManageService {
 
     enum ServiceType {SYSTEMCTL}
 
-    public class ServiceStatus {
+    class ServiceStatus {
         private boolean enabled, active;
+
+        public static ServiceStatus instance(boolean enable, boolean active) {
+            return new ServiceStatus(enable, active);
+        }
 
         public ServiceStatus() {
             super();

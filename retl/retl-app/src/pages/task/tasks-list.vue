@@ -40,7 +40,7 @@
           <template slot-scope="scope">
             <el-form label-position="left">
               <el-form-item label="集群状态">
-                <span v-if="scope.row.status" class="inline-span info">{{scope.row.status}}</span>
+                <span v-if="scope.row.submitted" class="inline-span info">已提交到集群</span>
                 <span v-else class="inline-span warn">未提交到集群</span>
                 <el-button v-if="!scope.row.submitted" @click="handleSubmit(scope.row.id, false)" size="mini" class="inline-button">提交集群</el-button>
                 <el-button v-if="!scope.row.submitted && isDebug" @click="handleSubmit(scope.row.id, true)" size="mini" class="inline-button">本地仿真</el-button>

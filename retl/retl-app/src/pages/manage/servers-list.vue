@@ -14,7 +14,7 @@
   <div>
     <pane-paginate-list ref="panePaginateList" v-on:buttonHandle="handleButtonClick">
       <el-table :max-height="570" :data="tableData" class="layout-table" highlight-current-row
-                @current-change="handleCurrentChange" @expand="handleExpand">
+                @current-change="handleCurrentChange">
         <el-table-column type="expand">
           <template slot-scope="scope">
             <el-row type="flex" v-if="scope.row.zookeeper" class="row-status">
@@ -33,10 +33,10 @@
                 <span class="title">服务状态：</span>
                 <el-button :disabled="isEnabled(scope.row.status, 'storm')" @click="handleService('storm', 'enable', scope.row.machineIp)" type="primary" size="small">启用</el-button>
                 <el-button :disabled="!isEnabled(scope.row.status, 'storm')" @click="handleService('storm', 'disable', scope.row.machineIp)" type="primary" size="small">禁用</el-button>
-                <el-button :disabled="isActive(scope.row.status, 'zookeeper')" @click="handleService('storm', 'start', scope.row.machineIp)" type="primary" size="small">启动</el-button>
-                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('storm', 'stop', scope.row.machineIp)" type="primary" size="small">停止</el-button>
-                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('storm', 'reload', scope.row.machineIp)" type="primary" size="small">重载</el-button>
-                <el-button :disabled="!isActive(scope.row.status, 'zookeeper')" @click="handleService('storm', 'restart', scope.row.machineIp)" type="primary" size="small">重启</el-button>
+                <el-button :disabled="isActive(scope.row.status, 'storm')" @click="handleService('storm', 'start', scope.row.machineIp)" type="primary" size="small">启动</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'storm')" @click="handleService('storm', 'stop', scope.row.machineIp)" type="primary" size="small">停止</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'storm')" @click="handleService('storm', 'reload', scope.row.machineIp)" type="primary" size="small">重载</el-button>
+                <el-button :disabled="!isActive(scope.row.status, 'storm')" @click="handleService('storm', 'restart', scope.row.machineIp)" type="primary" size="small">重启</el-button>
               </el-col>
             </el-row>
           </template>
@@ -71,6 +71,7 @@
 
 <script>
   import {logger} from 'mx-app-utils'
+  import {Loading} from 'element-ui'
   import {get, post, del} from '../../assets/ajax'
   import {info, confirm} from '../../assets/notify'
   import PanePaginateList from '../../components/pane-paginate-list.vue'
@@ -134,18 +135,9 @@
         get(url, data => {
           if (data) {
             info(cmd + '服务[' + service + ']成功。')
+            setTimeout(_ => this.refreshData(null), 2000)
           }
         })
-      },
-      handleExpand(row, expanded) {
-        if (expanded) {
-          let url = '/rest/server/status?machineIp=' + row.machineIp
-          logger.debug('send GET "%s"', url)
-          get(url, data => {
-            row.status = data
-            logger.debug(row)
-          })
-        }
       },
       handleButtonClick(operate, pagination) {
         if (operate === 'detail' || operate === 'edit' || operate === 'delete') {

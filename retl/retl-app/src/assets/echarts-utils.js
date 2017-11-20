@@ -69,7 +69,7 @@ const etlBolts = [
   {name: '归一化', x: 300, y: 200, value: 1},
   {name: '校验', x: 500, y: 100, value: 1},
   {name: '转换', x: 700, y: 100, value: 1},
-  {name: 'JMS缓存', x: 900, y: 200, value: 1},
+  {name: 'JMS存储', x: 900, y: 200, value: 1},
   {name: '错误处理', x: 600, y: 300, value: 1}
 ]
 

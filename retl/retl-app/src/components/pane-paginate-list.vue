@@ -85,6 +85,7 @@
       },
       handleSizeChange(size) {
         this.pagination.size = size
+        this.$emit('buttonHandle', 'refresh', this.pagination)
       },
       handlePageChange(page) {
         this.pagination.page = page

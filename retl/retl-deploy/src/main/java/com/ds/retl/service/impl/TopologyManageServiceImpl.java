@@ -217,10 +217,11 @@ public class TopologyManageServiceImpl implements TopologyManageService {
                 throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_FILE_OPERATE_FAIL);
             }
             try {
+                int timeout = 60;
                 String submitInfo = new RETLStormCli(stormHome, stormBin, retlHome, retlPlatform, retlDeps)
-                        .deploy(configName, 10);
+                        .deploy(configName, timeout);
                 topology.setSubmitInfo(submitInfo);
-                for (int index = 0; index < 10; index++) {
+                for (int index = 0; index < timeout; index++) {
                     JSONObject submittedTopology = foundSubmitedTopology(topologyName);
                     if (submittedTopology != null) {
                         topology.setSubmittedTime(new Date().getTime());
@@ -240,8 +241,8 @@ public class TopologyManageServiceImpl implements TopologyManageService {
                         }
                     }
                 }
-                if (logger.isWarnEnabled()) {
-                    logger.warn("The topology can be found in cluster after wait 10s.");
+                if (logger.isDebugEnabled()) {
+                    logger.debug("The topology can be found in cluster after wait 10s.");
                 }
                 topology.setSubmittedTime(new Date().getTime());
                 topology.setSubmitted(false);

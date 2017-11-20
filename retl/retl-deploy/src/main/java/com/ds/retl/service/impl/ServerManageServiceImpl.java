@@ -1,5 +1,6 @@
 package com.ds.retl.service.impl;
 
+import clojure.lang.Obj;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.cli.SystemCtlCli;
@@ -355,7 +356,15 @@ public class ServerManageServiceImpl implements ServerManageService {
                     String info = config.getConfigContent();
                     try {
                         JSONObject json = JSON.parseObject(info);
-                        String machineName = json.getString("machineName");
+                        String machineName = json.getString("machineName"), machineIp = json.getString("machineIp");
+                        // 获取状态
+                        JSONObject status = serviceStatusRestJson(machineIp);
+                        if (status != null) {
+                            if (logger.isDebugEnabled()) {
+                                logger.debug(String.format("Get %s status success: %s.", machineIp, status.toJSONString()));
+                            }
+                            json.put("status", status);
+                        }
                         map.put(machineName, json);
                     } catch (Exception ex) {
                         if (logger.isErrorEnabled()) {
@@ -385,6 +394,7 @@ public class ServerManageServiceImpl implements ServerManageService {
 
     /**
      * {@inheritDoc}
+     *
      * @see ServerManageService#getServerInfos(Pagination)
      */
     @Override
@@ -425,8 +435,24 @@ public class ServerManageServiceImpl implements ServerManageService {
         }
     }
 
+    private JSONObject getServiceConfig(String machineIp, String service) throws UserInterfaceErrorException {
+        Map<String, JSONObject> serverInfos = getServerInfos();
+        if (serverInfos != null && !serverInfos.isEmpty()) {
+            for (JSONObject row : serverInfos.values()) {
+                if (machineIp.equals(row.getString("machineIp"))) {
+                    JSONObject config = row.getJSONObject(service);
+                    if (config != null) {
+                        return config;
+                    }
+                }
+            }
+        }
+        throw new UserInterfaceErrorException(UserInterfaceErrors.SERVICE_NOT_CONFIGURE);
+    }
+
     /**
      * {@inheritDoc}
+     *
      * @see ServerManageService#serviceRest(String, String, String)
      */
     @Override
@@ -436,9 +462,10 @@ public class ServerManageServiceImpl implements ServerManageService {
         }
         RestClientInvoke invoke = new RestClientInvoke();
         try {
+            JSONObject serviceConfig = getServiceConfig(machineIp, service);
             int restPort = env.getProperty("restful.port", Integer.class, 9999);
-            JSONObject json = invoke.get(String.format("http://%s:%d/rest/server/service/local?cmd=%s&service=%s",
-                    machineIp, restPort, cmd, service),
+            JSONObject json = invoke.post(String.format("http://%s:%d/rest/server/service/local?cmd=%s&service=%s",
+                    machineIp, restPort, cmd, service), serviceConfig,
                     JSONObject.class);
             return json.getBooleanValue("data");
         } catch (RestInvokeException ex) {
@@ -451,13 +478,33 @@ public class ServerManageServiceImpl implements ServerManageService {
         }
     }
 
+    private String serviceLocal(ServiceType type, String cmd, String service) throws UserInterfaceErrorException {
+        return serviceLocal(type, cmd, service, null);
+    }
+
     /**
      * {@inheritDoc}
      *
-     * @see ServerManageService#serviceLocal(ServiceType, String, String)
+     * @see ServerManageService#serviceLocal(ServiceType, String, String, JSONObject)
      */
     @Override
-    public String serviceLocal(ServiceType type, String cmd, String service) throws UserInterfaceErrorException {
+    public String serviceLocal(ServiceType type, String cmd, String service, JSONObject serviceConfig)
+            throws UserInterfaceErrorException {
+        if (serviceConfig != null) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("service config: %s.", serviceConfig.toJSONString()));
+            }
+            if ("zookeeper".equals(service)) {
+                prepareZookeeperService(serviceConfig);
+            } else if ("storm".equals(service)) {
+                prepareStormService(serviceConfig);
+            } else {
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format("Unsupported service type: %s.", service));
+                }
+                throw new UserInterfaceErrorException(UserInterfaceErrors.SERVICE_UNSUPORTED);
+            }
+        }
         switch (type) {
             case SYSTEMCTL:
                 String info = systemctl(cmd, service);
@@ -474,34 +521,20 @@ public class ServerManageServiceImpl implements ServerManageService {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see ServerManageService#serviceStatusRest(String)
-     */
-    @Override
-    public Map<String, ServiceStatus> serviceStatusRest(String machineIp) throws UserInterfaceErrorException {
+    private JSONObject serviceStatusRestJson(String machineIp) throws UserInterfaceErrorException {
         if (StringUtils.isBlank(machineIp)) {
             throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
         }
         RestClientInvoke invoke = new RestClientInvoke();
         try {
             int restPort = env.getProperty("restful.port", Integer.class, 9999);
-            JSONObject json = invoke.get(String.format("http://%s:%d/rest/server/status/local", machineIp, restPort),
+            String url = String.format("http://%s:%d/rest/server/status/local", machineIp, restPort);
+            JSONObject json = invoke.get(url,
                     JSONObject.class);
-            JSONObject data = json.getJSONObject("data");
-            Map<String, ServiceStatus> status = new HashMap<>();
-            if (data.containsKey("zookeeper")) {
-                JSONObject zookeeper = data.getJSONObject("zookeeper");
-                status.put("zookeeper", new ServiceStatus(zookeeper.getBooleanValue("enabled"),
-                        zookeeper.getBooleanValue("active")));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("From %s response: %s.", url, json.toJSONString()));
             }
-            if (data.containsKey("storm")) {
-                JSONObject storm = data.getJSONObject("storm");
-                status.put("storm", new ServiceStatus(storm.getBooleanValue("enabled"),
-                        storm.getBooleanValue("active")));
-            }
-            return status;
+            return json.getJSONObject("data");
         } catch (RestInvokeException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
@@ -514,6 +547,32 @@ public class ServerManageServiceImpl implements ServerManageService {
 
     /**
      * {@inheritDoc}
+     *
+     * @see ServerManageService#serviceStatusRest(String)
+     */
+    @Override
+    public Map<String, ServiceStatus> serviceStatusRest(String machineIp) throws UserInterfaceErrorException {
+        if (StringUtils.isBlank(machineIp)) {
+            throw new UserInterfaceErrorException(UserInterfaceErrors.SYSTEM_ILLEGAL_PARAM);
+        }
+        JSONObject data = serviceStatusRestJson(machineIp);
+        Map<String, ServiceStatus> status = new HashMap<>();
+        if (data.containsKey("zookeeper")) {
+            JSONObject zookeeper = data.getJSONObject("zookeeper");
+            status.put("zookeeper", new ServiceStatus(zookeeper.getBooleanValue("enabled"),
+                    zookeeper.getBooleanValue("active")));
+        }
+        if (data.containsKey("storm")) {
+            JSONObject storm = data.getJSONObject("storm");
+            status.put("storm", new ServiceStatus(storm.getBooleanValue("enabled"),
+                    storm.getBooleanValue("active")));
+        }
+        return status;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see ServerManageService#serviceStatusLocal(String)
      */
     @Override

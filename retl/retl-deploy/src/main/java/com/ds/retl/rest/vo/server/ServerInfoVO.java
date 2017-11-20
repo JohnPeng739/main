@@ -1,6 +1,7 @@
 package com.ds.retl.rest.vo.server;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ds.retl.service.ServerManageService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class ServerInfoVO {
     private String machineName, machineIp;
     private Zookeeper zookeeper;
     private Storm storm;
+    private JSONObject status;
 
     public class Zookeeper {
         private boolean cluster = false;
@@ -164,6 +166,7 @@ public class ServerInfoVO {
             this.zookeeper = new Zookeeper(zookeeperJson);
             JSONObject stormJson = json.getJSONObject("storm");
             this.storm = new Storm(stormJson);
+            this.status = json.getJSONObject("status");
         }
     }
 
@@ -183,6 +186,10 @@ public class ServerInfoVO {
         this.storm = storm;
     }
 
+    public void setStatus(JSONObject status) {
+        this.status = status;
+    }
+
     public String getMachineName() {
         return machineName;
     }
@@ -197,5 +204,9 @@ public class ServerInfoVO {
 
     public Storm getStorm() {
         return storm;
+    }
+
+    public JSONObject getStatus() {
+        return status;
     }
 }

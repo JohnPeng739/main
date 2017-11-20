@@ -61,15 +61,17 @@
         let url = '/api/v1/cluster/summary'
         logger.debug('send GET "%s"', url)
         get(url, data => {
+          logger.debug('Response data: %j.', data)
           if (data) {
             this.refreshGauge(this.echartSlots, this.slotsOption, data.slotsTotal, data.slotsUsed)
             this.refreshGauge(this.echartCpu, this.cpuOption, data.totalCpu, data.totalCpu - data.availCpu)
             this.refreshGauge(this.echartMem, this.memOption, data.totalMem, data.totalMem - data.availMem)
           }
-        })
+        })/*
         url = '/api/v1/topology/summary'
         logger.debug('send GET "%s"', url)
         get(url, data => {
+          logger.debug('Response data: %j.', data)
           if (data && data.topologies && data.topologies.length > 0) {
             let legendData = []
             let taskTotal = 0
@@ -97,7 +99,7 @@
             this.topologiesOption.legend.data = legendData
             this.echartTopologies.setOption(this.topologiesOption, false)
           }
-        })
+        })*/
       },
       refreshGauge(echart, option, total, used) {
         option.series[0].max = total
