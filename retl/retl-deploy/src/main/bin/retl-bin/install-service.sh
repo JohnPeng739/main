@@ -27,7 +27,7 @@ do
     break
   fi
 done
-echo -n "Enter the database's url:[jdbc:oracle:thin:@192.168.7.190:7110:dsdb] "
+echo -n "Enter the database's url: [jdbc:oracle:thin:@192.168.7.190:7110:dsdb]"
 read dburl
 echo -n "Enter the database's user: "
 read dbuser
@@ -51,9 +51,20 @@ if [ "$confirm " == "yes " ]; then
   echo ""
   echo "Modify the configuration file......"
 
+  if [ -f ${retl}/conf/server.properties ]; then
+    cp ${retl}/conf/server.properties ${retl}/conf/server.properties.bak
+  fi
   sed -i 's/^restful.port/#restful.port/g' ${retl}/conf/server.properties
   sed -i "/^restful.service.classes/i\restful.port=${port}" ${retl}/conf/server.properties
 
+  if [ -f ${retl}/conf/web-app.conf ]; then
+    cp ${retl}/conf/web-app.conf ${retl}/conf/web-app.conf.bak
+  fi
+  sed -i "s/http:\/\/localhost:9999/http:\/\/localhost:${port}/g" ${retl}/conf/web-app.conf
+
+  if [ -f ${retl}/conf/database.properties ]; then
+    cp ${retl}/conf/database.properties ${retl}/conf/database.properties.bak
+  fi
   sed -i 's/^db.driver/#db.driver/g' ${retl}/conf/database.properties
   sed -i 's/^db.url/#db.url/g' ${retl}/conf/database.properties
   sed -i 's/^db.user/#db.user/g' ${retl}/conf/database.properties
@@ -63,6 +74,9 @@ if [ "$confirm " == "yes " ]; then
   sed -i "/^db.initialSize/i\db.user=$dbuser" ${retl}/conf/database.properties
   sed -i "/^db.initialSize/i\db.password=$dbpassword" ${retl}/conf/database.properties
 
+  if [ -f ${retl}/conf/jpa.properties ]; then
+    cp ${retl}/conf/jpa.properties ${retl}/conf/jpa.properties.bak
+  fi
   sed -i 's/^jpa.database/#jpa.database/g' ${retl}/conf/jpa.properties
   sed -i 's/^jpa.databasePlatform/#jpa.databasePlatform/g' ${retl}/conf/jpa.properties
   sed -i "/^jpa.generateDDL/i\jpa.database=${dbnames[database-1]}" ${retl}/conf/jpa.properties
