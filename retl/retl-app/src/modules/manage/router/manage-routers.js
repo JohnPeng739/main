@@ -5,6 +5,9 @@ export const manageRouters = [{
   path: '/manage/users',
   component: resolve => require(['../../../pages/manage/users-list.vue'], resolve)
 }, {
+  path: '/manage/retl-statistic',
+  component: resolve => require(['../../../pages/st-retl-statistic.vue'], resolve)
+}, {
   path: '/manage/servers',
   component: resolve => require(['../../../pages/manage/servers-list.vue'], resolve)
 }]
@@ -23,6 +26,11 @@ export const manageNavData = {
     path: '/manage/users',
     icon: 'supervisor_account',
     title: '用户列表',
+    role: 'manager',
+  }, {
+    path: '/manage/retl-statistic',
+    icon: 'supervisor_account',
+    title: '全省当日警情',
     role: 'manager',
   }, {
     path: '/manage/servers',

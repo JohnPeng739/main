@@ -31,6 +31,9 @@ const router = new Router({
   }, {
     path: '/tasks/task/:topologyId',
     component: resolve => require(['../../../pages/task/task-detail.vue'],resolve)
+  }, {
+    path: '/retl-statistic',
+    component: resolve => require(['../../../pages/st-retl-statistic.vue'], resolve)
   }]
 })
 export default router
