@@ -79,4 +79,13 @@ export default [{
       "cpuAssignedPercentUtil": 37.5
     }
   }
+}, {
+  path: /\/rest\/retl-statistic\?userCode=\w(&\w=\w)*/,
+  type: 'get',
+  data: {
+    data: {
+      'total': [{name: '济南市', value: Math.round(Math.random() * 5000)}, {name: '青岛市', value: Math.round(Math.random() * 3000)}],
+      'error': [{name: '济南市', value: Math.round(Math.random() * 50)}, {name: '青岛市', value: Math.round(Math.random() * 40)}]
+    }
+  }
 }]

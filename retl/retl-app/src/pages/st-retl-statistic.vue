@@ -24,6 +24,8 @@
 
 <script>
   import echarts from 'echarts'
+  import {logger} from 'mx-app-utils'
+  import {get} from '../assets/ajax'
   import 'echarts/map/js/province/shandong'
 
   export default {
@@ -47,7 +49,7 @@
       },
       createOption(subtext, color) {
         return {
-          title: {text: '山东全省警情实时汇聚', subtext: subtext, left: 'center'},
+          title: {text: subtext, left: 'center'},
           visualMap: {min: 0, max: 2500, left: 'left', text: ['高', '低'], calculable: true, show: false,
           inRange: {color: ['lightgray', color]}},
           series: [{
@@ -61,27 +63,22 @@
         }
       },
       refreshData() {
-        this.optionTotal.series[0].data = [
-          {name: '济南市', value: '1500'},
-          {name: '青岛市', value: '1300'},
-          {name: '烟台市', value: '650'},
-          {name: '德州市', value: '700'},
-          {name: '泰安市', value: '340'},
-          {name: '东营市', value: '1000'},
-          {name: '临沂市', value: '900'}
-        ]
-        this.optionTotal.visualMap.min = 0
-        this.optionTotal.visualMap.max = 1500
-        this.optionError.series[0].data = [
-          {name: '济南市', value: '20'},
-          {name: '烟台市', value: '5'},
-          {name: '临沂市', value: '0'},
-          {name: '青岛市', value: '10'},
-          {name: '东营市', value: '19'},
-          {name: '德州市', value: '8'}
-        ]
-        this.optionError.visualMap.min = 0
-        this.optionError.visualMap.max = 20
+        let url = '/rest/retl-statistic'
+        logger.debug('send GET "%s"', url)
+        get(url, data => {
+          if (data && data.total) {
+            let max = 550
+            //data.total.forEach(row => max = Math.max(max, row.value))
+            this.optionTotal.series[0].data = data.total
+            this.optionTotal.visualMap.max = max
+          }
+          if (data && data.error) {
+            let max = 550
+            //data.total.forEach(row => max = Math.max(max, row.value))
+            this.optionError.series[0].data = data.error
+            this.optionError.visualMap.max = max
+          }
+        })
 
         this.echartsTotal.setOption(this.optionTotal, false)
         this.echartsError.setOption(this.optionError, false)
@@ -92,7 +89,7 @@
       this.echartsError = echarts.init(document.getElementById('divError'))
       this.optionTotal = this.createOption('抽取数', 'green')
       this.optionError = this.createOption('错误数', 'red')
-      this.interval = setInterval(_ => this.refreshData(), 3000)
+      //this.interval = setInterval(_ => this.refreshData(), 5000)
       this.refreshData()
     },
     destroyed() {
