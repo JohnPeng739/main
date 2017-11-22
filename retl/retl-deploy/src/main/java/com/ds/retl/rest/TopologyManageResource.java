@@ -88,7 +88,6 @@ public class TopologyManageResource {
         }
         try {
             List<Topology> topologies = accessor.list(pagination, Topology.class);
-            // TODO 获取拓扑实时状态
             return new PaginationDataVO<>(pagination, TopologyVO.transform(topologies));
         } catch (EntityAccessException ex) {
             if (logger.isErrorEnabled()) {
