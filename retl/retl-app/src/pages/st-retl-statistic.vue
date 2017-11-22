@@ -3,12 +3,9 @@
 
   .content {
     margin: 30px auto;
-    width: 100%;
-    height: 100%;
     text-align: center;
     .divMap {
       display: inline-block;
-      width: 550px;
       height: 400px;
       padding: 0 5px;
     }
@@ -17,8 +14,19 @@
 
 <template>
   <div class="content">
-    <div id="divTotal" class="divMap broder"></div>
-    <div id="divError" class="divMap"></div>
+    <el-row type="flex">
+      <el-col :span="24">
+        <div id="divTotal" class="divMap"></div>
+        <div id="divError" class="divMap"></div>
+      </el-col>
+    </el-row>
+    <el-row type="flex">
+      <el-col :span="24">
+        <el-table :data="tableData">
+          <el-table-column v-for="item in columns" :key="item" :prop="item" :label="item" align="left"></el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -33,6 +41,8 @@
     name: 'page-st-retl-statistic',
     data() {
       return {
+        columns: [],
+        tableData: [],
         interval: null
       }
     },
@@ -63,26 +73,47 @@
         let url = '/rest/retl-statistic'
         logger.debug('send GET "%s"', url)
         get(url, data => {
-          if (data && data.total) {
-            let max = 0
-            data.total.forEach(row => max = Math.max(max, row.value))
-            optionTotal.series[0].data = data.total
-            optionTotal.visualMap.max = max
-          }
-          if (data && data.error) {
-            let max = 0
-            data.total.forEach(row => max = Math.max(max, row.value))
-            optionError.series[0].data = data.error
-            optionError.visualMap.max = max
+          let columns = ['地市']
+          let tableData = [{'地市': '抽取数'}, {'地市':'错误数'}]
+          if (data && data.cities) {
+            let maxTotal = 0
+            let maxError = 0
+            let totals = []
+            let errors = []
+            data.cities.forEach(row => {
+              let {name, total, error} = row
+              columns.push(name)
+              maxTotal = Math.max(maxTotal, total)
+              maxError = Math.max(maxError, error)
+              totals.push({name, value: total})
+              errors.push({name, value: error})
+              tableData[0][name] = total
+              tableData[1][name] = error
+            })
+            optionTotal.series[0].data = totals
+            optionTotal.visualMap.max = maxTotal
+            optionError.series[0].data = errors
+            optionError.visualMap.max = maxError
           }
           echartsTotal.setOption(optionTotal, false)
           echartsError.setOption(optionError, false)
+          this.columns = columns
+          this.tableData = tableData
         })
+      },
+      resizeChart(echart, parent) {
+        let {clientWidth, clientHeight} = parent
+        echart.style.width = (clientWidth / 2 - 20) + 'px'
       }
     },
     mounted() {
-      let echartsTotal = echarts.init(document.getElementById('divTotal'))
-      let echartsError = echarts.init(document.getElementById('divError'))
+      let divParent = document.getElementsByClassName('content')[0]
+      let divTotal = document.getElementById('divTotal')
+      let divError = document.getElementById('divError')
+      this.resizeChart(divTotal, divParent)
+      this.resizeChart(divError, divParent)
+      let echartsTotal = echarts.init(divTotal)
+      let echartsError = echarts.init(divError)
       let optionTotal = this.createOption('抽取数', 'green')
       let optionError = this.createOption('错误数', 'red')
       this.interval = setInterval(_ => this.refreshData(echartsTotal, echartsError, optionTotal, optionError), 5000)

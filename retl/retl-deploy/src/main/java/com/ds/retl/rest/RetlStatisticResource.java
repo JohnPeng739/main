@@ -33,17 +33,15 @@ public class RetlStatisticResource {
     @GET
     public DataVO<RetlStatisticVO> getRetlStatistic() {
         // 尚未真正实现，这里模拟山东省的数据
-        List<NameValueVO> total = new ArrayList<>();
-        List<NameValueVO> error = new ArrayList<>();
         String[] cities = {"济南市", "青岛市", "烟台市", "德州市", "泰安市", "临沂市", "威海市", "东营市", "济宁市", "日照市",
                 "淄博市", "枣庄市", "潍坊市", "滨州市", "菏泽市", "莱芜市", "聊城市"};
+        RetlStatisticVO vo = new RetlStatisticVO();
         Random random = new Random();
         for (String city : cities) {
-            NameValueVO vot = new NameValueVO(city, random.nextInt(5000));
-            NameValueVO voe = new NameValueVO(city, random.nextInt(Integer.valueOf(vot.getValue())));
-            total.add(vot);
-            error.add(voe);
+            int total = random.nextInt(5000);
+            int error = random.nextInt(total);
+            vo.add(city, total, error);
         }
-        return new DataVO<>(new RetlStatisticVO(total, error));
+        return new DataVO<>(vo);
     }
 }

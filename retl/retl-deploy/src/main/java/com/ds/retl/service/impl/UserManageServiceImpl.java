@@ -3,13 +3,13 @@ package com.ds.retl.service.impl;
 import com.ds.retl.dal.entity.User;
 import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.error.UserInterfaceErrors;
-import com.ds.retl.service.OperateLogService;
 import com.ds.retl.service.UserManageService;
 import org.mx.DigestUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.dal.service.GeneralDictAccessor;
+import org.mx.dal.service.OperateLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -22,14 +22,13 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author : john.peng created on date : 2017/10/8
  */
-@Component("userManageServiceHibernate")
+@Component
 public class UserManageServiceImpl implements UserManageService {
     @Autowired
     @Qualifier("generalDictEntityAccessorHibernate")
     private GeneralDictAccessor accessor = null;
 
     @Autowired
-    @Qualifier("operateLogService")
     private OperateLogService logService = null;
 
     /**

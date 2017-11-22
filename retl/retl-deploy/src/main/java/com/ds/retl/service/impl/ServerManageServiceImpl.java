@@ -1,13 +1,11 @@
 package com.ds.retl.service.impl;
 
-import clojure.lang.Obj;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.cli.SystemCtlCli;
 import com.ds.retl.dal.entity.ConfigJson;
 import com.ds.retl.exception.UserInterfaceErrorException;
 import com.ds.retl.rest.error.UserInterfaceErrors;
-import com.ds.retl.service.OperateLogService;
 import com.ds.retl.service.ServerManageService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +15,7 @@ import org.mx.dal.Pagination;
 import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.dal.service.GeneralDictAccessor;
+import org.mx.dal.service.OperateLogService;
 import org.mx.rest.client.RestClientInvoke;
 import org.mx.rest.client.RestInvokeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,7 +170,14 @@ public class ServerManageServiceImpl implements ServerManageService {
             }
             throw new UserInterfaceErrorException(UserInterfaceErrors.SERVICE_ZK_SERVICE_FAIL);
         }
-        operateLogService.writeLog("写入ZOOKEEPER服务配置信息成功。");
+        try {
+            operateLogService.writeLog("写入ZOOKEEPER服务配置信息成功。");
+        } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
     }
 
     private void prepareStormService(JSONObject config) throws UserInterfaceErrorException {
@@ -275,7 +281,14 @@ public class ServerManageServiceImpl implements ServerManageService {
             }
             throw new UserInterfaceErrorException(UserInterfaceErrors.SERVICE_STORM_SERVICE_FAIL);
         }
-        operateLogService.writeLog("写入STORM服务配置信息成功。");
+        try {
+            operateLogService.writeLog("写入STORM服务配置信息成功。");
+        } catch (EntityAccessException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            throw new UserInterfaceErrorException(UserInterfaceErrors.DB_OPERATE_FAIL);
+        }
     }
 
     /**

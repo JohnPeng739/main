@@ -112,8 +112,11 @@ export default [{
   type: 'get',
   data: {
     data: {
-      'total': [{name: '济南市', 'value|1000-5000': 3000}, {name: '青岛市', 'value|1000-5000': 3000}],
-      'error': [{name: '济南市', 'value|5-50': 30}, {name: '青岛市', 'value|3-20': 13}]
+      cities: [
+        {name: '济南市', 'total|1000-5000': 3000, 'error|0-100': 100},
+        {name: '青岛市', 'total|1000-5000': 3000, 'error|0-100': 100},
+        {name: '济宁市', 'total|1000-5000': 3000, 'error|0-100': 100}
+      ]
     }
   }
 }]

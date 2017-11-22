@@ -1,5 +1,6 @@
 package com.ds.retl.rest.config;
 
+import com.ds.retl.rest.RetlStatisticResource;
 import com.ds.retl.rest.ServerManageResource;
 import com.ds.retl.rest.TopologyManageResource;
 import com.ds.retl.rest.UserManageResource;
@@ -40,6 +41,7 @@ public class RETLRestConfig {
      */
     @Bean(name = "restfulClassesRETL")
     public List<Class<?>> restulClassesRETL() {
-        return Arrays.asList(UserManageResource.class, TopologyManageResource.class, ServerManageResource.class);
+        return Arrays.asList(UserManageResource.class, TopologyManageResource.class, ServerManageResource.class,
+                RetlStatisticResource.class);
     }
 }
