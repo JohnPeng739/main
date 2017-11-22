@@ -17,7 +17,7 @@
 
 <template>
   <div class="content">
-    <div id="divTotal" class="divMap"></div>
+    <div id="divTotal" class="divMap broder"></div>
     <div id="divError" class="divMap"></div>
   </div>
 </template>
@@ -27,15 +27,12 @@
   import {logger} from 'mx-app-utils'
   import {get} from '../assets/ajax'
   import 'echarts/map/js/province/shandong'
+  import 'echarts/map/json/province/shandong.json'
 
   export default {
     name: 'page-st-retl-statistic',
     data() {
       return {
-        echartsTotal: null,
-        echartsError: null,
-        optionTotal: null,
-        optionError: null,
         interval: null
       }
     },
@@ -62,35 +59,34 @@
           }]
         }
       },
-      refreshData() {
+      refreshData(echartsTotal, echartsError, optionTotal, optionError) {
         let url = '/rest/retl-statistic'
         logger.debug('send GET "%s"', url)
         get(url, data => {
           if (data && data.total) {
-            let max = 550
-            //data.total.forEach(row => max = Math.max(max, row.value))
-            this.optionTotal.series[0].data = data.total
-            this.optionTotal.visualMap.max = max
+            let max = 0
+            data.total.forEach(row => max = Math.max(max, row.value))
+            optionTotal.series[0].data = data.total
+            optionTotal.visualMap.max = max
           }
           if (data && data.error) {
-            let max = 550
-            //data.total.forEach(row => max = Math.max(max, row.value))
-            this.optionError.series[0].data = data.error
-            this.optionError.visualMap.max = max
+            let max = 0
+            data.total.forEach(row => max = Math.max(max, row.value))
+            optionError.series[0].data = data.error
+            optionError.visualMap.max = max
           }
+          echartsTotal.setOption(optionTotal, false)
+          echartsError.setOption(optionError, false)
         })
-
-        this.echartsTotal.setOption(this.optionTotal, false)
-        this.echartsError.setOption(this.optionError, false)
       }
     },
     mounted() {
-      this.echartsTotal = echarts.init(document.getElementById('divTotal'))
-      this.echartsError = echarts.init(document.getElementById('divError'))
-      this.optionTotal = this.createOption('抽取数', 'green')
-      this.optionError = this.createOption('错误数', 'red')
-      //this.interval = setInterval(_ => this.refreshData(), 5000)
-      this.refreshData()
+      let echartsTotal = echarts.init(document.getElementById('divTotal'))
+      let echartsError = echarts.init(document.getElementById('divError'))
+      let optionTotal = this.createOption('抽取数', 'green')
+      let optionError = this.createOption('错误数', 'red')
+      this.interval = setInterval(_ => this.refreshData(echartsTotal, echartsError, optionTotal, optionError), 5000)
+      this.$nextTick(_ => this.refreshData(echartsTotal, echartsError, optionTotal, optionError))
     },
     destroyed() {
       if (this.interval) {

@@ -75,7 +75,7 @@
   import {info, warn, confirm} from '../../assets/notify'
   import {get, post} from '../../assets/ajax'
   import {formatDateTime} from '../../assets/date-utils'
-  import config from '../../modules/manage/config'
+  import config from '../../modules/config'
   import PanePaginateList from '../../components/pane-paginate-list.vue'
 
   export default {

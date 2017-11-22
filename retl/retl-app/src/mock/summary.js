@@ -58,34 +58,62 @@ export default [{
     }
   }
 }, {
-  path: '/api/v1/cluster/summary',
+  path: /\/api\/v1\/cluster\/summary(\?userCode=\w(&\w=\w)*)?/,
   type: 'get',
   data: {
     data: {
       "stormVersion": "1.1.1",
-      "supervisors": 2,
-      "topologies": 3,
-      "slotsTotal": 10,
-      "slotsUsed": 4,
-      "slotsFree": 6,
-      "executorsTotal": 28,
-      "tasksTotal": 28,
+      "supervisors|1-3": 2,
+      "topologies|1-5": 3,
+      "slotsTotal|50-100": 10,
+      "slotsUsed|2-50": 4,
+      "slotsFree|2-10": 6,
+      "executorsTotal|20-30": 28,
+      "tasksTotal|20-30": 28,
       "schedulerDisplayResource": true,
-      "totalMem": 4096.0,
-      "totalCpu": 400.0,
-      "availMem": 1024.0,
-      "availCpu": 250.0,
-      "memAssignedPercentUtil": 75.0,
-      "cpuAssignedPercentUtil": 37.5
+      "totalMem|4096-8192": 4096.0,
+      "totalCpu|20-400": 400.0,
+      "availMem|0-4096": 1024.0,
+      "availCpu|0-200": 200.0,
+      "memAssignedPercentUtil|0-100": 75.0,
+      "cpuAssignedPercentUtil|0-100": 37.5
     }
   }
 }, {
-  path: /\/rest\/retl-statistic\?userCode=\w(&\w=\w)*/,
+  path: /\/api\/v1\/topology\/summary(\?userCode=\w(&\w=\w)*)?/,
   type: 'get',
   data: {
     data: {
-      'total': [{name: '济南市', value: Math.round(Math.random() * 5000)}, {name: '青岛市', value: Math.round(Math.random() * 3000)}],
-      'error': [{name: '济南市', value: Math.round(Math.random() * 50)}, {name: '青岛市', value: Math.round(Math.random() * 40)}]
+      topologies: [{
+        'name': '@title',
+        'tasksTotal|1-10': 5,
+        'assignedCpu|5-50': 30,
+        'assignedTotalMem|512-2048': 1024
+      }, {
+        'name': '@title',
+        'tasksTotal|1-10': 5,
+        'assignedCpu|5-50': 30,
+        'assignedTotalMem|512-2048': 1024
+      }, {
+        'name': '@title',
+        'tasksTotal|1-10': 5,
+        'assignedCpu|5-50': 30,
+        'assignedTotalMem|512-2048': 1024
+      }, {
+        'name': '@title',
+        'tasksTotal|1-10': 5,
+        'assignedCpu|5-50': 30,
+        'assignedTotalMem|512-2048': 1024
+      }]
+    }
+  }
+}, {
+  path: /\/rest\/retl-statistic(\?\w=\w(&\w=\w)*)?/,
+  type: 'get',
+  data: {
+    data: {
+      'total': [{name: '济南市', 'value|1000-5000': 3000}, {name: '青岛市', 'value|1000-5000': 3000}],
+      'error': [{name: '济南市', 'value|5-50': 30}, {name: '青岛市', 'value|3-20': 13}]
     }
   }
 }]

@@ -127,7 +127,7 @@
   import NavHeader from './header.vue'
   import NavMenu from './nav-menu.vue'
   import NavTools from './nav-tools.vue'
-  import config from '../config'
+  import config from '../../config'
   import {getNavTitle} from '../router'
 
   export default {

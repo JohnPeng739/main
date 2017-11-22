@@ -64,7 +64,7 @@
   import {get} from '../assets/ajax'
   import {warn, info} from '../assets/notify'
   import {requiredRule, rangeRule} from '../assets/form-validate-rules'
-  import config from '../modules/manage/config'
+  import config from '../modules/config'
 
   export default {
     data () {

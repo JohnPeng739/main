@@ -71,7 +71,7 @@
   import {logger} from 'mx-app-utils'
   import {postWithError, defaultError} from '../../assets/ajax'
   import {warn} from '../../assets/notify'
-  import config from '../../modules/manage/config'
+  import config from '../../modules/config'
 
   export default {
     name: 'topology-result-info',
