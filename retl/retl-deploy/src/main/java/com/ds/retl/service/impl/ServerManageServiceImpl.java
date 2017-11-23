@@ -16,6 +16,7 @@ import org.mx.dal.exception.EntityAccessException;
 import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.OperateLogService;
+import org.mx.dal.session.SessionDataStore;
 import org.mx.rest.client.RestClientInvoke;
 import org.mx.rest.client.RestInvokeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class ServerManageServiceImpl implements ServerManageService {
     private OperateLogService operateLogService = null;
     @Autowired
     private Environment env = null;
+    @Autowired
+    private SessionDataStore sessionDataStore = null;
 
     private String createMachineConfigField(String machineName) {
         String field = String.format("%s.%s", RETL_SERVERS_PREFIX, machineName);
@@ -477,8 +480,9 @@ public class ServerManageServiceImpl implements ServerManageService {
         try {
             JSONObject serviceConfig = getServiceConfig(machineIp, service);
             int restPort = env.getProperty("restful.port", Integer.class, 9999);
-            JSONObject json = invoke.post(String.format("http://%s:%d/rest/server/service/local?cmd=%s&service=%s",
-                    machineIp, restPort, cmd, service), serviceConfig,
+            String userCode  =sessionDataStore.getCurrentUserCode();
+            JSONObject json = invoke.post(String.format("http://%s:%d/rest/server/service/local?cmd=%s&service=%s&userCode=%s",
+                    machineIp, restPort, cmd, service, userCode), serviceConfig,
                     JSONObject.class);
             return json.getBooleanValue("data");
         } catch (RestInvokeException ex) {

@@ -66,9 +66,11 @@ public class ServerManageResource {
     @Path("server/service")
     @GET
     public DataVO<Boolean> service(@QueryParam("cmd") String cmd, @QueryParam("service") String service,
-                                   @QueryParam("machineIp") String machineIp) {
+                                   @QueryParam("machineIp") String machineIp, @QueryParam("userCode")String userCode) {
+        sessionDataStore.setCurrentUserCode(userCode);
         try {
             serverManageService.serviceRest(cmd, service, machineIp);
+            sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(true);
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
@@ -78,9 +80,11 @@ public class ServerManageResource {
     @Path("server/service/local")
     @POST
     public DataVO<Boolean> serviceLocal(@QueryParam("cmd") String cmd, @QueryParam("service") String service,
-                                        JSONObject serviceConfig) {
+                                        @QueryParam("userCode")String userCode, JSONObject serviceConfig) {
+        sessionDataStore.setCurrentUserCode(userCode);
         try {
             serverManageService.serviceLocal(ServerManageService.ServiceType.SYSTEMCTL, cmd, service, serviceConfig);
+            sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(true);
         } catch (UserInterfaceErrorException ex) {
             return new DataVO<>(ex);
