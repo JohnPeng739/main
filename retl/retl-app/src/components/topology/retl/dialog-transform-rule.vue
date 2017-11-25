@@ -7,7 +7,9 @@
   <el-dialog :visible.sync="visible" :title="title" @close="handleClose" :modal-append-to-body="false" @close-on-click-modal="false">
     <pane-formula-transform v-if="type === 'FormulaTransform'" ref="paneFormulaTransform" :columns="columns" :rule="rule" :mode="mode"></pane-formula-transform>
     <pane-merge-transform v-else-if="type === 'MergeTransform'" ref="paneMergeTransform" :columns="columns" :rule="rule" :mode="mode"></pane-merge-transform>
+    <pane-split-transform v-else-if="type === 'SplitTransform'" ref="paneSplitTransform" :columns="columns" :rule="rule" :mode="mode"></pane-split-transform>
     <pane-sub-string-transform v-else-if="type === 'SubStringTransform'" ref="paneSubStringTransform" :columns="columns" :rule="rule" :mode="mode"></pane-sub-string-transform>
+    <pane-contrast-transform v-else-if="type === 'ContrastTransform'" ref="paneContrastTransform" :columns="columns" :rule="rule" :mode="mode"></pane-contrast-transform>
     <div slot="footer" class="dialog-footer">
       <el-button class="button" @click="handleReset" :disabled="mode === 'detail'">重置</el-button>
       <el-button class="button" @click="handleSubmit" :disabled="mode === 'detail'">保存</el-button>
@@ -20,11 +22,14 @@
   import {logger} from 'mx-app-utils'
   import PaneFormulaTransform from '../../transform/form-transform-formula.vue'
   import PaneMergeTransform from '../../transform/form-transform-merge.vue'
+  import PaneSplitTransform from '../../transform/form-transform-split.vue'
   import PaneSubStringTransform from '../../transform/form-transform-substring.vue'
+  import PaneContrastTransform from '../../transform/form-transform-contrast.vue'
 
   export default {
     name: 'dialog-transform-rule',
-    components: {PaneFormulaTransform, PaneMergeTransform, PaneSubStringTransform},
+    components: {PaneFormulaTransform, PaneMergeTransform, PaneSplitTransform,
+      PaneSubStringTransform,PaneContrastTransform},
     data() {
       return {
         visible: false,

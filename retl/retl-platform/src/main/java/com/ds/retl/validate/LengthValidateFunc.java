@@ -22,8 +22,10 @@ public class LengthValidateFunc implements ValidateFunc {
     public ValidateError validate(RecordColumn column, JSONObject validateConfig, JSONObject data) {
         if (!data.keySet().contains(column.getName())) {
             // 指定的字段不存在
-            return new ValidateError(column.getName(), String.format("字段[%s：%s]不存在，长度校验失败。",
-                    column.getName(), column.getDesc()), data);
+            // update by lichunliang 长度校验时如果字段不存在,不返回错误，跳过校验 20171117
+            return null;
+            /*return new ValidateError(column.getName(), String.format("字段[%s：%s]不存在，长度校验失败。",
+                    column.getName(), column.getDesc()), data);*/
         }
         Object value = data.get(column.getName());
         if (value != null) {

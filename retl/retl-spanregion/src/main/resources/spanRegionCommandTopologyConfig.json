@@ -1,0 +1,43 @@
+{
+  "localCluster": true,
+  "topologyName": "SpanRegionCommandTopology",
+  "debug": true,
+  "maxSpoutPending": 1,
+  "maxTaskParallelism": 1,
+  "messageTimeoutSecs": 90,
+  "numAckers": 1,
+  "numWorkers": 1,
+  "properties": {
+    "mq.url": "tcp://192.168.8.118:61616",
+    "mq.user": "ds110",
+    "mq.password": "edmund",
+    "mq.queue.request": "sds.shengting.queue.command.request",
+    "db.driver": "oracle.jdbc.driver.OracleDriver",
+    "db.url": "jdbc:oracle:thin:@192.168.8.15:1521/DSDB",
+    "db.user": "SHANDONG_HZK_20150522",
+    "db.password": "SHANDONG_HZK_20150522",
+    "db.query.route": "SELECT REGION_CODE, JMS_URL, JMS_USER, JMS_PWD, JMS_QUEUE, TYPE FROM T_SPANREGION",
+    "db.query.period": 15,
+    "span.to.id": "span.to",
+    "span.cc.id": "span.cc",
+    "span.type.id": "span.type",
+    "retry.number": 60
+  },
+  "spouts": [
+    {
+      "name": "receiveSpaneRegionCommandSpout",
+      "spoutClass": "com.dscomm.storm.sds.ReceiveSpanRegionCommandSpout",
+      "parallelNum": 1
+    }
+  ],
+  "bolts": [
+    {
+      "name": "dispatchSpanRegionCommandBolt",
+      "boltClass": "com.dscomm.storm.sds.DispatchSpanRegionCommandRichBolt",
+      "parallelNum": 1,
+      "groupType": "shuffle",
+      "groupComponentName": "receiveSpaneRegionCommandSpout",
+      "streamId": ""
+    }
+  ]
+}

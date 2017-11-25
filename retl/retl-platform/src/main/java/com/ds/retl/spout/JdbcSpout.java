@@ -180,7 +180,7 @@ public class JdbcSpout extends BaseRichSpout {
             boolean hasData = false;
             long startTime = lastFetchTime, endTime = 0;
             PreparedStatement ps = connection.prepareStatement(sqlCount);
-            ps.setTimestamp(1, new java.sql.Timestamp(startTime));
+            ps.setTimestamp(1, new Timestamp(startTime));
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 long count = rs.getLong(1);
@@ -210,8 +210,8 @@ public class JdbcSpout extends BaseRichSpout {
 
             if (hasData) {
                 ps = connection.prepareStatement(sqlSelect);
-                ps.setTimestamp(1, new java.sql.Timestamp(startTime));
-                ps.setTimestamp(2, new java.sql.Timestamp(endTime));
+                ps.setTimestamp(1, new Timestamp(startTime));
+                ps.setTimestamp(2, new Timestamp(endTime));
                 lastFetchTime = endTime;
                 rs = ps.executeQuery();
                 int size = dowithResultset(rs);

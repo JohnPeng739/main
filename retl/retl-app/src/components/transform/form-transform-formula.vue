@@ -7,7 +7,7 @@
     <el-form-item label="规则">
       <span>四则运算转换</span>
     </el-form-item>
-    <el-form-item label="字段名称" prop="columnName">
+    <el-form-item label="目标字段" prop="columnName">
       <el-input v-model="formFormulaTransform.columnName" :readonly="mode === 'detail'"></el-input>
     </el-form-item>
     <el-form-item label="运算公式" prop="calculate">

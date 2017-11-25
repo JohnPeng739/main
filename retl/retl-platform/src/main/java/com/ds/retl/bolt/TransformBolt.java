@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ds.retl.RecordColumn;
 import com.ds.retl.error.TransformError;
+import com.ds.retl.jdbc.JdbcManager;
 import com.ds.retl.transform.TransformFunc;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,6 +29,7 @@ public class TransformBolt extends BaseRichBolt {
     private static final Log logger = LogFactory.getLog(TransformBolt.class);
 
     private OutputCollector collector = null;
+    private static final String TRANSFORM_MODE_STATIC = "STATIC";
 
     private Map<String, RecordColumn> columns = null;
     private Map<String, JSONObject> transformConfigs = null;
@@ -46,7 +48,7 @@ public class TransformBolt extends BaseRichBolt {
         String jsonStr = (String) stormConf.get("columns");
         Map<String, RecordColumn> columns = new HashMap<>();
         if (!StringUtils.isBlank(jsonStr)) {
-            JSONArray jsonColumns = com.alibaba.fastjson.JSON.parseArray(jsonStr);
+            JSONArray jsonColumns = JSON.parseArray(jsonStr);
             for (int index = 0; index < jsonColumns.size(); index++) {
                 RecordColumn column = JSON.parseObject(jsonColumns.getJSONObject(index).toJSONString(), RecordColumn.class);
                 if (column != null) {
@@ -67,10 +69,19 @@ public class TransformBolt extends BaseRichBolt {
                 logger.warn("May not define any transform rule.");
             }
         } else {
-            transforms.keySet().forEach(key -> {
+            final TreeSet<String> ts = new TreeSet(transforms.keySet());
+            ts.comparator();
+            ts.forEach(key -> {
                 JSONObject rule = transforms.getJSONObject(key);
                 // 初始化并缓存转换函数
                 String funcName = rule.getString("type");
+
+                // 初始化缓存
+                if("ContrastTransform".equals(funcName))
+                {
+                    JdbcManager.getManager().initContrastTransform(rule,key);
+                }
+
                 try {
                     Class<TransformFunc> clazz = (Class<TransformFunc>) Class.forName(String
                             .format("com.ds.retl.transform.%sFunc", funcName));
@@ -103,7 +114,9 @@ public class TransformBolt extends BaseRichBolt {
         }
         try {
             List<TransformError> errors = new ArrayList<>();
-            this.transformConfigs.keySet().forEach(key -> {
+            final TreeSet<String> ts = new TreeSet(transformConfigs.keySet());
+            ts.comparator();
+            ts.forEach(key -> {
                 RecordColumn column = this.columns.get(key);
                 JSONObject config = this.transformConfigs.get(key);
                 String type = config.getString("type");

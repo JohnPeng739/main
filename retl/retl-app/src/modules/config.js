@@ -1,6 +1,6 @@
 export default {
   title: '实时ETL管理系统',
-  debug: false,
-  mock: true,
-  forceValidate: false
+  debug: true,
+  mock: false,
+  forceValidate: true
 }

@@ -38,12 +38,12 @@
                   stripe style="width: 100%;">
           <el-table-column prop="columnName" label="字段名称" width="150"></el-table-column>
           <el-table-column prop="type" label="转换类型" width="200">
-            <template slot-scope="scope">
+            <template scope="scope">
               {{typeLabel('transformTypes', scope.row.type)}}
             </template>
           </el-table-column>
           <el-table-column prop="conf" label="配置信息">
-            <template slot-scope="scope">{{scope.row.conf}}</template>
+            <template scope="scope">{{scope.row.conf}}</template>
           </el-table-column>
         </el-table>
       </el-col>
@@ -117,8 +117,12 @@
             return {columnName: '', type, calculate: ''}
           case 'MergeTransform':
             return {columnName: '', type, fields: [], separator: ','}
+          case 'SplitTransform':
+            return {columnName: '', type, fields: [], separator: ',',field:''}
           case 'SubStringTransform':
             return {columnName: '', type, field: '', startPos: 0, endPos: -1}
+          case 'ContrastTransform':
+            return {columnName: '', type, mode: 'STATIC', staticDic: '', dataSource: '', intervalSec: '', sql: ''}
         }
         return null
       },

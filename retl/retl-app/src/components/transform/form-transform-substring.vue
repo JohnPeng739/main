@@ -7,7 +7,7 @@
     <el-form-item label="规则">
       <span>字符串子串转换</span>
     </el-form-item>
-    <el-form-item label="字段名称" prop="columnName">
+    <el-form-item label="目标字段" prop="columnName">
       <el-input v-model="formSubStringTransform.columnName" :readonly="mode === 'detail'"></el-input>
     </el-form-item>
     <el-form-item label="被截取字段" prop="field">

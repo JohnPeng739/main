@@ -9,11 +9,9 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * 基于APACHE DBCP2的关系型数据库连接管理器，能够对JDBC数据库连接池进行管理。
@@ -52,8 +50,11 @@ public class JdbcManager {
     private Map<String, BasicDataSource> pool = null;
     private Map<String, JdbcOperate> errorOperates = null;
     private Map<String, List<Object>> caches = null;
+    private Map<String, Map<String,String>> contrastTransformCaches=null;
     private List<JdbcLoadCacheDefine> loaders = null;
+    private List<JdbcLoadCacheDefine> contrastTransformLoaders = null;
     private Timer loadJdbcTimer = null;
+    private LoadCacheTask cacheTask;
 
     /**
      * 默认的构造函数
@@ -64,6 +65,8 @@ public class JdbcManager {
         this.errorOperates = new HashMap<>();
         this.caches = new HashMap<>();
         this.loaders = new ArrayList<>();
+        this.contrastTransformCaches = new HashMap<>();
+        this.contrastTransformLoaders = new ArrayList<>();
     }
 
     /**
@@ -99,6 +102,26 @@ public class JdbcManager {
                 }
                 throw new IllegalArgumentException(message);
             }
+        }
+    }
+
+    public void initContrastTransform(JSONObject ruleConfig,String columnName)
+    {
+        if ("STATIC".equals(ruleConfig.getString("mode"))) {
+            // TODO 这里要添加静态缓存的逻辑
+        }
+        else
+        {
+            //  String columnName = ruleConfig.getString("columnName");
+            String dataSource = ruleConfig.getString("dataSource");
+            String sql = ruleConfig.getString("sql");
+            int intervalSec = ruleConfig.getIntValue("intervalSec");
+            if (intervalSec <= MIN_INTERVAL_SEC) {
+                intervalSec = MIN_INTERVAL_SEC;
+            }
+            contrastTransformLoaders.add(new JdbcLoadCacheDefine(columnName, dataSource, sql, intervalSec));
+
+            startCacheTimerTask();
         }
     }
 
@@ -144,7 +167,19 @@ public class JdbcManager {
                 throw new IllegalArgumentException(String.format("Unsupported type[%s] for cache type.", type));
             }
         });
-        if (loaders != null && loaders.size() > 0) {
+
+        startCacheTimerTask();
+
+    }
+
+    private void startCacheTimerTask()
+    {
+        if(cacheTask != null)
+        {
+            return;
+        }
+
+        if (loaders.size() > 0 || contrastTransformLoaders.size() > 0) {
             LoadCacheTask cacheTask = new LoadCacheTask();
             cacheTask.loadJdbcCaches();
             loadJdbcTimer = new Timer();
@@ -311,6 +346,26 @@ public class JdbcManager {
     }
 
     /**
+     * 从对照表中获取对应字段的值
+     * @param columnName 缓存名
+     * @param srcValue 源数据
+     * @return 从对照表中获取到数据以后，赋值到tarValue字段，否则返回原数据
+     */
+    public String getContrastValue(String columnName,String srcValue)
+    {
+        if (StringUtils.isBlank(columnName) || StringUtils.isBlank(columnName)) {
+            return null;
+        }
+
+        if (!contrastTransformCaches.containsKey(columnName)) {
+            return null;
+        }
+
+        Map<String,String> columnCacheMap = contrastTransformCaches.get(columnName);
+        return columnCacheMap.get(srcValue);
+    }
+
+    /**
      * 从JDBC数据源中加载指定的字典内容
      *
      * @param loader 加载定义
@@ -320,17 +375,80 @@ public class JdbcManager {
             Connection conn = this.getConnection(loader.dataSource);
             PreparedStatement ps = conn.prepareStatement(loader.sql);
             ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData() ;
+
             List<Object> list = new ArrayList<>();
             while (rs.next()) {
                 Object value = rs.getObject(loader.columnName);
+
                 if (value != null) {
                     list.add(value);
                 }
             }
+
             rs.close();
             ps.close();
             conn.close();
             caches.put(loader.columnName, list);
+            loader.lastLoadTime = new Date().getTime();
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Auto load cache data from jdbc, column: %s, dataSource: %s, sql: %s, time: %d.",
+                        loader.columnName, loader.dataSource, loader.sql, loader.lastLoadTime));
+            }
+        } catch (SQLException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("load cache fail, sql: %s.", loader.sql), ex);
+            }
+        }
+    }
+
+    private void loadContrastTransformJdbcCache(JdbcLoadCacheDefine loader) {
+        try {
+            Connection conn = this.getConnection(loader.dataSource);
+            PreparedStatement ps = conn.prepareStatement(loader.sql);
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData() ;
+
+            int columnCount = rsmd.getColumnCount();
+            Map<String,String> columnCacheMap = new HashMap<>();
+            String[] columnArr = new String[columnCount];
+            // 多列缓存
+            for(int i = 0; i < columnCount; i++)
+            {
+                columnArr[i] = rsmd.getColumnName(i+1);
+            }
+
+            while(rs.next())
+            {
+                String srcValue = "";
+                String tarValue = "";
+
+                for(int i = 0; i < columnCount; i++)
+                {
+                    String columnName = columnArr[i].toUpperCase();
+
+                    if(columnName.startsWith("SRC_"))
+                    {
+                        srcValue += ","+rs.getString(columnArr[i]);
+                    }
+
+                    if(columnName.startsWith("TAR_"))
+                    {
+                        tarValue += ","+rs.getString(columnArr[i]);
+                    }
+                }
+
+                srcValue = srcValue.substring(1);
+                tarValue = tarValue.substring(1);
+
+                columnCacheMap.put(srcValue,tarValue);
+
+            }
+
+            rs.close();
+            ps.close();
+            conn.close();
+            contrastTransformCaches.put(loader.columnName, columnCacheMap);
             loader.lastLoadTime = new Date().getTime();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("Auto load cache data from jdbc, column: %s, dataSource: %s, sql: %s, time: %d.",
@@ -387,6 +505,12 @@ public class JdbcManager {
                 loaders.forEach(loader -> {
                     if (time - loader.lastLoadTime >= loader.interval) {
                         loadJdbcCache(loader);
+                    }
+                });
+
+                contrastTransformLoaders.forEach(loader ->{
+                    if (time - loader.lastLoadTime >= loader.interval) {
+                        loadContrastTransformJdbcCache(loader);
                     }
                 });
             }

@@ -7,7 +7,7 @@
     <el-form-item label="规则">
       <span>字段合并转换</span>
     </el-form-item>
-    <el-form-item label="字段名称" prop="columnName">
+    <el-form-item label="新字段名称" prop="columnName">
       <el-input v-model="formMergeTransform.columnName" :readonly="mode === 'detail'"></el-input>
     </el-form-item>
     <el-form-item label="被合并字段" prop="fields">
@@ -31,7 +31,7 @@
   import {logger} from 'mx-app-utils'
 
   export default {
-    name: 'pane-type-validate',
+    name: 'pane-merge-transform',
     props: ['columns', 'rule', 'mode'],
     data() {
       let fieldsValidator = (rule, value, callback) => {

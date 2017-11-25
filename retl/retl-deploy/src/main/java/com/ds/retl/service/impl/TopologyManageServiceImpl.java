@@ -169,20 +169,22 @@ public class TopologyManageServiceImpl implements TopologyManageService {
      */
     private Topology submit(Topology topology, boolean simulation) throws UserInterfaceErrorException {
         String topologyName = topology.getName();
-        // 检查拓扑名字是否已经被部署到Storm集群中
-        JSONObject found = foundSubmitedTopology(topologyName);
-        if (found != null) {
-            try {
-                topology.setSubmitted(false);
-                topology.setSubmittedTime(new Date().getTime());
-                topology.setSubmitInfo("同名的计算拓扑已经被部署到集群中，不能重复部署。");
-                accessor.save(topology);
-            } catch (EntityAccessException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Save submit information fail.", ex);
+        if (!simulation) {
+            // 检查拓扑名字是否已经被部署到Storm集群中
+            JSONObject found = foundSubmitedTopology(topologyName);
+            if (found != null) {
+                try {
+                    topology.setSubmitted(false);
+                    topology.setSubmittedTime(new Date().getTime());
+                    topology.setSubmitInfo("同名的计算拓扑已经被部署到集群中，不能重复部署。");
+                    accessor.save(topology);
+                } catch (EntityAccessException ex) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("Save submit information fail.", ex);
+                    }
                 }
+                throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_ALREADY_SUBMITTED);
             }
-            throw new UserInterfaceErrorException(UserInterfaceErrors.TOPOLOGY_ALREADY_SUBMITTED);
         }
         String confStr = topology.getTopologyContent();
         if (StringUtils.isBlank(confStr)) {
