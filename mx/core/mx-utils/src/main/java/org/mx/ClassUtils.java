@@ -16,6 +16,9 @@ import java.util.jar.JarFile;
  * 类工具，包括：包扫描等功能。
  *
  * @author : john.peng date : 2017/10/6
+ *
+ * 修改了在Windows环境下存在的扫描类中存在的bug。
+ * @author : chunliang.li date : 2017/11/25
  */
 public class ClassUtils {
     private static final Log logger = LogFactory.getLog(ClassUtils.class);
@@ -64,6 +67,12 @@ public class ClassUtils {
                     case "file":
                         String path = url.getPath();
                         String root = path.substring(0, path.length() - packageName.length());
+                        // update by lichunliang window得到的root前有一个"/" 20171124 start
+                        if(System.getProperty("os.name").toUpperCase().contains("WINDOWS"))
+                        {
+                            root = root.substring(1);
+                        }
+                        // update by lichunliang window得到的root前有一个"/" 20171124 end
                         scanPackageByFile(new File(path), root, recurse, ignoreInlineClass, list);
                         break;
                     default:
@@ -94,7 +103,10 @@ public class ClassUtils {
             if (path.isFile() && path.getName().endsWith(".class") && (!ignoreInlineClass || path.getName().indexOf("$") < 0)) {
                 String classPath = path.getAbsolutePath();
                 classPath = classPath.substring(root.length(), classPath.length() - ".class".length());
-                list.add(classPath.replaceAll("/", "\\."));
+                // list.add(classPath.replaceAll("/", "\\."));
+                // update by lichunliang 要考虑windows"\" 20171124 start
+                list.add(classPath.replaceAll("[/\\\\]", "\\."));
+                // update by lichunliang 要考虑windows"\" 20171124 end
             } else {
                 if (path.isDirectory() && recurse) {
                     File[] children = path.listFiles();
