@@ -17,6 +17,43 @@ public class FileUtils {
     }
 
     /**
+     * 删除指定的文件或目录，如果是目录，将会删除子目录及其包含的文件。
+     *
+     * @param filePath 待删除的文件或目录对象
+     * @throws IOException 删除过程中发生的异常
+     * @see #deleteFile(File)
+     */
+    public static void deleteFile(String filePath) throws IOException {
+        deleteFile(new File(filePath));
+    }
+
+    /**
+     * 删除指定的文件或目录，如果是目录，将会删除子目录及其包含的文件。
+     *
+     * @param file 待删除的文件或目录对象
+     * @throws IOException 删除过程中发生的异常
+     */
+    public static void deleteFile(File file) throws IOException {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files.length > 0) {
+                for (File child : files) {
+                    // 迭代处理子目录
+                    deleteFile(child);
+                    // 子目录处理完毕后，删除父目录
+                    file.delete();
+                }
+            } else {
+                // 空目录，直接删除
+                file.delete();
+            }
+        } else {
+            // 文件，直接删除
+            file.delete();
+        }
+    }
+
+    /**
      * 将输入流中的数据保存到指定的目录中，并按照保存日期建立子目录，文件名采用UUID自动生成。
      *
      * @param filePath 目录
