@@ -32,6 +32,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Object#toString()
      */
     @Override
@@ -45,6 +46,36 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
+     * @see Object#equals(Object)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseEntity that = (BaseEntity) o;
+        if (id != null ? !id.equals(that.id) : that.id != null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see Base#getId()
      */
     @Override
@@ -54,6 +85,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#setId(String)
      */
     @Override
@@ -63,6 +95,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#getCreatedTime()
      */
     @Override
@@ -72,6 +105,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#setCreatedTime(long)
      */
     @Override
@@ -81,6 +115,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#getUpdatedTime()
      */
     @Override
@@ -90,6 +125,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#setUpdatedTime(long)
      */
     @Override
@@ -99,6 +135,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#getOperator()
      */
     @Override
@@ -108,6 +145,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#setOperator(String)
      */
     @Override
@@ -117,6 +155,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#isValid()
      */
     @Override
@@ -126,6 +165,7 @@ public class BaseEntity implements Base {
 
     /**
      * {@inheritDoc}
+     *
      * @see Base#setValid(boolean)
      */
     @Override

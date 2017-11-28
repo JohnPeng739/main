@@ -1,5 +1,6 @@
 package org.mx.dal.entity;
 
+import org.mx.StringUtils;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -28,6 +29,35 @@ public class BaseEntity implements Base {
                 ", updatedTime=" + updatedTime +
                 ", operator='" + operator + '\'' +
                 ", valid=" + valid;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Object#equals(Object)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseEntity that = (BaseEntity) o;
+        if (id != null ? !id.equals(that.id) : that.id != null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        return result;
     }
 
     /**
