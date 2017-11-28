@@ -7,7 +7,7 @@ apply from: '../dependencies.gradle'
 apply from: '../allprojects.gradle'
 
 project(':retl-platform') {
-  version = '3.0.6'
+  version = '3.0.7'
 
   dependencies {
     compile(

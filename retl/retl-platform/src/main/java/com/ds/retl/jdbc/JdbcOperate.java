@@ -150,8 +150,8 @@ public class JdbcOperate {
                 fields.add(field);
                 updateFields.add(key);
             });
-            sqlUpdate = String.format("update %s set %s %s where %s = ?", table,
-                    StringUtils.merge(fields, " = ?, "), "= ?", primaryField);
+            sqlUpdate = String.format("update %s set %s = ? where %s = ?", table,
+                    StringUtils.merge(fields, " = ?, "), primaryField);
             updateFields.add(primaryKey);
         }
         if (sqlSelect == null) {
@@ -168,10 +168,10 @@ public class JdbcOperate {
      */
     private boolean exist(JSONObject data) throws SQLException {
         boolean found = false;
-        String id = data.getString(primaryField);
+        String id = data.getString(primaryKey);
         if (!StringUtils.isBlank(id)) {
             PreparedStatement psSelect = connection.prepareStatement(sqlSelect);
-            psSelect.setString(1, data.getString(primaryField));
+            psSelect.setString(1, id);
             ResultSet rs = psSelect.executeQuery();
             found = rs.next();
             psSelect.close();
