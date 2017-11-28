@@ -5,7 +5,7 @@ package org.mx.dal.exception;
  *
  * @author : john.peng date : 2017/8/18
  */
-public class EntityInstantiationException extends Exception {
+public class EntityInstantiationException extends RuntimeException {
     /**
      * 默认的构造函数
      *
