@@ -1,6 +1,8 @@
 package org.mx.dal;
 
-import org.mx.dal.exception.EntityInstantiationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.springframework.util.Assert;
 
 /**
@@ -9,24 +11,27 @@ import org.springframework.util.Assert;
  * @author : john.peng date : 2017/8/18
  */
 public class EntityFactory {
+    private static final Log logger = LogFactory.getLog(EntityFactory.class);
+
     /**
      * 根据指定的实体接口类定义创建一个实体对象
      *
      * @param entityInterfaceClass 实体接口类定义
      * @param <T>                  泛型类型
      * @return 创建后的实体对象
-     * @throws EntityInstantiationException 创建实体过程中发生的异常
+     * @throws UserInterfaceDalErrorException 创建实体过程中发生的异常
      */
-    public static <T> T createEntity(Class<T> entityInterfaceClass) throws EntityInstantiationException {
+    public static <T> T createEntity(Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException {
         Assert.notNull(entityInterfaceClass, "The class of the entity interface is null.");
         String entityName = String.format("%sEntity", entityInterfaceClass.getName());
         try {
             Class<T> entityClass = (Class<T>) Class.forName(entityName);
             return entityClass.newInstance();
-        } catch (ClassNotFoundException ex) {
-            throw new EntityInstantiationException(String.format("The class[%s] not found.", entityName), ex);
-        } catch (IllegalAccessException | InstantiationException ex) {
-            throw new EntityInstantiationException(String.format("Instance the class[%s] fail.", entityName), ex);
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
     }
 }

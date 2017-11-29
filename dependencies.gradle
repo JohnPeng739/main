@@ -21,11 +21,11 @@ ext.versions = [
   junit		: '4.12',
   'mongodb-driver'	: '3.5.0',
   zookeeper	: '3.4.9',
-  'mx-utils'    : '2.0.11',
-  'mx-rest-utils'       : '1.1.8',
-  'mx-dal'      : '1.0.7',
-  'mx-dal-hibernate'    : '1.0.18',
-  'mx-dal-mongodb'      : '1.0.7'
+  'mx-utils'    : '2.1.0',
+  'mx-rest-utils'       : '1.2.0',
+  'mx-dal'      : '1.1.0',
+  'mx-dal-hibernate'    : '1.1.0',
+  'mx-dal-mongodb'      : '1.1.0'
 ]
 
 ext.libs = [

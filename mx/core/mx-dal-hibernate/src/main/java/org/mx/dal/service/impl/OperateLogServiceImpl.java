@@ -4,8 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.entity.OperateLog;
-import org.mx.dal.exception.EntityAccessException;
-import org.mx.dal.exception.EntityInstantiationException;
+import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.OperateLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +33,9 @@ public class OperateLogServiceImpl implements OperateLogService {
      */
     @Transactional
     @Override
-    public void writeLog(String conent) throws EntityAccessException {
-        try {
-            OperateLog log = EntityFactory.createEntity(OperateLog.class);
-            log.setContent(conent);
-            accessor.save(log);
-        } catch (EntityInstantiationException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-            throw new EntityAccessException("Create OperateLog entity fail.", ex);
-        }
+    public void writeLog(String conent) throws UserInterfaceDalErrorException {
+        OperateLog log = EntityFactory.createEntity(OperateLog.class);
+        log.setContent(conent);
+        accessor.save(log);
     }
 }

@@ -4,7 +4,7 @@ package org.mx.dal.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.dal.entity.BaseDict;
-import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.GeneralDictEntityAccessor;
 import org.mx.dal.service.GeneralEntityAccessor;
@@ -32,7 +32,7 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass) throws EntityAccessException {
+    public <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException {
         return getByCode2(code, entityInterfaceClass, true);
     }
 
@@ -44,7 +44,7 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+    public <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass) throws UserInterfaceDalErrorException {
         List<ConditionTuple> tuples = new ArrayList<>();
         tuples.add(new ConditionTuple("code", code));
         List<T> result = super.find2(tuples, entityClass, isInterfaceClass);
@@ -61,34 +61,5 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
             }
             return null;
         }
-        /*
-        try {
-            Class<T> clazz = entityClass;
-            if (isInterfaceClass) {
-                clazz = (Class<T>) super.getEntityClass(entityClass);
-            }
-            Query query = entityManager.createQuery(String.format("SELECT dict FROM %s dict WHERE dict.code = :code " +
-                            "ORDER BY dict.createdTime DESC",
-                    clazz.getName()));
-            query.setParameter("code", code);
-            List<T> result = query.getResultList();
-            if (result != null && result.size() > 0) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Found %d dict entity, entity: %s, code: %s.",
-                            result.size(), entityClass.getName(), code));
-                }
-                return result.get(0);
-            } else {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("The dict entity not found, entity: %s, code: %s.",
-                            entityClass.getName(), code));
-                }
-                return null;
-            }
-        } catch (ClassNotFoundException ex) {
-            throw new EntityAccessException(String.format("Get dict entity[%s] by code[%s] fail.",
-                    entityClass.getName(), code), ex);
-        }
-        */
     }
 }

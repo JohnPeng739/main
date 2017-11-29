@@ -1,4 +1,4 @@
-package org.mx.rest.error;
+package org.mx.error;
 
 /**
  * 人机界面异常定义
@@ -6,7 +6,7 @@ package org.mx.rest.error;
  * @author : john.peng date : 2017/10/6
  * @see UserInterfaceError
  */
-public class UserInterfaceException extends Exception implements UserInterfaceError {
+public class UserInterfaceException extends RuntimeException implements UserInterfaceError {
     private int errorCode = 0;
     private String errorMessage = null;
 

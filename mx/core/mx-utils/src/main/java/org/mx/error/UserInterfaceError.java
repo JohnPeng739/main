@@ -1,4 +1,4 @@
-package org.mx.rest.error;
+package org.mx.error;
 
 /**
  * 人机界面错误接口定义

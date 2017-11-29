@@ -1,8 +1,8 @@
 package org.mx.rest.vo;
 
 import org.mx.dal.Pagination;
-import org.mx.rest.error.UserInterfaceError;
-import org.mx.rest.error.UserInterfaceException;
+import org.mx.error.UserInterfaceError;
+import org.mx.error.UserInterfaceException;
 
 /**
  * REST返回的分页数据值对象定义

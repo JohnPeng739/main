@@ -5,20 +5,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.config.DalHibernateConfig;
-import org.mx.dal.exception.EntityAccessException;
-import org.mx.dal.exception.EntityInstantiationException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictEntityAccessor;
 import org.mx.dal.service.GeneralEntityAccessor;
 import org.mx.dal.session.SessionDataStore;
+import org.mx.error.UserInterfaceException;
 import org.mx.test.entity.User;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import javax.persistence.EntityManager;
-import javax.sql.DataSource;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -121,12 +115,12 @@ public class TestDatabase {
             assertEquals(2, accessor.count(User.class, false));
             assertFalse(check.isValid());
 
-            List<User> list = ((GeneralEntityAccessor)accessor).find(Arrays.asList(
+            List<User> list = ((GeneralEntityAccessor) accessor).find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("code", "john"),
                     new GeneralAccessor.ConditionTuple("valid", true)
             ), User.class);
             assertEquals(0, list.size());
-            list = ((GeneralEntityAccessor)accessor).find(Arrays.asList(
+            list = ((GeneralEntityAccessor) accessor).find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("code", "josh"),
                     new GeneralAccessor.ConditionTuple("valid", true)
             ), User.class);
@@ -146,7 +140,7 @@ public class TestDatabase {
             user = accessor.getByCode("josh", User.class);
             accessor.remove(user, false);
             assertEquals(0, accessor.count(User.class));
-        }catch (EntityAccessException | EntityInstantiationException ex) {
+        } catch (UserInterfaceException ex) {
             fail(ex.getMessage());
         }
     }

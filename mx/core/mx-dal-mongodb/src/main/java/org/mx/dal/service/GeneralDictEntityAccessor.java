@@ -1,7 +1,7 @@
 package org.mx.dal.service;
 
 import org.mx.dal.entity.BaseDict;
-import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.error.UserInterfaceDalErrorException;
 
 /**
  * 基于Mongodb实现的基础字典实体访问接口定义
@@ -18,7 +18,8 @@ public interface GeneralDictEntityAccessor extends GeneralDictAccessor {
      * @param isInterfaceClass 如果为true，表示entityClass指定的类为实体接口类，否则表示真实的实体类
      * @param <T>              实现BaseDict接口的泛型对象类型
      * @return 实体对象，如果不存在，则返回null。
-     * @throws EntityAccessException 获取过程中发生的异常
+     * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
-    <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException;
+    <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass)
+            throws UserInterfaceDalErrorException;
 }

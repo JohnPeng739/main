@@ -1,7 +1,7 @@
 package org.mx.dal.service.impl;
 
 import org.mx.dal.entity.BaseDict;
-import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.GeneralDictEntityAccessor;
 import org.springframework.data.mongodb.core.query.Query;
@@ -24,7 +24,8 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
      * @see GeneralDictEntityAccessor#getByCode2(String, Class, boolean)
      */
     @Override
-    public <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass) throws EntityAccessException {
+    public <T extends BaseDict> T getByCode2(String code, Class<T> entityClass, boolean isInterfaceClass)
+            throws UserInterfaceDalErrorException {
         try {
             Class<T> clazz = entityClass;
             if (isInterfaceClass) {
@@ -32,8 +33,7 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
             }
             return template.findOne(Query.query(where("code").is(code)), clazz);
         } catch (ClassNotFoundException ex) {
-            throw new EntityAccessException(String.format("Get entity[%s] by code[%s] fail.",
-                    entityClass.getName(), code), ex);
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
     }
 
@@ -43,7 +43,8 @@ public class GeneralDictEntityAccessorImpl extends GeneralEntityAccessorImpl imp
      * @see GeneralDictAccessor#getByCode(String, Class)
      */
     @Override
-    public <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass) throws EntityAccessException {
+    public <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass)
+            throws UserInterfaceDalErrorException {
         return getByCode2(code, entityInterfaceClass, true);
     }
 }

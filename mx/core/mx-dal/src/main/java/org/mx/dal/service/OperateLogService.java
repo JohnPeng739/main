@@ -1,7 +1,7 @@
 package org.mx.dal.service;
 
 
-import org.mx.dal.exception.EntityAccessException;
+import org.mx.dal.error.UserInterfaceDalErrorException;
 
 /**
  * 账户操作日志存取服务接口定义
@@ -13,7 +13,7 @@ public interface OperateLogService {
      * 写入操作日志数据
      *
      * @param conent 操作日志内容
-     * @throws EntityAccessException 写入过程中发生的异常
+     * @throws UserInterfaceDalErrorException 写入过程中发生的异常
      */
-    void writeLog(String conent) throws EntityAccessException;
+    void writeLog(String conent) throws UserInterfaceDalErrorException;
 }
