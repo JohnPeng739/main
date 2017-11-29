@@ -10,5 +10,5 @@
 /**/logs/*
 /**/data/*
 /**/out/*
-/**/h2/*
+/**/h2/**/*.db
 !/retl/retl-app/build/*
