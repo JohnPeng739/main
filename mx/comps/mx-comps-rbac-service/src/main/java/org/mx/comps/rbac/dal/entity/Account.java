@@ -2,7 +2,7 @@ package org.mx.comps.rbac.dal.entity;
 
 import org.mx.dal.entity.BaseDict;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 用户账户对象定义接口
@@ -43,12 +43,12 @@ public interface Account extends BaseDict {
      *
      * @return 角色列表
      */
-    List<Role> getRoles();
+    Set<Role> getRoles();
 
     /**
      * 设置角色列表
      *
      * @param roles 角色列表
      */
-    void setRoles(List<Role> roles);
+    void setRoles(Set<Role> roles);
 }

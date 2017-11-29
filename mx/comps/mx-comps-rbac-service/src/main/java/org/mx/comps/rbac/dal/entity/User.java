@@ -4,6 +4,7 @@ import org.mx.dal.entity.Base;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户对象定义接口
@@ -112,13 +113,6 @@ public interface User extends Base {
     void setDepartment(Department department);
 
     /**
-     * 获取下属用户列表
-     *
-     * @return 下属用户列表
-     */
-    List<User> getSubordinates();
-
-    /**
      * 获取岗位
      *
      * @return 岗位
@@ -138,13 +132,6 @@ public interface User extends Base {
      * @param birthday 出生日期
      */
     void setBirthday(Date birthday);
-
-    /**
-     * 设置下属用户列表
-     *
-     * @param subordinates 下属用户列表
-     */
-    void setSubordinates(List<User> subordinates);
 
     /**
      * 性别枚举

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="off">
+	<Properties>
+		<Property name="baseDir">logs</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout charset="UTF-8"
+				pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{10}(%line) - %msg%exception{full}%n" />
+		</Console>
+
+		<RollingRandomAccessFile name="root"
+			fileName="${baseDir}/root.log" filePattern="${baseDir}/%d{yyyy-MM}/root-%d{dd}-%i.log.gz">
+			<PatternLayout charset="UTF-8"
+				pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{10}(%line) - %msg%exception{full}%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="2" />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingRandomAccessFile>
+        <RollingRandomAccessFile name="mx"
+                                 fileName="${baseDir}/mx.log" filePattern="${baseDir}/%d{yyyy-MM}/mx-%d{dd}-%i.log.gz">
+            <PatternLayout charset="UTF-8"
+                           pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{10}(%line) - %msg%exception{full}%n" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="2" />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingRandomAccessFile>
+        <!--
+		<Async name="async">
+			<AppenderRef ref="console" />
+			<AppenderRef ref="socket" />
+			<AppenderRef ref="rollingRandomAccessFile" />
+		</Async>
+		-->
+	</Appenders>
+	<Loggers>
+		<logger name="org.mx" level="debug" additivity="false">
+			<appender-ref ref="console" />
+		</logger>
+		<logger name="com.ds.retl" level="debug" additivity="false">
+			<appender-ref ref="console" />
+		</logger>
+        <!--
+		<logger name="AuditLog" level="info" additivity="false">
+			<appender-ref ref="async" />
+		</logger>
+		-->
+		<root level="info">
+			<appender-ref ref="console" />
+		</root>
+	</Loggers>
+</configuration>  

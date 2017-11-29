@@ -6,7 +6,19 @@ apply from: '../../dependencies.gradle'
 
 apply from: '../../allprojects.gradle'
 
-project(':mx-comps-rbac-hibernate') {
+project(':mx-comps-rbac-service') {
+  version = '3.0.0'
+
+  dependencies {
+    compile(
+      libs.'mx-utils',
+      libs.'mx-dal',
+      libs.'mx-rest-utils'
+    )
+  }
+}
+
+project(':mx-comps-rbac-service-hibernate') {
   version = '3.0.0'
 
   dependencies {
@@ -17,14 +29,12 @@ project(':mx-comps-rbac-hibernate') {
   }
 }
 
-project(':mx-comps-rbac-service') {
+project(':mx-comps-rbac-restful') {
   version = '3.0.0'
 
   dependencies {
     compile(
-      libs.'mx-utils',
-      libs.'mx-dal',
-      libs.'mx-rest-utils'
+      project(':mx-comps-rbac-service')
     )
   }
 }

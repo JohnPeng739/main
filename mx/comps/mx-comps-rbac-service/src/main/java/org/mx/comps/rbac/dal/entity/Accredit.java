@@ -4,6 +4,7 @@ import org.mx.dal.entity.Base;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 授权对象定义接口
@@ -30,14 +31,14 @@ public interface Accredit extends Base {
      *
      * @return 角色列表
      */
-    List<Role> getRoles();
+    Set<Role> getRoles();
 
     /**
      * 设置授权角色列表
      *
      * @param roles 角色列表
      */
-    void setRoles(List<Role> roles);
+    void setRoles(Set<Role> roles);
 
     /**
      * 获取授权目标账户
