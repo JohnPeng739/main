@@ -1,12 +1,15 @@
 #mx-app-utils
 ====
-<h5>版本： V1.1.8</h5>
+<h5>版本： V1.2.3</h5>
 一个非常简单使用的面向HTML5的WEB开发的工具类模块。目前封装了:
 1. logger：LOG（debug、info、warn、error）
 2. ajax：使用axios的简单AJAX调用工具方法
 3. clone和timestamp的工具方法
 
 ##修改历史
+**1.2.3**<br>
+1. 添加了编译脚本，并将编译后代码发布到npm中，解决了以前必须在引用项目中添加编译项的做法。
+
 **1.1.9**<br>
 1. 为ajax添加了del方法。
 
