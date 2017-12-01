@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -312,7 +309,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
             Root<T> root = criteriaQuery.from(clazz);
             List<Predicate> conditions = new ArrayList<>();
             if (tuples != null && tuples.size() > 0) {
-                tuples.forEach(tuple -> conditions.add(cb.equal(root.get(tuple.field), tuple.value)));
+                tuples.forEach(tuple -> conditions.add(cb.equal(getField(tuple.field, root), tuple.value)));
             }
             criteriaQuery.where(conditions.toArray(new Predicate[0]));
             Query query = entityManager.createQuery(criteriaQuery);
@@ -321,6 +318,23 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         } catch (ClassNotFoundException ex) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
+    }
+
+    /**
+     * 根据传入的filed，获取真正的比较字段。
+     *
+     * @param field 字段名，支持如"src.id"之类的对象操作
+     * @param root  根
+     * @param <T>   操作的范型类型
+     * @return 真正的比较字段
+     */
+    private <T extends Base> Path<T> getField(String field, Root<T> root) {
+        String[] path = field.split("\\.");
+        Path<T> result = root;
+        for (String p : path) {
+            result = result.get(p);
+        }
+        return result;
     }
 
     /**
