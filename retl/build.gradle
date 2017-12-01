@@ -2,7 +2,7 @@ plugins {
     id 'com.jfrog.bintray' version '1.4'
 }
 
-apply from: '../dependencies.gradle'
+apply from: './dependencies.gradle'
 
 apply from: '../allprojects.gradle'
 
