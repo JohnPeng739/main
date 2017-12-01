@@ -1,7 +1,6 @@
 package org.mx.comps.rbac.service;
 
 import org.mx.comps.rbac.dal.entity.Role;
-import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
 
 /**
@@ -15,8 +14,7 @@ public interface RoleManageService extends GeneralDictAccessor {
      *
      * @param role 角色实体对象
      * @return 保存后的角色实体对象
-     * @throws UserInterfaceRbacErrorException 保存过程中发生的异常
      */
-    Role saveRole(Role role) throws UserInterfaceRbacErrorException;
+    Role saveRole(Role role);
 
 }

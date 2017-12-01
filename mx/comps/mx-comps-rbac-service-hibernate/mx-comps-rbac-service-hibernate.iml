@@ -16,11 +16,11 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.0/aa0361b7a562fdd5898fc669711f1f0166da3b90/mx-dal-hibernate-1.1.0.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.1/edcbea792ee30fefbbb2f9bc93f7caacaf4be68d/mx-dal-hibernate-1.1.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.0/802ad1af980c40a423eeb7d589bf22a2785b0f28/mx-dal-hibernate-1.1.0-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.1/c47e9511c4397de2ab91eaddc81b8caa05e9fb04/mx-dal-hibernate-1.1.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -972,11 +972,11 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.0/aa0361b7a562fdd5898fc669711f1f0166da3b90/mx-dal-hibernate-1.1.0.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.1/edcbea792ee30fefbbb2f9bc93f7caacaf4be68d/mx-dal-hibernate-1.1.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.0/802ad1af980c40a423eeb7d589bf22a2785b0f28/mx-dal-hibernate-1.1.0-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.1/c47e9511c4397de2ab91eaddc81b8caa05e9fb04/mx-dal-hibernate-1.1.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1928,11 +1928,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.0/aa0361b7a562fdd5898fc669711f1f0166da3b90/mx-dal-hibernate-1.1.0.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.1/edcbea792ee30fefbbb2f9bc93f7caacaf4be68d/mx-dal-hibernate-1.1.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.0/802ad1af980c40a423eeb7d589bf22a2785b0f28/mx-dal-hibernate-1.1.0-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.1/c47e9511c4397de2ab91eaddc81b8caa05e9fb04/mx-dal-hibernate-1.1.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

@@ -38,7 +38,7 @@ public class UserManageServiceImpl extends GeneralEntityAccessorImpl implements 
      * @see UserManageService#allocateAccount(AccountInfo)
      */
     @Override
-    public Account allocateAccount(AccountInfo accountInfo) throws UserInterfaceRbacErrorException {
+    public Account allocateAccount(AccountInfo accountInfo) {
         if (accountInfo == null || StringUtils.isBlank(accountInfo.getUserId()) ||
                 StringUtils.isBlank(accountInfo.getCode())) {
             throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
@@ -78,7 +78,7 @@ public class UserManageServiceImpl extends GeneralEntityAccessorImpl implements 
      */
     @Transactional
     @Override
-    public User saveUser(User user) throws UserInterfaceRbacErrorException {
+    public User saveUser(User user) {
         if (user == null) {
             throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
         }

@@ -2,7 +2,6 @@ package org.mx.comps.rbac.service;
 
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.User;
-import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.dal.service.GeneralAccessor;
 
 import java.util.List;
@@ -18,18 +17,16 @@ public interface UserManageService extends GeneralAccessor {
      *
      * @param accountInfo 账户信息
      * @return 分配成功的账户实体对象
-     * @throws UserInterfaceRbacErrorException 分配过程中发生的错误
      */
-    Account allocateAccount(AccountInfo accountInfo) throws UserInterfaceRbacErrorException;
+    Account allocateAccount(AccountInfo accountInfo);
 
     /**
      * 修改用户信息
      *
      * @param user 用户实体
      * @return 修改后的用户实体
-     * @throws UserInterfaceRbacErrorException 修改过程中发生的异常
      */
-    User saveUser(User user) throws UserInterfaceRbacErrorException;
+    User saveUser(User user);
 
     /**
      * 分配一个新账户的必备信息定义

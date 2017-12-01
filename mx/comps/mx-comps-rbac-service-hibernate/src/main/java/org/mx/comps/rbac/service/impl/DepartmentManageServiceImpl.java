@@ -32,7 +32,7 @@ public class DepartmentManageServiceImpl extends GeneralDictEntityAccessorImpl i
      */
     @Transactional
     @Override
-    public Department saveDepartment(Department department) throws UserInterfaceRbacErrorException {
+    public Department saveDepartment(Department department) {
         if (department == null) {
             throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
         }

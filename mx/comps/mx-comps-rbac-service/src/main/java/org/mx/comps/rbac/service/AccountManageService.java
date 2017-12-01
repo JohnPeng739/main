@@ -2,7 +2,6 @@ package org.mx.comps.rbac.service;
 
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
-import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
 
 /**
@@ -17,9 +16,8 @@ public interface AccountManageService extends GeneralDictAccessor {
      *
      * @param account 账户实体
      * @return 修改成功后的账户实体
-     * @throws UserInterfaceRbacErrorException 修改过程中发生的异常
      */
-    Account saveAccount(Account account) throws UserInterfaceRbacErrorException;
+    Account saveAccount(Account account);
 
     /**
      * 修改账户密码
@@ -28,9 +26,8 @@ public interface AccountManageService extends GeneralDictAccessor {
      * @param oldPassword 旧密码
      * @param newPassword 新密码
      * @return 账户对象
-     * @throws UserInterfaceRbacErrorException 操作过程中发生的异常
      */
-    Account changePassword(String accountId, String oldPassword, String newPassword) throws UserInterfaceRbacErrorException;
+    Account changePassword(String accountId, String oldPassword, String newPassword);
 
     /**
      * 登录系统
@@ -39,16 +36,14 @@ public interface AccountManageService extends GeneralDictAccessor {
      * @param password    账户密码
      * @param forced      如果设置为true，则如果发生该账户已经登录的话仍然强制登录（踢掉上次登录），否则返回异常。
      * @return 登录历史对象
-     * @throws UserInterfaceRbacErrorException 操作过程中发生的异常
      */
-    LoginHistory login(String accountCode, String password, boolean forced) throws UserInterfaceRbacErrorException;
+    LoginHistory login(String accountCode, String password, boolean forced);
 
     /**
      * 登出系统
      *
      * @param accountId 账户ID
      * @return 登录历史对象
-     * @throws UserInterfaceRbacErrorException 操作过程中发生的异常
      */
-    LoginHistory logout(String accountId) throws UserInterfaceRbacErrorException;
+    LoginHistory logout(String accountId);
 }

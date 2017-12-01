@@ -45,6 +45,8 @@ public class UserInterfaceRbacErrorException extends UserInterfaceException {
         DEPARTMENT_NOT_FOUND("指定的部门不存在。"),
 
         ACCREDIT_NOT_FOUND("指定的授权不存在。"),
+        ACCREDIT_SAME_FOUND("指定的授权已经存在，不能重复创建。"),
+        ACCREDIT_HAS_CLOSED("指定的收取已经被关闭，不能重复关闭。"),
 
         RBAC_OTHER_FAIL("未知基于角色的访问控制错误。");
 

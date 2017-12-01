@@ -1,7 +1,6 @@
 package org.mx.comps.rbac.service;
 
 import org.mx.comps.rbac.dal.entity.Department;
-import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
 
 /**
@@ -15,7 +14,6 @@ public interface DepartmentManageService extends GeneralDictAccessor {
      *
      * @param department 部门实体
      * @return 修改后的部门实体
-     * @throws UserInterfaceRbacErrorException 修改过程中发生的错误
      */
-    Department saveDepartment(Department department) throws UserInterfaceRbacErrorException;
+    Department saveDepartment(Department department);
 }
