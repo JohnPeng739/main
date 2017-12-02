@@ -6,7 +6,6 @@ import org.mx.comps.rbac.dal.entity.Privilege;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.RoleManageService;
-import org.mx.dal.EntityFactory;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,11 +22,8 @@ public class TestRole extends BaseTest {
     public static String role1Id, role2Id, role3Id;
 
     public static void testInsertRole(RoleManageService service) {
-        Role role1 = EntityFactory.createEntity(Role.class);
-        role1.setCode("role1");
-        role1.setName("role1");
-        role1.setDesc("desc");
-        role1 = service.saveRole(role1);
+        RoleManageService.RoleInfo roleInfo = RoleManageService.RoleInfo.valueOf("role1", "role1", "desc");
+        Role role1 = service.saveRole(roleInfo);
         assertEquals(1, service.count(Role.class));
         role1 = service.getById(role1.getId(), Role.class);
         assertNotNull(role1);
@@ -38,11 +34,8 @@ public class TestRole extends BaseTest {
         assertEquals("desc", role1.getDesc());
         assertTrue(role1.isValid());
 
-        Role role2 = EntityFactory.createEntity(Role.class);
-        role2.setCode("role2");
-        role2.setName("role2");
-        role2.setDesc("desc");
-        service.saveRole(role2);
+        roleInfo = RoleManageService.RoleInfo.valueOf("role2", "role2", "desc");
+        Role role2 = service.saveRole(roleInfo);
         assertEquals(2, service.count(Role.class));
         role2 = service.getById(role2.getId(), Role.class);
         assertNotNull(role2);
@@ -53,11 +46,9 @@ public class TestRole extends BaseTest {
     }
 
     public static void testEditRole(RoleManageService service) {
-        Role role3 = EntityFactory.createEntity(Role.class);
-        role3.setCode("role3");
-        role3.setName("role3");
-        role3.setDesc("description");
-        service.saveRole(role3);
+        RoleManageService.RoleInfo roleInfo = RoleManageService.RoleInfo.valueOf("role3", "role3",
+                "description");
+        Role role3 = service.saveRole(roleInfo);
         assertEquals(3, service.count(Role.class));
         role3 = service.getById(role3.getId(), Role.class);
         assertNotNull(role3);
@@ -67,10 +58,9 @@ public class TestRole extends BaseTest {
         assertEquals("description", role3.getDesc());
         assertTrue(role3.isValid());
 
-        role3.setName("new name");
-        role3.setDesc("new desc");
-        role3.setValid(false);
-        service.saveRole(role3);
+        roleInfo = RoleManageService.RoleInfo.valueOf("role3", "new name",
+                "new desc", role3.getId(), Arrays.asList(), Arrays.asList(), false);
+        service.saveRole(roleInfo);
         assertEquals(2, service.count(Role.class));
         assertEquals(3, service.count(Role.class, false));
         role3 = service.getById(role3.getId(), Role.class);
@@ -81,9 +71,9 @@ public class TestRole extends BaseTest {
         assertEquals("new desc", role3.getDesc());
         assertFalse(role3.isValid());
 
-        role3.setName("role3");
-        role3.setValid(true);
-        service.saveRole(role3);
+        roleInfo = RoleManageService.RoleInfo.valueOf("role3", "role3",
+                "new desc", role3.getId(), Arrays.asList(), Arrays.asList(), true);
+        service.saveRole(roleInfo);
         assertEquals(3, service.count(Role.class));
     }
 
@@ -130,11 +120,10 @@ public class TestRole extends BaseTest {
             assertNotNull(account2);
             assertNotNull(account3);
 
-            role1.getAccounts().add(account1);
-            role1.getAccounts().add(account2);
-            role1.getAccounts().add(account3);
-            assertEquals(3, role1.getAccounts().size());
-            service.saveRole(role1);
+            RoleManageService.RoleInfo roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
+                    role1.getDesc(), role1.getId(), Arrays.asList(account1.getId(), account2.getId(), account3.getId()),
+                    Arrays.asList(), role1.isValid());
+            service.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -142,8 +131,10 @@ public class TestRole extends BaseTest {
             assertEquals(3, role1.getAccounts().size());
             assertEquals(new HashSet<>(Arrays.asList(account1, account2, account3)), role1.getAccounts());
 
-            role1.getAccounts().remove(account2);
-            service.saveRole(role1);
+            roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
+                    role1.getDesc(), role1.getId(), Arrays.asList(account1.getId(), account3.getId()),
+                    Arrays.asList(), role1.isValid());
+            service.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -151,8 +142,10 @@ public class TestRole extends BaseTest {
             assertEquals(2, role1.getAccounts().size());
             assertEquals(new HashSet<>(Arrays.asList(account1, account3)), role1.getAccounts());
 
-            role1.getAccounts().clear();
-            service.saveRole(role1);
+            roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
+                    role1.getDesc(), role1.getId(), Arrays.asList(),
+                    Arrays.asList(), role1.isValid());
+            service.saveRole(roleInfo);
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
             assertEquals(0, role1.getAccounts().size());
@@ -186,10 +179,10 @@ public class TestRole extends BaseTest {
             assertNotNull(p3);
             assertTrue(p3.getRoles().isEmpty());
 
-            role1.getPrivileges().add(p1);
-            role1.getPrivileges().add(p2);
-            role1.getPrivileges().add(p3);
-            service.saveRole(role1);
+            RoleManageService.RoleInfo roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
+                    role1.getDesc(), role1.getId(), Arrays.asList(),
+                    Arrays.asList(p1.getId(), p2.getId(), p3.getId()), role1.isValid());
+            service.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -208,8 +201,10 @@ public class TestRole extends BaseTest {
             assertEquals(1, p3.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1)), p3.getRoles());
 
-            role1.getPrivileges().remove(p2);
-            service.saveRole(role1);
+            roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
+                    role1.getDesc(), role1.getId(), Arrays.asList(),
+                    Arrays.asList(p1.getId(), p3.getId()), role1.isValid());
+            service.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -227,8 +222,10 @@ public class TestRole extends BaseTest {
             assertEquals(1, p3.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1)), p3.getRoles());
 
-            role1.getPrivileges().clear();
-            service.saveRole(role1);
+            roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
+                    role1.getDesc(), role1.getId(), Arrays.asList(),
+                    Arrays.asList(), role1.isValid());
+            service.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
