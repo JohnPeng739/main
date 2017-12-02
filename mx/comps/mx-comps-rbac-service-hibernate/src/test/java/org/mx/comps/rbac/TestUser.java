@@ -9,7 +9,6 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.DepartmentManageService;
 import org.mx.comps.rbac.service.UserManageService;
-import org.mx.dal.EntityFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,17 +28,12 @@ public class TestUser extends BaseTest {
     public static String johnId, joyId, joshId;
 
     public static void testInsertUser(UserManageService service) throws ParseException {
-        User john = EntityFactory.createEntity(User.class);
-        john.setStation("manager");
-        john.setSex(User.Sex.MALE);
-        john.setLastName("彭");
-        john.setMiddleName("明");
-        john.setFirstName("喜");
-        john.setDesc("This is John.Peng.");
-        john.setBirthday(new SimpleDateFormat("yyyy-MM-dd").parse("1973-09-18"));
-        john.setValid(true);
-        assertNull(john.getId());
-        john = service.saveUser(john);
+        long birthday = new SimpleDateFormat("yyyy-MM-dd").parse("1973-09-18").getTime();
+        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("喜", "明",
+                "彭", User.Sex.MALE, "", birthday, "", "manager", true,
+                "This is John.Peng.");
+        User john = service.saveUser(userInfo);
+        assertEquals(1, service.count(User.class));
         johnId = john.getId();
         assertNotNull(john);
         assertNotNull(john.getId());
@@ -48,6 +42,7 @@ public class TestUser extends BaseTest {
         assertEquals(john.getStation(), "manager");
         assertEquals(john.getSex(), User.Sex.MALE);
         assertEquals(john.getDesc(), "This is John.Peng.");
+        assertEquals(birthday, john.getBirthday().getTime());
         assertTrue(john.getCreatedTime() > 0);
         assertTrue(john.getUpdatedTime() > 0);
         assertEquals(john.getOperator(), "admin");
@@ -61,6 +56,7 @@ public class TestUser extends BaseTest {
         assertEquals(john.getStation(), "manager");
         assertEquals(john.getSex(), User.Sex.MALE);
         assertEquals(john.getDesc(), "This is John.Peng.");
+        assertEquals(birthday, john.getBirthday().getTime());
         assertTrue(john.getCreatedTime() > 0);
         assertTrue(john.getUpdatedTime() > 0);
         assertEquals(john.getOperator(), "admin");
@@ -69,14 +65,11 @@ public class TestUser extends BaseTest {
         assertEquals(service.count(User.class, true), 1);
         assertEquals(service.count(User.class, false), 1);
 
-        User joy = EntityFactory.createEntity(User.class);
-        joy.setSex(User.Sex.FEMALE);
-        joy.setLastName("peng");
-        joy.setFirstName("joy");
-        assertNull(joy.getId());
-        joy = service.saveUser(joy);
+        userInfo = UserManageService.UserInfo.valueOf("joy", "",
+                "peng", User.Sex.FEMALE);
+        User joy = service.saveUser(userInfo);
         joyId = joy.getId();
-        assertEquals(service.count(User.class), 2);
+        assertEquals(2, service.count(User.class));
         assertNotNull(joy);
         assertNotNull(joy.getId());
         assertEquals(joy.getFullName(), "peng joy");
@@ -87,20 +80,18 @@ public class TestUser extends BaseTest {
     }
 
     public static void testEditUser(UserManageService service) {
-        User josh = EntityFactory.createEntity(User.class);
-        josh.setFirstName("josh");
-        josh.setLastName("peng");
-        josh.setDesc("original desc.");
-        assertNull(josh.getId());
-        josh = service.saveUser(josh);
+        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("josh", "",
+                "peng", User.Sex.MALE, "", -1, "", "", true,
+                "original desc.");
+        User josh = service.saveUser(userInfo);
         joshId = josh.getId();
         assertNotNull(josh);
         assertNotNull(josh.getId());
         assertEquals(service.count(User.class), 3);
-        josh.setDesc("new desc.");
-        josh.setValid(false);
-        assertNotNull(josh.getId());
-        josh = service.saveUser(josh);
+        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(), josh.getMiddleName(),
+                josh.getLastName(), josh.getSex(), josh.getId(), -1, "", "", false,
+                "new desc.");
+        josh = service.saveUser(userInfo);
         assertNotNull(josh);
         assertNotNull(josh.getId());
         assertEquals(service.count(User.class), 2);
@@ -108,8 +99,10 @@ public class TestUser extends BaseTest {
         assertEquals(service.count(User.class, true), 2);
         assertEquals(service.count(User.class, false), 3);
 
-        josh.setValid(true);
-        service.saveUser(josh);
+        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(), josh.getMiddleName(),
+                josh.getLastName(), josh.getSex(), josh.getId(), -1, "", "", true,
+                josh.getDesc());
+        service.saveUser(userInfo);
         assertEquals(service.count(User.class), 3);
         assertEquals(service.count(User.class, true), 3);
         assertEquals(service.count(User.class, false), 3);
@@ -157,7 +150,7 @@ public class TestUser extends BaseTest {
             Department depart1 = departManageService.getById(TestDepartment.depart1Id, Department.class);
             assertNotNull(depart1);
             joy.setDepartment(depart1);
-            service.saveUser(joy);
+            service.save(joy);
             joy = service.getById(joyId, User.class);
             assertNotNull(joy);
             assertNotNull(joy.getDepartment());
@@ -168,7 +161,7 @@ public class TestUser extends BaseTest {
             assertEquals(new HashSet<>(Arrays.asList(joy)), depart1.getEmployees());
 
             josh.setDepartment(depart1);
-            service.saveUser(josh);
+            service.save(josh);
             josh = service.getById(joshId, User.class);
             assertNotNull(josh);
             assertNotNull(josh.getDepartment());
@@ -179,7 +172,7 @@ public class TestUser extends BaseTest {
             assertEquals(new HashSet<>(Arrays.asList(joy, josh)), depart1.getEmployees());
 
             joy.setDepartment(null);
-            service.saveUser(joy);
+            service.save(joy);
             joy = service.getById(joyId, User.class);
             assertNotNull(joy);
             assertNull(joy.getDepartment());
