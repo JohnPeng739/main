@@ -201,17 +201,18 @@ public class TestUser extends BaseTest {
             assertEquals(0, accountManageService.count(Account.class));
 
             // 用户不存在
-            UserManageService.AccountInfo accountInfo = UserManageService.AccountInfo.valueOf("john---",
-                    "code", "password", new ArrayList<>());
+            AccountManageService.AccountInfo accountInfo = AccountManageService.AccountInfo.valueOf("john---",
+                    "password", "desc", "", "asdfasd", Arrays.asList(), true);
             try {
                 service.allocateAccount(accountInfo);
+                fail("here need a exception");
             } catch (UserInterfaceRbacErrorException ex) {
                 assertEquals(UserInterfaceRbacErrorException.RbacErrors.USER_NOT_FOUND.getErrorCode(), ex.getErrorCode());
             }
 
             // 正常创建
-            accountInfo = UserManageService.AccountInfo.valueOf(john.getId(),
-                    "John.Peng", "edmund!@#123", new ArrayList<>());
+            accountInfo = AccountManageService.AccountInfo.valueOf("John.Peng",
+                    "edmund!@#123", "desc", "", john.getId(), Arrays.asList(), true);
             Account account = service.allocateAccount(accountInfo);
             assertNotNull(account);
             assertEquals(3, service.count(User.class));
@@ -222,12 +223,13 @@ public class TestUser extends BaseTest {
             assertEquals(john, account.getOwner());
             assertEquals(DigestUtils.md5("edmund!@#123"), account.getPassword());
             assertEquals(john.getFullName(), account.getName());
-            assertEquals(john.getDesc(), account.getDesc());
+            assertEquals("desc", account.getDesc());
             assertEquals(0, account.getRoles().size());
 
             // 账户已存在
             try {
                 service.allocateAccount(accountInfo);
+                fail("here need a exception");
             } catch (UserInterfaceRbacErrorException ex) {
                 assertEquals(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_HAS_EXIST.getErrorCode(), ex.getErrorCode());
             }

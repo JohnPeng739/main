@@ -4,10 +4,12 @@ import org.junit.Test;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.Accredit;
 import org.mx.comps.rbac.dal.entity.Role;
+import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.AccreditManageService;
 import org.mx.comps.rbac.service.RoleManageService;
+import org.mx.comps.rbac.service.UserManageService;
 import org.mx.error.UserInterfaceSystemErrorException;
 
 import java.util.Arrays;
@@ -26,12 +28,17 @@ public class TestAccredit extends BaseTest {
     public void testAccredit() {
         AccreditManageService service = context.getBean("accreditManageService", AccreditManageService.class);
         assertNotNull(service);
+        UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
+        assertNotNull(userManageService);
         AccountManageService accountManageService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(accountManageService);
         RoleManageService roleManageService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(roleManageService);
 
         try {
+            TestUser.testInsertUser(userManageService);
+            TestUser.testEditUser(userManageService);
+            assertEquals(3, userManageService.count(User.class));
             TestAccount.testInsertAccount(accountManageService);
             TestAccount.testEditAccount(accountManageService);
             TestRole.testInsertRole(roleManageService);

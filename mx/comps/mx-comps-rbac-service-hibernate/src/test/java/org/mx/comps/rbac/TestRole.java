@@ -4,8 +4,10 @@ import org.junit.Test;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.Privilege;
 import org.mx.comps.rbac.dal.entity.Role;
+import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.RoleManageService;
+import org.mx.comps.rbac.service.UserManageService;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -99,10 +101,15 @@ public class TestRole extends BaseTest {
     public void testRoleAccounts() {
         RoleManageService service = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(service);
+        UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
+        assertNotNull(userManageService);
         AccountManageService accountManageService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(accountManageService);
 
         try {
+            TestUser.testInsertUser(userManageService);
+            TestUser.testEditUser(userManageService);
+            assertEquals(3, userManageService.count(User.class));
             TestAccount.testInsertAccount(accountManageService);
             TestAccount.testEditAccount(accountManageService);
             testInsertRole(service);

@@ -6,6 +6,8 @@ import org.mx.DigestUtils;
 import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
+import org.mx.comps.rbac.dal.entity.Role;
+import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.dal.EntityFactory;
@@ -38,38 +40,58 @@ public class AccountManageServiceImpl extends GeneralDictEntityAccessorImpl impl
     /**
      * {@inheritDoc}
      *
-     * @see AccountManageService#saveAccount(Account)
+     * @see AccountManageService#saveAccount(AccountInfo)
      */
     @Transactional
     @Override
-    public Account saveAccount(Account account) {
-        if (account == null) {
+    public Account saveAccount(AccountInfo accountInfo) {
+        if (accountInfo == null) {
             throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
         }
         try {
-            String accountId = account.getId();
+            String accountId = accountInfo.getAccountId();
+            Account account;
             if (!StringUtils.isBlank(accountId)) {
-                Account checked = super.getById(accountId, Account.class);
-                if (checked == null) {
+                account = super.getById(accountId, Account.class);
+                if (account == null) {
                     if (logger.isErrorEnabled()) {
                         logger.error(String.format("The Account entity[%s] not found.", accountId));
                     }
                     throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND);
                 }
                 // 这里不允许修改密码，密码必须通过另外途径进行修改
-                checked.setName(account.getName());
-                checked.setOwner(account.getOwner());
-                checked.setDesc(account.getDesc());
-                checked.setRoles(account.getRoles());
-                checked.setValid(account.isValid());
-                account = super.save(checked, false);
             } else {
-                if (StringUtils.isBlank(account.getPassword())) {
-                    account.setPassword("ds110119");
+                String password = accountInfo.getPassword();
+                if (StringUtils.isBlank(password)) {
+                    password = "ds110119";
                 }
-                account.setPassword(DigestUtils.md5(account.getPassword()));
-                account = super.save(account, false);
+                account = EntityFactory.createEntity(Account.class);
+                account.setPassword(DigestUtils.md5(password));
             }
+            account.setCode(accountInfo.getCode());
+            if (StringUtils.isBlank(accountInfo.getOwnerId())) {
+                throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOALLOCATE_USER);
+            } else {
+                User owner = super.getById(accountInfo.getOwnerId(), User.class);
+                if (owner == null) {
+                    throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.USER_NOT_FOUND);
+                }
+                account.setOwner(owner);
+                account.setName(owner.getFullName());
+            }
+            account.setDesc(accountInfo.getDesc());
+            if (account.getRoles() != null && !account.getRoles().isEmpty()) {
+                account.getRoles().clear();
+            }
+            for (String roleId : accountInfo.getRoleIds()) {
+                Role role = super.getById(roleId, Role.class);
+                if (role == null) {
+                    throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ROLE_NOT_FOUND);
+                }
+                account.getRoles().add(role);
+            }
+            account.setValid(accountInfo.isValid());
+            account = super.save(account, false);
             if (operateLogService != null) {
                 operateLogService.writeLog(String.format("保存账户[code=%s, name=%s]成功。",
                         account.getCode(), account.getName()));

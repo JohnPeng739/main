@@ -34,6 +34,7 @@ public class UserInterfaceRbacErrorException extends UserInterfaceException {
         ACCOUNT_NOT_FOUND("指定的账户不存在。"),
         ACCOUNT_PASSWORD_NOT_MATCHED("输入的账户密码不正确。"),
         ACCOUNT_DIGEST_PASSWORD_FAIL("加密账户密码失败。"),
+        ACCOUNT_NOALLOCATE_USER("账户没有指定所属人员。"),
         ACCOUNT_ALREADY_LOGINED("指定的账户已经登录，请不要重复登录。"),
         ACCOUNT_NOT_LOGIN("账户尚未登录。"),
         ACCOUNT_HAS_EXIST("指定的账户已经存在。"),

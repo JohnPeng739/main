@@ -10,7 +10,6 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.comps.rbac.service.UserManageService;
-import org.mx.dal.EntityFactory;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -28,20 +27,18 @@ public class TestAccount extends BaseTest {
     public static String account1Id, account2Id, account3Id;
 
     public static void testInsertAccount(AccountManageService service) throws NoSuchAlgorithmException {
-        Account account1 = EntityFactory.createEntity(Account.class);
-        account1.setDesc("description account.");
-        account1.setCode("account1");
-        account1.setName("account1's name");
-        account1.setPassword("password");
-        assertNull(account1.getId());
-        account1 = service.saveAccount(account1);
+        User john = service.getById(TestUser.johnId, User.class);
+        assertNotNull(john);
+        AccountManageService.AccountInfo accountInfo = AccountManageService.AccountInfo.valueOf("account1",
+                "password", "description account.", "", TestUser.johnId, Arrays.asList(), true);
+        Account account1 = service.saveAccount(accountInfo);
         assertEquals(1, service.count(Account.class));
         assertNotNull(account1);
         assertNotNull(account1.getId());
         account1Id = account1.getId();
         assertEquals("description account.", account1.getDesc());
         assertEquals("account1", account1.getCode());
-        assertEquals("account1's name", account1.getName());
+        assertEquals(john.getFullName(), account1.getName());
         assertEquals(DigestUtils.md5("password"), account1.getPassword());
         assertEquals("admin", account1.getOperator());
         assertTrue(account1.isValid());
@@ -52,7 +49,7 @@ public class TestAccount extends BaseTest {
         assertNotNull(account1.getId());
         assertEquals("description account.", account1.getDesc());
         assertEquals("account1", account1.getCode());
-        assertEquals("account1's name", account1.getName());
+        assertEquals(john.getFullName(), account1.getName());
         assertEquals(DigestUtils.md5("password"), account1.getPassword());
         assertEquals("admin", account1.getOperator());
         account1 = service.getByCode(account1.getCode(), Account.class);
@@ -60,51 +57,57 @@ public class TestAccount extends BaseTest {
         assertNotNull(account1.getId());
         assertEquals("description account.", account1.getDesc());
         assertEquals("account1", account1.getCode());
-        assertEquals("account1's name", account1.getName());
+        assertEquals(john.getFullName(), account1.getName());
         assertEquals(DigestUtils.md5("password"), account1.getPassword());
         assertEquals("admin", account1.getOperator());
+        assertEquals(john, account1.getOwner());
         assertTrue(account1.isValid());
 
-        Account account2 = EntityFactory.createEntity(Account.class);
-        account2.setCode("account2");
-        account2.setName("account2's name");
-        account2 = service.saveAccount(account2);
+        accountInfo = AccountManageService.AccountInfo.valueOf("account2",
+                "", "description account.", "", TestUser.johnId, Arrays.asList(), true);
+        Account account2 = service.saveAccount(accountInfo);
         assertEquals(2, service.count(Account.class));
         assertNotNull(account2);
         assertNotNull(account2.getId());
         account2Id = account2.getId();
         assertEquals("account2", account2.getCode());
-        assertEquals("account2's name", account2.getName());
+        assertEquals(DigestUtils.md5("ds110119"), account2.getPassword());
+        assertEquals(john.getFullName(), account2.getName());
+        assertEquals(john, account2.getOwner());
         assertTrue(account2.isValid());
     }
 
     public static void testEditAccount(AccountManageService service) {
-        Account account3 = EntityFactory.createEntity(Account.class);
-        account3.setCode("account3");
-        account3.setName("account3's name");
-        account3 = service.saveAccount(account3);
+        User john = service.getById(TestUser.johnId, User.class);
+        assertNotNull(john);
+        AccountManageService.AccountInfo accountInfo = AccountManageService.AccountInfo.valueOf("account3",
+                "", "description account.", "", TestUser.johnId, Arrays.asList(), true);
+        Account account3 = service.saveAccount(accountInfo);
         assertEquals(3, service.count(Account.class));
         assertNotNull(account3);
         assertNotNull(account3.getId());
         account3Id = account3.getId();
-        assertEquals("account3's name", account3.getName());
+        assertEquals("description account.", account3.getDesc());
+        assertEquals(john.getFullName(), account3.getName());
+        assertEquals(john, account3.getOwner());
 
-        account3.setName("new name.");
-        account3.setValid(false);
-        account3 = service.saveAccount(account3);
+        accountInfo = AccountManageService.AccountInfo.valueOf(account3.getCode(), "",
+                "new desc.", account3.getId(), TestUser.johnId, Arrays.asList(), false);
+        account3 = service.saveAccount(accountInfo);
         assertEquals(2, service.count(Account.class));
         assertEquals(2, service.count(Account.class, true));
         assertEquals(3, service.count(Account.class, false));
         assertNotNull(account3);
-        assertEquals("new name.", account3.getName());
+        assertEquals("new desc.", account3.getDesc());
         assertFalse(account3.isValid());
         account3 = service.getByCode("account3", Account.class);
         assertNotNull(account3);
-        assertEquals("new name.", account3.getName());
+        assertEquals("new desc.", account3.getDesc());
         assertFalse(account3.isValid());
 
-        account3.setValid(true);
-        service.saveAccount(account3);
+        accountInfo = AccountManageService.AccountInfo.valueOf(account3.getCode(), "",
+                account3.getDesc(), account3.getId(), TestUser.johnId, Arrays.asList(), true);
+        service.saveAccount(accountInfo);
         assertEquals(3, service.count(Account.class));
         assertEquals(3, service.count(Account.class, true));
         assertEquals(3, service.count(Account.class, false));
@@ -117,8 +120,13 @@ public class TestAccount extends BaseTest {
     public void testAccountCrud() {
         AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
+        UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
+        assertNotNull(userManageService);
 
         try {
+            TestUser.testInsertUser(userManageService);
+            TestUser.testEditUser(userManageService);
+
             assertEquals(0, service.count(Account.class));
             // insert
             testInsertAccount(service);
@@ -132,46 +140,18 @@ public class TestAccount extends BaseTest {
     }
 
     @Test
-    public void testAccountOwner() {
+    public void testAccountRoles() {
         AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
         UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(userManageService);
-
-        try {
-            TestUser.testInsertUser(userManageService);
-            TestUser.testEditUser(userManageService);
-            testInsertAccount(service);
-            Account account1 = service.getById(account1Id, Account.class);
-            assertNotNull(account1);
-            User john = userManageService.getById(TestUser.johnId, User.class);
-            assertNotNull(john);
-            assertNull(account1.getOwner());
-            account1.setOwner(john);
-            assertNotNull(account1.getOwner());
-            service.saveAccount(account1);
-            account1 = service.getById(account1Id, Account.class);
-            assertNotNull(account1.getOwner());
-            assertEquals(account1.getOwner().getId(), john.getId());
-
-            account1.setOwner(null);
-            service.saveAccount(account1);
-            account1 = service.getById(account1Id, Account.class);
-            assertNotNull(account1);
-            assertNull(account1.getOwner());
-        } catch (Exception ex) {
-            fail(ex.getMessage());
-        }
-    }
-
-    @Test
-    public void testAccountRoles() {
-        AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
-        assertNotNull(service);
         RoleManageService roleManageService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(roleManageService);
 
         try {
+            TestUser.testInsertUser(userManageService);
+            TestUser.testEditUser(userManageService);
+            assertEquals(3, userManageService.count(User.class));
             TestRole.testInsertRole(roleManageService);
             TestRole.testEditRole(roleManageService);
             testInsertAccount(service);
@@ -188,27 +168,30 @@ public class TestAccount extends BaseTest {
             assertNotNull(role2);
             assertNotNull(role3);
 
-            account1.getRoles().add(role1);
-            account1.getRoles().add(role2);
-            account1.getRoles().add(role3);
-            assertEquals(3, account1.getRoles().size());
-            service.saveAccount(account1);
+            AccountManageService.AccountInfo accountInfo = AccountManageService.AccountInfo.valueOf(account1.getCode(),
+                    "", account1.getDesc(), account1.getId(), TestUser.johnId,
+                    Arrays.asList(role1.getId(), role2.getId(), role3.getId()), account1.isValid());
+            service.saveAccount(accountInfo);
             assertEquals(3, service.count(Account.class));
             account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
             assertEquals(3, account1.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1, role2, role3)), account1.getRoles());
 
-            account1.getRoles().remove(role2);
-            service.saveAccount(account1);
+            accountInfo = AccountManageService.AccountInfo.valueOf(account1.getCode(),
+                    "", account1.getDesc(), account1.getId(), TestUser.johnId,
+                    Arrays.asList(role1.getId(), role3.getId()), account1.isValid());
+            service.saveAccount(accountInfo);
             assertEquals(3, service.count(Account.class));
             account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
             assertEquals(2, account1.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1, role3)), account1.getRoles());
 
-            account1.getRoles().clear();
-            service.saveAccount(account1);
+            accountInfo = AccountManageService.AccountInfo.valueOf(account1.getCode(),
+                    "", account1.getDesc(), account1.getId(), TestUser.johnId,
+                    Arrays.asList(), account1.isValid());
+            service.saveAccount(accountInfo);
             account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
             assertTrue(account1.getRoles().isEmpty());
@@ -221,8 +204,13 @@ public class TestAccount extends BaseTest {
     public void testChangePassword() {
         AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
+        UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
+        assertNotNull(userManageService);
 
         try {
+            TestUser.testInsertUser(userManageService);
+            TestUser.testEditUser(userManageService);
+            assertEquals(3, userManageService.count(User.class));
             testInsertAccount(service);
             testEditAccount(service);
             assertEquals(3, service.count(Account.class));
@@ -251,8 +239,13 @@ public class TestAccount extends BaseTest {
     public void testLoginAndLogout() {
         AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
+        UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
+        assertNotNull(userManageService);
 
         try {
+            TestUser.testInsertUser(userManageService);
+            TestUser.testEditUser(userManageService);
+            assertEquals(3, userManageService.count(User.class));
             testInsertAccount(service);
             testEditAccount(service);
             assertEquals(3, service.count(Account.class));

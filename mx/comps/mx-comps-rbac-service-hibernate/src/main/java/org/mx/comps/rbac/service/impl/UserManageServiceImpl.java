@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.Department;
-import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
@@ -38,15 +37,15 @@ public class UserManageServiceImpl extends GeneralEntityAccessorImpl implements 
     /**
      * {@inheritDoc}
      *
-     * @see UserManageService#allocateAccount(AccountInfo)
+     * @see UserManageService#allocateAccount(AccountManageService.AccountInfo)
      */
     @Override
-    public Account allocateAccount(AccountInfo accountInfo) {
-        if (accountInfo == null || StringUtils.isBlank(accountInfo.getUserId()) ||
+    public Account allocateAccount(AccountManageService.AccountInfo accountInfo) {
+        if (accountInfo == null || StringUtils.isBlank(accountInfo.getOwnerId()) ||
                 StringUtils.isBlank(accountInfo.getCode())) {
             throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
         }
-        User user = super.getById(accountInfo.getUserId(), User.class);
+        User user = super.getById(accountInfo.getOwnerId(), User.class);
         if (user == null) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.USER_NOT_FOUND);
         }
@@ -54,20 +53,7 @@ public class UserManageServiceImpl extends GeneralEntityAccessorImpl implements 
         if (account != null) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_HAS_EXIST);
         }
-        account = EntityFactory.createEntity(Account.class);
-        account.setCode(accountInfo.getCode());
-        account.setPassword(accountInfo.getPassword());
-        account.setName(user.getFullName());
-        account.setDesc(user.getDesc());
-        account.setOwner(user);
-        for (String roleId : accountInfo.getRoleIds()) {
-            Role role = super.getById(roleId, Role.class);
-            if (role == null) {
-                throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ROLE_NOT_FOUND);
-            }
-            account.getRoles().add(role);
-        }
-        account = accountManageService.saveAccount(account);
+        account = accountManageService.saveAccount(accountInfo);
         if (operateLogService != null) {
             operateLogService.writeLog(String.format("为用户[%s]分配账户[%s]成功。", user.getFullName(), account.getCode()));
         }
