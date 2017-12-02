@@ -63,38 +63,7 @@
     <favorites_list name="comps" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="TestRole.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestRole.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="73" column="19" lean-forward="false" selection-start-line="73" selection-start-column="19" selection-end-line="73" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RoleManageServiceImpl.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/main/java/org/mx/comps/rbac/service/impl/RoleManageServiceImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="93">
-              <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RoleManageService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/RoleManageService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="93">
-              <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -134,7 +103,6 @@
         <option value="$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/error/UserInterfaceErrorException.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/main/java/org/mx/comps/rbac/service/impl/AccountManageServiceImpl.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestAccount.java" />
-        <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestDepartment.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestLogicalTransaction.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/service/impl/TestLogicalTransactServiceImpl.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-restful/src/main/java/org/mx/comps/rbac/rest/vo/AccreditVO.java" />
@@ -149,9 +117,7 @@
         <option value="$PROJECT_DIR$/mx-comps-rbac-restful/src/main/java/org/mx/comps/rbac/rest/UserManageResource.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-restful/src/main/java/org/mx/comps/rbac/rest/vo/UserVO.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-restful/src/main/java/org/mx/comps/rbac/rest/AccreditManageResource.java" />
-        <option value="$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/DepartmentManageService.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/AccountManageService.java" />
-        <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/main/java/org/mx/comps/rbac/service/impl/DepartmentManageServiceImpl.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/AccreditManageService.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/error/UserInterfaceRbacErrorException.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestAccredit.java" />
@@ -163,6 +129,9 @@
         <option value="$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/RoleManageService.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/main/java/org/mx/comps/rbac/service/impl/RoleManageServiceImpl.java" />
         <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestRole.java" />
+        <option value="$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/DepartmentManageService.java" />
+        <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/main/java/org/mx/comps/rbac/service/impl/DepartmentManageServiceImpl.java" />
+        <option value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestDepartment.java" />
       </list>
     </option>
   </component>
@@ -415,7 +384,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TestRole">
+  <component name="RunManager" selected="JUnit.rbac in mx-comps-rbac-service-hibernate">
     <configuration default="false" name="rbac in mx-comps-rbac-service-hibernate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea" />
       <module name="mx-comps-rbac-service-hibernate" />
@@ -435,32 +404,6 @@
       </option>
       <envs />
       <dir value="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac" />
-      <patterns />
-      <method />
-    </configuration>
-    <configuration default="false" name="TestAccredit.testAccredit" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="org.mx.comps.rbac.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="mx-comps-rbac-service-hibernate" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.mx.comps.rbac" />
-      <option name="MAIN_CLASS_NAME" value="org.mx.comps.rbac.TestAccredit" />
-      <option name="METHOD_NAME" value="testAccredit" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
       <patterns />
       <method />
     </configuration>
@@ -528,6 +471,32 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="org.mx.comps.rbac" />
       <option name="MAIN_CLASS_NAME" value="org.mx.comps.rbac.TestRole" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestDepartment" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="org.mx.comps.rbac.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <module name="mx-comps-rbac-service-hibernate" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="org.mx.comps.rbac" />
+      <option name="MAIN_CLASS_NAME" value="org.mx.comps.rbac.TestDepartment" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -876,18 +845,18 @@
     <list size="6">
       <item index="0" class="java.lang.String" itemvalue="Application.H2ServerApplication" />
       <item index="1" class="java.lang.String" itemvalue="JUnit.rbac in mx-comps-rbac-service-hibernate" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.TestAccredit.testAccredit" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.TestUser" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.TestUser.testUserCrud" />
-      <item index="5" class="java.lang.String" itemvalue="JUnit.TestRole" />
+      <item index="2" class="java.lang.String" itemvalue="JUnit.TestUser" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.TestUser.testUserCrud" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.TestRole" />
+      <item index="5" class="java.lang.String" itemvalue="JUnit.TestDepartment" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.TestRole" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.TestUser" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.TestUser.testUserCrud" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.rbac in mx-comps-rbac-service-hibernate" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.TestAccredit.testAccredit" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.rbac in mx-comps-rbac-service-hibernate" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.TestDepartment" />
+        <item index="2" class="java.lang.String" itemvalue="JUnit.TestRole" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.TestUser" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.TestUser.testUserCrud" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -922,11 +891,17 @@
       <workItem from="1511838356887" duration="43878000" />
       <workItem from="1512092444669" duration="1243000" />
       <workItem from="1512107512735" duration="11275000" />
-      <workItem from="1512212465985" duration="4694000" />
+      <workItem from="1512212465985" duration="6041000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
+    <history-entry file="TestDepartment - 2017.12.02 at 20h 41m 20s.xml">
+      <configuration name="TestDepartment" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TestDepartment - 2017.12.02 at 20h 42m 28s.xml">
+      <configuration name="TestDepartment" configurationId="JUnit" />
+    </history-entry>
     <history-entry file="TestRole - 2017.12.02 at 20h 12m 47s.xml">
       <configuration name="TestRole" configurationId="JUnit" />
     </history-entry>
@@ -945,21 +920,15 @@
     <history-entry file="TestRole - 2017.12.02 at 20h 19m 46s.xml">
       <configuration name="TestRole" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestUser - 2017.12.02 at 19h 42m 22s.xml">
-      <configuration name="TestUser" configurationId="JUnit" />
+    <history-entry file="TestRole - 2017.12.02 at 20h 20m 12s.xml">
+      <configuration name="TestRole" configurationId="JUnit" />
     </history-entry>
     <history-entry file="TestUser - 2017.12.02 at 19h 44m 52s.xml">
       <configuration name="TestUser" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="TestUser_testUserCrud - 2017.12.02 at 19h 43m 17s.xml">
-      <configuration name="TestUser.testUserCrud" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="TestUser_testUserCrud - 2017.12.02 at 19h 44m 40s.xml">
-      <configuration name="TestUser.testUserCrud" configurationId="JUnit" />
-    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61090000" />
+    <option name="totallyTimeSpent" value="62437000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -990,11 +959,11 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4885599" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.47779274" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.7025572" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28040057" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28040057" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="BPMNPalette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1040,13 +1009,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/main/java/org/mx/comps/rbac/dal/entity/UserEntity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="33" column="34" lean-forward="true" selection-start-line="33" selection-start-column="34" selection-end-line="33" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/mx/mx-rest-utils/1.1.8/mx-rest-utils-1.1.8-sources.jar!/org/mx/rest/error/UserInterfaceException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -1073,13 +1035,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2460">
           <caret line="214" column="17" lean-forward="false" selection-start-line="214" selection-start-column="17" selection-end-line="214" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestDepartment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="574">
-          <caret line="143" column="70" lean-forward="false" selection-start-line="143" selection-start-column="70" selection-end-line="143" selection-end-column="70" />
         </state>
       </provider>
     </entry>
@@ -1195,25 +1150,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/DepartmentManageService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="23" lean-forward="false" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/AccountManageService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="7" lean-forward="false" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/main/java/org/mx/comps/rbac/service/impl/DepartmentManageServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="34" column="59" lean-forward="false" selection-start-line="34" selection-start-column="59" selection-end-line="34" selection-end-column="59" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1246,6 +1186,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="254">
           <caret line="47" column="46" lean-forward="false" selection-start-line="47" selection-start-column="46" selection-end-line="47" selection-end-column="46" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1253,13 +1194,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="26" column="24" lean-forward="true" selection-start-line="26" selection-start-column="24" selection-end-line="26" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar!/org/junit/Assert.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="833" column="0" lean-forward="false" selection-start-line="833" selection-start-column="0" selection-end-line="833" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1398,7 +1332,7 @@
         <state relative-caret-position="101">
           <caret line="82" column="0" lean-forward="false" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
           <folding>
-            <element signature="e#2002#2003#0" expanded="true" />
+            <element signature="e#2002#2003#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1413,9 +1347,66 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestRole.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="73" column="19" lean-forward="false" selection-start-line="73" selection-start-column="19" selection-end-line="73" selection-end-column="19" />
+        <state relative-caret-position="232">
+          <caret line="65" column="33" lean-forward="false" selection-start-line="65" selection-start-column="33" selection-end-line="65" selection-end-column="33" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/service/DepartmentManageService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="16" column="6" lean-forward="true" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
+          <folding>
+            <element signature="e#1821#1822#0" expanded="true" />
+            <element signature="e#1856#1857#0" expanded="true" />
+            <element signature="e#1891#1892#0" expanded="true" />
+            <element signature="e#1926#1927#0" expanded="true" />
+            <element signature="e#1961#1962#0" expanded="true" />
+            <element signature="e#1996#1997#0" expanded="true" />
+            <element signature="e#2035#2036#0" expanded="true" />
+            <element signature="e#2074#2075#0" expanded="true" />
+            <element signature="e#2114#2115#0" expanded="true" />
+            <element signature="e#2154#2155#0" expanded="true" />
+            <element signature="e#2190#2191#0" expanded="true" />
+            <element signature="e#2226#2227#0" expanded="true" />
+            <element signature="e#2274#2275#0" expanded="true" />
+            <element signature="e#2316#2317#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service/src/main/java/org/mx/comps/rbac/dal/entity/Department.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="24" column="9" lean-forward="false" selection-start-line="24" selection-start-column="9" selection-end-line="24" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/main/java/org/mx/comps/rbac/service/impl/DepartmentManageServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="68" column="117" lean-forward="false" selection-start-line="68" selection-start-column="117" selection-end-line="68" selection-end-column="117" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar!/org/junit/Assert.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="121">
+          <caret line="754" column="0" lean-forward="false" selection-start-line="754" selection-start-column="0" selection-end-line="754" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/src/test/java/org/mx/comps/rbac/TestDepartment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="129" column="67" lean-forward="false" selection-start-line="129" selection-start-column="67" selection-end-line="129" selection-end-column="67" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

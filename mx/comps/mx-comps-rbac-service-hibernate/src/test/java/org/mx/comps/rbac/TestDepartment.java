@@ -5,8 +5,8 @@ import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.DepartmentManageService;
 import org.mx.comps.rbac.service.UserManageService;
-import org.mx.dal.EntityFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -20,12 +20,9 @@ public class TestDepartment extends BaseTest {
     public static String depart1Id, depart2Id, depart3Id;
 
     public static void testInsertDepartment(DepartmentManageService service) {
-        Department depart1 = EntityFactory.createEntity(Department.class);
-        depart1.setCode("depart1");
-        depart1.setName("depart1");
-        depart1.setDesc("description");
-        assertNull(depart1.getId());
-        depart1 = service.saveDepartment(depart1);
+        DepartmentManageService.DepartInfo departInfo = DepartmentManageService.DepartInfo.valueOf("depart1",
+                "depart1", "description");
+        Department depart1 = service.saveDepartment(departInfo);
         assertNotNull(depart1);
         assertNotNull(depart1.getId());
         depart1Id = depart1.getId();
@@ -41,10 +38,9 @@ public class TestDepartment extends BaseTest {
         assertEquals("depart1", depart1.getName());
         assertEquals("description", depart1.getDesc());
 
-        Department depart2 = EntityFactory.createEntity(Department.class);
-        depart2.setCode("depart2");
-        depart2.setName("depart2");
-        depart2 = service.saveDepartment(depart2);
+        departInfo = DepartmentManageService.DepartInfo.valueOf("depart2",
+                "depart2", "description");
+        Department depart2 = service.saveDepartment(departInfo);
         assertEquals(2, service.count(Department.class));
         assertNotNull(depart2);
         depart2Id = depart2.getId();
@@ -52,19 +48,17 @@ public class TestDepartment extends BaseTest {
     }
 
     public static void testEditDepartment(DepartmentManageService service) {
-        Department depart3 = EntityFactory.createEntity(Department.class);
-        depart3.setCode("depart3");
-        depart3.setName("depart3");
-        depart3 = service.saveDepartment(depart3);
+        DepartmentManageService.DepartInfo departInfo = DepartmentManageService.DepartInfo.valueOf("depart3",
+                "depart3", "description");
+        Department depart3 = service.saveDepartment(departInfo);
         assertEquals(3, service.count(Department.class));
         assertNotNull(depart3);
         assertNotNull(depart3.getId());
         depart3Id = depart3.getId();
 
-        depart3 = service.getById(depart3Id, Department.class);
-        depart3.setName("new name");
-        depart3.setValid(false);
-        depart3 = service.saveDepartment(depart3);
+        departInfo = DepartmentManageService.DepartInfo.valueOf("depart3",
+                "new name", "description", depart3.getId(), "", Arrays.asList(), false);
+        depart3 = service.saveDepartment(departInfo);
         assertEquals(2, service.count(Department.class));
         assertEquals(3, service.count(Department.class, false));
         assertNotNull(depart3);
@@ -73,9 +67,9 @@ public class TestDepartment extends BaseTest {
         assertEquals("new name", depart3.getName());
         assertFalse(depart3.isValid());
 
-        depart3.setValid(true);
-        depart3.setName("depart3");
-        service.saveDepartment(depart3);
+        departInfo = DepartmentManageService.DepartInfo.valueOf("depart3",
+                "depart3", "description", depart3.getId(), "", Arrays.asList(), true);
+        service.saveDepartment(departInfo);
         assertEquals(3, service.count(Department.class));
         assertEquals(3, service.count(Department.class, false));
     }
@@ -120,9 +114,9 @@ public class TestDepartment extends BaseTest {
             User john = userManageService.getById(TestUser.johnId, User.class);
             assertNotNull(john);
             assertTrue(john.isValid());
-            depart1.setManager(john);
-            assertNotNull(depart1.getManager());
-            depart1 = service.saveDepartment(depart1);
+            DepartmentManageService.DepartInfo departInfo = DepartmentManageService.DepartInfo.valueOf(depart1.getCode(),
+                    depart1.getName(), depart1.getDesc(), depart1.getId(), john.getId(), Arrays.asList(), true);
+            depart1 = service.saveDepartment(departInfo);
             assertEquals(3, service.count(Department.class));
             assertNotNull(depart1);
             depart1 = service.getById(depart1Id, Department.class);
@@ -130,10 +124,10 @@ public class TestDepartment extends BaseTest {
             assertNotNull(depart1.getManager());
             assertEquals(john, depart1.getManager());
 
-            depart1.setManager(null);
-            assertNull(depart1.getManager());
-            service.saveDepartment(depart1);
-            depart1 = service.saveDepartment(depart1);
+            departInfo = DepartmentManageService.DepartInfo.valueOf(depart1.getCode(),
+                    depart1.getName(), depart1.getDesc(), depart1.getId(), null, Arrays.asList(), true);
+            service.saveDepartment(departInfo);
+            depart1 = service.getById(depart1Id, Department.class);
             assertEquals(3, service.count(Department.class));
             assertNull(depart1.getManager());
         } catch (Exception ex) {
