@@ -39,6 +39,25 @@ public class AccreditEntity extends BaseEntity implements Accredit {
 
     /**
      * {@inheritDoc}
+     * @see Accredit#isClosed()
+     */
+    @Override
+    public boolean isClosed() {
+        if (!isValid()) {
+            return true;
+        }
+        long endTime = -1;
+        if (getEndTime() != null) {
+            endTime = getEndTime().getTime();
+        }
+        if (endTime != -1l && endTime <= new Date().getTime()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * {@inheritDoc}
      * @see Accredit#getSrc()
      */
     @Override

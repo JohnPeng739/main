@@ -1,6 +1,6 @@
 package org.mx.comps.rbac.rest.config;
 
-import org.mx.comps.rbac.rest.UserManageResource;
+import org.mx.comps.rbac.rest.*;
 import org.mx.rest.server.config.ServerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -21,6 +21,7 @@ import java.util.List;
 public class RbacRestConfig {
     @Bean(name = "restfulClassesRBAC")
     public List<Class<?>> rbacRestfulClasses() {
-        return Arrays.asList(UserManageResource.class);
+        return Arrays.asList(UserManageResource.class, AccountManageResource.class, RoleManageResource.class,
+                DepartmentManageResource.class, PrivilegeManageResource.class, AccreditManageResource.class);
     }
 }

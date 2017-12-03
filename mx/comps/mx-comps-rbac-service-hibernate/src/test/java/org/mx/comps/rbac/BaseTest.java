@@ -2,8 +2,7 @@ package org.mx.comps.rbac;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
-import org.mx.comps.rbac.config.TestRbacConfig;
+import org.mx.comps.rbac.config.CompsRbacConfig;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -15,7 +14,7 @@ public class BaseTest {
     @Before
     public void before() {
         CleanH2DatabaseFile.cleanDataFile("./h2/rbac");
-        context = new AnnotationConfigApplicationContext(TestRbacConfig.class);
+        context = new AnnotationConfigApplicationContext(CompsRbacConfig.class);
         assertNotNull(context);
 
         SessionDataStore sessionDataStore = context.getBean(SessionDataStore.class);

@@ -3,7 +3,6 @@ package org.mx.comps.rbac.dal.entity;
 import org.mx.dal.entity.Base;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,6 +11,13 @@ import java.util.Set;
  * @author : john.peng created on date : 2017/11/4
  */
 public interface Accredit extends Base {
+    /**
+     * 判断该授权是否已经失效
+     *
+     * @return 返回true表示该授权已经失效
+     */
+    boolean isClosed();
+
     /**
      * 获取授权源账户
      *

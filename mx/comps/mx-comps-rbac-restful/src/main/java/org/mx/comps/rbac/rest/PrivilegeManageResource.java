@@ -9,6 +9,7 @@ import org.mx.dal.Pagination;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.rest.vo.DataVO;
 import org.mx.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,14 @@ public class PrivilegeManageResource {
             List<PrivilegeVO> vos = PrivilegeVO.transformPrivilegeVOs(privileges);
             return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -59,10 +64,14 @@ public class PrivilegeManageResource {
             List<PrivilegeVO> vos = PrivilegeVO.transformPrivilegeVOs(privileges);
             return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
+            return new PaginationDataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new PaginationDataVO<>(ex);
+            return new PaginationDataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -75,10 +84,14 @@ public class PrivilegeManageResource {
             PrivilegeVO.transform(privilege, vo);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -93,10 +106,14 @@ public class PrivilegeManageResource {
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -123,10 +140,14 @@ public class PrivilegeManageResource {
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 }

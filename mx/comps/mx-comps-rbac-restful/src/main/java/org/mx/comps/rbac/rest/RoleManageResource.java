@@ -3,13 +3,16 @@ package org.mx.comps.rbac.rest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.rbac.dal.entity.Role;
+import org.mx.comps.rbac.rest.vo.RoleInfoVO;
 import org.mx.comps.rbac.rest.vo.RoleVO;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.rest.vo.DataVO;
+import org.mx.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,28 +41,36 @@ public class RoleManageResource {
             List<RoleVO> vos = RoleVO.transformRoleVOs(roles);
             return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("roles")
     @POST
-    public DataVO<List<RoleVO>> roles(Pagination pagination) {
+    public PaginationDataVO<List<RoleVO>> roles(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
         }
         try {
             List<Role> roles = roleManageService.list(pagination, Role.class);
             List<RoleVO> vos = RoleVO.transformRoleVOs(roles);
-            return new DataVO<>(vos);
+            return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
+            return new PaginationDataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new PaginationDataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -72,51 +83,60 @@ public class RoleManageResource {
             RoleVO.transform(role, vo);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("roles/new")
     @POST
-    public DataVO<RoleVO> saveRole(@QueryParam("userCode") String userCode, RoleVO roleVO) {
+    public DataVO<RoleVO> saveRole(@QueryParam("userCode") String userCode, RoleInfoVO roleInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            Role role = EntityFactory.createEntity(Role.class);
-            RoleVO.transform(roleVO, role);
-            role = roleManageService.save(role);
+            roleInfoVO.setRoleId(null);
+            Role role = roleManageService.saveRole(roleInfoVO.getRoleInfo());
             RoleVO vo = new RoleVO();
             RoleVO.transform(role, vo);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("roles/{id}")
     @PUT
-    public DataVO<RoleVO> saveRole(@QueryParam("userCode") String userCode, @PathParam("id") String id, RoleVO roleVO) {
+    public DataVO<RoleVO> saveRole(@QueryParam("userCode") String userCode, @PathParam("id") String id, RoleInfoVO roleInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            Role role = EntityFactory.createEntity(Role.class);
-            RoleVO.transform(roleVO, role);
-            role.setId(id);
-            role = roleManageService.save(role);
+            roleInfoVO.setRoleId(id);
+            Role role = roleManageService.saveRole(roleInfoVO.getRoleInfo());
             RoleVO vo = new RoleVO();
             RoleVO.transform(role, vo);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -131,10 +151,14 @@ public class RoleManageResource {
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 }

@@ -20,6 +20,7 @@ public class AccreditVO extends BaseVO {
     private List<RoleVO> roles;
     private long startTime, endTime;
     private String desc;
+    private boolean closed;
 
     public static void transform(Accredit accredit, AccreditVO accreditVO) {
         if (accredit == null || accreditVO == null) {
@@ -28,6 +29,7 @@ public class AccreditVO extends BaseVO {
         BaseVO.transform(accredit, accreditVO);
         accreditVO.startTime = accredit.getStartTime() == null ? 0 : accredit.getStartTime().getTime();
         accreditVO.endTime = accredit.getEndTime() == null ? 0 : accredit.getEndTime().getTime();
+        accreditVO.closed = accredit.isClosed();
         accreditVO.desc = accredit.getDesc();
         if (accredit.getSrc() != null) {
             AccountVO vo = new AccountVO();
@@ -79,6 +81,14 @@ public class AccreditVO extends BaseVO {
             }
         }
         return list;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     public AccountVO getSrc() {

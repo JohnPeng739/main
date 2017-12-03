@@ -4,17 +4,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Accredit;
+import org.mx.comps.rbac.rest.vo.AccreditInfoVO;
 import org.mx.comps.rbac.rest.vo.AccreditVO;
-import org.mx.dal.EntityFactory;
+import org.mx.comps.rbac.service.AccreditManageService;
 import org.mx.dal.Pagination;
-import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.rest.vo.DataVO;
 import org.mx.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -29,8 +28,7 @@ public class AccreditManageResource {
     private static final Log logger = LogFactory.getLog(AccreditManageResource.class);
 
     @Autowired
-    @Qualifier("generalDictEntityAccessorHibernate")
-    private GeneralDictAccessor accessor = null;
+    private AccreditManageService accreditManageService = null;
 
     @Autowired
     private SessionDataStore sessionDataStore = null;
@@ -39,14 +37,18 @@ public class AccreditManageResource {
     @GET
     public DataVO<List<AccreditVO>> accredits() {
         try {
-            List<Accredit> accredits = accessor.list(Accredit.class);
+            List<Accredit> accredits = accreditManageService.list(Accredit.class);
             List<AccreditVO> list = AccreditVO.transformAccreditVOs(accredits);
             return new DataVO<>(list);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -57,14 +59,18 @@ public class AccreditManageResource {
             pagination = new Pagination();
         }
         try {
-            List<Accredit> accredits = accessor.list(pagination, Accredit.class);
+            List<Accredit> accredits = accreditManageService.list(pagination, Accredit.class);
             List<AccreditVO> list = AccreditVO.transformAccreditVOs(accredits);
             return new PaginationDataVO<>(pagination, list);
         } catch (UserInterfaceException ex) {
+            return new PaginationDataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new PaginationDataVO<>(ex);
+            return new PaginationDataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -75,36 +81,39 @@ public class AccreditManageResource {
             return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
         }
         try {
-            Accredit accredit = accessor.getById(id, Accredit.class);
+            Accredit accredit = accreditManageService.getById(id, Accredit.class);
             AccreditVO vo = new AccreditVO();
             AccreditVO.transform(accredit, vo);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("accredits/new")
     @POST
-    public DataVO<AccreditVO> newAccredit(@QueryParam("userCode") String userCode, AccreditVO accreditVO) {
-        if (StringUtils.isBlank(userCode) || accreditVO == null) {
-            return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
-        }
+    public DataVO<AccreditVO> newAccredit(@QueryParam("userCode") String userCode, AccreditInfoVO accreditInfoVO) {
         try {
-            Accredit accredit = EntityFactory.createEntity(Accredit.class);
-            AccreditVO.transform(accreditVO, accredit);
-            accredit = accessor.save(accredit);
+            Accredit accredit = accreditManageService.accredit(accreditInfoVO.getAccreditInfo());
             AccreditVO vo = new AccreditVO();
             AccreditVO.transform(accredit, vo);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -116,16 +125,20 @@ public class AccreditManageResource {
         }
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            Accredit accredit = accessor.remove(id, Accredit.class);
+            Accredit accredit = accreditManageService.closeAccredit(id);
             AccreditVO vo = new AccreditVO();
             AccreditVO.transform(accredit, vo);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 }

@@ -4,13 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
-import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
-import org.mx.comps.rbac.rest.vo.AccountPasswordVO;
-import org.mx.comps.rbac.rest.vo.AccountVO;
-import org.mx.comps.rbac.rest.vo.ChangePasswordVO;
-import org.mx.comps.rbac.rest.vo.LoginHistoryVO;
+import org.mx.comps.rbac.rest.vo.*;
 import org.mx.comps.rbac.service.AccountManageService;
-import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
@@ -19,7 +14,6 @@ import org.mx.rest.vo.DataVO;
 import org.mx.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -46,10 +40,14 @@ public class AccountManageResource {
             List<LoginHistoryVO> vos = LoginHistoryVO.transformLoginHistories(histories);
             return new DataVO(vos);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -64,10 +62,14 @@ public class AccountManageResource {
             List<LoginHistoryVO> vos = LoginHistoryVO.transformLoginHistories(histories);
             return new PaginationDataVO(pagination, vos);
         } catch (UserInterfaceException ex) {
+            return new PaginationDataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new PaginationDataVO<>(ex);
+            return new PaginationDataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -78,10 +80,14 @@ public class AccountManageResource {
             List<Account> accounts = accountManageService.list(Account.class);
             return new DataVO<>(AccountVO.transformAccountVOs(accounts));
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -95,51 +101,38 @@ public class AccountManageResource {
             List<Account> accounts = accountManageService.list(pagination, Account.class);
             return new PaginationDataVO<>(pagination, AccountVO.transformAccountVOs(accounts));
         } catch (UserInterfaceException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
             return new PaginationDataVO<>(ex);
-        }
-    }
-
-    @Path("accounts/new")
-    @POST
-    public DataVO<AccountVO> newAccount(@QueryParam("userCode") String userCode, AccountVO accountVO) {
-        sessionDataStore.setCurrentUserCode(userCode);
-        try {
-            Account account = EntityFactory.createEntity(Account.class);
-            AccountVO.transform(accountVO, account);
-            account = accountManageService.save(account);
-            accountVO = new AccountVO();
-            AccountVO.transform(account, accountVO);
-            sessionDataStore.removeCurrentUserCode();
-            return new DataVO<>(accountVO);
-        } catch (UserInterfaceException ex) {
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new PaginationDataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("accounts/{id}")
     @PUT
-    public DataVO<AccountVO> saveAccount(@PathParam("id") String id, @QueryParam("userCode") String userCode, AccountVO accountVO) {
+    public DataVO<AccountVO> saveAccount(@PathParam("id") String id, @QueryParam("userCode") String userCode,
+                                         AccountInfoVO accountInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            Account account = EntityFactory.createEntity(Account.class);
-            AccountVO.transform(accountVO, account);
-            account.setId(id);
-            account = accountManageService.save(account);
-            accountVO = new AccountVO();
+            accountInfoVO.setAccountId(id);
+            Account account = accountManageService.saveAccount(accountInfoVO.getAccountInfo());
+            AccountVO accountVO = new AccountVO();
             AccountVO.transform(account, accountVO);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(accountVO);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -154,10 +147,14 @@ public class AccountManageResource {
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(accountVO);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -177,29 +174,39 @@ public class AccountManageResource {
             AccountVO.transform(account, accountVO);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(accountVO);
-        } catch (UserInterfaceRbacErrorException ex) {
+        } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("accounts/login")
     @POST
-    public DataVO<LoginHistoryVO> login(@QueryParam("userCode") String userCode, AccountPasswordVO vo) {
+    public DataVO<LoginHistoryVO> login(@QueryParam("userCode") String userCode, AuthenticateAccountPasswordVO vo) {
         sessionDataStore.setCurrentUserCode(userCode);
-        if (vo == null) {
-            return new DataVO<>(new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
-        }
         String accountCode = vo.getAccountCode(), password = vo.getPassword();
-        boolean forced = vo.isForced();
+        boolean forced = vo.isForcedReplace();
         try {
             LoginHistory loginHistory = accountManageService.login(accountCode, password, forced);
             LoginHistoryVO loginHistoryVO = new LoginHistoryVO();
             LoginHistoryVO.transform(loginHistory, loginHistoryVO);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(loginHistoryVO);
-        } catch (UserInterfaceRbacErrorException ex) {
+        } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -207,18 +214,21 @@ public class AccountManageResource {
     @GET
     public DataVO<LoginHistoryVO> logout(@PathParam("id") String id, @QueryParam("userCode") String userCode) {
         sessionDataStore.setCurrentUserCode(userCode);
-        if (StringUtils.isEmpty(id)) {
-            return new DataVO<>(new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
-        }
         try {
             LoginHistory loginHistory = accountManageService.logout(id);
             LoginHistoryVO loginHistoryVO = new LoginHistoryVO();
             LoginHistoryVO.transform(loginHistory, loginHistoryVO);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(loginHistoryVO);
-        } catch (UserInterfaceRbacErrorException ex) {
+        } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 }

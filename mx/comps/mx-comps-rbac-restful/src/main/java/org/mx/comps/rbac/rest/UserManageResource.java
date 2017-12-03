@@ -2,13 +2,18 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.User;
+import org.mx.comps.rbac.rest.vo.AccountInfoVO;
+import org.mx.comps.rbac.rest.vo.AccountVO;
+import org.mx.comps.rbac.rest.vo.UserInfoVO;
 import org.mx.comps.rbac.rest.vo.UserVO;
 import org.mx.comps.rbac.service.UserManageService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.rest.vo.DataVO;
 import org.mx.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +45,14 @@ public class UserManageResource {
             List<UserVO> userVOS = UserVO.transformUserVOs(users);
             return new DataVO<>(userVOS);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -58,10 +67,14 @@ public class UserManageResource {
             List<UserVO> userVOs = UserVO.transformUserVOs(users);
             return new PaginationDataVO<>(pagination, userVOs);
         } catch (UserInterfaceException ex) {
+            return new PaginationDataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new PaginationDataVO<>(ex);
+            return new PaginationDataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -74,47 +87,59 @@ public class UserManageResource {
             UserVO.transform(user, userVO);
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
-    @Path("users/{userId}")
+    @Path("users/new")
     @POST
-    public DataVO<UserVO> newUser(@QueryParam("userCode") String userCode, UserVO userVO) {
+    public DataVO<UserVO> newUser(@QueryParam("userCode") String userCode, UserInfoVO userInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            User user = EntityFactory.createEntity(User.class);
-            UserVO.transform(userVO, user);
-            user = userManageService.save(user);
+            userInfoVO.setUserId(null);
+            User user = userManageService.saveUser(userInfoVO.getUserInfo());
+            UserVO userVO = new UserVO();
             UserVO.transform(user, userVO);
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("users/{userId}")
     @PUT
-    public DataVO<UserVO> saveUser(@QueryParam("userCode") String userCode, @PathParam("userId") String userId, UserVO userVO) {
+    public DataVO<UserVO> saveUser(@QueryParam("userCode") String userCode, @PathParam("userId") String userId,
+                                   UserInfoVO userInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            User user = EntityFactory.createEntity(User.class);
-            UserVO.transform(userVO, user);
-            user.setId(userId);
-            user = userManageService.saveUser(user);
+            userInfoVO.setUserId(userId);
+            User user = userManageService.saveUser(userInfoVO.getUserInfo());
+            UserVO userVO = new UserVO();
             UserVO.transform(user, userVO);
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -130,6 +155,36 @@ public class UserManageResource {
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
+        }
+    }
+
+    @Path("users/{userId}/allocate")
+    @POST
+    public DataVO<AccountVO> allocateAccount(@QueryParam("userCode") String userCode, @PathParam("userId") String userId,
+                                             AccountInfoVO accountInfoVO) {
+        sessionDataStore.setCurrentUserCode(userCode);
+        try {
+            accountInfoVO.setOwnerId(userId);
+            Account account = userManageService.allocateAccount(accountInfoVO.getAccountInfo());
+            AccountVO accountVO = new AccountVO();
+            AccountVO.transform(account, accountVO);
+            return new DataVO<>(accountVO);
+        } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 }

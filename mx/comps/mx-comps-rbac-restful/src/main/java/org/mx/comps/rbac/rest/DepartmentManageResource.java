@@ -2,11 +2,10 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Department;
+import org.mx.comps.rbac.rest.vo.DepartmentInfoVO;
 import org.mx.comps.rbac.rest.vo.DepartmentVO;
 import org.mx.comps.rbac.service.DepartmentManageService;
-import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
@@ -41,10 +40,14 @@ public class DepartmentManageResource {
             List<DepartmentVO> vos = DepartmentVO.transformDepartmentVOs(departments);
             return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
@@ -59,83 +62,76 @@ public class DepartmentManageResource {
             List<DepartmentVO> vos = DepartmentVO.transformDepartmentVOs(departments);
             return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
+            return new PaginationDataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new PaginationDataVO<>(ex);
+            return new PaginationDataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("departments/{id}")
     @GET
     public DataVO<DepartmentVO> getDepartment(@PathParam("id") String id) {
-        if (StringUtils.isBlank(id)) {
-            return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
-        }
         try {
             Department department = departmentManageService.getById(id, Department.class);
             DepartmentVO vo = new DepartmentVO();
             DepartmentVO.transform(department, vo);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
+        }
+    }
+
+    private DataVO<DepartmentVO> saveDepartment(DepartmentInfoVO departmentInfoVO) {
+        try {
+
+            Department department = departmentManageService.saveDepartment(departmentInfoVO.getDepartInfo());
+            DepartmentVO vo = new DepartmentVO();
+            DepartmentVO.transform(department, vo);
+            return new DataVO<>(vo);
+        } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 
     @Path("departments/new")
     @POST
-    public DataVO<DepartmentVO> saveDepartment(@QueryParam("userCode") String userCode, DepartmentVO departmentVO) {
-        if (StringUtils.isBlank(userCode)) {
-            return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
-        }
+    public DataVO<DepartmentVO> saveDepartment(@QueryParam("userCode") String userCode, DepartmentInfoVO departmentInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
-        try {
-            Department department = EntityFactory.createEntity(Department.class);
-            DepartmentVO.transform(departmentVO, department);
-            department = departmentManageService.save(department);
-            DepartmentVO vo = new DepartmentVO();
-            DepartmentVO.transform(department, vo);
-            return new DataVO<>(vo);
-        } catch (UserInterfaceException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-            return new DataVO<>(ex);
-        }
+        departmentInfoVO.setDepartId(null);
+        return saveDepartment(departmentInfoVO);
     }
 
     @Path("departments/{id}")
     @PUT
-    public DataVO<DepartmentVO> saveDepartment(@QueryParam("userCode") String userCode, @PathParam("id") String id, DepartmentVO departmentVO) {
-        if (StringUtils.isBlank(id) || StringUtils.isBlank(userCode)) {
-            return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
-        }
+    public DataVO<DepartmentVO> saveDepartment(@QueryParam("userCode") String userCode, @PathParam("id") String id,
+                                               DepartmentInfoVO departmentInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
-        try {
-            Department department = EntityFactory.createEntity(Department.class);
-            DepartmentVO.transform(departmentVO, department);
-            department.setId(id);
-            department = departmentManageService.save(department);
-            DepartmentVO vo = new DepartmentVO();
-            DepartmentVO.transform(department, vo);
-            return new DataVO<>(vo);
-        } catch (UserInterfaceException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-            return new DataVO<>(ex);
-        }
+        departmentInfoVO.setDepartId(id);
+        return saveDepartment(departmentInfoVO);
     }
 
     @Path("departments/{id}")
     @DELETE
     public DataVO<DepartmentVO> deleteDepartment(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
-        if (StringUtils.isBlank(id) || StringUtils.isBlank(userCode)) {
-            return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
-        }
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             Department department = departmentManageService.remove(id, Department.class);
@@ -144,10 +140,14 @@ public class DepartmentManageResource {
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
-            return new DataVO<>(ex);
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
         }
     }
 }

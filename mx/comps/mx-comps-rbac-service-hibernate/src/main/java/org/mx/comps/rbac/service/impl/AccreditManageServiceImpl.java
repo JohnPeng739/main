@@ -41,7 +41,7 @@ public class AccreditManageServiceImpl extends GeneralEntityAccessorImpl impleme
         List<Accredit> accredits = new ArrayList<>();
         if (list != null && !list.isEmpty()) {
             list.forEach(accredit -> {
-                if (!isClosed(accredit)) {
+                if (!accredit.isClosed()) {
                     accredits.add(accredit);
                 }
             });
@@ -50,7 +50,7 @@ public class AccreditManageServiceImpl extends GeneralEntityAccessorImpl impleme
             return false;
         }
         for (Accredit accredit : accredits) {
-            if (!isClosed(accredit)) {
+            if (!accredit.isClosed()) {
                 for (String roleId : accreditInfo.getRoleIds()) {
                     boolean found = false;
                     for (Role role : accredit.getRoles()) {
@@ -119,26 +119,6 @@ public class AccreditManageServiceImpl extends GeneralEntityAccessorImpl impleme
     }
 
     /**
-     * 判断指定的授权是否已经被关闭，关闭规则为：valid == false，或 endTime <= startTime。
-     *
-     * @param accredit 授权实体对象
-     * @return 返回true表示已经被关闭，否则为授权有效。
-     */
-    private boolean isClosed(Accredit accredit) {
-        if (!accredit.isValid()) {
-            return true;
-        }
-        long endTime = -1;
-        if (accredit.getEndTime() != null) {
-            endTime = accredit.getEndTime().getTime();
-        }
-        if (endTime != -1l && endTime <= new Date().getTime()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @see AccreditManageService#closeAccredit(String)
@@ -153,7 +133,7 @@ public class AccreditManageServiceImpl extends GeneralEntityAccessorImpl impleme
         if (accredit == null) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCREDIT_NOT_FOUND);
         }
-        if (isClosed(accredit)) {
+        if (accredit.isClosed()) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCREDIT_HAS_CLOSED);
         }
         accredit.setValid(false);
