@@ -1,5 +1,9 @@
 package org.mx.rest.server;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
@@ -12,12 +16,12 @@ import org.mx.rest.server.config.TestConfig;
 import org.mx.rest.server.websocket.EchoSocket;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created by john on 2017/11/4.
@@ -61,7 +65,33 @@ public class TestServer {
 
             invoke.close();
         } catch (RestInvokeException ex) {
-            ex.printStackTrace();
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testServletServer() {
+        AbstractServerFactory factory = context.getBean(ServletServerFactory.class);
+        assertNotNull(factory);
+        Server server = factory.getServer();
+        assertNotNull(server);
+
+        try {
+            CloseableHttpClient client = HttpClients.createDefault();
+            HttpGet get = new HttpGet("http://localhost:9998/download?id=123");
+            CloseableHttpResponse res = client.execute(get);
+            assertEquals(200, res.getStatusLine().getStatusCode());
+            String msg = "This is a test message file.";
+            assertNotNull(res.getEntity());
+            assertEquals(msg.length(), res.getEntity().getContentLength());
+            assertNotNull(res.getEntity().getContent());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            assertNotNull(reader);
+            assertEquals(msg, reader.readLine());
+            reader.close();
+            res.close();
+            client.close();
+        } catch (Exception ex) {
             fail(ex.getMessage());
         }
     }
@@ -82,14 +112,13 @@ public class TestServer {
             client.connect(socket, new URI("ws://localhost:9997/upload"), request);
             socket.awaitClose(60, TimeUnit.SECONDS);
         } catch (Exception ex) {
-            ex.printStackTrace();
             fail(ex.getMessage());
         }
         try {
             client.stop();
             client.destroy();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            fail(ex.getMessage());
         }
     }
 }

@@ -58,7 +58,7 @@ public class ServletServerFactory extends AbstractServerFactory {
                     if (servletClasses != null && !servletClasses.isEmpty()) {
                         servletClasses.forEach((clazz) -> {
                             BaseHttpServlet servlet = (BaseHttpServlet) this.context.getBean(clazz);
-                            contextHandler.addServlet(new ServletHolder(servlet), servlet.getPathSpec());
+                            contextHandler.addServlet(new ServletHolder(servlet), servlet.getPath());
                         });
                     }
                 }

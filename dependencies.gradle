@@ -5,6 +5,7 @@ ext.versions = [
   'hibernate-entitymanager'	: '5.2.9.Final',
   'commons-logging'	: '1.2',
   'commons-dbcp2'	: '2.1.1',
+  httpclient	: '4.5.4',
   log4j		: '2.8.2',
   slf4j		: '1.7.25',
   fastjson	: '1.2.29',
@@ -38,7 +39,7 @@ ext.libs = [
 
   "commons-logging"	: "commons-logging:commons-logging:${versions.'commons-logging'}",
   "commons-dbcp2"	: "org.apache.commons:commons-dbcp2:${versions.'commons-dbcp2'}",
-
+  "httpclient"		: "org.apache.httpcomponents:httpclient:${versions.httpclient}",
   "log4j-api"		: "org.apache.logging.log4j:log4j-api:${versions.log4j}",
   "log4j-core"		: "org.apache.logging.log4j:log4j-core:${versions.log4j}",
   "log4j-jcl"		: "org.apache.logging.log4j:log4j-jcl:${versions.log4j}",

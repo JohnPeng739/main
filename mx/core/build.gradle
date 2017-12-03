@@ -75,6 +75,9 @@ project(':mx-rest-utils') {
       libs.'jetty-servlet',
       libs.'jetty-websocket'
     )
+    testCompile(
+      libs.'httpclient',
+    )
   }
 }
 

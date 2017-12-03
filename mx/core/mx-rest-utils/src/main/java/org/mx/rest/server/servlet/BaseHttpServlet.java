@@ -1,10 +1,10 @@
 package org.mx.rest.server.servlet;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-
-/**
- * Created by john on 2017/10/6.
- */
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 基础的Http Servlet定义
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
  * @see HttpServlet
  */
 public class BaseHttpServlet extends HttpServlet {
-    private String pathSpec = "servlet";
+    private String path = "/";
 
     /**
      * 默认的构造函数
@@ -23,20 +23,30 @@ public class BaseHttpServlet extends HttpServlet {
     }
 
     /**
+     * 默认的构造函数
+     *
+     * @param path 路径
+     */
+    public BaseHttpServlet(String path) {
+        this();
+        this.path = path;
+    }
+
+    /**
      * 获取Http Servlet对应的路径
      *
      * @return 路径
      */
-    public String getPathSpec() {
-        return this.pathSpec;
+    public String getPath() {
+        return this.path;
     }
 
     /**
-     * 设置Http Servlet对应的路径
-     *
-     * @param pathSpec 路径
+     * {@inheritDoc}
+     * @see HttpServlet#service(HttpServletRequest, HttpServletResponse)
      */
-    protected void setPathSpec(String pathSpec) {
-        this.pathSpec = pathSpec;
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        super.service(req, resp);
     }
 }
