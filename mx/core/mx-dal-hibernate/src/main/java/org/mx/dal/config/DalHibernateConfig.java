@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.sql.DataSource;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 基于Hibernate的DAL基础实现
@@ -39,6 +41,12 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
         super();
     }
 
+    @Bean("jpaEntityPackagesDal")
+    @Lazy(false)
+    public JpaEntityPackagesDefine jpaEntityPackages() {
+        return new JpaEntityPackagesDefine("org.mx.dal.entity");
+    }
+
     /**
      * 创建实体管理器工厂Bean
      *
@@ -59,11 +67,15 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
         adapter.setShowSql(showSQL);
         adapter.setPrepareConnection(true);
 
-        String entityPackageString = env.getProperty("jpa.entity.package", String.class, "");
-        String[] entityPackages = entityPackageString.split(",");
+        String[] jpaDefines = context.getBeanNamesForType(JpaEntityPackagesDefine.class);
+        Set<String> jpaEntityPackages = new HashSet<>();
+        for (String jpaDefine : jpaDefines) {
+            JpaEntityPackagesDefine define = context.getBean(jpaDefine, JpaEntityPackagesDefine.class);
+            jpaEntityPackages.addAll(define.getPackages());
+        }
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(context.getBean("dataSource", DataSource.class));
-        emf.setPackagesToScan(entityPackages);
+        emf.setPackagesToScan(jpaEntityPackages.toArray(new String[0]));
         emf.setJpaVendorAdapter(adapter);
         return emf;
     }
