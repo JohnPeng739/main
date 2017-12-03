@@ -87,6 +87,7 @@ public class TestServer {
         }
         try {
             client.stop();
+            client.destroy();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

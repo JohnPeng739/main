@@ -47,12 +47,12 @@ public abstract class AbstractServerFactory {
         if (server != null) {
             try {
                 server.stop();
+                server.destroy();
             } catch (Exception ex) {
                 if (logger.isErrorEnabled()) {
                     logger.error(ex);
                 }
             }
-            server.destroy();
         }
     }
 }

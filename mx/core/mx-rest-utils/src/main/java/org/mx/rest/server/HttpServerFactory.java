@@ -2,6 +2,7 @@ package org.mx.rest.server;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jetty.server.Server;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.mx.StringUtils;
@@ -57,7 +58,10 @@ public class HttpServerFactory extends AbstractServerFactory {
             int port = this.env.getProperty("restful.port", Integer.class, 9999);
             String uri = String.format("http://localhost:%d/", port);
             URI baseUri = new URI(uri);
-            super.setServer(JettyHttpContainerFactory.createServer(baseUri, config));
+            Server server = JettyHttpContainerFactory.createServer(baseUri, config);
+            server.setStopAtShutdown(true);
+            server.setStopTimeout(10);
+            super.setServer(server);
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Start HttpServer success, listen base uri: %s.", uri));
             }

@@ -44,7 +44,6 @@ public class ServletServerFactory extends AbstractServerFactory {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("You not define [%s], will not ", serviceClassesDef));
             }
-
         } else {
             int port = env.getProperty("servlet.port", Integer.class, 9997);
             Server server = new Server(port);
@@ -65,8 +64,9 @@ public class ServletServerFactory extends AbstractServerFactory {
                 }
             }
 
+            server.setStopAtShutdown(true);
+            server.setStopTimeout(10);
             super.setServer(server);
-
             server.start();
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Start ServletServer success, listen port: %d.", port));

@@ -18,12 +18,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Component("echoSocket")
 @WebSocket()
-public class EchoSocket {
+public class EchoSocket extends BaseWebsocket {
     private static final Log logger = LogFactory.getLog(EchoSocket.class);
     private final CountDownLatch closeLatch;
 
     public EchoSocket() {
-        super();
+        super("/upload");
         closeLatch = new CountDownLatch(1);
     }
 
@@ -31,11 +31,9 @@ public class EchoSocket {
         return closeLatch.await(duration, unit);
     }
 
-    @OnWebSocketConnect
+    @Override
     public void onConnection(Session session) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Got connection: %s%n", session));
-        }
+        super.onConnection(session);
         try {
             Future<Void> future;
             future = session.getRemote().sendStringByFuture("Hello");
@@ -50,39 +48,9 @@ public class EchoSocket {
         }
     }
 
-    @OnWebSocketClose
+    @Override
     public void onClose(Session session, int statusCode, String reason) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Connection closed, status: %d, reason: %s.", statusCode, reason));
-        }
+        super.onClose(session, statusCode, reason);
         closeLatch.countDown();
-    }
-
-    @OnWebSocketError
-    public void onError(Session session, Throwable throwable) {
-        if (logger.isErrorEnabled()) {
-            logger.error("Got error.", throwable);
-        }
-    }
-
-    @OnWebSocketFrame
-    public void onFrame(Session session, Frame frame) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Got a frame.");
-        }
-    }
-
-    @OnWebSocketMessage
-    public void onBinaryMessage(Session session, InputStream in) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Got a binary message.");
-        }
-    }
-
-    @OnWebSocketMessage
-    public void onTextMessage(Session session, String message) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Got a text message: %s.", message));
-        }
     }
 }

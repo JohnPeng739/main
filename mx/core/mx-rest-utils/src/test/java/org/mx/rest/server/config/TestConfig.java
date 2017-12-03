@@ -1,6 +1,7 @@
 package org.mx.rest.server.config;
 
 import org.mx.rest.server.rest.DemoRestResource;
+import org.mx.rest.server.websocket.EchoSocket;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,12 +18,17 @@ import java.util.List;
 @ComponentScan({"org.mx.rest.server.rest", "org.mx.rest.server.websocket"})
 public class TestConfig {
     @Bean(name = "restfulClassesTest")
-    public List<Class<?>> restfulClassesIprm() {
+    public List<Class<?>> restfulClassesTest() {
         return Arrays.asList(DemoRestResource.class);
     }
 
     @Bean(name = "servletClassesTest")
-    public List<Class<?>> servletClassesIprm() {
+    public List<Class<?>> servletClassesTest() {
         return Arrays.asList();
+    }
+
+    @Bean(name = "websocketClassesTest")
+    public List<Class<?>> websocketClassesTest() {
+        return Arrays.asList(EchoSocket.class);
     }
 }

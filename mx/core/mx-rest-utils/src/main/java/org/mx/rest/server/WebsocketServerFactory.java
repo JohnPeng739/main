@@ -9,12 +9,14 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
+import org.mx.rest.server.websocket.BaseWebsocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,10 +31,11 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     private Environment env = null;
     @Autowired
     private ApplicationContext context = null;
-    private Map<String, String> socketBeans = null;
+    private Map<String, BaseWebsocket> socketBeans = null;
 
     public WebsocketServerFactory() {
         super();
+        this.socketBeans = new HashMap<>();
     }
 
     /**
@@ -48,23 +51,38 @@ public class WebsocketServerFactory extends AbstractServerFactory {
             return;
         }
         final int port = env.getProperty("websocket.port", Integer.class, 9997);
-        final int num = env.getProperty("websocket.num", Integer.class, 0);
-        socketBeans = new HashMap<>();
-        for (int index = 1; index <= num; index++) {
-            String path = env.getProperty(String.format("websocket.%d.path", index));
-            String socketBeanName = env.getProperty(String.format("websocket.%d.socketBeanName", index));
-            socketBeans.put(path, socketBeanName);
-        }
-        Server server = new Server(port);
-        server.setHandler(new WebSocketHandler() {
-            @Override
-            public void configure(WebSocketServletFactory factory) {
-                factory.setCreator(new MyWebsocketCreator());
+        String websocketClassesStr = "websocket.service.classes";
+        String websocketServiceClassesDef = this.env.getProperty(websocketClassesStr);
+        if (StringUtils.isBlank(websocketServiceClassesDef)) {
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("You not define [%s], will not ", websocketClassesStr));
             }
-        });
-        server.setStopTimeout(0);
-        super.setServer(server);
-        server.start();
+        } else {
+            String[] classesDefs = websocketServiceClassesDef.split(",");
+            for (String classesDef : classesDefs) {
+                if (!StringUtils.isBlank(classesDef)) {
+                    List<Class<?>> websocketClasses = (List) this.context.getBean(classesDef, List.class);
+                    if (websocketClasses != null && !websocketClasses.isEmpty()) {
+                        websocketClasses.forEach((clazz) -> {
+                            BaseWebsocket websocket = (BaseWebsocket) this.context.getBean(clazz);
+                            socketBeans.put(websocket.getPath(), websocket);
+                        });
+                    }
+                }
+            }
+
+            Server server = new Server(port);
+            server.setHandler(new WebSocketHandler() {
+                @Override
+                public void configure(WebSocketServletFactory factory) {
+                    factory.setCreator(new MyWebsocketCreator());
+                }
+            });
+            server.setStopAtShutdown(true);
+            server.setStopTimeout(10);
+            super.setServer(server);
+            server.start();
+        }
     }
 
     public class MyWebsocketCreator implements WebSocketCreator {
@@ -74,8 +92,7 @@ public class WebsocketServerFactory extends AbstractServerFactory {
             if (requestUri != null) {
                 String path = requestUri.getPath();
                 if (!StringUtils.isBlank(path)) {
-                    String socketBeanName = socketBeans.get(path);
-                    return context.getBean(socketBeanName);
+                    return socketBeans.get(path);
                 }
             }
             return null;
