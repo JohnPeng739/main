@@ -42,6 +42,11 @@ public class WebsocketServerFactory extends AbstractServerFactory {
      */
     @Override
     public void init() throws Exception {
+        boolean enabled = env.getProperty("websocket.enabled", Boolean.class, true);
+        if (!enabled) {
+            // 显式配置enable为false，表示不进行初始化。
+            return;
+        }
         final int port = env.getProperty("websocket.port", Integer.class, 9997);
         final int num = env.getProperty("websocket.num", Integer.class, 0);
         socketBeans = new HashMap<>();

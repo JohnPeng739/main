@@ -30,6 +30,11 @@ public class HttpServerFactory extends AbstractServerFactory {
      */
     @Override
     public void init() throws Exception {
+        boolean enabled = this.env.getProperty("restful.enabled", Boolean.class, true);
+        if (!enabled) {
+            // 显式配置enable为false，表示不进行初始化。
+            return;
+        }
         String serviceClassesDef = "restful.service.classes";
         String restfulServiceClasses = this.env.getProperty(serviceClassesDef);
         if (StringUtils.isBlank(restfulServiceClasses)) {

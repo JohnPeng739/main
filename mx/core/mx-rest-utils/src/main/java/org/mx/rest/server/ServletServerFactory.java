@@ -33,6 +33,11 @@ public class ServletServerFactory extends AbstractServerFactory {
      */
     @Override
     public void init() throws Exception {
+        boolean enabled = env.getProperty("servlet.enabled", Boolean.class, true);
+        if (!enabled) {
+            // 显式配置enable为false，表示不进行初始化。
+            return;
+        }
         String serviceClassesDef = "servlet.service.classes";
         String servletServiceClassesDef = this.env.getProperty(serviceClassesDef);
         if (StringUtils.isBlank(servletServiceClassesDef)) {
