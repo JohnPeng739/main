@@ -3,3 +3,5 @@ rootProject.name = 'comps'
 include 'mx-comps-rbac-service'
 include 'mx-comps-rbac-service-hibernate'
 include 'mx-comps-rbac-restful'
+
+include 'mx-comps-file-service'

@@ -8,18 +8,20 @@ apply from: '../../allprojects.gradle'
 
 project(':mx-comps-rbac-service') {
   version = '3.0.0'
+  description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
 
   dependencies {
     compile(
       libs.'mx-utils',
       libs.'mx-dal',
-      libs.'mx-rest-utils'
+      libs.'mx-service-utils'
     )
   }
 }
 
 project(':mx-comps-rbac-service-hibernate') {
   version = '3.0.0'
+  description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
 
   dependencies {
     compile(
@@ -31,10 +33,26 @@ project(':mx-comps-rbac-service-hibernate') {
 
 project(':mx-comps-rbac-restful') {
   version = '3.0.0'
+  description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
 
   dependencies {
     compile(
       project(':mx-comps-rbac-service')
+    )
+  }
+}
+
+project(':mx-comps-file-service') {
+  version = '1.0.0'
+  description = 'File service component base Websocket upload &amp; Servlet download.'
+
+  dependencies {
+    compile(
+      libs.'mx-utils',
+      libs.'mx-service-utils'
+    )
+    testCompile(
+      libs.'spring-test'
     )
   }
 }
