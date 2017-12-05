@@ -53,6 +53,7 @@ subprojects { subprj ->
         groupId subprj.group
         artifactId subprj.name
         version subprj.version
+        description subprj.description
 
         from components.java
         artifact sourcesJar
@@ -61,7 +62,7 @@ subprojects { subprj ->
         pom.withXml {
           Node root = asNode()
           root.appendNode('name', subprj.name)
-          root.appendNode('description', POM_DESCRIPTION)
+          root.appendNode('description', subprj.description)
           root.appendNode('url', POM_URL)
 
           def issues = root.appendNode('issueManagement')
@@ -91,7 +92,7 @@ subprojects { subprj ->
     pkg {
       repo = subprj.group
       name = subprj.name
-      desc = POM_DESCRIPTION
+      description = subprj.description
       websiteUrl = POM_URL
       issueTrackerUrl = ISSUE_URL
       vcsUrl = GIT_URL
@@ -100,7 +101,7 @@ subprojects { subprj ->
       publicDownloadNumbers = true
       version {
         name = subprj.version
-        desc = POM_DESCRIPTION
+        description = subprj.description
       }
     }
   }
