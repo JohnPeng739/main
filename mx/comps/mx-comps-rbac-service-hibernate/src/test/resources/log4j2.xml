@@ -9,6 +9,7 @@
 				pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{10}(%line) - %msg%exception{full}%n" />
 		</Console>
 
+        <!--
 		<RollingRandomAccessFile name="root"
 			fileName="${baseDir}/root.log" filePattern="${baseDir}/%d{yyyy-MM}/root-%d{dd}-%i.log.gz">
 			<PatternLayout charset="UTF-8"
@@ -29,6 +30,7 @@
             </Policies>
             <DefaultRolloverStrategy max="10" />
         </RollingRandomAccessFile>
+        -->
         <!--
 		<Async name="async">
 			<AppenderRef ref="console" />
