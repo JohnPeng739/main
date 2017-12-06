@@ -1,15 +1,18 @@
 package org.mx.comps.file.websocket;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
-import org.mx.comps.file.FilePersistProcessor;
+import org.mx.StringUtils;
+import org.mx.comps.file.FileWriteProcessor;
+import org.mx.comps.file.procesor.ProcessorFactory;
 import org.mx.service.server.websocket.BaseWebsocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.io.InputStream;
 
@@ -29,27 +32,10 @@ public class FileUploadWebsocket extends BaseWebsocket {
     @Autowired
     private ApplicationContext context = null;
 
-    private FilePersistProcessor persistProcessor = null;
+    private FileWriteProcessor writeProcessor = null;
 
     public FileUploadWebsocket() {
         super(FILE_UPLOAD_URI_PATH);
-    }
-
-    private void initBean() {
-        if (persistProcessor == null) {
-            Assert.notNull(context, "The ApplicationContext");
-            String persistType = env.getProperty("file.processor", String.class, "simple");
-            switch (persistType) {
-                case "simple":
-                    persistProcessor = context.getBean("simpleFilePersistProcessor", FilePersistProcessor.class);
-                    break;
-                default:
-                    if (logger.isErrorEnabled()) {
-                        logger.error(String.format("Unsupported file persist processor type: %s.", persistType));
-                    }
-                    break;
-            }
-        }
     }
 
     /**
@@ -60,9 +46,6 @@ public class FileUploadWebsocket extends BaseWebsocket {
     @Override
     public void onConnection(Session session) {
         super.onConnection(session);
-
-        initBean();
-        Assert.notNull(persistProcessor, "The FilePersistProcessor not be initialized.");
     }
 
     /**
@@ -72,12 +55,11 @@ public class FileUploadWebsocket extends BaseWebsocket {
      */
     @Override
     public void onClose(Session session, int statusCode, String reason) {
-        initBean();
-        if (persistProcessor.isOpened()) {
-            persistProcessor.close();
+        if (writeProcessor.isOpened()) {
+            writeProcessor.close();
         } else {
             if (logger.isErrorEnabled()) {
-                logger.error("The FilePersistProcessor has been closed.");
+                logger.error("The FileWriteProcessor has been closed.");
             }
         }
         super.onClose(session, statusCode, reason);
@@ -90,10 +72,9 @@ public class FileUploadWebsocket extends BaseWebsocket {
      */
     @Override
     public void onError(Session session, Throwable throwable) {
-        initBean();
         boolean closeFileForError = env.getProperty(CLOSE_FILE_FOR_ERROR, Boolean.class, true);
         if (closeFileForError) {
-            persistProcessor.close();
+            writeProcessor.close();
         }
         super.onError(session, throwable);
     }
@@ -105,30 +86,63 @@ public class FileUploadWebsocket extends BaseWebsocket {
      */
     @Override
     public void onBinaryMessage(Session session, InputStream in) {
-        initBean();
-        if (persistProcessor.isOpened()) {
-            persistProcessor.persist(in);
+        if (writeProcessor.isOpened()) {
+            writeProcessor.persist(in);
         } else {
             if (logger.isErrorEnabled()) {
-                logger.error("The FilePersistProcessor is not opened.");
+                logger.error("The FileWriteProcessor is not opened.");
             }
         }
         super.onBinaryMessage(session, in);
     }
 
     /**
-     * {@inheritDoc}
+     * 将收到的文本消息转换为JSONObject对象描述的命令对象，该对象至少包括：command字段，如：
+     * {
+     * command: 'init',
+     * processorType: 'simple'
+     * }
+     * 或
+     * {
+     * command: 'start',
+     * directory: '/root',
+     * filename: 'filename.txt'
+     * }
      *
      * @see BaseWebsocket#onTextMessage(Session, String)
      */
     @Override
     public void onTextMessage(Session session, String message) {
-        initBean();
-        if (persistProcessor.isOpened()) {
-            persistProcessor.command(message);
-        } else {
+
+        if (StringUtils.isBlank(message)) {
             if (logger.isErrorEnabled()) {
-                logger.error("The FilePersistProcessor is not opened.");
+                logger.error("The command data is blank.");
+            }
+            return;
+        }
+        try {
+            JSONObject json = JSON.parseObject(message);
+            String command = json.getString("command");
+            if ("init".equalsIgnoreCase(command)) {
+                // 初始化FileWriteProcessor
+                ProcessorFactory factory = context.getBean("fileServiceProcessorFactory", ProcessorFactory.class);
+                if (factory == null) {
+                    throw new Exception("Get ProcessorFactory fail, name: fileServiceProcessorFactory.");
+                }
+                String type = json.getString("processorType");
+                if (StringUtils.isBlank(type)) {
+                    throw new Exception("The processor's type is blank in 'init' command.");
+                }
+                writeProcessor = factory.createWriteProcessor(ProcessorFactory.ProcessorType.valueOf(type));
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Init a %s FileWriteProcessor successfully.", type));
+                }
+            } else {
+                writeProcessor.command(json);
+            }
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
             }
         }
         super.onTextMessage(session, message);

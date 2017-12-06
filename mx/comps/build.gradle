@@ -43,7 +43,7 @@ project(':mx-comps-rbac-restful') {
 }
 
 project(':mx-comps-file-service') {
-  version = '1.0.0'
+  version = '1.0.1'
   description = 'File service component base Websocket upload &amp; Servlet download.'
 
   dependencies {

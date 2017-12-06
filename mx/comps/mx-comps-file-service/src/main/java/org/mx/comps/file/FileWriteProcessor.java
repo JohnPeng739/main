@@ -1,15 +1,15 @@
 package org.mx.comps.file;
 
-import javax.servlet.http.HttpServletRequest;
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  * 文件存储处理接口定义
  *
  * @author : john.peng created on date : 2017/12/04
  */
-public interface FilePersistProcessor {
+public interface FileWriteProcessor {
     /**
      * 获取文件的长度
      *
@@ -32,30 +32,23 @@ public interface FilePersistProcessor {
     boolean isOpened();
 
     /**
+     * 设置处理器处理进程监听器
+     *
+     * @param listener 监听器
+     */
+    void setFileServiceListener(FileServiceListener listener);
+
+    /**
      * 关闭文件
      */
     void close();
 
     /**
-     * 根据HTTP请求中的参数初始化处理器
+     * 执行一条从WebSocket中收到的命令，该文本命令已经被转换为一个JSONObject对象
      *
-     * @param req HTTP请求
+     * @param json 文本命令
      */
-    void init(HttpServletRequest req);
-
-    /**
-     * 执行一条从WebSocket中收到的文本命令，该文本命令一般是JSON格式的字符串
-     *
-     * @param command 文本命令
-     */
-    void command(String command);
-
-    /**
-     * 将打开的文件内容读入到输出流中
-     *
-     * @param out 输出流
-     */
-    void read(OutputStream out);
+    void command(JSONObject json);
 
     /**
      * 将输入流中的数据写入到打开的文件中

@@ -1,14 +1,17 @@
-package org.mx.comps.file.simple;
+package org.mx.comps.file.processor.simple;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.DigestUtils;
 import org.mx.StringUtils;
-import org.mx.comps.file.FileManageDescriptor;
-import org.mx.comps.file.FilePersistProcessor;
+import org.mx.comps.file.FileReadProcessor;
+import org.mx.comps.file.FileServiceDescriptor;
+import org.mx.comps.file.FileServiceListener;
+import org.mx.comps.file.FileWriteProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,7 @@ import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * 一个简单的文件持久化实现类，直接根据指定的目录和文件名进行存储。
@@ -24,9 +28,9 @@ import java.io.*;
  */
 @Component("simpleFilePersistProcessor")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersistProcessor {
-    public static final String FILE_ROOT = "file.root";
-    private static final Log logger = LogFactory.getLog(FilePersistProcessorImpl.class);
+public class FileWriteProcessorImpl implements FileServiceDescriptor, FileWriteProcessor, FileReadProcessor {
+    public static final String FILE_ROOT = "file.simple.root";
+    private static final Log logger = LogFactory.getLog(FileWriteProcessorImpl.class);
     private String filePath;
     private String filename;
     private boolean opened = false;
@@ -36,13 +40,16 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
     @Autowired
     private Environment env = null;
 
-    public FilePersistProcessorImpl() {
+    private FileServiceListener fileServiceListener = null;
+
+    public FileWriteProcessorImpl() {
         super();
     }
 
     /**
      * {@inheritDoc}
-     * @see FilePersistProcessor#getLength() ()
+     *
+     * @see FileWriteProcessor#getLength() ()
      */
     @Override
     public long getLength() {
@@ -60,7 +67,8 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
 
     /**
      * {@inheritDoc}
-     * @see FilePersistProcessor#getFilename()
+     *
+     * @see FileWriteProcessor#getFilename()
      */
     @Override
     public String getFilename() {
@@ -70,7 +78,7 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
     /**
      * {@inheritDoc}
      *
-     * @see FilePersistProcessor#isOpened()
+     * @see FileWriteProcessor#isOpened()
      */
     @Override
     public boolean isOpened() {
@@ -79,8 +87,17 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
 
     /**
      * {@inheritDoc}
+     * @see FileWriteProcessor#setFileServiceListener(FileServiceListener)
+     */
+    @Override
+    public void setFileServiceListener(FileServiceListener listener) {
+        fileServiceListener = listener;
+    }
+
+    /**
+     * {@inheritDoc}
      *
-     * @see FilePersistProcessor#close()
+     * @see FileWriteProcessor#close()
      */
     @Override
     public void close() {
@@ -106,7 +123,8 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
 
     /**
      * {@inheritDoc}
-     * @see FilePersistProcessor#init(HttpServletRequest)
+     *
+     * @see FileReadProcessor#init(HttpServletRequest)
      */
     @Override
     public void init(HttpServletRequest req) {
@@ -151,18 +169,11 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
     /**
      * {@inheritDoc}
      *
-     * @see FilePersistProcessor#command(String)
+     * @see FileWriteProcessor#command(JSONObject)
      */
     @Override
-    public void command(String commandData) {
-        if (StringUtils.isBlank(commandData)) {
-            if (logger.isErrorEnabled()) {
-                logger.error("The command data is blank.");
-            }
-            return;
-        }
+    public void command(JSONObject json) {
         try {
-            JSONObject json = JSON.parseObject(commandData);
             String command = json.getString("command");
             String root = env.getProperty(FILE_ROOT, String.class, System.getProperty("user.dir"));
             switch (command) {
@@ -174,7 +185,7 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
                     String filename = json.getString("filename");
                     if (StringUtils.isBlank(filename)) {
                         if (logger.isErrorEnabled()) {
-                            logger.error(String.format("Filename is blank, command data: %s.", commandData));
+                            logger.error(String.format("Filename is blank, command data: %s.", json.toJSONString()));
                         }
                         break;
                     }
@@ -187,9 +198,17 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
                     randomAccessFile = new RandomAccessFile(file, "rw");
                     randomAccessFile.seek(offset);
                     opened = true;
+                    if (fileServiceListener != null) {
+                        // start
+                        fileServiceListener.started(this);
+                    }
                     break;
                 case "finish":
                     close();
+                    if (fileServiceListener != null) {
+                        // finish
+                        fileServiceListener.finished(this);
+                    }
                     break;
                 case "cancel":
                     close();
@@ -197,6 +216,10 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
                     File deleteFile = new File(root, filePath);
                     if (deleteFile.exists() && deleteFile.isFile()) {
                         deleteFile.delete();
+                    }
+                    if (fileServiceListener != null) {
+                        // cancel
+                        fileServiceListener.canceled(this);
                     }
                     break;
                 default:
@@ -215,7 +238,24 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
     /**
      * {@inheritDoc}
      *
-     * @see FileManageDescriptor#getPath()
+     * @see FileServiceDescriptor#getId()
+     */
+    @Override
+    public String getId() {
+        try {
+            return DigestUtils.md5(filePath);
+        } catch (NoSuchAlgorithmException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return filePath;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see FileServiceDescriptor#getPath()
      */
     @Override
     public String getPath() {
@@ -224,7 +264,8 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
 
     /**
      * {@inheritDoc}
-     * @see FilePersistProcessor#read(OutputStream)
+     *
+     * @see FileReadProcessor#read(OutputStream)
      */
     @Override
     public void read(OutputStream out) {
@@ -248,7 +289,7 @@ public class FilePersistProcessorImpl implements FileManageDescriptor, FilePersi
     /**
      * {@inheritDoc}
      *
-     * @see FilePersistProcessor#persist(InputStream)
+     * @see FileWriteProcessor#persist(InputStream)
      */
     @Override
     public void persist(InputStream in) {

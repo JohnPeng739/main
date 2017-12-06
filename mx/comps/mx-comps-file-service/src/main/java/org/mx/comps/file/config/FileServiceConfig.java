@@ -14,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 @ComponentScan({
         "org.mx.comps.file.servlet",
         "org.mx.comps.file.websocket",
-        "org.mx.comps.file.simple"
+        "org.mx.comps.file.processor.simple"
 })
 public class FileServiceConfig {
 }

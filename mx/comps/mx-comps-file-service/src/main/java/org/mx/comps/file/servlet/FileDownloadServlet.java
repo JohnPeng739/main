@@ -2,7 +2,7 @@ package org.mx.comps.file.servlet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.comps.file.FilePersistProcessor;
+import org.mx.comps.file.FileReadProcessor;
 import org.mx.service.server.servlet.BaseHttpServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,17 +24,16 @@ import java.net.URLEncoder;
  */
 @Component("fileDownloadServlet")
 public class FileDownloadServlet extends BaseHttpServlet {
-    private static final Log logger = LogFactory.getLog(FileDownloadServlet.class);
     public static final String FILE_DOWNLOAD_URI_PATH = "/download";
     public static final String FILE_ROOT = "file.root";
-
+    private static final Log logger = LogFactory.getLog(FileDownloadServlet.class);
     @Autowired
     private Environment env = null;
 
     @Autowired
     private ApplicationContext context = null;
 
-    private FilePersistProcessor persistProcessor = null;
+    private FileReadProcessor readProcessor = null;
 
     private String root;
 
@@ -42,12 +41,12 @@ public class FileDownloadServlet extends BaseHttpServlet {
         super(FILE_DOWNLOAD_URI_PATH);
     }
 
-    private void initBean(){
+    private void initBean() {
         root = env.getProperty(FILE_ROOT, String.class, System.getProperty("user.dir"));
         String persistType = env.getProperty("file.processor", String.class, "simple");
         switch (persistType) {
             case "simple":
-                persistProcessor = context.getBean("simpleFilePersistProcessor", FilePersistProcessor.class);
+                readProcessor = context.getBean("simpleFilePersistProcessor", FileReadProcessor.class);
                 break;
             default:
                 if (logger.isErrorEnabled()) {
@@ -59,15 +58,16 @@ public class FileDownloadServlet extends BaseHttpServlet {
 
     /**
      * {@inheritDoc}
+     *
      * @see HttpServlet#doPost(HttpServletRequest, HttpServletResponse)
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         initBean();
-        persistProcessor.init(req);
+        readProcessor.init(req);
         resp.reset();
-        String filename = persistProcessor.getFilename();
-        long length = persistProcessor.getLength();
+        String filename = readProcessor.getFilename();
+        long length = readProcessor.getLength();
         if (req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
             filename = URLEncoder.encode(filename, "UTF-8");
         } else {
@@ -75,11 +75,11 @@ public class FileDownloadServlet extends BaseHttpServlet {
         }
         resp.addHeader("Content-Disposition", "attachment;filename=" + filename);
         resp.addHeader("Content-Length", "" + length);
-        resp.setContentLength((int)length);
+        resp.setContentLength((int) length);
         OutputStream out = resp.getOutputStream();
-        persistProcessor.read(out);
+        readProcessor.read(out);
         out.flush();
-        persistProcessor.close();
+        readProcessor.close();
         out.close();
     }
 }

@@ -27,7 +27,11 @@ ext.versions = [
   'mx-service-utils'	: '1.3.2',
   'mx-dal'      : '1.1.2',
   'mx-dal-hibernate'    : '1.1.3',
-  'mx-dal-mongodb'      : '1.1.1'
+  'mx-dal-mongodb'      : '1.1.1',
+  'mx-rbac-service'	: '3.0.0',
+  'mx-rbac-service-hibernate'	: '3.0.0',
+  'mx-rbac-restful'	: '3.0.0',
+  'mx-file-service'	: '1.0.1'
 ]
 
 ext.libs = [
@@ -47,7 +51,6 @@ ext.libs = [
   "log4j-jcl"		: "org.apache.logging.log4j:log4j-jcl:${versions.log4j}",
   "log4j-slf4j-impl"	: "org.apache.logging.log4j:log4j-slf4j-impl:${versions.log4j}",
   "slf4j-api"		: "org.slf4j:slf4j-api:${versions.slf4j}",
-
   "fastjson"		: "com.alibaba:fastjson:${versions.fastjson}",
 
   "jedis"		: "redis.clients:jedis:${versions.jedis}",
@@ -93,5 +96,9 @@ ext.libs = [
   "mx-service-utils"	: "org.mx:mx-service-utils:${versions.'mx-service-utils'}",
   "mx-dal"              : "org.mx:mx-dal:${versions.'mx-dal'}",
   "mx-dal-hibernate"    : "org.mx:mx-dal-hibernate:${versions.'mx-dal-hibernate'}",
-  "mx-dal-mongodb"      : "org.mx:mx-dal-mongodb:${versions.'mx-dal-mongodb'}"
+  "mx-dal-mongodb"      : "org.mx:mx-dal-mongodb:${versions.'mx-dal-mongodb'}",
+  "mx-rbac-service"	: "org.mx:mx-comps-rbac-service:${versions.'mx-rbac-service}",
+  "mx-rbac-service-hibernate"	: "org.mx:mx-comps-rbac-service-hibernate:${versions.'mx-rbac-service-hibernate'}",
+  "mx-rbac-restful"	: "org.mx:mx-comps-rbac-restful:${versions.'mx-rbac-restful'}",
+  "mx-file-service"	: "org.mx:mx-comps-file-service:${versions.'mx-file-service'}"
 ]
