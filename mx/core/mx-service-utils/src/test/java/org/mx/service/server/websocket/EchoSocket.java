@@ -5,8 +5,13 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.StatusCode;
 import org.eclipse.jetty.websocket.api.annotations.*;
+import org.java_websocket.util.ByteBufferUtils;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +26,7 @@ public class EchoSocket extends BaseWebsocket {
     private final CountDownLatch closeLatch;
 
     public EchoSocket() {
-        super("/upload");
+        super("/echo");
         closeLatch = new CountDownLatch(1);
     }
 
@@ -33,17 +38,49 @@ public class EchoSocket extends BaseWebsocket {
     public void onConnection(Session session) {
         super.onConnection(session);
         try {
-            Future<Void> future;
-            future = session.getRemote().sendStringByFuture("Hello");
-            future.get(2, TimeUnit.SECONDS);
-            future = session.getRemote().sendStringByFuture("Thanks for the conversation.");
-            future.get(2, TimeUnit.SECONDS);
-            session.close(StatusCode.NORMAL, "I'm done.");
+            session.getRemote().sendString("Server is ok.");
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }
         }
+    }
+
+    @Override
+    public void onTextMessage(Session session, String message) {
+        try {
+            session.getRemote().sendString(String.format("Server echo: %s.", message));
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+        }
+        super.onTextMessage(session, message);
+    }
+
+    @Override
+    public void onBinaryMessage(Session session, InputStream in) {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte[] buffer = new byte[8192];
+            long size = 0;
+            do {
+                int len = in.read(buffer);
+                if (len > 0) {
+                    out.write(buffer, 0, len);
+                } else {
+                    break;
+                }
+                size += len;
+            } while (true);
+            ByteBuffer bb = ByteBuffer.wrap(out.toByteArray());
+            session.getRemote().sendBytes(bb);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("some errors.", ex);
+            }
+        }
+        super.onBinaryMessage(session, in);
     }
 
     @Override

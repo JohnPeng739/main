@@ -13,6 +13,7 @@ ext.versions = [
   jedis		: '2.9.0',
   jersey	: '2.25.1',
   jetty		: '9.2.14.v20151106',
+  'java-websocket'	: '1.3.6',
   activiti	: '6.0.0',
   storm		: '1.1.1',
   activemq	: '5.15.2',
@@ -62,6 +63,8 @@ ext.libs = [
   "jetty-servlet"	: "org.eclipse.jetty:jetty-servlet:${versions.jetty}",
   "jetty-websocket"	: "org.eclipse.jetty.websocket:javax-websocket-server-impl:${versions.jetty}",
 
+  "java-websocket"	: "org.java-websocket:Java-WebSocket:${versions.'java-websocket'}",
+
   "activiti-engine"	: "org.activiti:activiti-engine:${versions.activiti}",
   "activiti-converter"	: "org.activiti:activiti-bpmn-converter:${versions.activiti}",
   "activiti-image"	: "org.activiti:activiti-image-generator:${versions.activiti}",
@@ -97,7 +100,7 @@ ext.libs = [
   "mx-dal"              : "org.mx:mx-dal:${versions.'mx-dal'}",
   "mx-dal-hibernate"    : "org.mx:mx-dal-hibernate:${versions.'mx-dal-hibernate'}",
   "mx-dal-mongodb"      : "org.mx:mx-dal-mongodb:${versions.'mx-dal-mongodb'}",
-  "mx-rbac-service"	: "org.mx:mx-comps-rbac-service:${versions.'mx-rbac-service}",
+  "mx-rbac-service"	: "org.mx:mx-comps-rbac-service:${versions.'mx-rbac-service'}",
   "mx-rbac-service-hibernate"	: "org.mx:mx-comps-rbac-service-hibernate:${versions.'mx-rbac-service-hibernate'}",
   "mx-rbac-restful"	: "org.mx:mx-comps-rbac-restful:${versions.'mx-rbac-restful'}",
   "mx-file-service"	: "org.mx:mx-comps-file-service:${versions.'mx-file-service'}"

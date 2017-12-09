@@ -5,21 +5,21 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.java_websocket.WebSocket;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mx.service.rest.client.RestClientInvoke;
 import org.mx.service.rest.client.RestInvokeException;
 import org.mx.service.server.config.TestConfig;
-import org.mx.service.server.websocket.EchoSocket;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
+import java.nio.ByteBuffer;
 
 import static org.junit.Assert.*;
 
@@ -103,22 +103,59 @@ public class TestServer {
         Server server = factory.getServer();
         assertNotNull(server);
 
-        // test websocket client
-        WebSocketClient client = new WebSocketClient();
-        ClientUpgradeRequest request = new ClientUpgradeRequest();
-        EchoSocket socket = new EchoSocket();
         try {
-            client.start();
-            client.connect(socket, new URI("ws://localhost:9997/upload"), request);
-            socket.awaitClose(60, TimeUnit.SECONDS);
+            // test websocket client
+            TestWebsocketClient client = new TestWebsocketClient(new URI("ws://localhost:9997/echo"));
+            client.connect();
+            Thread.sleep(1000);
+            assertEquals(WebSocket.READYSTATE.OPEN, client.getReadyState());
+            assertEquals("Server is ok.", client.textMsg);
+            String msg = "hello, john";
+            client.send(msg);
+            Thread.sleep(1000);
+            assertEquals(String.format("Server echo: %s.", msg), client.textMsg);
+            client.send(msg.getBytes());
+            Thread.sleep(1000);
+            assertEquals(msg, new String(client.binaryMsg));
+            client.close();
+            Thread.sleep(1000);
+            assertEquals(WebSocket.READYSTATE.CLOSED, client.getReadyState());
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
-        try {
-            client.stop();
-            client.destroy();
-        } catch (Exception ex) {
-            fail(ex.getMessage());
+    }
+
+    private class TestWebsocketClient extends WebSocketClient {
+        private String textMsg;
+        private byte[] binaryMsg;
+
+        public TestWebsocketClient(URI serverUri) {
+            super(serverUri);
+        }
+
+        @Override
+        public void onOpen(ServerHandshake handshakedata) {
+            //
+        }
+
+        @Override
+        public void onMessage(ByteBuffer bytes) {
+            this.binaryMsg = bytes.array();
+        }
+
+        @Override
+        public void onMessage(String message) {
+            this.textMsg = message;
+        }
+
+        @Override
+        public void onClose(int code, String reason, boolean remote) {
+            //
+        }
+
+        @Override
+        public void onError(Exception ex) {
+            //
         }
     }
 }
