@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
  * @author : john.peng created on date : 2017/12/04
  */
 @Configuration
-@PropertySource({"classpath:file-persist.properties"})
+@PropertySource({"classpath:file-processor.properties"})
 @ComponentScan({
         "org.mx.comps.file.servlet",
         "org.mx.comps.file.websocket",

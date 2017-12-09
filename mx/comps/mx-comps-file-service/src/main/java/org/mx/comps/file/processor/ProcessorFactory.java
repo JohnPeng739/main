@@ -1,4 +1,4 @@
-package org.mx.comps.file.procesor;
+package org.mx.comps.file.processor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

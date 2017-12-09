@@ -11,18 +11,11 @@ import java.io.InputStream;
  */
 public interface FileWriteProcessor {
     /**
-     * 获取文件的长度
+     * 或当前处理器关联的文件服务描述符
      *
-     * @return 长度
+     * @return 文件服务描述符
      */
-    long getLength();
-
-    /**
-     * 获取文件名
-     *
-     * @return 文件名
-     */
-    String getFilename();
+    FileServiceDescriptor getFileServiceDescriptor();
 
     /**
      * 判断处理器是否已经被打开
@@ -55,5 +48,5 @@ public interface FileWriteProcessor {
      *
      * @param in 输入流
      */
-    void persist(InputStream in);
+    void write(InputStream in);
 }

@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  *
  * @author : john.peng created on date : 2017/12/04
  */
-public class TestSimpleFileWriteProcessorImpl {
+public class TestSimpleFileProcessorHashImpl {
     private AnnotationConfigApplicationContext context;
 
     @Before
@@ -49,6 +49,7 @@ public class TestSimpleFileWriteProcessorImpl {
         map.put("directory", directory);
         map.put("filename", filename);
         JSONObject json = new JSONObject(map);
+        boolean hashed = context.getEnvironment().getProperty("file.simple.hashed", Boolean.class, true);
 
         File file = new File(directory, filename);
         FileServiceListener listener = new FileServiceListener() {
@@ -56,30 +57,38 @@ public class TestSimpleFileWriteProcessorImpl {
             public void started(FileServiceDescriptor descriptor) {
                 assertNotNull(descriptor);
                 assertFalse(StringUtils.isBlank(descriptor.getId()));
-                assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                if (!hashed) {
+                    assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                }
             }
 
             @Override
             public void finished(FileServiceDescriptor descriptor) {
                 assertNotNull(descriptor);
                 assertFalse(StringUtils.isBlank(descriptor.getId()));
-                assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                if (!hashed) {
+                    assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                }
             }
 
             @Override
             public void canceled(FileServiceDescriptor descriptor) {
                 assertNotNull(descriptor);
                 assertFalse(StringUtils.isBlank(descriptor.getId()));
-                assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                if (!hashed) {
+                    assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                }
             }
         };
         writeProcessor.setFileServiceListener(listener);
 
         writeProcessor.command(json);
         assertTrue(writeProcessor.isOpened());
-        assertEquals(filename, writeProcessor.getFilename());
-        assertEquals(file.getAbsolutePath(), ((FileServiceDescriptor) writeProcessor).getPath());
-        writeProcessor.persist(new ByteArrayInputStream(msg.getBytes()));
+        if (!hashed) {
+            assertEquals(filename, writeProcessor.getFileServiceDescriptor().getFilename());
+            assertEquals(file.getAbsolutePath(), writeProcessor.getFileServiceDescriptor().getPath());
+        }
+        writeProcessor.write(new ByteArrayInputStream(msg.getBytes()));
         assertTrue(writeProcessor.isOpened());
         writeProcessor.close();
         assertFalse(writeProcessor.isOpened());
@@ -95,9 +104,11 @@ public class TestSimpleFileWriteProcessorImpl {
             req.addParameter("filename", filename);
             readProcessor.init(req);
             assertTrue(readProcessor.isOpened());
-            assertEquals(msg.getBytes().length, readProcessor.getLength());
-            assertEquals(filename, readProcessor.getFilename());
-            assertEquals(file.getAbsolutePath(), ((FileServiceDescriptor) readProcessor).getPath());
+            assertEquals(msg.getBytes().length, readProcessor.getFileServiceDescriptor().getLength());
+            if (!hashed) {
+                assertEquals(filename, readProcessor.getFileServiceDescriptor().getFilename());
+                assertEquals(file.getAbsolutePath(), readProcessor.getFileServiceDescriptor().getPath());
+            }
             ByteArrayOutputStream out = new ByteArrayOutputStream(100);
             readProcessor.read(out);
             assertEquals(msg, new String(out.toString()));

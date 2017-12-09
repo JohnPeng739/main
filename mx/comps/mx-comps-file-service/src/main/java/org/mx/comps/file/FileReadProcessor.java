@@ -1,7 +1,6 @@
 package org.mx.comps.file;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -11,18 +10,11 @@ import java.io.OutputStream;
  */
 public interface FileReadProcessor {
     /**
-     * 获取文件的长度
+     * 或当前处理器关联的文件服务描述符
      *
-     * @return 长度
+     * @return 文件服务描述符
      */
-    long getLength();
-
-    /**
-     * 获取文件名
-     *
-     * @return 文件名
-     */
-    String getFilename();
+    FileServiceDescriptor getFileServiceDescriptor();
 
     /**
      * 判断处理器是否已经被打开

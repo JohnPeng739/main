@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.comps.file.FileWriteProcessor;
-import org.mx.comps.file.procesor.ProcessorFactory;
+import org.mx.comps.file.processor.ProcessorFactory;
 import org.mx.service.server.websocket.BaseWebsocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -87,7 +87,7 @@ public class FileUploadWebsocket extends BaseWebsocket {
     @Override
     public void onBinaryMessage(Session session, InputStream in) {
         if (writeProcessor.isOpened()) {
-            writeProcessor.persist(in);
+            writeProcessor.write(in);
         } else {
             if (logger.isErrorEnabled()) {
                 logger.error("The FileWriteProcessor is not opened.");

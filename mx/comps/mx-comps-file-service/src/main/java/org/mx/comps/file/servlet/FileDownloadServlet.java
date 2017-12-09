@@ -2,6 +2,7 @@ package org.mx.comps.file.servlet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.StringUtils;
 import org.mx.comps.file.FileReadProcessor;
 import org.mx.service.server.servlet.BaseHttpServlet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,19 +42,24 @@ public class FileDownloadServlet extends BaseHttpServlet {
         super(FILE_DOWNLOAD_URI_PATH);
     }
 
-    private void initBean() {
+    private void initBean(HttpServletRequest req) {
         root = env.getProperty(FILE_ROOT, String.class, System.getProperty("user.dir"));
-        String persistType = env.getProperty("file.processor", String.class, "simple");
-        switch (persistType) {
+        String readProcessorType = req.getParameter("processorType");
+        if (StringUtils.isBlank(readProcessorType)) {
+            // 如果没有设置processorType参数，则使用simple类型。
+            readProcessorType = "simple";
+        }
+        switch (readProcessorType) {
             case "simple":
                 readProcessor = context.getBean("simpleFilePersistProcessor", FileReadProcessor.class);
                 break;
             default:
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("Unsupported file persist processor type: %s.", persistType));
+                    logger.error(String.format("Unsupported file write processor type: %s.", readProcessorType));
                 }
                 break;
         }
+        readProcessor.init(req);
     }
 
     /**
@@ -63,11 +69,10 @@ public class FileDownloadServlet extends BaseHttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        initBean();
-        readProcessor.init(req);
+        initBean(req);
         resp.reset();
-        String filename = readProcessor.getFilename();
-        long length = readProcessor.getLength();
+        String filename = readProcessor.getFileServiceDescriptor().getFilename();
+        long length = readProcessor.getFileServiceDescriptor().getLength();
         if (req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
             filename = URLEncoder.encode(filename, "UTF-8");
         } else {
