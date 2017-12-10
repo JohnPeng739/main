@@ -62,6 +62,41 @@ public class FileDownloadServlet extends BaseHttpServlet {
         readProcessor.init(req);
     }
 
+    private void invoke(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        initBean(req);
+        resp.reset();
+        String filename = readProcessor.getFileServiceDescriptor().getFilename();
+        long length = readProcessor.getFileServiceDescriptor().getLength();
+        if (length >= 0) {
+            if (req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
+                filename = URLEncoder.encode(filename, "UTF-8");
+            } else {
+                filename = new String(filename.getBytes("UTF-8"), "ISO8859-1");
+            }
+            resp.addHeader("Content-Disposition", "attachment;filename=" + filename);
+            resp.addHeader("Content-Length", "" + length);
+            resp.setContentLength((int) length);
+            OutputStream out = resp.getOutputStream();
+            readProcessor.read(out);
+            out.flush();
+            readProcessor.close();
+            out.close();
+        } else {
+            // 文件不存在
+            resp.setStatus(404);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
+     */
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        invoke(req, resp);
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -69,22 +104,6 @@ public class FileDownloadServlet extends BaseHttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        initBean(req);
-        resp.reset();
-        String filename = readProcessor.getFileServiceDescriptor().getFilename();
-        long length = readProcessor.getFileServiceDescriptor().getLength();
-        if (req.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {
-            filename = URLEncoder.encode(filename, "UTF-8");
-        } else {
-            filename = new String(filename.getBytes("UTF-8"), "ISO8859-1");
-        }
-        resp.addHeader("Content-Disposition", "attachment;filename=" + filename);
-        resp.addHeader("Content-Length", "" + length);
-        resp.setContentLength((int) length);
-        OutputStream out = resp.getOutputStream();
-        readProcessor.read(out);
-        out.flush();
-        readProcessor.close();
-        out.close();
+        invoke(req, resp);
     }
 }

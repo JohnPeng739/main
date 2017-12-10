@@ -43,7 +43,7 @@ project(':mx-comps-rbac-restful') {
 }
 
 project(':mx-comps-file-service') {
-  version = '1.0.2'
+  version = '1.0.4'
   description = 'File service component base Websocket upload &amp; Servlet download.'
 
   dependencies {
@@ -52,7 +52,9 @@ project(':mx-comps-file-service') {
       libs.'mx-service-utils'
     )
     testCompile(
-      libs.'spring-test'
+      libs.'spring-test',
+      libs.'httpclient',
+      libs.'java-websocket'
     )
   }
 }

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.mx.StringUtils;
 import org.mx.comps.file.FileWriteProcessor;
 import org.mx.comps.file.processor.ProcessorFactory;
@@ -14,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -22,6 +24,7 @@ import java.io.InputStream;
  * @author : john.peng created on date : 2017/12/04
  */
 @Component("fileUploadWebsocket")
+@WebSocket
 public class FileUploadWebsocket extends BaseWebsocket {
     public static final String FILE_UPLOAD_URI_PATH = "/wsupload";
     public static final String CLOSE_FILE_FOR_ERROR = "file.error.close";
@@ -113,15 +116,14 @@ public class FileUploadWebsocket extends BaseWebsocket {
      */
     @Override
     public void onTextMessage(Session session, String message) {
-
         if (StringUtils.isBlank(message)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The command data is blank.");
             }
             return;
         }
+        JSONObject json = JSON.parseObject(message);
         try {
-            JSONObject json = JSON.parseObject(message);
             String command = json.getString("command");
             if ("init".equalsIgnoreCase(command)) {
                 // 初始化FileWriteProcessor
@@ -140,7 +142,13 @@ public class FileUploadWebsocket extends BaseWebsocket {
             } else {
                 writeProcessor.command(json);
             }
+            json.put("result", "ok");
         } catch (Exception ex) {
+            json.put("result", "error");
+        }
+        try {
+            session.getRemote().sendString(json.toJSONString());
+        } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
             }

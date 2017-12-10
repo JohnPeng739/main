@@ -32,7 +32,7 @@ ext.versions = [
   'mx-rbac-service'	: '3.0.0',
   'mx-rbac-service-hibernate'	: '3.0.0',
   'mx-rbac-restful'	: '3.0.0',
-  'mx-file-service'	: '1.0.2'
+  'mx-file-service'	: '1.0.4'
 ]
 
 ext.libs = [

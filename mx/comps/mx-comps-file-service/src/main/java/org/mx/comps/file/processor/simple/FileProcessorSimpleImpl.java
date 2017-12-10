@@ -1,10 +1,12 @@
 package org.mx.comps.file.processor.simple;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.comps.file.FileReadProcessor;
+import org.mx.comps.file.FileServiceDescriptor;
 import org.mx.comps.file.FileWriteProcessor;
 import org.mx.comps.file.processor.RandomAccessFileProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.UUID;
 
 /**
@@ -42,45 +41,42 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
         super();
     }
 
-    private String createHashPath(String originPath) {
-        // 根据哈希规则将路径分为二级目录，可以总共管理26*26*26*26=456976个子目录
-        // 每层目录根据文件逻辑路径哈希，总共26*26个目录，文件名根据命名的UUID规则生成。
-        int hashValue = originPath.hashCode();
-        long originValue = 0l;
-        if (hashValue <= 0) {
-            originValue = hashValue + Integer.MAX_VALUE;
-        } else {
-            originValue = hashValue;
-        }
-        long dirHash = originValue % (26 * 26 * 26 * 26);
-        long dirHash1 = dirHash / (26 * 26);
-        long dirHash2 = dirHash - dirHash1 * (26 * 26);
-        String hashPath = String.format("%03d/%03d/%s", dirHash1, dirHash2,
-                UUID.nameUUIDFromBytes(originPath.getBytes()));
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Create a hash path, origin: %s, hash: %s.", originPath, hashPath));
-        }
-        return hashPath;
-    }
-
     /**
      * 初始化随机存取文件对象
      *
      * @param mode   文件操作模式
      * @param offset 操作偏移量
      */
-    protected void initRandomAccessFile(File file, String mode, long offset) {
-        Assert.notNull(file, "File is null.");
+    protected void initRandomAccessFile(String directory, String filename, String mode, long offset) {
         boolean hashed = env.getProperty(FILE_HASHED, Boolean.class, true);
-        if (hashed) {
-            String hashPath = createHashPath(file.getAbsolutePath());
-            file = new File(hashPath);
-        }
-        super.fileServiceDescriptor = new FileServiceSimpleDescriptor(file);
-
+        FileServiceDescriptor fileServiceDescriptor = new FileServiceSimpleDescriptor(directory, filename);
         String root = env.getProperty(FILE_ROOT, String.class, System.getProperty("user.dir"));
-        ((FileServiceSimpleDescriptor)super.fileServiceDescriptor).root = root;
-        file = new File(root, file.getAbsolutePath());
+        ((FileServiceSimpleDescriptor) fileServiceDescriptor).setRoot(root);
+        if (hashed) {
+            // 根据哈希规则将路径分为二级目录，可以总共管理26*26*26*26=456976个子目录
+            // 每层目录根据文件逻辑路径哈希，总共26*26个目录，文件名根据命名的UUID规则生成。
+            String originPath = fileServiceDescriptor.getPath();
+            int hashValue = originPath.hashCode();
+            long originValue = 0l;
+            if (hashValue <= 0) {
+                originValue = hashValue + Integer.MAX_VALUE;
+            } else {
+                originValue = hashValue;
+            }
+            long dirHash = originValue % (26 * 26 * 26 * 26);
+            long dirHash1 = dirHash / (26 * 26);
+            long dirHash2 = dirHash - dirHash1 * (26 * 26);
+            directory = String.format("%03d/%03d", dirHash1, dirHash2);
+            filename = UUID.nameUUIDFromBytes(originPath.getBytes()).toString();
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Create a hash path, origin: %s, hash: %s/%s.",
+                        originPath, directory, filename));
+            }
+            ((FileServiceSimpleDescriptor) fileServiceDescriptor).setPath(directory, filename);
+        }
+        super.fileServiceDescriptor = fileServiceDescriptor;
+
+        File file = new File(root, super.fileServiceDescriptor.getPath());
         try {
             if (!file.getParentFile().exists()) {
                 // 如果父级目录不存在，则创建父级目录。
@@ -112,19 +108,35 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
             }
             return;
         }
-        String directory = req.getParameter("directory");
+        String directory = null, filename = null;
+        if (req.getMethod().equalsIgnoreCase("get")) {
+            directory = req.getParameter("directory");
+            filename = req.getParameter("filename");
+        } else if(req.getMethod().equalsIgnoreCase("post")) {
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(req.getInputStream()));
+                String str = reader.readLine();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Post data: %s.", str));
+                }
+                JSONObject json = JSON.parseObject(str);
+                directory = json.getString("directory");
+                filename = json.getString("filename");
+            } catch (IOException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(ex);
+                }
+            }
+        } else {
+            throw new UnsupportedOperationException(String.format("Unsupported method: %s.", req.getMethod()));
+        }
         if (StringUtils.isBlank(directory)) {
             directory = "./";
         }
-        String filename = req.getParameter("filename");
         if (StringUtils.isBlank(filename)) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Filename is blank");
-            }
-            return;
+            throw new IllegalArgumentException("Filename is blank.");
         }
-        File file = new File(directory, filename);
-        initRandomAccessFile(file, "r", -1l);
+        initRandomAccessFile(directory, filename, "r", -1l);
     }
 
     /**
@@ -133,9 +145,9 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
      * @see FileWriteProcessor#command(JSONObject)
      */
     @Override
-    public void command(JSONObject json) {
+    public void command(JSONObject json) throws Exception {
+        String command = json.getString("command");
         try {
-            String command = json.getString("command");
             switch (command) {
                 case "start":
                     String directory = json.getString("directory");
@@ -150,43 +162,51 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
                         break;
                     }
                     long offset = json.getLongValue("offset");
-                    File file = new File(directory, filename);
-                    initRandomAccessFile(file, "rw", offset);
+                    initRandomAccessFile(directory, filename, "rw", offset);
                     if (super.fileServiceListener != null) {
                         // start
                         super.fileServiceListener.started(super.fileServiceDescriptor);
                     }
                     break;
                 case "finish":
-                    close();
-                    if (super.fileServiceListener != null) {
-                        // finish
-                        super.fileServiceListener.finished(super.fileServiceDescriptor);
+                    if (super.isOpened()) {
+                        close();
+                        if (super.fileServiceListener != null) {
+                            // finish
+                            super.fileServiceListener.finished(super.fileServiceDescriptor);
+                        }
+                    } else {
+                        throw new Exception("The session is closed.");
                     }
                     break;
                 case "cancel":
-                    close();
-                    // 删除文件
-                    String root = env.getProperty(FILE_ROOT, String.class, System.getProperty("user.dir"));
-                    File deleteFile = new File(root, super.fileServiceDescriptor.getPath());
-                    if (deleteFile.exists() && deleteFile.isFile()) {
-                        deleteFile.delete();
-                    }
-                    if (super.fileServiceListener != null) {
-                        // cancel
-                        super.fileServiceListener.canceled(super.fileServiceDescriptor);
+                    if (super.isOpened()) {
+                        close();
+                        // 删除文件
+                        String root = env.getProperty(FILE_ROOT, String.class, System.getProperty("user.dir"));
+                        File deleteFile = new File(root, super.fileServiceDescriptor.getPath());
+                        if (deleteFile.exists() && deleteFile.isFile()) {
+                            deleteFile.delete();
+                        }
+                        if (super.fileServiceListener != null) {
+                            // cancel
+                            super.fileServiceListener.canceled(super.fileServiceDescriptor);
+                        }
+                    } else {
+                        throw new Exception("The session is closed.");
                     }
                     break;
                 default:
-                    if (logger.isErrorEnabled()) {
-                        logger.error(String.format("Unsupported command: %s.", command));
-                    }
-                    break;
+                    throw new Exception(String.format("Unsupported command: %s.", command));
             }
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error(String.format("invoke command[%s] fail.", command), ex);
             }
+            if (super.fileServiceListener != null) {
+                super.fileServiceListener.errored(super.fileServiceDescriptor, ex.getMessage());
+            }
+            throw ex;
         }
     }
 }

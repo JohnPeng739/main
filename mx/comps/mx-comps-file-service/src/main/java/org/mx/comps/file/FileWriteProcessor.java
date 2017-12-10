@@ -41,7 +41,7 @@ public interface FileWriteProcessor {
      *
      * @param json 文本命令
      */
-    void command(JSONObject json);
+    void command(JSONObject json) throws Exception;
 
     /**
      * 将输入流中的数据写入到打开的文件中

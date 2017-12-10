@@ -7,6 +7,7 @@ import org.mx.StringUtils;
 import org.mx.comps.file.FileServiceDescriptor;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -17,8 +18,7 @@ import java.security.NoSuchAlgorithmException;
 public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
     private static final Log logger = LogFactory.getLog(FileServiceSimpleDescriptor.class);
 
-    protected String root;
-    private File file;
+    private String root, directory, filename;
 
     /**
      * 默认的构造函数
@@ -29,35 +29,58 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
 
     /**
      * 默认的构造函数
-     * @param parent 文件的目录
-     * @param filename 文件名
+     *
+     * @param directory 文件的目录
+     * @param filename  文件名
      */
-    public FileServiceSimpleDescriptor(String parent, String filename) {
+    public FileServiceSimpleDescriptor(String directory, String filename) {
         super();
-        if (StringUtils.isBlank(parent)) {
-            parent = "./";
+        setPath(directory, filename);
+    }
+
+    /**
+     * 获取关联的文件对象
+     *
+     * @return 文件对象
+     */
+    private File getFile() {
+        File file = new File(root, directory);
+        return new File(file, filename);
+    }
+
+    /**
+     * 设置文件操作的根路径
+     *
+     * @param root 根路径
+     */
+    protected void setRoot(String root) {
+        if (StringUtils.isBlank(root)) {
+            root = System.getProperty("user.dir");
+        }
+        try {
+            this.root = new File(root).getCanonicalPath();
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Set the root fail.", ex);
+            }
+        }
+    }
+
+    /**
+     * 设置路径
+     *
+     * @param directory 目录
+     * @param filename  文件名
+     */
+    protected void setPath(String directory, String filename) {
+        if (StringUtils.isBlank(directory)) {
+            directory = "./";
         }
         if (StringUtils.isBlank(filename)) {
             filename = "test.txt";
         }
-        this.file = new File(parent, filename);
-    }
-
-    /**
-     * 默认的构造函数
-     * @param file 文件对象
-     */
-    public FileServiceSimpleDescriptor(File file) {
-        this();
-        this.file = file;
-    }
-
-    /**
-     * 设置文件对象
-     * @param file 文件
-     */
-    protected void setFile(File file) {
-        this.file = file;
+        this.directory = directory;
+        this.filename = filename;
     }
 
     /**
@@ -85,7 +108,14 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
      */
     @Override
     public String getPath() {
-        return file.getAbsolutePath();
+        try {
+            return getFile().getCanonicalPath().replace('\\', '/').substring(root.length() + 1);
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Get file path fail.", ex);
+            }
+            return null;
+        }
     }
 
     /**
@@ -95,7 +125,7 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
      */
     @Override
     public String getParentPath() {
-        return file.getParent();
+        return getFile().getParent().replace('\\', '/').substring(root.length() + 1);
     }
 
     /**
@@ -105,7 +135,7 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
      */
     @Override
     public String getFilename() {
-        return file.getName();
+        return getFile().getName();
     }
 
     /**
@@ -115,7 +145,7 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
      */
     @Override
     public long getLength() {
-        File file = new File(root, this.file.getAbsolutePath());
+        File file = getFile();
         if (file.exists() && file.isFile()) {
             return file.length();
         } else {

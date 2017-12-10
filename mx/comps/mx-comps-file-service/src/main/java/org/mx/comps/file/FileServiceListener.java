@@ -7,6 +7,14 @@ package org.mx.comps.file;
  */
 public interface FileServiceListener {
     /**
+     * 文件服务过程中发生了错误。
+     *
+     * @param descriptor 文件描述符
+     * @param error      错误信息
+     */
+    void errored(FileServiceDescriptor descriptor, String error);
+
+    /**
      * 文件服务已经准备好，顺利开始了。
      *
      * @param descriptor 文件描述符
