@@ -11,10 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
+import java.io.*;
 
 /**
  * 一个简单的文件持久化实现类，直接根据指定的目录和文件名进行存储。
@@ -69,6 +66,33 @@ public abstract class RandomAccessFileProcessor implements FileWriteProcessor, F
     @Override
     public FileServiceDescriptor getFileServiceDescriptor() {
         return fileServiceDescriptor;
+    }
+
+    /**
+     * 根据参数初始化RandomAccessFile
+     *
+     * @param root   根目录
+     * @param mode   操作模式，一般为"r"或"rw"。
+     * @param offset 操作偏移量
+     */
+    protected void initRandomAccessFile(String root, String mode, long offset) {
+        File file = new File(root, fileServiceDescriptor.getPath());
+        try {
+            if (!file.getParentFile().exists()) {
+                // 如果父级目录不存在，则创建父级目录。
+                file.getParentFile().mkdirs();
+            }
+            randomAccessFile = new RandomAccessFile(file, mode);
+            if (offset > 0) {
+                // 如果指定了偏移量，则预先设置操作偏移量。
+                randomAccessFile.seek(offset);
+            }
+            opened = true;
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+        }
     }
 
     /**

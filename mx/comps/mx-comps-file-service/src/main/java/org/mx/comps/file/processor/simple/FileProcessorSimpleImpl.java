@@ -28,7 +28,9 @@ import java.util.UUID;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
     public static final String FILE_ROOT = "file.simple.root";
-    public static final String FILE_HASHED = "file.simple.hased";
+    public static final String FILE_HASHED = "file.simple.hash";
+    public static final String DIR_LEVELS = "file.simple.hash.levels";
+    public static final String NUM_PER_LEVEL = "file.simple.hash.numPerLevel";
     private static final Log logger = LogFactory.getLog(FileProcessorSimpleImpl.class);
 
     @Autowired
@@ -53,46 +55,14 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
         String root = env.getProperty(FILE_ROOT, String.class, System.getProperty("user.dir"));
         ((FileServiceSimpleDescriptor) fileServiceDescriptor).setRoot(root);
         if (hashed) {
-            // 根据哈希规则将路径分为二级目录，可以总共管理26*26*26*26=456976个子目录
-            // 每层目录根据文件逻辑路径哈希，总共26*26个目录，文件名根据命名的UUID规则生成。
-            String originPath = fileServiceDescriptor.getPath();
-            int hashValue = originPath.hashCode();
-            long originValue = 0l;
-            if (hashValue <= 0) {
-                originValue = hashValue + Integer.MAX_VALUE;
-            } else {
-                originValue = hashValue;
-            }
-            long dirHash = originValue % (26 * 26 * 26 * 26);
-            long dirHash1 = dirHash / (26 * 26);
-            long dirHash2 = dirHash - dirHash1 * (26 * 26);
-            directory = String.format("%03d/%03d", dirHash1, dirHash2);
-            filename = UUID.nameUUIDFromBytes(originPath.getBytes()).toString();
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Create a hash path, origin: %s, hash: %s/%s.",
-                        originPath, directory, filename));
-            }
-            ((FileServiceSimpleDescriptor) fileServiceDescriptor).setPath(directory, filename);
+            int levels = env.getProperty(DIR_LEVELS, Integer.class, 3);
+            int numPerLevel = env.getProperty(NUM_PER_LEVEL, Integer.class, 1000);
+            fileServiceDescriptor = ((FileServiceSimpleDescriptor)fileServiceDescriptor).createHashDescriptor(
+                    fileServiceDescriptor, levels, numPerLevel);
+            ((FileServiceSimpleDescriptor) fileServiceDescriptor).setRoot(root);
         }
         super.fileServiceDescriptor = fileServiceDescriptor;
-
-        File file = new File(root, super.fileServiceDescriptor.getPath());
-        try {
-            if (!file.getParentFile().exists()) {
-                // 如果父级目录不存在，则创建父级目录。
-                file.getParentFile().mkdirs();
-            }
-            super.randomAccessFile = new RandomAccessFile(file, mode);
-            if (offset > 0) {
-                // 如果指定了偏移量，则预先设置操作偏移量。
-                super.randomAccessFile.seek(offset);
-            }
-            super.opened = true;
-        } catch (IOException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-        }
+        super.initRandomAccessFile(root, mode, offset);
     }
 
     /**

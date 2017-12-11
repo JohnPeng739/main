@@ -9,6 +9,10 @@ import org.mx.comps.file.FileServiceDescriptor;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 一个指定了存储目录和文件名的简单文件服务描述定义类。
@@ -36,6 +40,37 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
     public FileServiceSimpleDescriptor(String directory, String filename) {
         super();
         setPath(directory, filename);
+    }
+
+    public FileServiceSimpleDescriptor createHashDescriptor(FileServiceDescriptor descriptor, int levels, int numPerLevel) {
+        String originPath = descriptor.getPath();
+        int hashValue = originPath.hashCode();
+        long originValue;
+        if (hashValue <= 0) {
+            originValue = hashValue + Integer.MAX_VALUE;
+        } else {
+            originValue = hashValue;
+        }
+        long dirHash = originValue % (long)((Math.pow(numPerLevel, levels)));
+        long[] dirHashs = new long[levels];
+        Arrays.fill(dirHashs, 0);
+        for (int index = 0; index < levels && dirHash > 0; index ++) {
+            long hash = dirHash % numPerLevel;
+            dirHashs[levels - 1 - index] = hash;
+            dirHash = dirHash / numPerLevel;
+        }
+        String[] dirHashStrs = new String[dirHashs.length];
+        String format = String.format("%%0%dd", String.valueOf(numPerLevel).length());
+        for (int index = 0; index < dirHashs.length; index ++) {
+            dirHashStrs[index] = String.format(format, dirHashs[index]);
+        }
+        directory = String.format("%s", StringUtils.merge(dirHashStrs, "/"));
+        filename = UUID.nameUUIDFromBytes(originPath.getBytes()).toString();
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Create a hash path, origin: %s, hash: %s/%s.",
+                    originPath, directory, filename));
+        }
+        return new FileServiceSimpleDescriptor(directory, filename);
     }
 
     /**
