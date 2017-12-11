@@ -1,4 +1,4 @@
-package org.mx.comps.file.processor.simple;
+package org.mx.comps.file.processor.category;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -10,6 +10,7 @@ import org.mx.comps.file.FileServiceDescriptor;
 import org.mx.comps.file.FileWriteProcessor;
 import org.mx.comps.file.processor.AbstractFileServiceDescriptor;
 import org.mx.comps.file.processor.RandomAccessFileProcessor;
+import org.mx.comps.file.processor.simple.FileServiceSimpleDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,20 +21,22 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * 一个简单的文件持久化实现类，直接根据指定的目录和文件名进行存储。
+ * 一个按照分级分类实现的文件持久化实现类。
  *
- * @author : john.peng created on date : 2017/12/04
+ * @author : john.peng created on date : 2017/12/11
  */
-@Component("simpleFilePersistProcessor")
+@Component("categoryFilePersistProcessor")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
-    public static final String SIMPLE_FILE_ROOT = "file.simple.root";
-    public static final String SIMPLE_FILE_HASHED = "file.simple.hash";
-    public static final String SIMPLE_DIR_LEVELS = "file.simple.hash.levels";
-    public static final String SIMPLE_NUM_PER_LEVEL = "file.simple.hash.numPerLevel";
-    private static final Log logger = LogFactory.getLog(FileProcessorSimpleImpl.class);
+public class FileProcessorCategoryImpl extends RandomAccessFileProcessor {
+    public static final String CATEGORY_FILE_ROOT = "file.category.root";
+    public static final String CATEGORY_FILE_HASHED = "file.category.hash";
+    public static final String CATEGORY_DIR_LEVELS = "file.category.hash.levels";
+    public static final String CATEGORY_NUM_PER_LEVEL = "file.category.hash.numPerLevel";
+    private static final Log logger = LogFactory.getLog(FileProcessorCategoryImpl.class);
 
     @Autowired
     private Environment env = null;
@@ -41,7 +44,7 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
     /**
      * 默认的构造函数
      */
-    public FileProcessorSimpleImpl() {
+    public FileProcessorCategoryImpl() {
         super();
     }
 
@@ -51,17 +54,16 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
      * @param mode   文件操作模式
      * @param offset 操作偏移量
      */
-    protected void initRandomAccessFile(String directory, String filename, String mode, long offset) {
-        boolean hashed = env.getProperty(SIMPLE_FILE_HASHED, Boolean.class, true);
-        FileServiceDescriptor fileServiceDescriptor = new FileServiceSimpleDescriptor(directory, filename);
-        String root = env.getProperty(SIMPLE_FILE_ROOT, String.class, System.getProperty("user.dir"));
+    protected void initRandomAccessFile(List<String> categories, String filename, String mode, long offset) {
+        boolean hashed = env.getProperty(CATEGORY_FILE_HASHED, Boolean.class, true);
+        FileServiceDescriptor fileServiceDescriptor = new FileServiceCategoryDescriptor(categories, filename);
+        String root = env.getProperty(CATEGORY_FILE_ROOT, String.class, System.getProperty("user.dir"));
         ((AbstractFileServiceDescriptor) fileServiceDescriptor).setRoot(root);
         if (hashed) {
-            int levels = env.getProperty(SIMPLE_DIR_LEVELS, Integer.class, 3);
-            int numPerLevel = env.getProperty(SIMPLE_NUM_PER_LEVEL, Integer.class, 1000);
+            int categoryLevels = env.getProperty(CATEGORY_DIR_LEVELS, Integer.class, 3);
+            int categoryNumPerLevel = env.getProperty(CATEGORY_NUM_PER_LEVEL, Integer.class, 1000);
             fileServiceDescriptor = ((FileServiceSimpleDescriptor) fileServiceDescriptor).createHashDescriptor(
-                    fileServiceDescriptor, root, levels, numPerLevel);
-            ((AbstractFileServiceDescriptor) fileServiceDescriptor).setRoot(root);
+                    fileServiceDescriptor, root, categoryLevels, categoryNumPerLevel);
         }
         super.fileServiceDescriptor = fileServiceDescriptor;
         super.initRandomAccessFile(root, mode, offset);
@@ -80,9 +82,11 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
             }
             return;
         }
-        String directory = null, filename = null;
+        List<String> categories = null;
+        String filename = null;
         if (req.getMethod().equalsIgnoreCase("get")) {
-            directory = req.getParameter("directory");
+            String str = req.getParameter("categories");
+            categories = Arrays.asList(StringUtils.split(str));
             filename = req.getParameter("filename");
         } else if (req.getMethod().equalsIgnoreCase("post")) {
             try {
@@ -92,7 +96,7 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
                     logger.debug(String.format("Post data: %s.", str));
                 }
                 JSONObject json = JSON.parseObject(str);
-                directory = json.getString("directory");
+                categories = json.getObject("categories", List.class);
                 filename = json.getString("filename");
             } catch (IOException ex) {
                 if (logger.isErrorEnabled()) {
@@ -102,13 +106,13 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
         } else {
             throw new UnsupportedOperationException(String.format("Unsupported method: %s.", req.getMethod()));
         }
-        if (StringUtils.isBlank(directory)) {
-            directory = "./";
+        if (categories == null || categories.isEmpty()) {
+            categories = Arrays.asList("category");
         }
         if (StringUtils.isBlank(filename)) {
             throw new IllegalArgumentException("Filename is blank.");
         }
-        initRandomAccessFile(directory, filename, "r", -1l);
+        initRandomAccessFile(categories, filename, "r", -1l);
     }
 
     /**
@@ -122,9 +126,9 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
         try {
             switch (command) {
                 case "start":
-                    String directory = json.getString("directory");
-                    if (StringUtils.isBlank(directory)) {
-                        directory = "./";
+                    List<String> categories = json.getObject("categories", List.class);
+                    if (categories == null || categories.isEmpty()) {
+                        categories = Arrays.asList("category");
                     }
                     String filename = json.getString("filename");
                     if (StringUtils.isBlank(filename)) {
@@ -134,7 +138,7 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
                         break;
                     }
                     long offset = json.getLongValue("offset");
-                    initRandomAccessFile(directory, filename, "rw", offset);
+                    initRandomAccessFile(categories, filename, "rw", offset);
                     if (super.fileServiceListener != null) {
                         // start
                         super.fileServiceListener.started(super.fileServiceDescriptor);
@@ -144,7 +148,7 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
                     super.finishCmd();
                     break;
                 case "cancel":
-                    String root = env.getProperty(SIMPLE_FILE_ROOT, String.class, System.getProperty("user.dir"));
+                    String root = env.getProperty(CATEGORY_FILE_ROOT, String.class, System.getProperty("user.dir"));
                     super.cancelCmd(root);
                     break;
                 default:

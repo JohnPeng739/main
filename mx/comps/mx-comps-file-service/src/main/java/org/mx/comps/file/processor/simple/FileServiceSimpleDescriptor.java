@@ -2,16 +2,12 @@ package org.mx.comps.file.processor.simple;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.DigestUtils;
 import org.mx.StringUtils;
 import org.mx.comps.file.FileServiceDescriptor;
+import org.mx.comps.file.processor.AbstractFileServiceDescriptor;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,17 +15,10 @@ import java.util.UUID;
  *
  * @author : john.peng created on date : 2017/12/09
  */
-public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
+public class FileServiceSimpleDescriptor extends AbstractFileServiceDescriptor {
     private static final Log logger = LogFactory.getLog(FileServiceSimpleDescriptor.class);
 
-    private String root, directory, filename;
-
-    /**
-     * 默认的构造函数
-     */
-    public FileServiceSimpleDescriptor() {
-        this(null, null);
-    }
+    private String directory, filename;
 
     /**
      * 默认的构造函数
@@ -42,7 +31,15 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
         setPath(directory, filename);
     }
 
-    public FileServiceSimpleDescriptor createHashDescriptor(FileServiceDescriptor descriptor, int levels, int numPerLevel) {
+    /**
+     * 根据一个现有的文件描述对象创建一个新的哈希表述的文件描述对象
+     *
+     * @param descriptor  原有的文件描述对象
+     * @param levels      哈希目录级数
+     * @param numPerLevel 每级目录哈希数量
+     * @return
+     */
+    public FileServiceSimpleDescriptor createHashDescriptor(FileServiceDescriptor descriptor, String root, int levels, int numPerLevel) {
         String originPath = descriptor.getPath();
         int hashValue = originPath.hashCode();
         long originValue;
@@ -51,17 +48,17 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
         } else {
             originValue = hashValue;
         }
-        long dirHash = originValue % (long)((Math.pow(numPerLevel, levels)));
+        long dirHash = originValue % (long) ((Math.pow(numPerLevel, levels)));
         long[] dirHashs = new long[levels];
         Arrays.fill(dirHashs, 0);
-        for (int index = 0; index < levels && dirHash > 0; index ++) {
+        for (int index = 0; index < levels && dirHash > 0; index++) {
             long hash = dirHash % numPerLevel;
             dirHashs[levels - 1 - index] = hash;
             dirHash = dirHash / numPerLevel;
         }
         String[] dirHashStrs = new String[dirHashs.length];
         String format = String.format("%%0%dd", String.valueOf(numPerLevel).length());
-        for (int index = 0; index < dirHashs.length; index ++) {
+        for (int index = 0; index < dirHashs.length; index++) {
             dirHashStrs[index] = String.format(format, dirHashs[index]);
         }
         directory = String.format("%s", StringUtils.merge(dirHashStrs, "/"));
@@ -70,35 +67,20 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
             logger.debug(String.format("Create a hash path, origin: %s, hash: %s/%s.",
                     originPath, directory, filename));
         }
-        return new FileServiceSimpleDescriptor(directory, filename);
+        FileServiceSimpleDescriptor fileServiceSimpleDescriptor = new FileServiceSimpleDescriptor(directory, filename);
+        fileServiceSimpleDescriptor.setRoot(root);
+        return fileServiceSimpleDescriptor;
     }
 
     /**
-     * 获取关联的文件对象
+     * {@inheritDoc}
      *
-     * @return 文件对象
+     * @see AbstractFileServiceDescriptor#getFile()
      */
-    private File getFile() {
-        File file = new File(root, directory);
+    @Override
+    protected File getFile() {
+        File file = new File(super.root, directory);
         return new File(file, filename);
-    }
-
-    /**
-     * 设置文件操作的根路径
-     *
-     * @param root 根路径
-     */
-    protected void setRoot(String root) {
-        if (StringUtils.isBlank(root)) {
-            root = System.getProperty("user.dir");
-        }
-        try {
-            this.root = new File(root).getCanonicalPath();
-        } catch (IOException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Set the root fail.", ex);
-            }
-        }
     }
 
     /**
@@ -116,75 +98,5 @@ public class FileServiceSimpleDescriptor implements FileServiceDescriptor {
         }
         this.directory = directory;
         this.filename = filename;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see FileServiceDescriptor#getId()
-     */
-    @Override
-    public String getId() {
-        String filePath = getPath();
-        try {
-            return DigestUtils.md5(filePath);
-        } catch (NoSuchAlgorithmException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-            return filePath;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see FileServiceDescriptor#getPath()
-     */
-    @Override
-    public String getPath() {
-        try {
-            return getFile().getCanonicalPath().replace('\\', '/').substring(root.length() + 1);
-        } catch (IOException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Get file path fail.", ex);
-            }
-            return null;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see FileServiceDescriptor#getParentPath()
-     */
-    @Override
-    public String getParentPath() {
-        return getFile().getParent().replace('\\', '/').substring(root.length() + 1);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see FileServiceDescriptor#getFilename()
-     */
-    @Override
-    public String getFilename() {
-        return getFile().getName();
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see FileServiceDescriptor#getLength()
-     */
-    @Override
-    public long getLength() {
-        File file = getFile();
-        if (file.exists() && file.isFile()) {
-            return file.length();
-        } else {
-            return -1l;
-        }
     }
 }

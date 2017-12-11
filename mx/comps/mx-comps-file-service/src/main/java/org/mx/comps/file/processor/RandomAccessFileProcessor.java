@@ -167,4 +167,33 @@ public abstract class RandomAccessFileProcessor implements FileWriteProcessor, F
             }
         }
     }
+
+    protected void cancelCmd(String root) throws Exception {
+        if (isOpened()) {
+            close();
+            // 删除文件
+            File deleteFile = new File(root, fileServiceDescriptor.getPath());
+            if (deleteFile.exists() && deleteFile.isFile()) {
+                deleteFile.delete();
+            }
+            if (fileServiceListener != null) {
+                // cancel
+                fileServiceListener.canceled(fileServiceDescriptor);
+            }
+        } else {
+            throw new Exception("The session is closed.");
+        }
+    }
+
+    protected void finishCmd() throws Exception {
+        if (isOpened()) {
+            close();
+            if (fileServiceListener != null) {
+                // finish
+                fileServiceListener.finished(fileServiceDescriptor);
+            }
+        } else {
+            throw new Exception("The session is closed.");
+        }
+    }
 }
