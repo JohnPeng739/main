@@ -35,9 +35,10 @@ public class FileServiceSimpleDescriptor extends AbstractFileServiceDescriptor {
      * 根据一个现有的文件描述对象创建一个新的哈希表述的文件描述对象
      *
      * @param descriptor  原有的文件描述对象
+     * @param root        文件存储根目录
      * @param levels      哈希目录级数
      * @param numPerLevel 每级目录哈希数量
-     * @return
+     * @return 哈希后的文件描述符
      */
     public FileServiceSimpleDescriptor createHashDescriptor(FileServiceDescriptor descriptor, String root, int levels, int numPerLevel) {
         String originPath = descriptor.getPath();

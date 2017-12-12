@@ -51,8 +51,10 @@ public class FileProcessorCategoryImpl extends RandomAccessFileProcessor {
     /**
      * 初始化随机存取文件对象
      *
-     * @param mode   文件操作模式
-     * @param offset 操作偏移量
+     * @param categories 文件分级分类
+     * @param filename   文件名
+     * @param mode       文件操作模式
+     * @param offset     操作偏移量
      */
     protected void initRandomAccessFile(List<String> categories, String filename, String mode, long offset) {
         boolean hashed = env.getProperty(CATEGORY_FILE_HASHED, Boolean.class, true);

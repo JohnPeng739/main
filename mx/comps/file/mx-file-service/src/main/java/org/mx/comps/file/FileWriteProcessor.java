@@ -40,6 +40,7 @@ public interface FileWriteProcessor {
      * 执行一条从WebSocket中收到的命令，该文本命令已经被转换为一个JSONObject对象
      *
      * @param json 文本命令
+     * @throws Exception 执行命令过程中发生的异常
      */
     void command(JSONObject json) throws Exception;
 

@@ -48,11 +48,8 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module filepath="$PROJECT_DIR$/comps.iml" fileurl="file://$PROJECT_DIR$/comps.iml"/>
-      <module filepath="$PROJECT_DIR$/mx-comps-file-service/mx-comps-file-service.iml" fileurl="file://$PROJECT_DIR$/mx-comps-file-service/mx-comps-file-service.iml"/>
-      <module filepath="$PROJECT_DIR$/mx-comps-rbac-restful/mx-comps-rbac-restful.iml" fileurl="file://$PROJECT_DIR$/mx-comps-rbac-restful/mx-comps-rbac-restful.iml"/>
-      <module filepath="$PROJECT_DIR$/mx-comps-rbac-service/mx-comps-rbac-service.iml" fileurl="file://$PROJECT_DIR$/mx-comps-rbac-service/mx-comps-rbac-service.iml"/>
-      <module filepath="$PROJECT_DIR$/mx-comps-rbac-service-hibernate/mx-comps-rbac-service-hibernate.iml" fileurl="file://$PROJECT_DIR$/mx-comps-rbac-service-hibernate/mx-comps-rbac-service-hibernate.iml"/>
+      <module filepath="$PROJECT_DIR$/file.iml" fileurl="file://$PROJECT_DIR$/file.iml"/>
+      <module filepath="$PROJECT_DIR$/mx-file-service/mx-file-service.iml" fileurl="file://$PROJECT_DIR$/mx-file-service/mx-file-service.iml"/>
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" assert-keyword="true" jdk-15="true" project-jdk-type="JavaSDK" assert-jdk-15="true" project-jdk-name="1.8">
