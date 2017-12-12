@@ -1,5 +1,6 @@
 package org.mx.dal.config;
 
+import org.mx.dal.util.Dbcp2DataSourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
@@ -25,7 +26,10 @@ import java.util.Set;
 @Configuration
 @EnableTransactionManagement
 @Import(DalConfig.class)
-@PropertySource({"classpath:jpa.properties"})
+@PropertySource({
+        "classpath:database.properties",
+        "classpath:jpa.properties"
+})
 @ComponentScan({"org.mx.dal.service.impl"})
 public class DalHibernateConfig implements TransactionManagementConfigurer {
     @Autowired
@@ -39,6 +43,22 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      */
     public DalHibernateConfig() {
         super();
+    }
+
+    @Bean(name = "dataSourceFactory", initMethod = "init", destroyMethod = "close")
+    /**
+     * 创建JDBC数据源工厂
+     */
+    public Dbcp2DataSourceFactory dataSourceFactory() {
+        return new Dbcp2DataSourceFactory(env);
+    }
+
+    @Bean(name = "dataSource")
+    /**
+     * 从工厂中获取JDBC数据源
+     */
+    public DataSource dataSource() {
+        return dataSourceFactory().getDataSource();
     }
 
     @Bean("jpaEntityPackagesDal")

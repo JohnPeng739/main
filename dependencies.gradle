@@ -23,12 +23,13 @@ ext.versions = [
   c3p0		: '0.9.1.2',
   junit		: '4.12',
   'mongodb-driver'	: '3.5.0',
+  'mongodb-embed'	: '2.0.0',
   zookeeper	: '3.4.9',
   'mx-utils'    : '2.1.1',
   'mx-service-utils'	: '1.3.3',
-  'mx-dal'      : '1.1.2',
-  'mx-dal-hibernate'    : '1.1.3',
-  'mx-dal-mongodb'      : '1.1.1',
+  'mx-dal'      : '1.1.3',
+  'mx-dal-hibernate'    : '1.1.4',
+  'mx-dal-mongodb'      : '1.1.2',
   'mx-rbac-service'	: '3.0.0',
   'mx-rbac-service-hibernate'	: '3.0.0',
   'mx-rbac-restful'	: '3.0.0',
@@ -90,6 +91,7 @@ ext.libs = [
   "c3p0"		: "c3p0:c3p0:${versions.c3p0}",
 
   "mongodb-driver"	: "org.mongodb:mongodb-driver:${versions.'mongodb-driver'}",
+  "mongodb-embed"	: "de.flapdoodle.embed:de.flapdoodle.embed.mongo:${versions.'mongodb-embed'}",
 
   "junit"		: "junit:junit:${versions.junit}",
 

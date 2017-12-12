@@ -19,34 +19,8 @@ import javax.sql.DataSource;
  * @author : john.peng date : 2017/10/7
  */
 @Configuration
-@PropertySource({"classpath:database.properties"})
 @ComponentScan({
         "org.mx.dal.session.impl"
 })
 public class DalConfig {
-    @Autowired
-    private Environment env = null;
-
-    /**
-     * 默认的构造函数
-     */
-    public DalConfig() {
-        super();
-    }
-
-    @Bean(name = "dataSourceFactory", initMethod = "init", destroyMethod = "close")
-    /**
-     * 创建JDBC数据源工厂
-     */
-    public Dbcp2DataSourceFactory dataSourceFactory() {
-        return new Dbcp2DataSourceFactory(env);
-    }
-
-    @Bean(name = "dataSource")
-    /**
-     * 从工厂中获取JDBC数据源
-     */
-    public DataSource dataSource() {
-        return dataSourceFactory().getDataSource();
-    }
 }

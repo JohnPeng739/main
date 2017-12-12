@@ -13,9 +13,7 @@
     </wildcardResourcePatterns>
     <bytecodeTargetLevel target="1.8" />
   </component>
-  <component name="CopyrightManager" default="">
-    <module2copyright />
-  </component>
+  <component name="CopyrightManager" default="" />
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
