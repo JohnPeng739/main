@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 角色对象实体定义
+ * 角色对象实体定义，使用JPA
  *
  * @author : john.peng created on date : 2017/11/4
  */

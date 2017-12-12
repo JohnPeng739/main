@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/11/13
  */
-public interface AccountManageService extends GeneralDictAccessor {
+public interface AccountManageService {
     /**
      * 修改账户信息，这里不允许修改账户的密码；如果需要修改密码，必须使用<code>changePassword</code>方法。
      * 注意：如果是新增账户，系统会根据传入的密码进行设置，如果传入的密码为空，则使用默认密码"ds110119"。

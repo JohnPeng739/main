@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 用户对象实体定义
+ * 用户对象实体定义，使用JPA
  *
  * @author : john.peng created on date : 2017/11/4
  */

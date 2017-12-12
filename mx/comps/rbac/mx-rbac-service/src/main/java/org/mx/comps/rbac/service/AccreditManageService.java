@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/12/01
  */
-public interface AccreditManageService extends GeneralAccessor {
+public interface AccreditManageService {
     /**
      * 创建一个新的授权
      *

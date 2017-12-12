@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 特权对象实体定义
+ * 特权对象实体定义，使用JPA
  *
  * @author : john.peng created on date : 2017/11/4
  */

@@ -9,7 +9,7 @@ import org.mx.dal.service.GeneralAccessor;
  *
  * @author : john.peng created on date : 2017/11/10
  */
-public interface UserManageService extends GeneralAccessor {
+public interface UserManageService {
     /**
      * 为指定的用户分配一个账户
      *

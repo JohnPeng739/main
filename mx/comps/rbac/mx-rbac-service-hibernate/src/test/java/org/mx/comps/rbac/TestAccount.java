@@ -10,6 +10,7 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.comps.rbac.service.UserManageService;
+import org.mx.dal.service.GeneralDictAccessor;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -26,12 +27,12 @@ import static org.junit.Assert.*;
 public class TestAccount extends BaseTest {
     public static String account1Id, account2Id, account3Id;
 
-    public static void testInsertAccount(AccountManageService service) throws NoSuchAlgorithmException {
+    public static void testInsertAccount(GeneralDictAccessor service, AccountManageService accountService) throws NoSuchAlgorithmException {
         User john = service.getById(TestUser.johnId, User.class);
         assertNotNull(john);
         AccountManageService.AccountInfo accountInfo = AccountManageService.AccountInfo.valueOf("account1",
                 "password", "description account.", "", TestUser.johnId, Arrays.asList(), true);
-        Account account1 = service.saveAccount(accountInfo);
+        Account account1 = accountService.saveAccount(accountInfo);
         assertEquals(1, service.count(Account.class));
         assertNotNull(account1);
         assertNotNull(account1.getId());
@@ -65,7 +66,7 @@ public class TestAccount extends BaseTest {
 
         accountInfo = AccountManageService.AccountInfo.valueOf("account2",
                 "", "description account.", "", TestUser.johnId, Arrays.asList(), true);
-        Account account2 = service.saveAccount(accountInfo);
+        Account account2 = accountService.saveAccount(accountInfo);
         assertEquals(2, service.count(Account.class));
         assertNotNull(account2);
         assertNotNull(account2.getId());
@@ -77,12 +78,12 @@ public class TestAccount extends BaseTest {
         assertTrue(account2.isValid());
     }
 
-    public static void testEditAccount(AccountManageService service) {
+    public static void testEditAccount(GeneralDictAccessor service, AccountManageService accountService) {
         User john = service.getById(TestUser.johnId, User.class);
         assertNotNull(john);
         AccountManageService.AccountInfo accountInfo = AccountManageService.AccountInfo.valueOf("account3",
                 "", "description account.", "", TestUser.johnId, Arrays.asList(), true);
-        Account account3 = service.saveAccount(accountInfo);
+        Account account3 = accountService.saveAccount(accountInfo);
         assertEquals(3, service.count(Account.class));
         assertNotNull(account3);
         assertNotNull(account3.getId());
@@ -93,7 +94,7 @@ public class TestAccount extends BaseTest {
 
         accountInfo = AccountManageService.AccountInfo.valueOf(account3.getCode(), "",
                 "new desc.", account3.getId(), TestUser.johnId, Arrays.asList(), false);
-        account3 = service.saveAccount(accountInfo);
+        account3 = accountService.saveAccount(accountInfo);
         assertEquals(2, service.count(Account.class));
         assertEquals(2, service.count(Account.class, true));
         assertEquals(3, service.count(Account.class, false));
@@ -107,7 +108,7 @@ public class TestAccount extends BaseTest {
 
         accountInfo = AccountManageService.AccountInfo.valueOf(account3.getCode(), "",
                 account3.getDesc(), account3.getId(), TestUser.johnId, Arrays.asList(), true);
-        service.saveAccount(accountInfo);
+        accountService.saveAccount(accountInfo);
         assertEquals(3, service.count(Account.class));
         assertEquals(3, service.count(Account.class, true));
         assertEquals(3, service.count(Account.class, false));
@@ -118,20 +119,22 @@ public class TestAccount extends BaseTest {
 
     @Test
     public void testAccountCrud() {
-        AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        AccountManageService accountService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
         UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(userManageService);
 
         try {
-            TestUser.testInsertUser(userManageService);
-            TestUser.testEditUser(userManageService);
+            TestUser.testInsertUser(service, userManageService);
+            TestUser.testEditUser(service, userManageService);
 
             assertEquals(0, service.count(Account.class));
             // insert
-            testInsertAccount(service);
+            testInsertAccount(service, accountService);
             // edit
-            testEditAccount(service);
+            testEditAccount(service, accountService);
             // delete
             testDeleteAccount(service);
         } catch (Exception ex) {
@@ -141,7 +144,9 @@ public class TestAccount extends BaseTest {
 
     @Test
     public void testAccountRoles() {
-        AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        AccountManageService accountService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
         UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(userManageService);
@@ -149,21 +154,21 @@ public class TestAccount extends BaseTest {
         assertNotNull(roleManageService);
 
         try {
-            TestUser.testInsertUser(userManageService);
-            TestUser.testEditUser(userManageService);
-            assertEquals(3, userManageService.count(User.class));
-            TestRole.testInsertRole(roleManageService);
-            TestRole.testEditRole(roleManageService);
-            testInsertAccount(service);
-            testEditAccount(service);
-            assertEquals(3, roleManageService.count(Role.class));
+            TestUser.testInsertUser(service, userManageService);
+            TestUser.testEditUser(service, userManageService);
+            assertEquals(3, service.count(User.class));
+            TestRole.testInsertRole(service, roleManageService);
+            TestRole.testEditRole(service, roleManageService);
+            testInsertAccount(service, accountService);
+            testEditAccount(service, accountService);
+            assertEquals(3, service.count(Role.class));
             assertEquals(3, service.count(Account.class));
             Account account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
             assertTrue(account1.getRoles().isEmpty());
-            Role role1 = roleManageService.getById(TestRole.role1Id, Role.class);
-            Role role2 = roleManageService.getById(TestRole.role2Id, Role.class);
-            Role role3 = roleManageService.getById(TestRole.role3Id, Role.class);
+            Role role1 = service.getById(TestRole.role1Id, Role.class);
+            Role role2 = service.getById(TestRole.role2Id, Role.class);
+            Role role3 = service.getById(TestRole.role3Id, Role.class);
             assertNotNull(role1);
             assertNotNull(role2);
             assertNotNull(role3);
@@ -171,7 +176,7 @@ public class TestAccount extends BaseTest {
             AccountManageService.AccountInfo accountInfo = AccountManageService.AccountInfo.valueOf(account1.getCode(),
                     "", account1.getDesc(), account1.getId(), TestUser.johnId,
                     Arrays.asList(role1.getId(), role2.getId(), role3.getId()), account1.isValid());
-            service.saveAccount(accountInfo);
+            accountService.saveAccount(accountInfo);
             assertEquals(3, service.count(Account.class));
             account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
@@ -181,7 +186,7 @@ public class TestAccount extends BaseTest {
             accountInfo = AccountManageService.AccountInfo.valueOf(account1.getCode(),
                     "", account1.getDesc(), account1.getId(), TestUser.johnId,
                     Arrays.asList(role1.getId(), role3.getId()), account1.isValid());
-            service.saveAccount(accountInfo);
+            accountService.saveAccount(accountInfo);
             assertEquals(3, service.count(Account.class));
             account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
@@ -191,7 +196,7 @@ public class TestAccount extends BaseTest {
             accountInfo = AccountManageService.AccountInfo.valueOf(account1.getCode(),
                     "", account1.getDesc(), account1.getId(), TestUser.johnId,
                     Arrays.asList(), account1.isValid());
-            service.saveAccount(accountInfo);
+            accountService.saveAccount(accountInfo);
             account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
             assertTrue(account1.getRoles().isEmpty());
@@ -202,23 +207,25 @@ public class TestAccount extends BaseTest {
 
     @Test
     public void testChangePassword() {
-        AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        AccountManageService accountService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
         UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(userManageService);
 
         try {
-            TestUser.testInsertUser(userManageService);
-            TestUser.testEditUser(userManageService);
-            assertEquals(3, userManageService.count(User.class));
-            testInsertAccount(service);
-            testEditAccount(service);
+            TestUser.testInsertUser(service, userManageService);
+            TestUser.testEditUser(service, userManageService);
+            assertEquals(3, service.count(User.class));
+            testInsertAccount(service, accountService);
+            testEditAccount(service, accountService);
             assertEquals(3, service.count(Account.class));
 
             Account account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
             assertEquals(DigestUtils.md5("password"), account1.getPassword());
-            service.changePassword(account1.getId(), "password", "new password");
+            accountService.changePassword(account1.getId(), "password", "new password");
             account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
             assertEquals(DigestUtils.md5("new password"), account1.getPassword());
@@ -226,7 +233,7 @@ public class TestAccount extends BaseTest {
             Account account3 = service.getById(account3Id, Account.class);
             assertNotNull(account3);
             assertEquals(DigestUtils.md5("ds110119"), account3.getPassword());
-            service.changePassword(account3.getId(), "ds110119", "new password");
+            accountService.changePassword(account3.getId(), "ds110119", "new password");
             account3 = service.getById(account3Id, Account.class);
             assertNotNull(account3);
             assertEquals(DigestUtils.md5("new password"), account3.getPassword());
@@ -237,49 +244,51 @@ public class TestAccount extends BaseTest {
 
     @Test
     public void testLoginAndLogout() {
-        AccountManageService service = context.getBean("accountManageService", AccountManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        AccountManageService accountService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
         UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(userManageService);
 
         try {
-            TestUser.testInsertUser(userManageService);
-            TestUser.testEditUser(userManageService);
-            assertEquals(3, userManageService.count(User.class));
-            testInsertAccount(service);
-            testEditAccount(service);
+            TestUser.testInsertUser(service, userManageService);
+            TestUser.testEditUser(service, userManageService);
+            assertEquals(3, service.count(User.class));
+            testInsertAccount(service, accountService);
+            testEditAccount(service, accountService);
             assertEquals(3, service.count(Account.class));
 
             // 测试正常流程
-            LoginHistory login = service.login("account1", "password", false);
+            LoginHistory login = accountService.login("account1", "password", false);
             assertNotNull(login);
             Account account1 = service.getById(account1Id, Account.class);
             assertNotNull(account1);
             assertEquals(account1, login.getAccount());
             // 测试用户重复登录
-            login = service.login("account1", "password", true);
+            login = accountService.login("account1", "password", true);
             assertNotNull(login);
             assertEquals(account1, login.getAccount());
             try {
-                service.login("account1", "password", false);
+                accountService.login("account1", "password", false);
             } catch (UserInterfaceRbacErrorException ex) {
                 assertEquals(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_ALREADY_LOGINED.getErrorCode(), ex.getErrorCode());
             }
             // 测试正常登出
-            login = service.logout(account1.getId());
+            login = accountService.logout(account1.getId());
             assertNotNull(login);
             assertEquals(account1, login.getAccount());
 
             // 测试用户不存在
             try {
-                service.login("abc", "adasd", false);
+                accountService.login("abc", "adasd", false);
             } catch (UserInterfaceRbacErrorException ex) {
                 assertEquals(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND.getErrorMessage(), ex.getErrorMessage());
             }
 
             // 测试密码不正确
             try {
-                service.login("account1", "adfasd", false);
+                accountService.login("account1", "adfasd", false);
             } catch (UserInterfaceRbacErrorException ex) {
                 assertEquals(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_PASSWORD_NOT_MATCHED.getErrorMessage(), ex.getErrorMessage());
             }
@@ -288,7 +297,7 @@ public class TestAccount extends BaseTest {
         }
     }
 
-    private void testDeleteAccount(AccountManageService service) {
+    private void testDeleteAccount(GeneralDictAccessor service) {
         List<Account> accounts = service.list(Account.class);
         int accountNum = accounts.size();
         for (Account account : accounts) {

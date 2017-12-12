@@ -19,110 +19,6 @@ import static org.junit.Assert.*;
  * @author : john.peng created on date : 2017/11/28
  */
 public class TestPrivilege extends BaseTest {
-    @Test
-    public void testPrivilegeCrud() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
-        assertNotNull(service);
-
-        try {
-            assertEquals(0, service.count(Privilege.class));
-            // insert
-            testInsertPrivilege(service);
-            // edit
-            testEditPrivilege(service);
-            // delete
-            testDeletePrivilege(service);
-        } catch (Exception ex) {
-            fail(ex.getMessage());
-        }
-    }
-
-    @Test
-    public void testPrivilegeRoles() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
-        assertNotNull(service);
-        RoleManageService roleManageService = context.getBean("roleManageService", RoleManageService.class);
-        assertNotNull(roleManageService);
-
-        try {
-            TestRole.testInsertRole(roleManageService);
-            TestRole.testEditRole(roleManageService);
-            testInsertPrivilege(service);
-            testEditPrivilege(service);
-            assertEquals(3, roleManageService.count(Role.class));
-            assertEquals(3, service.count(Privilege.class));
-
-            Privilege p1 = service.getById(p1Id, Privilege.class);
-            assertNotNull(p1);
-            assertTrue(p1.getRoles().isEmpty());
-            Role role1 = roleManageService.getById(TestRole.role1Id, Role.class);
-            Role role2 = roleManageService.getById(TestRole.role2Id, Role.class);
-            Role role3 = roleManageService.getById(TestRole.role3Id, Role.class);
-            assertNotNull(role1);
-            assertTrue(role1.getPrivileges().isEmpty());
-            assertNotNull(role2);
-            assertTrue(role2.getPrivileges().isEmpty());
-            assertNotNull(role3);
-            assertTrue(role3.getPrivileges().isEmpty());
-
-            p1.getRoles().add(role1);
-            p1.getRoles().add(role2);
-            p1.getRoles().add(role3);
-            service.save(p1);
-            p1 = service.getById(p1Id, Privilege.class);
-            assertNotNull(p1);
-            assertEquals(3, p1.getRoles().size());
-            assertEquals(new HashSet<>(Arrays.asList(role1, role2, role3)), p1.getRoles());
-            role1 = roleManageService.getById(TestRole.role1Id, Role.class);
-            assertNotNull(role1);
-            assertEquals(1, role1.getPrivileges().size());
-            assertEquals(new HashSet<>(Arrays.asList(p1)), role1.getPrivileges());
-            role2 = roleManageService.getById(TestRole.role2Id, Role.class);
-            assertNotNull(role2);
-            assertEquals(1, role2.getPrivileges().size());
-            assertEquals(new HashSet<>(Arrays.asList(p1)), role2.getPrivileges());
-            role3 = roleManageService.getById(TestRole.role3Id, Role.class);
-            assertNotNull(role3);
-            assertEquals(1, role3.getPrivileges().size());
-            assertEquals(new HashSet<>(Arrays.asList(p1)), role3.getPrivileges());
-
-            p1.getRoles().remove(role2);
-            service.save(p1);
-            p1 = service.getById(p1Id, Privilege.class);
-            assertNotNull(p1);
-            assertEquals(2, p1.getRoles().size());
-            assertEquals(new HashSet<>(Arrays.asList(role1, role3)), p1.getRoles());
-            role1 = roleManageService.getById(TestRole.role1Id, Role.class);
-            assertNotNull(role1);
-            assertEquals(1, role1.getPrivileges().size());
-            assertEquals(new HashSet<>(Arrays.asList(p1)), role1.getPrivileges());
-            role2 = roleManageService.getById(TestRole.role2Id, Role.class);
-            assertNotNull(role2);
-            assertEquals(0, role2.getPrivileges().size());
-            role3 = roleManageService.getById(TestRole.role3Id, Role.class);
-            assertNotNull(role3);
-            assertEquals(1, role3.getPrivileges().size());
-            assertEquals(new HashSet<>(Arrays.asList(p1)), role3.getPrivileges());
-
-            p1.getRoles().clear();
-            service.save(p1);
-            p1 = service.getById(p1Id, Privilege.class);
-            assertNotNull(p1);
-            assertEquals(0, p1.getRoles().size());
-            role1 = roleManageService.getById(TestRole.role1Id, Role.class);
-            assertNotNull(role1);
-            assertEquals(0, role1.getPrivileges().size());
-            role2 = roleManageService.getById(TestRole.role2Id, Role.class);
-            assertNotNull(role2);
-            assertEquals(0, role2.getPrivileges().size());
-            role3 = roleManageService.getById(TestRole.role1Id, Role.class);
-            assertNotNull(role3);
-            assertEquals(0, role3.getPrivileges().size());
-        } catch (Exception ex) {
-            fail(ex.getMessage());
-        }
-    }
-
     public static String p1Id, p2Id, p3Id;
 
     public static void testInsertPrivilege(GeneralDictAccessor service) {
@@ -178,6 +74,110 @@ public class TestPrivilege extends BaseTest {
         p3.setValid(true);
         service.save(p3);
         assertEquals(3, service.count(Privilege.class));
+    }
+
+    @Test
+    public void testPrivilegeCrud() {
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+
+        try {
+            assertEquals(0, service.count(Privilege.class));
+            // insert
+            testInsertPrivilege(service);
+            // edit
+            testEditPrivilege(service);
+            // delete
+            testDeletePrivilege(service);
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testPrivilegeRoles() {
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        RoleManageService roleManageService = context.getBean("roleManageService", RoleManageService.class);
+        assertNotNull(roleManageService);
+
+        try {
+            TestRole.testInsertRole(service, roleManageService);
+            TestRole.testEditRole(service, roleManageService);
+            testInsertPrivilege(service);
+            testEditPrivilege(service);
+            assertEquals(3, service.count(Role.class));
+            assertEquals(3, service.count(Privilege.class));
+
+            Privilege p1 = service.getById(p1Id, Privilege.class);
+            assertNotNull(p1);
+            assertTrue(p1.getRoles().isEmpty());
+            Role role1 = service.getById(TestRole.role1Id, Role.class);
+            Role role2 = service.getById(TestRole.role2Id, Role.class);
+            Role role3 = service.getById(TestRole.role3Id, Role.class);
+            assertNotNull(role1);
+            assertTrue(role1.getPrivileges().isEmpty());
+            assertNotNull(role2);
+            assertTrue(role2.getPrivileges().isEmpty());
+            assertNotNull(role3);
+            assertTrue(role3.getPrivileges().isEmpty());
+
+            p1.getRoles().add(role1);
+            p1.getRoles().add(role2);
+            p1.getRoles().add(role3);
+            service.save(p1);
+            p1 = service.getById(p1Id, Privilege.class);
+            assertNotNull(p1);
+            assertEquals(3, p1.getRoles().size());
+            assertEquals(new HashSet<>(Arrays.asList(role1, role2, role3)), p1.getRoles());
+            role1 = service.getById(TestRole.role1Id, Role.class);
+            assertNotNull(role1);
+            assertEquals(1, role1.getPrivileges().size());
+            assertEquals(new HashSet<>(Arrays.asList(p1)), role1.getPrivileges());
+            role2 = service.getById(TestRole.role2Id, Role.class);
+            assertNotNull(role2);
+            assertEquals(1, role2.getPrivileges().size());
+            assertEquals(new HashSet<>(Arrays.asList(p1)), role2.getPrivileges());
+            role3 = service.getById(TestRole.role3Id, Role.class);
+            assertNotNull(role3);
+            assertEquals(1, role3.getPrivileges().size());
+            assertEquals(new HashSet<>(Arrays.asList(p1)), role3.getPrivileges());
+
+            p1.getRoles().remove(role2);
+            service.save(p1);
+            p1 = service.getById(p1Id, Privilege.class);
+            assertNotNull(p1);
+            assertEquals(2, p1.getRoles().size());
+            assertEquals(new HashSet<>(Arrays.asList(role1, role3)), p1.getRoles());
+            role1 = service.getById(TestRole.role1Id, Role.class);
+            assertNotNull(role1);
+            assertEquals(1, role1.getPrivileges().size());
+            assertEquals(new HashSet<>(Arrays.asList(p1)), role1.getPrivileges());
+            role2 = service.getById(TestRole.role2Id, Role.class);
+            assertNotNull(role2);
+            assertEquals(0, role2.getPrivileges().size());
+            role3 = service.getById(TestRole.role3Id, Role.class);
+            assertNotNull(role3);
+            assertEquals(1, role3.getPrivileges().size());
+            assertEquals(new HashSet<>(Arrays.asList(p1)), role3.getPrivileges());
+
+            p1.getRoles().clear();
+            service.save(p1);
+            p1 = service.getById(p1Id, Privilege.class);
+            assertNotNull(p1);
+            assertEquals(0, p1.getRoles().size());
+            role1 = service.getById(TestRole.role1Id, Role.class);
+            assertNotNull(role1);
+            assertEquals(0, role1.getPrivileges().size());
+            role2 = service.getById(TestRole.role2Id, Role.class);
+            assertNotNull(role2);
+            assertEquals(0, role2.getPrivileges().size());
+            role3 = service.getById(TestRole.role1Id, Role.class);
+            assertNotNull(role3);
+            assertEquals(0, role3.getPrivileges().size());
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
     }
 
     private void testDeletePrivilege(GeneralDictAccessor service) {

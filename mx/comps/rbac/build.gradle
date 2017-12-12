@@ -1,5 +1,5 @@
 plugins {
-  id 'com.jfrog.bintray' version '1.4'
+  id 'com.jfrog.bintray' version '1.8.0'
 }
 
 apply from: '../../../dependencies.gradle'
@@ -7,7 +7,7 @@ apply from: '../../../dependencies.gradle'
 apply from: '../../../allprojects.gradle'
 
 project(':mx-rbac-service') {
-  version = '3.1.0'
+  version = '3.1.1'
   description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
 
   dependencies {
@@ -20,7 +20,7 @@ project(':mx-rbac-service') {
 }
 
 project(':mx-rbac-service-hibernate') {
-  version = '3.1.0'
+  version = '3.1.1'
   description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
 
   dependencies {
@@ -32,13 +32,16 @@ project(':mx-rbac-service-hibernate') {
 }
 
 project(':mx-rbac-service-mongodb') {
-  version = '3.1.0'
+  version = '1.0.0'
   description = 'RBAC components based mx-dal-mongodb &amp; mx-rest-utils.'
 
   dependencies {
     compile(
       project(':mx-rbac-service'),
       libs.'mx-dal-mongodb'
+    )
+    testCompile(
+      libs.'mongodb-embed'
     )
   }
 }

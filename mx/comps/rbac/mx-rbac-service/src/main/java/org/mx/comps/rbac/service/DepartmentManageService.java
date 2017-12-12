@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/11/19
  */
-public interface DepartmentManageService extends GeneralDictAccessor {
+public interface DepartmentManageService {
     /**
      * 保存部门信息
      *

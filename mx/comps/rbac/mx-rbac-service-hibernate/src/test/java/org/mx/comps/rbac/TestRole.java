@@ -8,6 +8,7 @@ import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.comps.rbac.service.UserManageService;
+import org.mx.dal.service.GeneralDictAccessor;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,9 +24,9 @@ import static org.junit.Assert.*;
 public class TestRole extends BaseTest {
     public static String role1Id, role2Id, role3Id;
 
-    public static void testInsertRole(RoleManageService service) {
+    public static void testInsertRole(GeneralDictAccessor service, RoleManageService roleService) {
         RoleManageService.RoleInfo roleInfo = RoleManageService.RoleInfo.valueOf("role1", "role1", "desc");
-        Role role1 = service.saveRole(roleInfo);
+        Role role1 = roleService.saveRole(roleInfo);
         assertEquals(1, service.count(Role.class));
         role1 = service.getById(role1.getId(), Role.class);
         assertNotNull(role1);
@@ -37,7 +38,7 @@ public class TestRole extends BaseTest {
         assertTrue(role1.isValid());
 
         roleInfo = RoleManageService.RoleInfo.valueOf("role2", "role2", "desc");
-        Role role2 = service.saveRole(roleInfo);
+        Role role2 = roleService.saveRole(roleInfo);
         assertEquals(2, service.count(Role.class));
         role2 = service.getById(role2.getId(), Role.class);
         assertNotNull(role2);
@@ -47,10 +48,10 @@ public class TestRole extends BaseTest {
         assertTrue(role2.isValid());
     }
 
-    public static void testEditRole(RoleManageService service) {
+    public static void testEditRole(GeneralDictAccessor service, RoleManageService roleService) {
         RoleManageService.RoleInfo roleInfo = RoleManageService.RoleInfo.valueOf("role3", "role3",
                 "description");
-        Role role3 = service.saveRole(roleInfo);
+        Role role3 = roleService.saveRole(roleInfo);
         assertEquals(3, service.count(Role.class));
         role3 = service.getById(role3.getId(), Role.class);
         assertNotNull(role3);
@@ -62,7 +63,7 @@ public class TestRole extends BaseTest {
 
         roleInfo = RoleManageService.RoleInfo.valueOf("role3", "new name",
                 "new desc", role3.getId(), Arrays.asList(), Arrays.asList(), false);
-        service.saveRole(roleInfo);
+        roleService.saveRole(roleInfo);
         assertEquals(2, service.count(Role.class));
         assertEquals(3, service.count(Role.class, false));
         role3 = service.getById(role3.getId(), Role.class);
@@ -75,21 +76,23 @@ public class TestRole extends BaseTest {
 
         roleInfo = RoleManageService.RoleInfo.valueOf("role3", "role3",
                 "new desc", role3.getId(), Arrays.asList(), Arrays.asList(), true);
-        service.saveRole(roleInfo);
+        roleService.saveRole(roleInfo);
         assertEquals(3, service.count(Role.class));
     }
 
     @Test
     public void testRoleCrud() {
-        RoleManageService service = context.getBean("roleManageService", RoleManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(service);
 
         try {
             assertEquals(0, service.count(Role.class));
             // insert
-            testInsertRole(service);
+            testInsertRole(service, roleService);
             // edit
-            testEditRole(service);
+            testEditRole(service, roleService);
             // delete
             testDeleteRole(service);
         } catch (Exception ex) {
@@ -99,7 +102,9 @@ public class TestRole extends BaseTest {
 
     @Test
     public void testRoleAccounts() {
-        RoleManageService service = context.getBean("roleManageService", RoleManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(service);
         UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(userManageService);
@@ -107,22 +112,22 @@ public class TestRole extends BaseTest {
         assertNotNull(accountManageService);
 
         try {
-            TestUser.testInsertUser(userManageService);
-            TestUser.testEditUser(userManageService);
-            assertEquals(3, userManageService.count(User.class));
-            TestAccount.testInsertAccount(accountManageService);
-            TestAccount.testEditAccount(accountManageService);
-            testInsertRole(service);
-            testEditRole(service);
-            assertEquals(3, accountManageService.count(Account.class));
+            TestUser.testInsertUser(service, userManageService);
+            TestUser.testEditUser(service, userManageService);
+            assertEquals(3, service.count(User.class));
+            TestAccount.testInsertAccount(service, accountManageService);
+            TestAccount.testEditAccount(service, accountManageService);
+            testInsertRole(service, roleService);
+            testEditRole(service, roleService);
+            assertEquals(3, service.count(Account.class));
             assertEquals(3, service.count(Role.class));
 
             Role role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
             assertEquals(0, role1.getAccounts().size());
-            Account account1 = accountManageService.getById(TestAccount.account1Id, Account.class);
-            Account account2 = accountManageService.getById(TestAccount.account2Id, Account.class);
-            Account account3 = accountManageService.getById(TestAccount.account3Id, Account.class);
+            Account account1 = service.getById(TestAccount.account1Id, Account.class);
+            Account account2 = service.getById(TestAccount.account2Id, Account.class);
+            Account account3 = service.getById(TestAccount.account3Id, Account.class);
             assertNotNull(account1);
             assertNotNull(account2);
             assertNotNull(account3);
@@ -130,7 +135,7 @@ public class TestRole extends BaseTest {
             RoleManageService.RoleInfo roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
                     role1.getDesc(), role1.getId(), Arrays.asList(account1.getId(), account2.getId(), account3.getId()),
                     Arrays.asList(), role1.isValid());
-            service.saveRole(roleInfo);
+            roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -141,7 +146,7 @@ public class TestRole extends BaseTest {
             roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
                     role1.getDesc(), role1.getId(), Arrays.asList(account1.getId(), account3.getId()),
                     Arrays.asList(), role1.isValid());
-            service.saveRole(roleInfo);
+            roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -152,7 +157,7 @@ public class TestRole extends BaseTest {
             roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
                     role1.getDesc(), role1.getId(), Arrays.asList(),
                     Arrays.asList(), role1.isValid());
-            service.saveRole(roleInfo);
+            roleService.saveRole(roleInfo);
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
             assertEquals(0, role1.getAccounts().size());
@@ -163,13 +168,15 @@ public class TestRole extends BaseTest {
 
     @Test
     public void testRolePrivileges() {
-        RoleManageService service = context.getBean("roleManageService", RoleManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(service);
         try {
             TestPrivilege.testInsertPrivilege(service);
             TestPrivilege.testEditPrivilege(service);
-            testInsertRole(service);
-            testEditRole(service);
+            testInsertRole(service, roleService);
+            testEditRole(service, roleService);
             assertEquals(3, service.count(Role.class));
             assertEquals(3, service.count(Privilege.class));
 
@@ -189,7 +196,7 @@ public class TestRole extends BaseTest {
             RoleManageService.RoleInfo roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
                     role1.getDesc(), role1.getId(), Arrays.asList(),
                     Arrays.asList(p1.getId(), p2.getId(), p3.getId()), role1.isValid());
-            service.saveRole(roleInfo);
+            roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -211,7 +218,7 @@ public class TestRole extends BaseTest {
             roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
                     role1.getDesc(), role1.getId(), Arrays.asList(),
                     Arrays.asList(p1.getId(), p3.getId()), role1.isValid());
-            service.saveRole(roleInfo);
+            roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -232,7 +239,7 @@ public class TestRole extends BaseTest {
             roleInfo = RoleManageService.RoleInfo.valueOf(role1.getCode(), role1.getName(),
                     role1.getDesc(), role1.getId(), Arrays.asList(),
                     Arrays.asList(), role1.isValid());
-            service.saveRole(roleInfo);
+            roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
             role1 = service.getById(role1Id, Role.class);
             assertNotNull(role1);
@@ -251,7 +258,7 @@ public class TestRole extends BaseTest {
         }
     }
 
-    private void testDeleteRole(RoleManageService service) {
+    private void testDeleteRole(GeneralDictAccessor service) {
         List<Role> roles = service.list(Role.class);
         int roleNum = roles.size();
         for (Role role : roles) {

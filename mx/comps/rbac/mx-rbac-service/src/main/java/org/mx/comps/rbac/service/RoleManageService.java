@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/11/23
  */
-public interface RoleManageService extends GeneralDictAccessor {
+public interface RoleManageService {
     /**
      * 保存角色相关信息
      *

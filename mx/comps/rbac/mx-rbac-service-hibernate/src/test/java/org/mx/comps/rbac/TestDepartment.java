@@ -5,6 +5,7 @@ import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.DepartmentManageService;
 import org.mx.comps.rbac.service.UserManageService;
+import org.mx.dal.service.GeneralDictAccessor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,10 +20,10 @@ import static org.junit.Assert.*;
 public class TestDepartment extends BaseTest {
     public static String depart1Id, depart2Id, depart3Id;
 
-    public static void testInsertDepartment(DepartmentManageService service) {
+    public static void testInsertDepartment(GeneralDictAccessor service, DepartmentManageService departService) {
         DepartmentManageService.DepartInfo departInfo = DepartmentManageService.DepartInfo.valueOf("depart1",
                 "depart1", "description");
-        Department depart1 = service.saveDepartment(departInfo);
+        Department depart1 = departService.saveDepartment(departInfo);
         assertNotNull(depart1);
         assertNotNull(depart1.getId());
         depart1Id = depart1.getId();
@@ -40,17 +41,17 @@ public class TestDepartment extends BaseTest {
 
         departInfo = DepartmentManageService.DepartInfo.valueOf("depart2",
                 "depart2", "description");
-        Department depart2 = service.saveDepartment(departInfo);
+        Department depart2 = departService.saveDepartment(departInfo);
         assertEquals(2, service.count(Department.class));
         assertNotNull(depart2);
         depart2Id = depart2.getId();
         assertNotNull(depart2.getId());
     }
 
-    public static void testEditDepartment(DepartmentManageService service) {
+    public static void testEditDepartment(GeneralDictAccessor service, DepartmentManageService departService) {
         DepartmentManageService.DepartInfo departInfo = DepartmentManageService.DepartInfo.valueOf("depart3",
                 "depart3", "description");
-        Department depart3 = service.saveDepartment(departInfo);
+        Department depart3 = departService.saveDepartment(departInfo);
         assertEquals(3, service.count(Department.class));
         assertNotNull(depart3);
         assertNotNull(depart3.getId());
@@ -58,7 +59,7 @@ public class TestDepartment extends BaseTest {
 
         departInfo = DepartmentManageService.DepartInfo.valueOf("depart3",
                 "new name", "description", depart3.getId(), "", Arrays.asList(), false);
-        depart3 = service.saveDepartment(departInfo);
+        depart3 = departService.saveDepartment(departInfo);
         assertEquals(2, service.count(Department.class));
         assertEquals(3, service.count(Department.class, false));
         assertNotNull(depart3);
@@ -69,22 +70,24 @@ public class TestDepartment extends BaseTest {
 
         departInfo = DepartmentManageService.DepartInfo.valueOf("depart3",
                 "depart3", "description", depart3.getId(), "", Arrays.asList(), true);
-        service.saveDepartment(departInfo);
+        departService.saveDepartment(departInfo);
         assertEquals(3, service.count(Department.class));
         assertEquals(3, service.count(Department.class, false));
     }
 
     @Test
     public void testDepartmentCrud() {
-        DepartmentManageService service = context.getBean("departmentManageService", DepartmentManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        DepartmentManageService departService = context.getBean("departmentManageService", DepartmentManageService.class);
         assertNotNull(service);
 
         try {
             assertEquals(service.count(User.class), 0);
             // insert
-            testInsertDepartment(service);
+            testInsertDepartment(service, departService);
             // edit
-            testEditDepartment(service);
+            testEditDepartment(service, departService);
             // delete
             testDeleteDepartment(service);
         } catch (Exception ex) {
@@ -94,29 +97,31 @@ public class TestDepartment extends BaseTest {
 
     @Test
     public void testDepartmentManager() {
-        DepartmentManageService service = context.getBean("departmentManageService", DepartmentManageService.class);
+        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        assertNotNull(service);
+        DepartmentManageService departService = context.getBean("departmentManageService", DepartmentManageService.class);
         assertNotNull(service);
         UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(userManageService);
 
         try {
-            TestUser.testInsertUser(userManageService);
-            TestUser.testEditUser(userManageService);
-            testInsertDepartment(service);
-            testEditDepartment(service);
-            assertEquals(3, userManageService.count(User.class));
+            TestUser.testInsertUser(service, userManageService);
+            TestUser.testEditUser(service, userManageService);
+            testInsertDepartment(service, departService);
+            testEditDepartment(service, departService);
+            assertEquals(3, service.count(User.class));
             assertEquals(3, service.count(Department.class));
 
             Department depart1 = service.getById(depart1Id, Department.class);
             assertNotNull(depart1);
             assertTrue(depart1.isValid());
             assertNull(depart1.getManager());
-            User john = userManageService.getById(TestUser.johnId, User.class);
+            User john = service.getById(TestUser.johnId, User.class);
             assertNotNull(john);
             assertTrue(john.isValid());
             DepartmentManageService.DepartInfo departInfo = DepartmentManageService.DepartInfo.valueOf(depart1.getCode(),
                     depart1.getName(), depart1.getDesc(), depart1.getId(), john.getId(), Arrays.asList(), true);
-            depart1 = service.saveDepartment(departInfo);
+            depart1 = departService.saveDepartment(departInfo);
             assertEquals(3, service.count(Department.class));
             assertNotNull(depart1);
             depart1 = service.getById(depart1Id, Department.class);
@@ -126,7 +131,7 @@ public class TestDepartment extends BaseTest {
 
             departInfo = DepartmentManageService.DepartInfo.valueOf(depart1.getCode(),
                     depart1.getName(), depart1.getDesc(), depart1.getId(), null, Arrays.asList(), true);
-            service.saveDepartment(departInfo);
+            departService.saveDepartment(departInfo);
             depart1 = service.getById(depart1Id, Department.class);
             assertEquals(3, service.count(Department.class));
             assertNull(depart1.getManager());
@@ -135,7 +140,7 @@ public class TestDepartment extends BaseTest {
         }
     }
 
-    private void testDeleteDepartment(DepartmentManageService service) {
+    private void testDeleteDepartment(GeneralDictAccessor service) {
         List<Department> departs = service.list(Department.class);
         int departNum = departs.size();
         for (Department depart : departs) {

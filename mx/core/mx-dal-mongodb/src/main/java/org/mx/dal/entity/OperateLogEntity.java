@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @see BaseEntity
  * @see OperateLog
  */
-@Document
+@Document(collection = "operateLog")
 public class OperateLogEntity extends BaseEntity implements OperateLog {
     @TextIndexed
     private String content;
