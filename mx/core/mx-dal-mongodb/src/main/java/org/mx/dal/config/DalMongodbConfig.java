@@ -3,10 +3,7 @@ package org.mx.dal.config;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.util.Assert;
@@ -25,6 +22,7 @@ import java.net.UnknownHostException;
  * @author : john.peng date : 2017/10/8
  */
 @Configuration
+@Import({DalConfig.class})
 @PropertySource("classpath:mongodb.properties")
 @ComponentScan({"org.mx.dal.service.impl"})
 public class DalMongodbConfig {

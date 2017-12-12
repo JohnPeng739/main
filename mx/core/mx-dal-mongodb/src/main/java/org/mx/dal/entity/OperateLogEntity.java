@@ -1,6 +1,8 @@
 package org.mx.dal.entity;
 
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * 基于Mongodb实现的操作日志实体
@@ -9,8 +11,9 @@ import org.springframework.data.mongodb.core.index.Indexed;
  * @see BaseEntity
  * @see OperateLog
  */
+@Document
 public class OperateLogEntity extends BaseEntity implements OperateLog {
-    @Indexed(unique = true)
+    @TextIndexed
     private String content;
 
     /**

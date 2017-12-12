@@ -1,6 +1,7 @@
 package org.mx.dal.entity;
 
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 
 /**
  * 基于Mongodb实现的基础字典实体
@@ -12,6 +13,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 public class BaseDictEntity extends BaseEntity implements BaseDict {
     @Indexed(unique = true)
     private String code;
+    @TextIndexed
     private String name, desc;
 
     /**

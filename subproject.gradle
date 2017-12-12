@@ -99,6 +99,7 @@ subprojects { subprj ->
       licenses = ['Apache-2.0']
       labels = ['gradle', 'johnpeng739', 'org.mx']
       publicDownloadNumbers = true
+      publish = true
       version {
         name = subprj.version
         description = subprj.description

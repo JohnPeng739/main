@@ -4,6 +4,8 @@ package org.mx.dal.entity;
  * Created by john on 2017/10/8.
  */
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 /**
  * 基于Mongodb实现的基础树状字典实体
  *
@@ -12,6 +14,7 @@ package org.mx.dal.entity;
  * @see BaseDictTree
  */
 public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
+    @Indexed
     private String parentId;
 
     /**

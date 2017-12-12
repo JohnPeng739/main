@@ -1,7 +1,7 @@
 package org.mx.dal.entity;
 
-import org.mx.StringUtils;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  * 基于Mongodb实现的基础实体
@@ -12,9 +12,10 @@ import org.springframework.data.annotation.Id;
 public class BaseEntity implements Base {
     @Id
     private String id;
-
+    @Indexed
     private long createdTime, updatedTime;
     private String operator;
+    @Indexed
     private boolean valid = true;
 
     /**

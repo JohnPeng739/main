@@ -9,7 +9,7 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
  * @author : john.peng date : 2017/10/7
  * @see GeneralEntityAccessor
  */
-public interface GeneralDictEntityAccessor extends GeneralDictAccessor {
+public interface GeneralDictEntityAccessor extends GeneralEntityAccessor, GeneralDictAccessor {
     /**
      * 根据实体的唯一代码获取指定的实体。
      *

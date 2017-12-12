@@ -1,22 +1,20 @@
-package org.mx.test;
+package org.mx.dal.service;
 
 import org.junit.Test;
+import org.mx.dal.BaseTest;
 import org.mx.dal.EntityFactory;
-import org.mx.dal.service.GeneralAccessor;
-import org.mx.dal.service.GeneralDictEntityAccessor;
-import org.mx.dal.service.GeneralEntityAccessor;
-import org.mx.error.UserInterfaceException;
-import org.mx.test.entity.User;
+import org.mx.dal.entity.User;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertNull;
 
 public class TestDatabase extends BaseTest {
     @Test
     public void testUserInterface() {
-        GeneralDictEntityAccessor accessor = context.getBean("generalDictEntityAccessorHibernate",
+        GeneralDictEntityAccessor accessor = context.getBean("generalDictEntityAccessorMongodb",
                 GeneralDictEntityAccessor.class);
         assertNotNull(accessor);
 
@@ -25,7 +23,7 @@ public class TestDatabase extends BaseTest {
             User user = EntityFactory.createEntity(User.class);
             user.setCode("john");
             user.setName("John Peng");
-            user.setAddress("address");
+            user.setAddress("some address is here, 中华人民共和国，美利坚合众国。");
             user.setEmail("email");
             user.setPostCode("zip");
             user.setDesc("description");
@@ -48,6 +46,26 @@ public class TestDatabase extends BaseTest {
             assertEquals(user.getId(), check.getId());
             assertEquals(user.getCode(), check.getCode());
             assertEquals(user.getName(), check.getName());
+
+            // test text search
+            List<User> users = accessor.search("address", true, User.class, true);
+            assertNotNull(user);
+            assertEquals(1, users.size());
+            assertNotNull(users.get(0));
+            assertEquals(check.getId(), users.get(0).getId());
+            users = accessor.search(Arrays.asList("address", "here", "some"), true, User.class, true);
+            assertNotNull(user);
+            assertEquals(1, users.size());
+            assertNotNull(users.get(0));
+            assertEquals(check.getId(), users.get(0).getId());
+            users = accessor.search("\"Josh Peng\"", true, User.class, true);
+            assertNotNull(user);
+            assertEquals(0, users.size());
+            users = accessor.search("中华人民共和国", true, User.class, true);
+            assertNotNull(user);
+            assertEquals(1, users.size());
+            assertNotNull(users.get(0));
+            assertEquals(check.getId(), users.get(0).getId());
 
             user = accessor.getByCode("john", User.class);
             user.setCode("john-1");
@@ -118,7 +136,8 @@ public class TestDatabase extends BaseTest {
             user = accessor.getByCode("josh", User.class);
             accessor.remove(user, false);
             assertEquals(0, accessor.count(User.class));
-        } catch (UserInterfaceException ex) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
             fail(ex.getMessage());
         }
     }
