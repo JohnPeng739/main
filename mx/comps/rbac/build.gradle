@@ -1,0 +1,57 @@
+plugins {
+  id 'com.jfrog.bintray' version '1.4'
+}
+
+apply from: '../../../dependencies.gradle'
+
+apply from: '../../../allprojects.gradle'
+
+project(':mx-rbac-service') {
+  version = '3.1.0'
+  description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
+
+  dependencies {
+    compile(
+      libs.'mx-utils',
+      libs.'mx-dal',
+      libs.'mx-service-utils'
+    )
+  }
+}
+
+project(':mx-rbac-service-hibernate') {
+  version = '3.1.0'
+  description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
+
+  dependencies {
+    compile(
+      project(':mx-rbac-service'),
+      libs.'mx-dal-hibernate'
+    )
+  }
+}
+
+project(':mx-rbac-service-mongodb') {
+  version = '3.1.0'
+  description = 'RBAC components based mx-dal-mongodb &amp; mx-rest-utils.'
+
+  dependencies {
+    compile(
+      project(':mx-rbac-service'),
+      libs.'mx-dal-mongodb'
+    )
+  }
+}
+
+project(':mx-rbac-restful') {
+  version = '3.1.0'
+  description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
+
+  dependencies {
+    compile(
+      project(':mx-rbac-service')
+    )
+  }
+}
+
+apply from: '../../../subproject.gradle'

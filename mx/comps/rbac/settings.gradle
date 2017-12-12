@@ -1,0 +1,6 @@
+rootProject.name = 'rbac'
+
+include 'mx-rbac-service'
+include 'mx-rbac-service-hibernate'
+include 'mx-rbac-service-mongodb'
+include 'mx-rbac-restful'
