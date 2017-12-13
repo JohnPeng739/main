@@ -2,7 +2,10 @@ package org.mx.dal.config;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import org.mx.dal.service.GeneralAccessor;
+import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -29,11 +32,34 @@ public class DalMongodbConfig {
     @Autowired
     private Environment env = null;
 
+    @Autowired
+    private ApplicationContext context = null;
+
     /**
      * 默认的构造函数
      */
     public DalMongodbConfig() {
         super();
+    }
+
+    /**
+     * 创建一个通用的数据访问器
+     *
+     * @return 数据访问器
+     */
+    @Bean(name = "generalAccessor")
+    public GeneralAccessor generalAccessor() {
+        return context.getBean("generalEntityAccessorMongodb", GeneralAccessor.class);
+    }
+
+    /**
+     * 创建一个通用的字典数据访问器
+     *
+     * @return 数据访问器
+     */
+    @Bean(name = "generalDictAccessor")
+    public GeneralDictAccessor generalDictAccessor() {
+        return context.getBean("generalDictEntityAccessorMongodb", GeneralDictAccessor.class);
     }
 
     /**

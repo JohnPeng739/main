@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 public class TestDatabase extends BaseTest {
     @Test
     public void testUserInterface() {
-        GeneralDictEntityAccessor accessor = context.getBean("generalDictEntityAccessorHibernate",
+        GeneralDictEntityAccessor accessor = context.getBean("generalDictAccessor",
                 GeneralDictEntityAccessor.class);
         assertNotNull(accessor);
 

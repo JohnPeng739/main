@@ -1,5 +1,7 @@
 package org.mx.dal.config;
 
+import org.mx.dal.service.GeneralAccessor;
+import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.util.Dbcp2DataSourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -43,6 +45,26 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      */
     public DalHibernateConfig() {
         super();
+    }
+
+    /**
+     * 创建一个通用的数据访问器
+     *
+     * @return 数据访问器
+     */
+    @Bean(name = "generalAccessor")
+    public GeneralAccessor generalAccessor() {
+        return context.getBean("generalEntityAccessorHibernate", GeneralAccessor.class);
+    }
+
+    /**
+     * 创建一个通用的字典数据访问器
+     *
+     * @return 数据访问器
+     */
+    @Bean(name = "generalDictAccessor")
+    public GeneralDictAccessor generalDictAccessor() {
+        return context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
     }
 
     @Bean(name = "dataSourceFactory", initMethod = "init", destroyMethod = "close")

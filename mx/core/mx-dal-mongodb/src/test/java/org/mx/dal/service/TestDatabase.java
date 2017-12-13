@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNull;
 public class TestDatabase extends BaseTest {
     @Test
     public void testUserInterface() {
-        GeneralDictEntityAccessor accessor = context.getBean("generalDictEntityAccessorMongodb",
+        GeneralDictEntityAccessor accessor = context.getBean("generalDictAccessor",
                 GeneralDictEntityAccessor.class);
         assertNotNull(accessor);
 
