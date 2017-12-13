@@ -2,7 +2,6 @@ package org.mx.comps.rbac.service;
 
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.User;
-import org.mx.dal.service.GeneralAccessor;
 
 /**
  * 用户管理相关接口定义

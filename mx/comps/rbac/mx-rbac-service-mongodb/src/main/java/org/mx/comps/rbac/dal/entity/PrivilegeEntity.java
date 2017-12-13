@@ -13,14 +13,15 @@ import java.util.Set;
  * @author : john.peng created on date : 2017/12/12
  */
 @Document(collection = "privilege")
-public class PrivilegeEnity extends BaseDictEntity implements Privilege {
-    @DBRef
+public class PrivilegeEntity extends BaseDictEntity implements Privilege {
+    // 由Role维护关系，这里延迟加载
+    @DBRef(lazy = true)
     private Set<Role> roles;
 
     /**
      * 默认的构造函数
      */
-    public PrivilegeEnity() {
+    public PrivilegeEntity() {
         super();
         roles = new HashSet<>();
     }

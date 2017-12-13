@@ -1,7 +1,6 @@
 package org.mx.comps.rbac.service;
 
 import org.mx.comps.rbac.dal.entity.Department;
-import org.mx.dal.service.GeneralDictAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +24,6 @@ public interface DepartmentManageService {
         private boolean valid = true;
         private List<String> employeeIds;
 
-        public static final DepartInfo valueOf(String code, String name, String desc) {
-            return new DepartInfo(code, name, desc);
-        }
-
-        public static final DepartInfo valueOf(String code, String name, String desc, String departId, String managerId,
-                                               List<String> employeeIds, boolean valid) {
-            return new DepartInfo(code, name, desc, departId, managerId, employeeIds, valid);
-        }
-
         private DepartInfo() {
             super();
             this.employeeIds = new ArrayList<>();
@@ -53,6 +43,15 @@ public interface DepartmentManageService {
             this.managerId = managerId;
             this.employeeIds = employeeIds;
             this.valid = valid;
+        }
+
+        public static final DepartInfo valueOf(String code, String name, String desc) {
+            return new DepartInfo(code, name, desc);
+        }
+
+        public static final DepartInfo valueOf(String code, String name, String desc, String departId, String managerId,
+                                               List<String> employeeIds, boolean valid) {
+            return new DepartInfo(code, name, desc, departId, managerId, employeeIds, valid);
         }
 
         public String getCode() {

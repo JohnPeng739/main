@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(DalMongodbConfig.class)
-@ComponentScan({"org.mx.comps.rbac.service.impl"})
+@ComponentScan({
+        "org.mx.comps.rbac.service.impl"
+})
 public class CompsRbacConfig {
 }

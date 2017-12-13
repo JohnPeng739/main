@@ -18,13 +18,21 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author : john.peng created on date : 2017/11/19
  */
-public class DepartmentManageServiceCommonImpl implements DepartmentManageService {
+public abstract class DepartmentManageServiceCommonImpl implements DepartmentManageService {
     private static final Log logger = LogFactory.getLog(DepartmentManageServiceCommonImpl.class);
 
     protected GeneralDictAccessor accessor = null;
 
     @Autowired
     private OperateLogService operateLogService = null;
+
+    /**
+     * 保存部门实体对象
+     *
+     * @param department 部门实体对象
+     * @return 保存后的部门实体对象
+     */
+    protected abstract Department save(Department department);
 
     /**
      * {@inheritDoc}
@@ -69,7 +77,7 @@ public class DepartmentManageServiceCommonImpl implements DepartmentManageServic
             department.getEmployees().add(employee);
         }
         department.setValid(departInfo.isValid());
-        department = accessor.save(department, false);
+        department = this.save(department);
         if (operateLogService != null) {
             operateLogService.writeLog(String.format("保存部门[code=%s, name=%s]信息成功。",
                     departInfo.getCode(), departInfo.getName()));

@@ -10,9 +10,11 @@ import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import org.junit.After;
 import org.junit.Before;
-import org.mx.dal.config.DalMongodbConfig;
+import org.mx.comps.rbac.config.CompsRbacConfig;
+import org.mx.dal.session.SessionDataStore;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 public class BaseTest {
@@ -27,7 +29,11 @@ public class BaseTest {
                     .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
             mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
             mongod = mongodExecutable.start();
-            context = new AnnotationConfigApplicationContext(DalMongodbConfig.class);
+            context = new AnnotationConfigApplicationContext(CompsRbacConfig.class);
+
+            SessionDataStore sessionDataStore = context.getBean(SessionDataStore.class);
+            assertNotNull(sessionDataStore);
+            sessionDataStore.setCurrentUserCode("admin");
         } catch (Exception ex) {
             ex.printStackTrace();
             fail(ex.getMessage());

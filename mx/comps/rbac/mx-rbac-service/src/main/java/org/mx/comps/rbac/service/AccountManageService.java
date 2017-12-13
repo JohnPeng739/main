@@ -2,7 +2,6 @@ package org.mx.comps.rbac.service;
 
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
-import org.mx.dal.service.GeneralDictAccessor;
 
 import java.util.ArrayList;
 import java.util.List;

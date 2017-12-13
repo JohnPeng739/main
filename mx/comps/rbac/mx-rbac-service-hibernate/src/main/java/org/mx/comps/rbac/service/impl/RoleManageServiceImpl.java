@@ -25,6 +25,15 @@ public class RoleManageServiceImpl extends RoleManageServiceCommonImpl {
 
     /**
      * {@inheritDoc}
+     * @see RoleManageServiceCommonImpl#save(Role)
+     */
+    @Override
+    protected Role save(Role role) {
+        return accessor.save(role, false);
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @see RoleManageService#saveRole(RoleInfo)
      */

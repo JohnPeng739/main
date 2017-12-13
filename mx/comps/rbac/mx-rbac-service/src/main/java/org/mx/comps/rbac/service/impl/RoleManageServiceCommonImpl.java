@@ -19,13 +19,21 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author : john.peng created on date : 2017/11/19
  */
-public class RoleManageServiceCommonImpl implements RoleManageService {
+public abstract class RoleManageServiceCommonImpl implements RoleManageService {
     private static final Log logger = LogFactory.getLog(RoleManageServiceCommonImpl.class);
 
     protected GeneralDictAccessor accessor = null;
 
     @Autowired
     private OperateLogService operateLogService = null;
+
+    /**
+     * 保存角色实体对象
+     *
+     * @param role 角色实体对象
+     * @return 保存后的角色实体对象
+     */
+    protected abstract Role save(Role role);
 
     /**
      * {@inheritDoc}
@@ -71,7 +79,7 @@ public class RoleManageServiceCommonImpl implements RoleManageService {
             role.getPrivileges().add(privilege);
         }
         role.setValid(roleInfo.isValid());
-        role = accessor.save(role, false);
+        role = this.save(role);
         if (operateLogService != null) {
             operateLogService.writeLog(String.format("保存角色[code=%s, name=%s]信息成功。",
                     roleInfo.getCode(), roleInfo.getName()));

@@ -29,13 +29,21 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/11/12
  */
-public class AccountManageServiceCommonImpl implements AccountManageService {
+public abstract class AccountManageServiceCommonImpl implements AccountManageService {
     private static final Log logger = LogFactory.getLog(AccountManageServiceCommonImpl.class);
 
     protected GeneralDictAccessor accessor = null;
 
     @Autowired
     private OperateLogService operateLogService = null;
+
+    /**
+     * 保存账户实体对象
+     *
+     * @param account 账户实体对象
+     * @return 保存后的账户实体对象
+     */
+    protected abstract Account save(Account account);
 
     /**
      * {@inheritDoc}
@@ -90,7 +98,7 @@ public class AccountManageServiceCommonImpl implements AccountManageService {
                 account.getRoles().add(role);
             }
             account.setValid(accountInfo.isValid());
-            account = accessor.save(account, false);
+            account = this.save(account);
             if (operateLogService != null) {
                 operateLogService.writeLog(String.format("保存账户[code=%s, name=%s]成功。",
                         account.getCode(), account.getName()));
@@ -124,7 +132,7 @@ public class AccountManageServiceCommonImpl implements AccountManageService {
             if (account.getPassword().equals(DigestUtils.md5(oldPassword))) {
                 // the old password is matched.
                 account.setPassword(DigestUtils.md5(newPassword));
-                account = accessor.save(account, false);
+                account = this.save(account);
                 if (operateLogService != null) {
                     operateLogService.writeLog(String.format("修改账户[code=%s, name=%s]的密码成功。",
                             account.getCode(), account.getName()));

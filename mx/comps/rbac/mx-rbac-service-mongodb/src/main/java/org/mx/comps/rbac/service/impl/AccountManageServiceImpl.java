@@ -2,13 +2,18 @@ package org.mx.comps.rbac.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
+import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 基于Hibernate JPA实现的账户管理相关服务
@@ -22,6 +27,34 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
     @Autowired
     @Qualifier("generalDictEntityAccessorMongodb")
     private GeneralDictAccessor accessor = null;
+
+    /**
+     * {@inheritDoc}
+     * @see AccountManageServiceCommonImpl#save(Account)
+     */
+    @Override
+    protected Account save(Account account) {
+        Set<Role> oldRoles = new HashSet<>();
+        if (!StringUtils.isBlank(account.getId())) {
+            oldRoles.addAll(accessor.getById(account.getId(), Account.class).getRoles());
+        }
+        account = accessor.save(account, false);
+        Set<Role> roles = account.getRoles();
+        for (Role role : roles) {
+            if (oldRoles.contains(role)) {
+                oldRoles.remove(role);
+                continue;
+            } else {
+                role.getAccounts().add(account);
+                accessor.save(role, false);
+            }
+        }
+        for (Role role : oldRoles) {
+            role.getAccounts().remove(role);
+            accessor.save(role, false);
+        }
+        return account;
+    }
 
     /**
      * {@inheritDoc}
@@ -64,6 +97,6 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
     @Override
     public LoginHistory logout(String accountId) {
         super.accessor = accessor;
-        return logout(accountId);
+        return super.logout(accountId);
     }
 }

@@ -2,7 +2,9 @@ package org.mx.comps.rbac.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jetty.util.StringUtil;
 import org.mx.comps.rbac.dal.entity.Account;
+import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.UserManageService;
@@ -34,6 +36,31 @@ public class UserManageServiceImpl extends UserManageServiceCommonImpl {
     public Account allocateAccount(AccountManageService.AccountInfo accountInfo) {
         super.accessor = accessor;
         return super.allocateAccount(accountInfo);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see UserManageServiceCommonImpl#save(User)
+     */
+    @Override
+    protected User save(User user) {
+        Department oldDepart= null;
+        if (!StringUtil.isBlank(user.getId())) {
+            oldDepart = accessor.getById(user.getId(), User.class).getDepartment();
+        }
+        user = accessor.save(user, false);
+        Department depart = user.getDepartment();
+        if (oldDepart != null && !oldDepart.equals(depart)) {
+            // 与原有的部门不同，因此需要删除原有的部门和用户关系
+            oldDepart.getEmployees().remove(user);
+            accessor.save(oldDepart, false);
+        }
+        if (depart != null && !depart.equals(oldDepart)) {
+            // 新设置了部门
+            depart.getEmployees().add(user);
+            accessor.save(depart, false);
+        }
+        return user;
     }
 
     /**

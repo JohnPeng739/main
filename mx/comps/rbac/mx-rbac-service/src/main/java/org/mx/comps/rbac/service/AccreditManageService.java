@@ -1,7 +1,6 @@
 package org.mx.comps.rbac.service;
 
 import org.mx.comps.rbac.dal.entity.Accredit;
-import org.mx.dal.service.GeneralAccessor;
 
 import java.util.ArrayList;
 import java.util.List;

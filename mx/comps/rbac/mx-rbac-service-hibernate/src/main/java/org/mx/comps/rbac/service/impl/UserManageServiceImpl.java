@@ -40,6 +40,16 @@ public class UserManageServiceImpl extends UserManageServiceCommonImpl {
     /**
      * {@inheritDoc}
      *
+     * @see UserManageServiceCommonImpl#save(User)
+     */
+    @Override
+    protected User save(User user) {
+        return accessor.save(user, false);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see UserManageService#saveUser(UserManageService.UserInfo)
      */
     @Transactional

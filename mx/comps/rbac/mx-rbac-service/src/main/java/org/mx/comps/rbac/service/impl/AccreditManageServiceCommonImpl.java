@@ -12,18 +12,28 @@ import org.mx.dal.service.OperateLogService;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 基于Hibernate JPA实现的授权管理服务实现。
  *
  * @author : john.peng created on date : 2017/12/01
  */
-public class AccreditManageServiceCommonImpl implements AccreditManageService {
+public abstract class AccreditManageServiceCommonImpl implements AccreditManageService {
     protected GeneralAccessor accessor = null;
 
     @Autowired
     private OperateLogService operateLogService = null;
+
+    /**
+     * 保存授权实体对象
+     *
+     * @param accredit 授权实体对象
+     * @return 保存后的授权实体对象
+     */
+    protected abstract Accredit save(Accredit accredit);
 
     /**
      * 判断指定的授权是否在有效授权中存在
@@ -31,40 +41,7 @@ public class AccreditManageServiceCommonImpl implements AccreditManageService {
      * @param accreditInfo 授权信息对象
      * @return 如果已经存在，则返回true；否则返回false。
      */
-    private boolean hasSameAccredit(AccreditInfo accreditInfo) {
-        List<GeneralAccessor.ConditionTuple> conditions = new ArrayList<>();
-        conditions.add(new GeneralAccessor.ConditionTuple("src.id", accreditInfo.getSrcAccountId()));
-        conditions.add(new GeneralAccessor.ConditionTuple("tar.id", accreditInfo.getTarAccountId()));
-        conditions.add(new GeneralAccessor.ConditionTuple("valid", true));
-        List<Accredit> list = accessor.find(conditions, Accredit.class);
-        List<Accredit> accredits = new ArrayList<>();
-        if (list != null && !list.isEmpty()) {
-            list.forEach(accredit -> {
-                if (!accredit.isClosed()) {
-                    accredits.add(accredit);
-                }
-            });
-        }
-        if (accredits.isEmpty()) {
-            return false;
-        }
-        for (Accredit accredit : accredits) {
-            if (!accredit.isClosed()) {
-                for (String roleId : accreditInfo.getRoleIds()) {
-                    boolean found = false;
-                    for (Role role : accredit.getRoles()) {
-                        if (roleId.equals(role.getId())) {
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
+    protected abstract boolean hasSameAccredit(AccreditInfo accreditInfo);
 
     /**
      * {@inheritDoc}
@@ -108,7 +85,7 @@ public class AccreditManageServiceCommonImpl implements AccreditManageService {
         }
         accredit.setValid(true);
         accredit.setDesc(accreditInfo.getDesc());
-        accredit = accessor.save(accredit, false);
+        accredit = this.save(accredit);
         if (operateLogService != null) {
             operateLogService.writeLog(String.format("新增授权[%s=>%s]成功。", accredit.getSrc().getName(),
                     accredit.getTar().getName()));
@@ -134,7 +111,7 @@ public class AccreditManageServiceCommonImpl implements AccreditManageService {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCREDIT_HAS_CLOSED);
         }
         accredit.setValid(false);
-        accredit = accessor.save(accredit, false);
+        accredit = this.save(accredit);
         if (operateLogService != null) {
             operateLogService.writeLog(String.format("关闭授权[%s=>%s]成功。", accredit.getSrc().getName(),
                     accredit.getTar().getName()));

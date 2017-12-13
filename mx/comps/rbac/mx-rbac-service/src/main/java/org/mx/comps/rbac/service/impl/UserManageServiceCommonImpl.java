@@ -10,7 +10,6 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.UserManageService;
 import org.mx.dal.EntityFactory;
-import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.OperateLogService;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -23,7 +22,7 @@ import java.util.Date;
  *
  * @author : john.peng created on date : 2017/11/10
  */
-public class UserManageServiceCommonImpl implements UserManageService {
+public abstract class UserManageServiceCommonImpl implements UserManageService {
     private static final Log logger = LogFactory.getLog(UserManageServiceCommonImpl.class);
 
     protected GeneralDictAccessor accessor = null;
@@ -33,6 +32,14 @@ public class UserManageServiceCommonImpl implements UserManageService {
 
     @Autowired
     private OperateLogService operateLogService = null;
+
+    /**
+     * 保存用户实体对象
+     *
+     * @param user 用户实体
+     * @return 保存后的用户实体
+     */
+    protected abstract User save(User user);
 
     /**
      * {@inheritDoc}
@@ -90,6 +97,8 @@ public class UserManageServiceCommonImpl implements UserManageService {
                 throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.DEPARTMENT_NOT_FOUND);
             }
             user.setDepartment(depart);
+        } else {
+            user.setDepartment(null);
         }
         long birthday = userInfo.getBirthday();
         if (birthday > 0) {
@@ -102,7 +111,7 @@ public class UserManageServiceCommonImpl implements UserManageService {
         user.setSex(userInfo.getSex());
         user.setStation(userInfo.getStation());
         user.setValid(userInfo.isValid());
-        user = accessor.save(user, false);
+        user = this.save(user);
         if (operateLogService != null) {
             operateLogService.writeLog(String.format("保存用户[name=%s]信息成功。", user.getFullName()));
         }

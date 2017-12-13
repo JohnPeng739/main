@@ -26,6 +26,15 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
 
     /**
      * {@inheritDoc}
+     * @see AccountManageServiceCommonImpl#save(Account)
+     */
+    @Override
+    protected Account save(Account account) {
+        return accessor.save(account, false);
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @see AccountManageService#saveAccount(AccountInfo)
      */

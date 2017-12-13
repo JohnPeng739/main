@@ -32,6 +32,15 @@ public class DepartmentManageServiceImpl extends DepartmentManageServiceCommonIm
 
     /**
      * {@inheritDoc}
+     * @see DepartmentManageServiceCommonImpl#save(Department)
+     */
+    @Override
+    protected Department save(Department department) {
+        return accessor.save(department, false);
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @see DepartmentManageService#saveDepartment(DepartInfo)
      */

@@ -14,7 +14,8 @@ import java.util.Set;
  */
 @Document(collection = "role")
 public class RoleEntity extends BaseDictEntity implements Role {
-    @DBRef
+    // 由Account对象维护，这里延迟加载
+    @DBRef(lazy = true)
     private Set<Account> accounts;
     @DBRef
     private Set<Privilege> privileges;
