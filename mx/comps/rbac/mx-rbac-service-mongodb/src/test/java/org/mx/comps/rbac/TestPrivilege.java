@@ -78,7 +78,7 @@ public class TestPrivilege extends BaseTest {
 
     @Test
     public void testPrivilegeCrud() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorMongodb", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
 
         try {

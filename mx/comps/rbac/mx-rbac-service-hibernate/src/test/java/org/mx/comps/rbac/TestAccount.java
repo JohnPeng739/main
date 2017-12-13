@@ -119,7 +119,7 @@ public class TestAccount extends BaseTest {
 
     @Test
     public void testAccountCrud() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         AccountManageService accountService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
@@ -144,7 +144,7 @@ public class TestAccount extends BaseTest {
 
     @Test
     public void testAccountRoles() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         AccountManageService accountService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
@@ -207,7 +207,7 @@ public class TestAccount extends BaseTest {
 
     @Test
     public void testChangePassword() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         AccountManageService accountService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);
@@ -244,7 +244,7 @@ public class TestAccount extends BaseTest {
 
     @Test
     public void testLoginAndLogout() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         AccountManageService accountService = context.getBean("accountManageService", AccountManageService.class);
         assertNotNull(service);

@@ -8,6 +8,7 @@ import org.mx.comps.rbac.rest.vo.AccreditInfoVO;
 import org.mx.comps.rbac.rest.vo.AccreditVO;
 import org.mx.comps.rbac.service.AccreditManageService;
 import org.mx.dal.Pagination;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -28,6 +29,9 @@ public class AccreditManageResource {
     private static final Log logger = LogFactory.getLog(AccreditManageResource.class);
 
     @Autowired
+    private GeneralAccessor accessor = null;
+
+    @Autowired
     private AccreditManageService accreditManageService = null;
 
     @Autowired
@@ -37,7 +41,7 @@ public class AccreditManageResource {
     @GET
     public DataVO<List<AccreditVO>> accredits() {
         try {
-            List<Accredit> accredits = accreditManageService.list(Accredit.class);
+            List<Accredit> accredits = accessor.list(Accredit.class);
             List<AccreditVO> list = AccreditVO.transformAccreditVOs(accredits);
             return new DataVO<>(list);
         } catch (UserInterfaceException ex) {
@@ -59,7 +63,7 @@ public class AccreditManageResource {
             pagination = new Pagination();
         }
         try {
-            List<Accredit> accredits = accreditManageService.list(pagination, Accredit.class);
+            List<Accredit> accredits = accessor.list(pagination, Accredit.class);
             List<AccreditVO> list = AccreditVO.transformAccreditVOs(accredits);
             return new PaginationDataVO<>(pagination, list);
         } catch (UserInterfaceException ex) {
@@ -81,7 +85,7 @@ public class AccreditManageResource {
             return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
         }
         try {
-            Accredit accredit = accreditManageService.getById(id, Accredit.class);
+            Accredit accredit = accessor.getById(id, Accredit.class);
             AccreditVO vo = new AccreditVO();
             AccreditVO.transform(accredit, vo);
             return new DataVO<>(vo);

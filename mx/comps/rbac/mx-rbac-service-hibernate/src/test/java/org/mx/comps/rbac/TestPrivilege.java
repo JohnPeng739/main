@@ -78,7 +78,7 @@ public class TestPrivilege extends BaseTest {
 
     @Test
     public void testPrivilegeCrud() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
 
         try {
@@ -96,7 +96,7 @@ public class TestPrivilege extends BaseTest {
 
     @Test
     public void testPrivilegeRoles() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         RoleManageService roleManageService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(roleManageService);

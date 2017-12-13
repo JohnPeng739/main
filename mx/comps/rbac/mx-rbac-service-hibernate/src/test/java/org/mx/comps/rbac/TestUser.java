@@ -110,7 +110,7 @@ public class TestUser extends BaseTest {
 
     @Test
     public void testUserCrud() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         UserManageService userService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(service);
@@ -130,7 +130,7 @@ public class TestUser extends BaseTest {
 
     @Test
     public void testUserDepartment() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         UserManageService userService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(service);
@@ -191,7 +191,7 @@ public class TestUser extends BaseTest {
 
     @Test
     public void testAllocateAccount() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         UserManageService userService = context.getBean("userManageService", UserManageService.class);
         assertNotNull(service);

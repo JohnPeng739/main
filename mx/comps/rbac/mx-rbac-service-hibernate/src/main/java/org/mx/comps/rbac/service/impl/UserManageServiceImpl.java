@@ -22,7 +22,7 @@ public class UserManageServiceImpl extends UserManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(UserManageServiceCommonImpl.class);
 
     @Autowired
-    @Qualifier("generalDictEntityAccessorHibernate")
+    @Qualifier("generalDictAccessor")
     private GeneralDictAccessor accessor = null;
 
     /**

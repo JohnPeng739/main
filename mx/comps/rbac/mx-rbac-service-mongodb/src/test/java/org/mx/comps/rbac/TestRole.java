@@ -82,7 +82,7 @@ public class TestRole extends BaseTest {
 
     @Test
     public void testRoleCrud() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorMongodb", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(service);
@@ -103,7 +103,7 @@ public class TestRole extends BaseTest {
 
     @Test
     public void testRoleAccounts() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorMongodb", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(service);
@@ -170,7 +170,7 @@ public class TestRole extends BaseTest {
 
     @Test
     public void testRolePrivileges() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorMongodb", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
         assertNotNull(service);

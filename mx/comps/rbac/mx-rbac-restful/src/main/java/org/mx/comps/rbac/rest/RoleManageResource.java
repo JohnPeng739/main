@@ -7,6 +7,7 @@ import org.mx.comps.rbac.rest.vo.RoleInfoVO;
 import org.mx.comps.rbac.rest.vo.RoleVO;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.dal.Pagination;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -27,6 +28,9 @@ public class RoleManageResource {
     private static final Log logger = LogFactory.getLog(RoleManageResource.class);
 
     @Autowired
+    private GeneralAccessor accessor = null;
+
+    @Autowired
     private RoleManageService roleManageService = null;
 
     @Autowired
@@ -36,7 +40,7 @@ public class RoleManageResource {
     @GET
     public DataVO<List<RoleVO>> roles() {
         try {
-            List<Role> roles = roleManageService.list(Role.class);
+            List<Role> roles = accessor.list(Role.class);
             List<RoleVO> vos = RoleVO.transformRoleVOs(roles);
             return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
@@ -58,7 +62,7 @@ public class RoleManageResource {
             pagination = new Pagination();
         }
         try {
-            List<Role> roles = roleManageService.list(pagination, Role.class);
+            List<Role> roles = accessor.list(pagination, Role.class);
             List<RoleVO> vos = RoleVO.transformRoleVOs(roles);
             return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
@@ -77,7 +81,7 @@ public class RoleManageResource {
     @GET
     public DataVO<RoleVO> getRole(@PathParam("id") String id) {
         try {
-            Role role = roleManageService.getById(id, Role.class);
+            Role role = accessor.getById(id, Role.class);
             RoleVO vo = new RoleVO();
             RoleVO.transform(role, vo);
             return new DataVO<>(vo);
@@ -144,7 +148,7 @@ public class RoleManageResource {
     public DataVO<RoleVO> deleteRole(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            Role role = roleManageService.remove(id, Role.class);
+            Role role = accessor.remove(id, Role.class);
             RoleVO vo = new RoleVO();
             RoleVO.transform(role, vo);
             sessionDataStore.removeCurrentUserCode();

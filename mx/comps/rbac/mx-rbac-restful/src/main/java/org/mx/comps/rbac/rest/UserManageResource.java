@@ -10,6 +10,7 @@ import org.mx.comps.rbac.rest.vo.UserInfoVO;
 import org.mx.comps.rbac.rest.vo.UserVO;
 import org.mx.comps.rbac.service.UserManageService;
 import org.mx.dal.Pagination;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -30,6 +31,9 @@ public class UserManageResource {
     private static final Log logger = LogFactory.getLog(UserManageResource.class);
 
     @Autowired
+    private GeneralAccessor accessor = null;
+
+    @Autowired
     private UserManageService userManageService = null;
 
     @Autowired
@@ -40,7 +44,7 @@ public class UserManageResource {
     @GET
     public DataVO<List<UserVO>> listUsers() {
         try {
-            List<User> users = userManageService.list(User.class);
+            List<User> users = accessor.list(User.class);
             List<UserVO> userVOS = UserVO.transformUserVOs(users);
             return new DataVO<>(userVOS);
         } catch (UserInterfaceException ex) {
@@ -62,7 +66,7 @@ public class UserManageResource {
             pagination = new Pagination();
         }
         try {
-            List<User> users = userManageService.list(pagination, User.class);
+            List<User> users = accessor.list(pagination, User.class);
             List<UserVO> userVOs = UserVO.transformUserVOs(users);
             return new PaginationDataVO<>(pagination, userVOs);
         } catch (UserInterfaceException ex) {
@@ -81,7 +85,7 @@ public class UserManageResource {
     @GET
     public DataVO<UserVO> getUser(@PathParam("id") String id) {
         try {
-            User user = userManageService.getById(id, User.class);
+            User user = accessor.getById(id, User.class);
             UserVO userVO = new UserVO();
             UserVO.transform(user, userVO);
             return new DataVO<>(userVO);
@@ -147,7 +151,7 @@ public class UserManageResource {
     public DataVO<UserVO> deleteUser(@QueryParam("userCode") String userCode, @PathParam("userId") String userId) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            User user = userManageService.remove(userId, User.class);
+            User user = accessor.remove(userId, User.class);
             UserVO userVO = new UserVO();
             UserVO.transform(user, userVO);
             sessionDataStore.removeCurrentUserCode();

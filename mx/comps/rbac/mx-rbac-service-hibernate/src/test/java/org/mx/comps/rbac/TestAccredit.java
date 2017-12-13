@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
 public class TestAccredit extends BaseTest {
     @Test
     public void testAccredit() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         AccreditManageService accreditService = context.getBean("accreditManageService", AccreditManageService.class);
         assertNotNull(service);

@@ -7,6 +7,7 @@ import org.mx.comps.rbac.dal.entity.LoginHistory;
 import org.mx.comps.rbac.rest.vo.*;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.dal.Pagination;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -27,6 +28,9 @@ public class AccountManageResource {
     private static final Log logger = LogFactory.getLog(AccountManageResource.class);
 
     @Autowired
+    private GeneralAccessor accessor = null;
+
+    @Autowired
     private AccountManageService accountManageService = null;
 
     @Autowired
@@ -36,7 +40,7 @@ public class AccountManageResource {
     @GET
     public DataVO<List<LoginHistoryVO>> loginHistories() {
         try {
-            List<LoginHistory> histories = accountManageService.list(LoginHistory.class);
+            List<LoginHistory> histories = accessor.list(LoginHistory.class);
             List<LoginHistoryVO> vos = LoginHistoryVO.transformLoginHistories(histories);
             return new DataVO(vos);
         } catch (UserInterfaceException ex) {
@@ -58,7 +62,7 @@ public class AccountManageResource {
             pagination = new Pagination();
         }
         try {
-            List<LoginHistory> histories = accountManageService.list(pagination, LoginHistory.class);
+            List<LoginHistory> histories = accessor.list(pagination, LoginHistory.class);
             List<LoginHistoryVO> vos = LoginHistoryVO.transformLoginHistories(histories);
             return new PaginationDataVO(pagination, vos);
         } catch (UserInterfaceException ex) {
@@ -77,7 +81,7 @@ public class AccountManageResource {
     @GET
     public DataVO<List<AccountVO>> listAccounts() {
         try {
-            List<Account> accounts = accountManageService.list(Account.class);
+            List<Account> accounts = accessor.list(Account.class);
             return new DataVO<>(AccountVO.transformAccountVOs(accounts));
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -98,7 +102,7 @@ public class AccountManageResource {
             pagination = new Pagination();
         }
         try {
-            List<Account> accounts = accountManageService.list(pagination, Account.class);
+            List<Account> accounts = accessor.list(pagination, Account.class);
             return new PaginationDataVO<>(pagination, AccountVO.transformAccountVOs(accounts));
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
@@ -141,7 +145,7 @@ public class AccountManageResource {
     public DataVO<AccountVO> invalidateAccount(@PathParam("id") String id, @QueryParam("userCode") String userCode) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            Account account = accountManageService.remove(id, Account.class);
+            Account account = accessor.remove(id, Account.class);
             AccountVO accountVO = new AccountVO();
             AccountVO.transform(account, accountVO);
             sessionDataStore.removeCurrentUserCode();

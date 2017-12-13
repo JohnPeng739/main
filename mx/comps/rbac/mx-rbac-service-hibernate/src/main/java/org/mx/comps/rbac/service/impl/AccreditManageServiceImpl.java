@@ -20,7 +20,7 @@ import java.util.List;
 @Component("accreditManageService")
 public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
     @Autowired
-    @Qualifier("generalEntityAccessorHibernate")
+    @Qualifier("generalDictAccessor")
     private GeneralAccessor accessor = null;
 
     /**

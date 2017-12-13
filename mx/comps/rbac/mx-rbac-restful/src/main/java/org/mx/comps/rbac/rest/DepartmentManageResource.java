@@ -7,6 +7,7 @@ import org.mx.comps.rbac.rest.vo.DepartmentInfoVO;
 import org.mx.comps.rbac.rest.vo.DepartmentVO;
 import org.mx.comps.rbac.service.DepartmentManageService;
 import org.mx.dal.Pagination;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -27,6 +28,9 @@ public class DepartmentManageResource {
     private static final Log logger = LogFactory.getLog(DepartmentManageResource.class);
 
     @Autowired
+    private GeneralAccessor accessor = null;
+
+    @Autowired
     private DepartmentManageService departmentManageService = null;
 
     @Autowired
@@ -36,7 +40,7 @@ public class DepartmentManageResource {
     @GET
     public DataVO<List<DepartmentVO>> departments() {
         try {
-            List<Department> departments = departmentManageService.list(Department.class);
+            List<Department> departments = accessor.list(Department.class);
             List<DepartmentVO> vos = DepartmentVO.transformDepartmentVOs(departments);
             return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
@@ -58,7 +62,7 @@ public class DepartmentManageResource {
             pagination = new Pagination();
         }
         try {
-            List<Department> departments = departmentManageService.list(pagination, Department.class);
+            List<Department> departments = accessor.list(pagination, Department.class);
             List<DepartmentVO> vos = DepartmentVO.transformDepartmentVOs(departments);
             return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
@@ -77,7 +81,7 @@ public class DepartmentManageResource {
     @GET
     public DataVO<DepartmentVO> getDepartment(@PathParam("id") String id) {
         try {
-            Department department = departmentManageService.getById(id, Department.class);
+            Department department = accessor.getById(id, Department.class);
             DepartmentVO vo = new DepartmentVO();
             DepartmentVO.transform(department, vo);
             return new DataVO<>(vo);
@@ -134,7 +138,7 @@ public class DepartmentManageResource {
     public DataVO<DepartmentVO> deleteDepartment(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            Department department = departmentManageService.remove(id, Department.class);
+            Department department = accessor.remove(id, Department.class);
             DepartmentVO vo = new DepartmentVO();
             DepartmentVO.transform(department, vo);
             sessionDataStore.removeCurrentUserCode();

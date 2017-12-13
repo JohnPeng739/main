@@ -77,7 +77,7 @@ public class TestDepartment extends BaseTest {
 
     @Test
     public void testDepartmentCrud() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         DepartmentManageService departService = context.getBean("departmentManageService", DepartmentManageService.class);
         assertNotNull(service);
@@ -97,7 +97,7 @@ public class TestDepartment extends BaseTest {
 
     @Test
     public void testDepartmentManager() {
-        GeneralDictAccessor service = context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
         DepartmentManageService departService = context.getBean("departmentManageService", DepartmentManageService.class);
         assertNotNull(service);

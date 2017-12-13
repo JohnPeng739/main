@@ -24,7 +24,7 @@ public class UserManageServiceImpl extends UserManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(UserManageServiceCommonImpl.class);
 
     @Autowired
-    @Qualifier("generalDictEntityAccessorMongodb")
+    @Qualifier("generalDictAccessor")
     private GeneralDictAccessor accessor = null;
 
     /**

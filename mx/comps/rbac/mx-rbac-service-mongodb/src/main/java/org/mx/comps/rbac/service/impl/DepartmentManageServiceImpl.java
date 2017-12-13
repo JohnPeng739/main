@@ -24,7 +24,7 @@ public class DepartmentManageServiceImpl extends DepartmentManageServiceCommonIm
     private static final Log logger = LogFactory.getLog(DepartmentManageServiceCommonImpl.class);
 
     @Autowired
-    @Qualifier("generalDictEntityAccessorMongodb")
+    @Qualifier("generalDictAccessor")
     private GeneralDictAccessor accessor = null;
 
     /**

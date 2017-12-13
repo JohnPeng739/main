@@ -21,7 +21,7 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(AccountManageServiceCommonImpl.class);
 
     @Autowired
-    @Qualifier("generalDictEntityAccessorHibernate")
+    @Qualifier("generalDictAccessor")
     private GeneralDictAccessor accessor = null;
 
     /**

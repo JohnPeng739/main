@@ -25,7 +25,7 @@ public class RoleManageServiceImpl extends RoleManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(RoleManageServiceCommonImpl.class);
 
     @Autowired
-    @Qualifier("generalDictEntityAccessorMongodb")
+    @Qualifier("generalDictAccessor")
     private GeneralDictAccessor accessor = null;
 
     /**
