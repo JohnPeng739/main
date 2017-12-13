@@ -6,7 +6,7 @@ import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.UserManageService;
-import org.mx.comps.rbac.service.mongodb.impl.UserManageServiceCommonImpl;
+import org.mx.comps.rbac.service.impl.UserManageServiceCommonImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author : john.peng created on date : 2017/11/10
  */
-@Component("userManageService")
+@Component("userManageServiceHibernate")
 public class UserManageServiceImpl extends UserManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(UserManageServiceCommonImpl.class);
 

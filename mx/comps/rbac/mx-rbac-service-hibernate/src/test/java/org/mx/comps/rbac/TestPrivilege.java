@@ -98,7 +98,7 @@ public class TestPrivilege extends BaseTest {
     public void testPrivilegeRoles() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        RoleManageService roleManageService = context.getBean("roleManageService", RoleManageService.class);
+        RoleManageService roleManageService = context.getBean( RoleManageService.class);
         assertNotNull(roleManageService);
 
         try {

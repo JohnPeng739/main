@@ -29,13 +29,13 @@ public class TestAccredit extends BaseTest {
     public void testAccredit() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        AccreditManageService accreditService = context.getBean("accreditManageService", AccreditManageService.class);
+        AccreditManageService accreditService = context.getBean(AccreditManageService.class);
         assertNotNull(service);
-        UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
+        UserManageService userManageService = context.getBean(UserManageService.class);
         assertNotNull(userManageService);
-        AccountManageService accountManageService = context.getBean("accountManageService", AccountManageService.class);
+        AccountManageService accountManageService = context.getBean(AccountManageService.class);
         assertNotNull(accountManageService);
-        RoleManageService roleManageService = context.getBean("roleManageService", RoleManageService.class);
+        RoleManageService roleManageService = context.getBean(RoleManageService.class);
         assertNotNull(roleManageService);
 
         try {

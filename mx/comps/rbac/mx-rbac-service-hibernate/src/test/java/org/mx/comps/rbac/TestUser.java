@@ -112,7 +112,7 @@ public class TestUser extends BaseTest {
     public void testUserCrud() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        UserManageService userService = context.getBean("userManageService", UserManageService.class);
+        UserManageService userService = context.getBean(UserManageService.class);
         assertNotNull(service);
 
         try {
@@ -132,9 +132,9 @@ public class TestUser extends BaseTest {
     public void testUserDepartment() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        UserManageService userService = context.getBean("userManageService", UserManageService.class);
+        UserManageService userService = context.getBean(UserManageService.class);
         assertNotNull(service);
-        DepartmentManageService departManageService = context.getBean("departmentManageService", DepartmentManageService.class);
+        DepartmentManageService departManageService = context.getBean(DepartmentManageService.class);
         assertNotNull(departManageService);
 
         try {
@@ -193,9 +193,9 @@ public class TestUser extends BaseTest {
     public void testAllocateAccount() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        UserManageService userService = context.getBean("userManageService", UserManageService.class);
+        UserManageService userService = context.getBean(UserManageService.class);
         assertNotNull(service);
-        AccountManageService accountManageService = context.getBean("accountManageService", AccountManageService.class);
+        AccountManageService accountManageService = context.getBean(AccountManageService.class);
         assertNotNull(accountManageService);
         try {
             testInsertUser(service, userService);

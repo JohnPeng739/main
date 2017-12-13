@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.service.DepartmentManageService;
-import org.mx.comps.rbac.service.mongodb.impl.DepartmentManageServiceCommonImpl;
+import org.mx.comps.rbac.service.impl.DepartmentManageServiceCommonImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author : john.peng created on date : 2017/11/19
  */
-@Component("departmentManageService")
+@Component("departmentManageServiceHibernate")
 public class DepartmentManageServiceImpl extends DepartmentManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(DepartmentManageServiceCommonImpl.class);
 

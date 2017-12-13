@@ -3,7 +3,7 @@ package org.mx.comps.rbac.service.hibernate.impl;
 import org.mx.comps.rbac.dal.entity.Accredit;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.service.AccreditManageService;
-import org.mx.comps.rbac.service.mongodb.impl.AccreditManageServiceCommonImpl;
+import org.mx.comps.rbac.service.impl.AccreditManageServiceCommonImpl;
 import org.mx.dal.service.GeneralAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/12/01
  */
-@Component("accreditManageService")
+@Component("accreditManageServiceHibernate")
 public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
     @Autowired
     @Qualifier("generalDictAccessor")

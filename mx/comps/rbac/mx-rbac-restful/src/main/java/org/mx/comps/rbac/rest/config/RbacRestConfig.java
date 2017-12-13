@@ -1,8 +1,9 @@
 package org.mx.comps.rbac.rest.config;
 
-import org.mx.comps.rbac.config.CompsRbacHibernateConfig;
 import org.mx.comps.rbac.rest.*;
 import org.mx.service.server.config.ServerConfig;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +20,12 @@ import java.util.List;
 @Configuration
 @Import({ServerConfig.class})
 @ComponentScan({
-        "org.mx.comps.rbac.rest",
-        "org.mx.comps.rbac.service.impl"
+        "org.mx.comps.rbac.rest"
 })
 public class RbacRestConfig {
+    @Autowired
+    private ApplicationContext context = null;
+
     @Bean(name = "restfulClassesRBAC")
     public List<Class<?>> rbacRestfulClasses() {
         return Arrays.asList(UserManageResource.class, AccountManageResource.class, RoleManageResource.class,

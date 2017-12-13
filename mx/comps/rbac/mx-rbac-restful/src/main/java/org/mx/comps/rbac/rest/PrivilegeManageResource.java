@@ -6,6 +6,7 @@ import org.mx.comps.rbac.dal.entity.Privilege;
 import org.mx.comps.rbac.rest.vo.PrivilegeVO;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
+import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
@@ -28,8 +29,8 @@ public class PrivilegeManageResource {
     private static final Log logger = LogFactory.getLog(PrivilegeManageResource.class);
 
     @Autowired
-    @Qualifier("generalDictEntityAccessorHibernate")
-    private GeneralDictAccessor accessor = null;
+    @Qualifier("generalAccessor")
+    private GeneralAccessor accessor = null;
 
     @Autowired
     private SessionDataStore sessionDataStore = null;

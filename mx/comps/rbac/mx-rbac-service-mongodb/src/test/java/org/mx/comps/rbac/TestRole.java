@@ -84,7 +84,7 @@ public class TestRole extends BaseTest {
     public void testRoleCrud() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
+        RoleManageService roleService = context.getBean(RoleManageService.class);
         assertNotNull(service);
 
         try {
@@ -105,11 +105,11 @@ public class TestRole extends BaseTest {
     public void testRoleAccounts() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
+        RoleManageService roleService = context.getBean(RoleManageService.class);
         assertNotNull(service);
-        UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
+        UserManageService userManageService = context.getBean(UserManageService.class);
         assertNotNull(userManageService);
-        AccountManageService accountManageService = context.getBean("accountManageService", AccountManageService.class);
+        AccountManageService accountManageService = context.getBean(AccountManageService.class);
         assertNotNull(accountManageService);
 
         try {
@@ -172,7 +172,7 @@ public class TestRole extends BaseTest {
     public void testRolePrivileges() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        RoleManageService roleService = context.getBean("roleManageService", RoleManageService.class);
+        RoleManageService roleService = context.getBean(RoleManageService.class);
         assertNotNull(service);
         try {
             TestPrivilege.testInsertPrivilege(service);

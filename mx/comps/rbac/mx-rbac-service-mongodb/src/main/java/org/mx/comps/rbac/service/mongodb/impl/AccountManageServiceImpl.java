@@ -7,6 +7,7 @@ import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.service.AccountManageService;
+import org.mx.comps.rbac.service.impl.AccountManageServiceCommonImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +21,7 @@ import java.util.Set;
  *
  * @author : john.peng created on date : 2017/11/12
  */
-@Component("accountManageService")
+@Component("accountManageServiceMongodb")
 public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(AccountManageServiceCommonImpl.class);
 

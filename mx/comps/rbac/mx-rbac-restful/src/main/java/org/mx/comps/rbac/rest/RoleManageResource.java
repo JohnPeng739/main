@@ -14,6 +14,7 @@ import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.service.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -28,6 +29,7 @@ public class RoleManageResource {
     private static final Log logger = LogFactory.getLog(RoleManageResource.class);
 
     @Autowired
+    @Qualifier("generalAccessor")
     private GeneralAccessor accessor = null;
 
     @Autowired

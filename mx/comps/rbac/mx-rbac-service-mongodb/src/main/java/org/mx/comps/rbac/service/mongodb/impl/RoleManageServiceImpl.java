@@ -7,6 +7,7 @@ import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.Privilege;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.service.RoleManageService;
+import org.mx.comps.rbac.service.impl.RoleManageServiceCommonImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,7 +21,7 @@ import java.util.Set;
  *
  * @author : john.peng created on date : 2017/11/19
  */
-@Component("roleManageService")
+@Component("roleManageServiceMongodb")
 public class RoleManageServiceImpl extends RoleManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(RoleManageServiceCommonImpl.class);
 

@@ -6,6 +6,7 @@ import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.DepartmentManageService;
+import org.mx.comps.rbac.service.impl.DepartmentManageServiceCommonImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +20,7 @@ import java.util.Set;
  *
  * @author : john.peng created on date : 2017/11/19
  */
-@Component("departmentManageService")
+@Component("departmentManageServiceMongodb")
 public class DepartmentManageServiceImpl extends DepartmentManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(DepartmentManageServiceCommonImpl.class);
 

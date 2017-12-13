@@ -79,7 +79,7 @@ public class TestDepartment extends BaseTest {
     public void testDepartmentCrud() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        DepartmentManageService departService = context.getBean("departmentManageService", DepartmentManageService.class);
+        DepartmentManageService departService = context.getBean( DepartmentManageService.class);
         assertNotNull(service);
 
         try {
@@ -99,9 +99,9 @@ public class TestDepartment extends BaseTest {
     public void testDepartmentManager() {
         GeneralDictAccessor service = context.getBean("generalDictAccessor", GeneralDictAccessor.class);
         assertNotNull(service);
-        DepartmentManageService departService = context.getBean("departmentManageService", DepartmentManageService.class);
+        DepartmentManageService departService = context.getBean(DepartmentManageService.class);
         assertNotNull(service);
-        UserManageService userManageService = context.getBean("userManageService", UserManageService.class);
+        UserManageService userManageService = context.getBean( UserManageService.class);
         assertNotNull(userManageService);
 
         try {
