@@ -1,4 +1,4 @@
-package org.mx.comps.rbac.service;
+package org.mx.comps.rbac.service.hibernate;
 
 import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.dal.service.GeneralDictEntityAccessor;

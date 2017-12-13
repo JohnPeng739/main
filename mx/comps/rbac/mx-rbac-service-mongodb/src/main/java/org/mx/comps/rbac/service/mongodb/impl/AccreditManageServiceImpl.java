@@ -1,5 +1,6 @@
-package org.mx.comps.rbac.service.impl;
+package org.mx.comps.rbac.service.mongodb.impl;
 
+import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.Accredit;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.service.AccreditManageService;
@@ -7,7 +8,6 @@ import org.mx.dal.service.GeneralAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,12 @@ import java.util.List;
 @Component("accreditManageService")
 public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
     @Autowired
-    @Qualifier("generalDictAccessor")
+    @Qualifier("generalAccessor")
     private GeneralAccessor accessor = null;
 
     /**
      * {@inheritDoc}
+     *
      * @see AccreditManageServiceCommonImpl#save(Accredit)
      */
     @Override
@@ -40,8 +41,8 @@ public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
     @Override
     protected boolean hasSameAccredit(AccreditInfo accreditInfo) {
         List<GeneralAccessor.ConditionTuple> conditions = new ArrayList<>();
-        conditions.add(new GeneralAccessor.ConditionTuple("src.id", accreditInfo.getSrcAccountId()));
-        conditions.add(new GeneralAccessor.ConditionTuple("tar.id", accreditInfo.getTarAccountId()));
+        conditions.add(new GeneralAccessor.ConditionTuple("src", accessor.getById(accreditInfo.getSrcAccountId(), Account.class)));
+        conditions.add(new GeneralAccessor.ConditionTuple("tar", accessor.getById(accreditInfo.getTarAccountId(), Account.class)));
         conditions.add(new GeneralAccessor.ConditionTuple("valid", true));
         List<Accredit> list = accessor.find(conditions, Accredit.class);
         List<Accredit> accredits = new ArrayList<>();
@@ -79,7 +80,6 @@ public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
      * @see AccreditManageService#accredit(AccreditInfo)
      */
     @Override
-    @Transactional
     public Accredit accredit(AccreditInfo accreditInfo) {
         super.accessor = accessor;
         return super.accredit(accreditInfo);
@@ -91,7 +91,6 @@ public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
      * @see AccreditManageService#closeAccredit(String)
      */
     @Override
-    @Transactional
     public Accredit closeAccredit(String accreditId) {
         super.accessor = accessor;
         return super.closeAccredit(accreditId);

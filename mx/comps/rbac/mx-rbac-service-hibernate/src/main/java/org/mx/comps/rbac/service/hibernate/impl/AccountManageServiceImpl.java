@@ -1,19 +1,16 @@
-package org.mx.comps.rbac.service.impl;
+package org.mx.comps.rbac.service.hibernate.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
-import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.service.AccountManageService;
+import org.mx.comps.rbac.service.mongodb.impl.AccountManageServiceCommonImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 基于Hibernate JPA实现的账户管理相关服务
@@ -34,26 +31,7 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
      */
     @Override
     protected Account save(Account account) {
-        Set<Role> oldRoles = new HashSet<>();
-        if (!StringUtils.isBlank(account.getId())) {
-            oldRoles.addAll(accessor.getById(account.getId(), Account.class).getRoles());
-        }
-        account = accessor.save(account, false);
-        Set<Role> roles = account.getRoles();
-        for (Role role : roles) {
-            if (oldRoles.contains(role)) {
-                oldRoles.remove(role);
-                continue;
-            } else {
-                role.getAccounts().add(account);
-                accessor.save(role, false);
-            }
-        }
-        for (Role role : oldRoles) {
-            role.getAccounts().remove(role);
-            accessor.save(role, false);
-        }
-        return account;
+        return accessor.save(account, false);
     }
 
     /**
@@ -61,6 +39,7 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
      *
      * @see AccountManageService#saveAccount(AccountInfo)
      */
+    @Transactional
     @Override
     public Account saveAccount(AccountInfo accountInfo) {
         super.accessor = accessor;
@@ -72,6 +51,7 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
      *
      * @see AccountManageService#changePassword(String, String, String)
      */
+    @Transactional
     @Override
     public Account changePassword(String accountId, String oldPassword, String newPassword) {
         super.accessor = accessor;
@@ -83,6 +63,7 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
      *
      * @see AccountManageService#login(String, String, boolean)
      */
+    @Transactional
     @Override
     public LoginHistory login(String accountCode, String password, boolean forced) {
         super.accessor = accessor;
@@ -94,6 +75,7 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
      *
      * @see AccountManageService#logout(String)
      */
+    @Transactional
     @Override
     public LoginHistory logout(String accountId) {
         super.accessor = accessor;

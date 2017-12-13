@@ -1,4 +1,4 @@
-package org.mx.comps.rbac.service.impl;
+package org.mx.comps.rbac.service.hibernate.impl;
 
 
 import org.apache.commons.logging.Log;
@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
-import org.mx.comps.rbac.service.TestLogicalTransactService;
+import org.mx.comps.rbac.service.hibernate.TestLogicalTransactService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.impl.GeneralDictEntityAccessorImpl;

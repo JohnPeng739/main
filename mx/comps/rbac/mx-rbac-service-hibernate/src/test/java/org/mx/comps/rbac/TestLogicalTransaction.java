@@ -1,9 +1,10 @@
 package org.mx.comps.rbac;
 
 import org.junit.Test;
+import org.mx.comps.rbac.BaseTest;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.User;
-import org.mx.comps.rbac.service.TestLogicalTransactService;
+import org.mx.comps.rbac.service.hibernate.TestLogicalTransactService;
 
 import static org.junit.Assert.*;
 

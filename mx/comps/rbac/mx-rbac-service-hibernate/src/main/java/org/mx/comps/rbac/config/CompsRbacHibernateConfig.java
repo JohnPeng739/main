@@ -11,8 +11,10 @@ import org.springframework.context.annotation.*;
  */
 @Configuration
 @Import(DalHibernateConfig.class)
-@ComponentScan({"org.mx.comps.rbac.service.impl"})
-public class CompsRbacConfig {
+@ComponentScan({
+        "org.mx.comps.rbac.service.hibernate.impl"
+})
+public class CompsRbacHibernateConfig {
     @Bean("jpaEntityPackagesRbac")
     @Lazy(false)
     public JpaEntityPackagesDefine jpaEntityPackages() {

@@ -12,20 +12,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * RBAC微服务配置定义
+ * 基于Hibernate实现的RBAC微服务配置定义
  *
  * @author : john.peng created on date : 2017/11/4
  */
 @Configuration
-@Import({ServerConfig.class})
-@ComponentScan({
-        "org.mx.comps.rbac.rest",
-        "org.mx.comps.rbac.service.impl"
-})
-public class RbacRestConfig {
-    @Bean(name = "restfulClassesRBAC")
-    public List<Class<?>> rbacRestfulClasses() {
-        return Arrays.asList(UserManageResource.class, AccountManageResource.class, RoleManageResource.class,
-                DepartmentManageResource.class, PrivilegeManageResource.class, AccreditManageResource.class);
-    }
+@Import({RbacRestConfig.class, CompsRbacHibernateConfig.class})
+public class RbacRestHibernateConfig {
 }

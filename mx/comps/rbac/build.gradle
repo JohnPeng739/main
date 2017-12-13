@@ -52,7 +52,9 @@ project(':mx-rbac-restful') {
 
   dependencies {
     compile(
-      project(':mx-rbac-service')
+      project(':mx-rbac-service'),
+      project(':mx-rbac-service-hibernate'),
+      project(':mx-rbac-service-mongodb')
     )
   }
 }

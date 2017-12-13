@@ -1,4 +1,4 @@
-package org.mx.comps.rbac.service.impl;
+package org.mx.comps.rbac.service.mongodb.impl;
 
 import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Account;

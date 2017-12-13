@@ -1,4 +1,4 @@
-package org.mx.comps.rbac.service.impl;
+package org.mx.comps.rbac.service.hibernate.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -6,6 +6,7 @@ import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.UserManageService;
+import org.mx.comps.rbac.service.mongodb.impl.UserManageServiceCommonImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

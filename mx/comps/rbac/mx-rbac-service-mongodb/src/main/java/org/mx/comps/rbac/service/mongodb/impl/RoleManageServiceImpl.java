@@ -1,4 +1,4 @@
-package org.mx.comps.rbac.service.impl;
+package org.mx.comps.rbac.service.mongodb.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
