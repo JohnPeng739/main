@@ -1,5 +1,5 @@
 /**
- * Created by john on 2017/6/9.
+ * Created by john.peng on 2017/6/9.
  *
  */
 import axios from 'axios'

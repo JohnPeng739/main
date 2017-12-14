@@ -3,8 +3,9 @@
  */
 import ajax from './ajax'
 import logger from './logger'
+import format from './format'
 
-export {ajax, logger}
+export {ajax, logger, format}
 
 export function clone (obj) {
   //
