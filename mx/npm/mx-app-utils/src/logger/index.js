@@ -2,11 +2,12 @@
  * Created by john on 2017/6/9.
  */
 import util from 'util'
-import {format, timestamp} from '../index'
+import {timestamp} from '../index'
+import {formatter} from '../formatter'
 
 let log = function (level) {
     let args = Array.prototype.slice.call(arguments, 1)
-    let msg = format.strFormat.apply(this, args)
+    let msg = formatter.strFormat.apply(this, args)
     msg = util.format('%s %s %s', timestamp(), level.toUpperCase(), msg)
     console.log(msg)
 }
