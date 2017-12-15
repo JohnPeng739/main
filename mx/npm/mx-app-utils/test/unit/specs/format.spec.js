@@ -1,7 +1,9 @@
-import formatter from '../../../src/formatter'
+import {formatter} from '../../../dist/mx-app-utils.min'
 
 describe('formatter default', () => {
     it('formatter for string', () => {
+        console.log(formatter)
+        console.log(formatter.format)
         expect(formatter.format('This is a test message.')).toBe('This is a test message.')
     })
     it('formatter for string parameter', () => {
@@ -51,5 +53,18 @@ describe('format fixed length string', () => {
         expect(formatter.formatFixedLen(12, 4)).toBe('0012')
         expect(formatter.formatFixedLen(12, 5)).toBe('00012')
         expect(formatter.formatFixedLen(12, 6)).toBe('000012')
+    })
+    it('format one param', () => {
+        expect(formatter.formatFixedLen(1)).toBe('01')
+        expect(formatter.formatFixedLen(12)).toBe('12')
+        expect(formatter.formatFixedLen(123)).toBe('12')
+    })
+    it('format three params', () => {
+        expect(formatter.formatFixedLen(1, 5, '_')).toBe('____1')
+        expect(formatter.formatFixedLen(12, 5, '_')).toBe('___12')
+        expect(formatter.formatFixedLen(123, 5, '_')).toBe('__123')
+        expect(formatter.formatFixedLen(1234, 5, '_')).toBe('_1234')
+        expect(formatter.formatFixedLen(12345, 5, '_')).toBe('12345')
+        expect(formatter.formatFixedLen(123456, 5, '_')).toBe('12345')
     })
 })

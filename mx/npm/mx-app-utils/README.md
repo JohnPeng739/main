@@ -1,6 +1,6 @@
 #mx-app-utils
 ====
-<h5>版本： V1.3.0</h5>
+<h5>版本： V1.4.0</h5>
 一个非常简单使用的面向HTML5的WEB开发的工具类模块。目前封装了:
 1. logger：LOG（debug、info、warn、error）
 2. ajax：使用axios的简单AJAX调用工具方法
@@ -8,7 +8,7 @@
 4. clone和timestamp的工具方法
 
 ##修改历史
-**1.3.0**<br>
+**1.4.0**<br>
 1. 重新发布编译代码。
 
 **1.2.6**<br>

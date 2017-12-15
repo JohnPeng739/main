@@ -5,9 +5,7 @@ import ajax from './ajax'
 import logger from './logger'
 import formatter from './formatter'
 
-export {ajax, logger, formatter}
-
-export function clone (obj) {
+function clone (obj) {
   //
   // We only need to clone reference types (Object)
   //
@@ -42,6 +40,8 @@ export function clone (obj) {
   return copy
 }
 
-export function timestamp () {
+function timestamp () {
   return new Date().toISOString()
 }
+
+export {ajax, logger, formatter, timestamp, clone}

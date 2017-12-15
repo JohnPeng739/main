@@ -1,6 +1,7 @@
 import Mock from 'mockjs'
 
-import {ajax} from '../../../src/index'
+// import {ajax} from '../../../src/index'
+import {ajax} from '../../../dist/mx-app-utils.min'
 
 let checked = {a: 'a', b: 'b', c: 123, d: false}
 let errorMsg = "This is a test error."

@@ -1,8 +1,11 @@
 import util from 'util'
-import {timestamp} from "../index"
 
 let formatRegExp = /%[sdj%]/g
 
+/**
+ * 根据参数格式化字符串，支持：%s（字符串）、%d（数字）、%j（JSON对象）。
+ * @returns {string} 格式化后的字符串
+ */
 function format() {
     let args = arguments
     let hasFormat = args && args[0] && args[0].match && args[0].match(formatRegExp) !== null
@@ -29,18 +32,39 @@ function long2Date(longDatetime) {
     return new Date(longDatetime)
 }
 
-function formatFixedLenNumber(number, bits) {
+/**
+ * 根据数字创建一个指定长度的字符串
+ * @param number 数字
+ * @param bits 长度，默认2位
+ * @param filledChar 填充字符，默认为'0'
+ * @returns {string} 转换后的字符串
+ */
+function formatFixedLenNumber(number, bits, filledChar) {
+    if (filledChar) {
+        filledChar = '' + filledChar
+        if (filledChar.length > 1) {
+            filledChar = filledChar.substr(0, 1)
+        }
+    } else {
+        filledChar = '0'
+    }
+    bits = (bits >= 0) ? bits : 2
     let str = '' + number
     let len = str.length
     if (len > bits) {
         return str.substr(0, bits)
     } else if (len < bits) {
-        return '0'.repeat(bits - len) + str
+        return filledChar.repeat(bits - len) + str
     } else {
         return str
     }
 }
 
+/**
+ * 将指定的long值转换为"yyyy/MM/dd"格式的日期字符串
+ * @param longDatetime long值
+ * @returns {string} 日期字符串
+ */
 function formatDate(longDatetime) {
     let date = long2Date(longDatetime)
     let year = date.getFullYear()
@@ -49,6 +73,11 @@ function formatDate(longDatetime) {
     return year + '/' + formatFixedLenNumber(month, 2) + '/' + formatFixedLenNumber(day, 2)
 }
 
+/**
+ * 将指定的long值转换为"yyyy/MM/dd HH:mm:ss"格式的时间字符串
+ * @param longDatetime long值
+ * @returns {string} 时间字符串
+ */
 function formatDatetime(longDatetime) {
     let date = long2Date(longDatetime)
     let hours = date.getHours()
@@ -58,6 +87,11 @@ function formatDatetime(longDatetime) {
         + ':' + formatFixedLenNumber(second, 2)
 }
 
+/**
+ * 将指定的long值转换为"yyyy/MM/dd HH:mm:ss.SSS"格式的时间戳字符串
+ * @param longDatetime long值
+ * @returns {string} 时间戳字符串
+ */
 function formatTimestamp(longDatetime) {
     let date = long2Date(longDatetime)
     let mm = date.getMilliseconds()

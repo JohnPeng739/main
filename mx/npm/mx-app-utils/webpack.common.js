@@ -4,14 +4,15 @@ const ManifestPlugin = require('webpack-manifest-plugin')
 
 module.exports = {
     entry: {
-        "mx-app-utils": path.resolve(__dirname, 'src/index.js')
+        "index": path.resolve(__dirname, 'src/index.js'),
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
         new ManifestPlugin()
     ],
     output: {
-        filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
-    }
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'mx-app-utils.min.js',
+        libraryTarget: 'umd'
+    },
 }
