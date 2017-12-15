@@ -1,13 +1,13 @@
 {
   "name": "mx-app-utils",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Web前端开发工具类模块",
   "private": false,
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "unit": "jest"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -43,6 +43,7 @@
     "file-loader": "^1.1.5",
     "html-webpack-plugin": "^2.30.1",
     "jest": "^21.2.1",
+    "mockjs": "^1.0.1-beta3",
     "style-loader": "^0.19.1",
     "uglifyjs-webpack-plugin": "^1.1.4",
     "webpack": "^3.10.0",
