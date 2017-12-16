@@ -4,6 +4,7 @@
 import ajax from './ajax'
 import logger from './logger'
 import formatter from './formatter'
+import parser from './parser'
 
 function clone (obj) {
   //
@@ -44,4 +45,4 @@ function timestamp () {
   return new Date().toISOString()
 }
 
-export {ajax, logger, formatter, timestamp, clone}
+export {ajax, logger, formatter, parser, timestamp, clone}

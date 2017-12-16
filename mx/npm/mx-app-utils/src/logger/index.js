@@ -11,31 +11,41 @@ let log = function (level) {
     console.log(msg)
 }
 
+var defaultLevel = 'debug'
+
 export default {
+    setLevel: function (level) {
+        defaultLevel = level
+    },
     debug: function () {
-        if (process.env.NODE_ENV !== 'development') {
-            return
+        if ('debug' === defaultLevel) {
+            let args = Array.prototype.slice.call(arguments)
+            args.unshift('debug')
+            log.apply(this, args)
         }
-        let args = Array.prototype.slice.call(arguments)
-        args.unshift('debug')
-        log.apply(this, args)
     },
 
     info: function () {
-        let args = Array.prototype.slice.call(arguments)
-        args.unshift('info')
-        log.apply(this, args)
+        if (['info', 'debug'].indexOf(defaultLevel) >= 0) {
+            let args = Array.prototype.slice.call(arguments)
+            args.unshift('info')
+            log.apply(this, args)
+        }
     },
 
     warn: function () {
-        let args = Array.prototype.slice.call(arguments)
-        args.unshift('warn')
-        log.apply(this, args)
+        if (['warn', 'info', 'debug'].indexOf(defaultLevel) >= 0) {
+            let args = Array.prototype.slice.call(arguments)
+            args.unshift('warn')
+            log.apply(this, args)
+        }
     },
 
     error: function () {
-        let args = Array.prototype.slice.call(arguments)
-        args.unshift('error')
-        log.apply(this, args)
+        if (['error', 'warn', 'info', 'debug'].indexOf(defaultLevel) >= 0) {
+            let args = Array.prototype.slice.call(arguments)
+            args.unshift('error')
+            log.apply(this, args)
+        }
     }
 }
