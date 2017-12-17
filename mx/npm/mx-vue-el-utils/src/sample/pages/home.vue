@@ -4,6 +4,7 @@
     <img src="../assets/logo.png">
     <br/>
     <el-button @click="handleGoto('/notify')">Notify</el-button>
+    <el-button @click="handleGoto('/tag')">Tag</el-button>
   </div>
 </template>
 

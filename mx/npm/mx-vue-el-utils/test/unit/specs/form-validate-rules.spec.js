@@ -1,5 +1,5 @@
-import formValidateRules from '../../../src/utils/form-validate-rules'
-// import {formValidateRules} from '../../../dist/mx-vue-el-utils.min'
+// import formValidateRules from '../../../src/utils/form-validate-rules'
+import {formValidateRules} from '../../../dist/mx-vue-el-utils.min'
 
 describe('test form validate rules', () => {
   it('test required rule', () => {
