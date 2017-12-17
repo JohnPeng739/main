@@ -1,16 +1,17 @@
 import {logger, parser} from 'mx-app-utils'
 
-const requiredRule = ({type, msg, trigger}) => {
+const requiredRule = (param) => {
+  let {type, msg, trigger} = param || {}
   let rule = {required: true}
-  if (type && type !== '') {
+  if (type && typeof type === 'string' && type !== '') {
     rule.type = type
   }
-  if (msg !== null && msg !== undefined && msg !== '') {
+  if (msg && typeof msg === 'string' && msg !== '') {
     rule.message = msg
   } else {
-    rule.message = '数据字段为必填'
+    rule.message = '数据字段必须输入数据'
   }
-  if (trigger !== null && trigger !== undefined && trigger !== '') {
+  if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger
   } else {
     rule.trigger = 'blur'
@@ -86,7 +87,7 @@ const _rangeNumberRule = (min, max, msg, trigger) => {
     callback()
   }
   let rule = {type: 'number', validator: numberValidator}
-  if (!trigger && trigger !== '') {
+  if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger
   } else {
     rule.trigger = 'blur'
@@ -96,15 +97,15 @@ const _rangeNumberRule = (min, max, msg, trigger) => {
 }
 
 const _processExtremeDate = (min, max) => {
-  if (!min || min === '') {
-    min = null
-  } else {
+  if (min && typeof min === 'string') {
     min = parser.parseDate(min)
-  }
-  if (!max || max === '') {
-    max = null
   } else {
+    min = undefined
+  }
+  if (max && typeof max === 'string') {
     max = parser.parseDate(max)
+  } else {
+    max = undefined
   }
   return {minValue: min, maxValue: max}
 }
@@ -114,29 +115,29 @@ const _rangeDateRule = (min, max, msg, trigger) => {
   let dateValidator = (rule, value, callback) => {
     if (minValue !== null && maxValue !== null) {
       if (value.getTime() > maxValue.getTime() || value.getTime() < minValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应介于[' + minValue + ' - ' + maxValue + ']'
+        let message = (!msg && msg !== '') ? msg : '数据字段的值应介于[' + min + ' - ' + max + ']'
         callback(new Error(message))
       }
     } else if (minValue !== null) {
       if (value.getTime() < minValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应晚于[' + minValue + ']'
+        let message = (!msg && msg !== '') ? msg : '数据字段的值应晚于[' + min + ']'
         callback(new Error(message))
       }
     } else if (maxValue !== null) {
       if (value.getTime() > maxValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应早于[' + maxValue + ']'
+        let message = (!msg && msg !== '') ? msg : '数据字段的值应早于[' + max + ']'
         callback(new Error(message))
       }
     }
     callback()
   }
   let rule = {type: 'date', validator: dateValidator}
-  if (!trigger && trigger !== '') {
+  if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger
   } else {
     rule.trigger = 'blur'
   }
-  logger.debug('创建了一个日期范围规则： ', rule)
+  logger.debug('创建了一个日期范围规则：%j.', rule)
   return rule
 }
 
@@ -162,16 +163,17 @@ const _rangeArrayRule = (min, max, msg, trigger) => {
     callback()
   }
   let rule = {type: 'array', validator: arrayValidator}
-  if (!trigger && trigger !== '') {
+  if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger
   } else {
     rule.trigger = 'blur'
   }
-  logger.debug('创建了一个数组个数范围规则： ', rule)
+  logger.debug('创建了一个数组个数范围规则：%j.', rule)
   return rule
 }
 
-const rangeRule = ({type, min, max, msg, trigger}) => {
+const rangeRule = (param) => {
+  let {type, min, max, msg, trigger} = param || {}
   if (!min && !max) {
     throw new Error('范围校验规则至少要设定最大值或者最小值之间的一个')
   }
@@ -191,14 +193,15 @@ const rangeRule = ({type, min, max, msg, trigger}) => {
   }
 }
 
-const emailRule = ({msg, trigger}) => {
+const emailRule = (param) => {
+  let {msg, trigger} = param || {}
   let rule = {type: 'email'}
-  if (msg !== null && msg !== undefined && msg !== '') {
+  if (msg && typeof msg === 'string' && msg !== '') {
     rule.message = msg
   } else {
     rule.message = '电子邮件格式错误'
   }
-  if (trigger !== null && trigger !== undefined && trigger !== '') {
+  if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger
   } else {
     rule.trigger = 'blur'
@@ -206,11 +209,14 @@ const emailRule = ({msg, trigger}) => {
   return rule
 }
 
-const customRule = ({validator, trigger}) => {
-  if (!validator || (typeof validator !== 'function')) {
+const customRule = (param) => {
+  let {validator, trigger} = param || {}
+  let rule = {}
+  if (validator && typeof validator === 'function') {
+    rule.validator = validator
+  } else {
     throw new Error('自定义校验规则需要输入自定义的校验函数')
   }
-  let rule = {validator: validator}
   if (trigger !== null && trigger !== undefined && trigger !== '') {
     rule.trigger = trigger
   } else {
