@@ -1,7 +1,5 @@
 <template>
   <div>
-    <el-button type="primary" @click="handleHome">Home</el-button>
-    <br/><br/>
     <el-button @click="handleWarnClick">Click for Warn</el-button>
     <el-button @click="handleErrorClick">Click for Error</el-button>
     <br/><br/>
@@ -22,8 +20,9 @@
 </template>
 
 <script>
-  import notify from '@/utils/notify'
   import {formatter} from 'mx-app-utils'
+  // import notify from '@/utils/notify'
+  import {notify} from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-notify-page',
@@ -35,9 +34,6 @@
       }
     },
     methods: {
-      handleHome () {
-        this.$router.push('/')
-      },
       handleInfoClick () {
         let duration = this.duration
         notify.info(formatter.format('This is a test information, duration: %d ms.', duration), duration)

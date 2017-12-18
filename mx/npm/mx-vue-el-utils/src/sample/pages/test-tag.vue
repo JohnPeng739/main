@@ -18,10 +18,9 @@
 </template>
 
 <script>
-  // import {TagNormal, TagCouple} from '../../../dist/mx-vue-el-utils.min'
-  // import '../../../dist/static/css/mx-vue-el-utils.ecfbeeeed085f40fd3439bcd81320b70.css'
-  import TagNormal from '@/components/form/tag-normal'
-  import TagCouple from '@/components/form/tag-couple'
+  import {TagNormal, TagCouple} from '../../../dist/mx-vue-el-utils.min'
+  // import TagNormal from '@/components/form/tag-normal'
+  // import TagCouple from '@/components/form/tag-couple'
 
   export default {
     name: 'test-tag-page',

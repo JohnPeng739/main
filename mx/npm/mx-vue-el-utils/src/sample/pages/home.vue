@@ -9,13 +9,15 @@
     <icon name="build"></icon>
     <icon name="3d_rotation"></icon>
     <br/><br/>
-    <el-button @click="handleGoto('/notify')">Notify</el-button>
-    <el-button @click="handleGoto('/tag')">Tag</el-button>
+    <el-button @click="handleGoto('/tests/notify')">Notify</el-button>
+    <el-button @click="handleGoto('/tests/tag')">Tag</el-button>
+    <el-button @click="handleGoto('/tests/page')">Page</el-button>
   </div>
 </template>
 
 <script>
-  import Icon from '@/components/icon'
+  // import Icon from '@/components/icon'
+  import {Icon} from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'home-page',
