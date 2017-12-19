@@ -1,8 +1,8 @@
 {
   "name": "mx-vue-el-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "一个基于Vue、ElementUI的前端项目框架组件库。",
-  "private": true,
+  "private": false,
   "license": "MIT",
   "main": "dist/mx-vue-el-utils.min.js",
   "scripts": {
