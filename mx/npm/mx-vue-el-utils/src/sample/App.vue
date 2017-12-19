@@ -48,7 +48,7 @@
   import {logger} from 'mx-app-utils'
   // import LayoutNormal from '@/layout/normal/index.vue'
   import {LayoutNormal} from '../../dist/mx-vue-el-utils.min'
-  import '../../dist/mx-vue-el-utils.min.css'
+  import '../../dist/css/index.min.css'
   import { navData } from './router'
 
   export default {

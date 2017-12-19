@@ -33,7 +33,7 @@
     "element-ui": "^2.0.8",
     "material-design-icons": "^3.0.1",
     "mockjs": "^1.0.1-beta3",
-    "mx-app-utils": "^1.5.0",
+    "mx-app-utils": "^1.5.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
@@ -68,7 +68,7 @@
     "eslint-plugin-promise": "^3.4.0",
     "eslint-plugin-standard": "^3.0.1",
     "extract-text-webpack-plugin": "^3.0.0",
-    "file-loader": "^1.1.4",
+    "file-loader": "^1.1.6",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
     "jest": "^21.2.0",

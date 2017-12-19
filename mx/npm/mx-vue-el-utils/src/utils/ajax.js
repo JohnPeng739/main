@@ -32,4 +32,4 @@ const put = (url, data, success, error) => ajax.put(preurl(url), data, success, 
 
 const del = (url, success, error) => ajax.del(preurl(url), success, error || defaultError)
 
-export {get, post, put, del}
+export default {get, post, put, del}
