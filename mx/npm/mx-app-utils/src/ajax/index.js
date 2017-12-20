@@ -19,7 +19,7 @@ let fnSuccess = (success, res, error) => {
   }
   if (success && typeof success === 'function') {
     if (pagination) {
-      success({data, pagination})
+      success(pagination, data)
     } else {
       success(data)
     }
