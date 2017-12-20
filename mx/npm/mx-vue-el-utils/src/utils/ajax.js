@@ -12,13 +12,15 @@ let defaultError = (errorMessage) => {
 }
 
 let preurl = (url) => {
-  let user = JSON.parse(sessionStorage.getItem('auth.user'))
-  if (user) {
-    let userCode = user.code
-    if (url.indexOf('?') >= 0) {
-      url = url + '&userCode=' + userCode
-    } else {
-      url = url + '?userCode=' + userCode
+  if (window.sessionStorage) {
+    let user = JSON.parse(window.sessionStorage.getItem('auth.user'))
+    if (user) {
+      let userCode = user.code
+      if (url.indexOf('?') >= 0) {
+        url = url + '&userCode=' + userCode
+      } else {
+        url = url + '?userCode=' + userCode
+      }
     }
   }
   return url
