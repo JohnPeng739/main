@@ -3,13 +3,14 @@ import Mock from 'mockjs'
 // import {ajax} from '../../../src/index'
 import {ajax} from '../../../dist/mx-app-utils.min'
 
+let pagination = {total: 100, size: 20, page: 3}
 let checked = {a: 'a', b: 'b', c: 123, d: false}
 let errorMsg = "This is a test error."
 
 beforeEach(() => {
     Mock.mock('/rest/get/success', 'get', {errorCode: 0, data: checked})
     Mock.mock('/rest/get/error', 'get', {errorCode: 1, errorMessage: errorMsg})
-    Mock.mock('/rest/post', 'post', {errorCode: 0, data: checked})
+    Mock.mock('/rest/post', 'post', {errorCode: 0, errorMessage: '', pagination: pagination, data: checked})
     Mock.mock('/rest/put', 'put', {errorCode: 0, data: checked})
     Mock.mock('/rest/delete', 'delete', {errorCode: 0, data: checked})
 })
@@ -43,7 +44,11 @@ describe('test ajax', () => {
         ajax.get('/rest/get/error', fnSuccess, fnError)
     })
     it('test post method', (done) => {
-        let fnSuccess = jest.fn(data => {
+        let fnSuccess = jest.fn((pagination, data) => {
+            expect(pagination).toBeDefined()
+            expect(pagination.total).toBe(100)
+            expect(pagination.size).toBe(20)
+            expect(pagination.page).toBe(3)
             expect(data).toBeDefined()
             expect(data.a).toBe(checked.a)
             expect(data.b).toBe(checked.b)
