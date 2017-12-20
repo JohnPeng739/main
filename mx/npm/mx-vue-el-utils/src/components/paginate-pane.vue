@@ -35,15 +35,16 @@
     <el-row type="flex">
       <el-col :span="24">
         <span class="layout-buttons">
-          <el-button v-if="showAdd" class="button" :plain="true" type="text" @click="handleOperate('add')">
+          <el-button v-if="showAdd" class="button" :plain="true" type="text" @click.native="handleOperate('add')">
             <icon class="button-icon" name="add"></icon>添加</el-button>
-          <el-button v-if="showEdit" class="button" :plain="true" type="text" @click="handleOperate('edit')">
+          <el-button v-if="showEdit" class="button" :plain="true" type="text" @click.native="handleOperate('edit')">
             <icon class="button-icon" name="edit"></icon>修改</el-button>
-          <el-button v-if="showDelete" class="button" :plain="true" type="text" @click="handleOperate('delete')">
+          <el-button v-if="showDelete" class="button" :plain="true" type="text" @click.native="handleOperate('delete')">
             <icon class="button-icon" name="delete"></icon>删除</el-button>
-          <el-button v-if="showDetail" class="button" :plain="true" type="text" @click="handleOperate('detail')">
+          <el-button v-if="showDetail" class="button" :plain="true" type="text" @click.native="handleOperate('detail')">
             <icon class="button-icon" name="details"></icon>详情</el-button>
-          <el-button v-if="showRefresh" class="button" :plain="true" type="text" @click="handleOperate('refresh')">
+          <el-button v-if="showRefresh" class="button" :plain="true" type="text"
+                     @click.native="handleOperate('refresh')">
             <icon class="button-icon" name="refresh"></icon>刷新</el-button>
         </span>
       </el-col>
@@ -64,6 +65,7 @@
 </template>
 
 <script>
+  import { logger } from 'mx-app-utils'
   import Icon from '@/components/icon'
 
   export default {
@@ -97,8 +99,10 @@
     },
     methods: {
       setPagination (pagination) {
-        if (pagination) {
+        let {total, size, page} = this.pagination
+        if (pagination && (pagination.total !== total || pagination.size !== size || pagination.page !== page)) {
           this.pagination = pagination
+          logger.debug('Set paginate: %j.', pagination)
         }
       },
       handleOperate (operate) {

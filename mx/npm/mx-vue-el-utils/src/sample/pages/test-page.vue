@@ -17,8 +17,9 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  // import PaginateContentPane from '@/components/paginate-pane'
-  import {PaginatePane} from '../../../dist/mx-vue-el-utils.min'
+  import notify from '@/utils/notify'
+  import PaginatePane from '@/components/paginate-pane'
+  // import {PaginatePane} from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-paginate-content',
@@ -38,6 +39,7 @@
           data.push({code: 'code ' + index, name: 'name ' + index, desc: 'description ' + index})
         }
         this.tableData = data
+        notify.info('asdfasdfasdfasdfasd')
       },
       handleButtonClick (operate, pagination) {
         logger.debug('Click a button, operate: %s, page: %j.', operate, pagination)
