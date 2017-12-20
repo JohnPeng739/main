@@ -1,17 +1,17 @@
 import {ajax, logger} from 'mx-app-utils'
-import {Message} from 'element-ui'
+import notify from './notify'
 
-const defaultError = (errorMessage) => {
+let defaultError = (errorMessage) => {
   if (errorMessage.response) {
     logger.debug(errorMessage.response.status)
     let msg = '访问服务器错误，错误号：' + errorMessage.response.status + ', 错误信息：' + errorMessage.response.statusText + '。'
-    Message({type: 'error', message: msg})
+    notify.error(msg)
   } else {
-    Message({type: 'error', message: errorMessage})
+    notify.error(errorMessage)
   }
 }
 
-const preurl = (url) => {
+let preurl = (url) => {
   let user = JSON.parse(sessionStorage.getItem('auth.user'))
   if (user) {
     let userCode = user.code
@@ -24,12 +24,12 @@ const preurl = (url) => {
   return url
 }
 
-const get = (url, success, error) => ajax.get(preurl(url), success, error || defaultError)
+let get = (url, success, error) => ajax.get(preurl(url), success, error || defaultError)
 
-const post = (url, data, success, error) => ajax.post(preurl(url), data, success, error || defaultError)
+let post = (url, data, success, error) => ajax.post(preurl(url), data, success, error || defaultError)
 
-const put = (url, data, success, error) => ajax.put(preurl(url), data, success, error || defaultError)
+let put = (url, data, success, error) => ajax.put(preurl(url), data, success, error || defaultError)
 
-const del = (url, success, error) => ajax.del(preurl(url), success, error || defaultError)
+let del = (url, success, error) => ajax.del(preurl(url), success, error || defaultError)
 
 export default {get, post, put, del}
