@@ -5,6 +5,7 @@ import TestNotify from '../pages/test-notify.vue'
 import TestTag from '../pages/test-tag.vue'
 import TestPage from '../pages/test-page.vue'
 import TestEcharts from '../pages/test-echarts.vue'
+import TestDialog from '../pages/test-dialog.vue'
 
 export const navData = [{
   path: '/',
@@ -30,6 +31,10 @@ export const navData = [{
     path: '/tests/echarts',
     icon: 'apps',
     name: 'Echarts'
+  }, {
+    path: '/tests/dialog',
+    icon: 'apps',
+    name: '对话框'
   }]
 }]
 
@@ -53,6 +58,9 @@ const router = new Router({
   }, {
     path: '/tests/echarts',
     component: TestEcharts
+  }, {
+    path: '/tests/dialog',
+    component: TestDialog
   }, {
     path: '',
     component: TestHome
