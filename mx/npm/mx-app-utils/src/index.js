@@ -41,6 +41,23 @@ function clone(obj) {
     return copy
 }
 
+function mixin(dest, src) {
+    if (dest === null || dest === undefined) {
+        dest = {}
+    }
+    if (src === null || src === undefined || typeof src !== 'object') {
+        return
+    }
+    for (let key in src) {
+        let tar = dest[key]
+        if (tar === null || tar === undefined || typeof tar !== 'object') {
+            dest[key] = src[key]
+        } else {
+            mixin(dest[key], src[key])
+        }
+    }
+}
+
 function timestamp() {
     return new Date().toISOString()
 }
@@ -57,4 +74,4 @@ function round(value, digits) {
     }
 }
 
-export {ajax, logger, formatter, parser, timestamp, clone, round}
+export {ajax, logger, formatter, parser, timestamp, mixin, clone, round}

@@ -1,5 +1,5 @@
-// import {round} from '../../../src/index'
-import {round} from '../../../dist/mx-app-utils.min'
+// import {round, mixin} from '../../../src/index'
+import {round, mixin} from '../../../dist/mx-app-utils.min'
 
 describe('test utils', () => {
     it('test round', () => {
@@ -26,5 +26,23 @@ describe('test utils', () => {
         expect(round(1.52342, 2)).toBe(1.52)
         expect(round(1.55, 2)).toBe(1.55)
         expect(round(1.59, 2)).toBe(1.59)
+    })
+    it('test mixin', () => {
+        let src1 = {a: 'aaaa', b: {b1: 'b1'}}
+        let src2 = {}
+        expect(src2.a).toBeUndefined()
+        expect(src2.b).toBeUndefined()
+        mixin(src2, src1)
+        expect(src2.a).toBe('aaaa')
+        expect(src2.b.b1).toBe('b1')
+        src2 = {a: 'a123', b: {b2: 'b2'}, c: 'ccc'}
+        expect(src2.a).toBe('a123')
+        expect(src2.b.b2).toBe('b2')
+        expect(src2.c).toBe('ccc')
+        mixin(src2, src1)
+        expect(src2.a).toBe('aaaa')
+        expect(src2.b.b1).toBe('b1')
+        expect(src2.b.b2).toBe('b2')
+        expect(src2.c).toBe('ccc')
     })
 })
