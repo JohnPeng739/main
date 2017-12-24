@@ -1,4 +1,10 @@
 <style rel="stylesheet/less" lang="less">
+  @import "./style/base.less";
+  @import "../../dist/style/less/layout-normal";
+  @import "../../dist/style/less/dialog.less";
+  @import "../../dist/style/less/tag.less";
+  @import "../../dist/style/less/pagination.less";
+
   @font-face {
     font-family: 'Material Icons';
     font-style: normal;
@@ -48,7 +54,6 @@
   import {logger} from 'mx-app-utils'
   // import LayoutNormal from '@/layout/normal/index.vue'
   import {LayoutNormal} from '../../dist/mx-vue-el-utils.min'
-  import '../../dist/css/index.min.css'
   import { navData } from './router'
 
   export default {

@@ -1,5 +1,5 @@
 <style rel="stylesheet/less" lang="less" scoped>
-  @import "../../style/base.less";
+  @import "../style/base.less";
 
   .dialog-form {
     font-size: @content-text-font-size;

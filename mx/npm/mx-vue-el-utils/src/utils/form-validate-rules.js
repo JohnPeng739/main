@@ -1,4 +1,5 @@
 import {logger, parser} from 'mx-app-utils'
+import locale from '@/assets/lang'
 
 const requiredRule = (param) => {
   let {type, msg, trigger} = param || {}
@@ -9,14 +10,14 @@ const requiredRule = (param) => {
   if (msg && typeof msg === 'string' && msg !== '') {
     rule.message = msg
   } else {
-    rule.message = '数据字段必须输入数据'
+    rule.message = locale.i18n.t('message.validate.required')
   }
   if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger
   } else {
     rule.trigger = 'blur'
   }
-  logger.debug('创建了必填校验规则： %j', rule)
+  logger.debug('create a required rule: %j', rule)
   return rule
 }
 
@@ -41,19 +42,19 @@ const _rangeStringRule = (min, max, msg, trigger) => {
     rule.min = minValue
     rule.max = maxValue
     if (!rule.message) {
-      rule.message = '数据字段的长度应介于[' + minValue + ' - ' + maxValue + ']之间'
+      rule.message = locale.i18n.t('message.validate.stringRangeBetween', {min: minValue, max: maxValue})
     }
   } else if (minValue !== -1) {
     // min
     rule.min = minValue
     if (!rule.message) {
-      rule.message = '数据字段的长度应大于[' + minValue + ']'
+      rule.message = locale.i18n.t('message.validate.stringRangeLarge', {min: minValue})
     }
   } else if (maxValue !== -1) {
     // max
     rule.max = maxValue
     if (!rule.message) {
-      rule.message = '数据字段的长度应小于[' + max + ']'
+      rule.message = locale.i18n.t('message.validate.stringRangeSmall', {max: maxValue})
     }
   }
   if (trigger !== null && trigger !== undefined && trigger !== '') {
@@ -61,7 +62,7 @@ const _rangeStringRule = (min, max, msg, trigger) => {
   } else {
     rule.trigger = 'blur'
   }
-  logger.debug('创建一个文本长度范围校验规则： %j', rule)
+  logger.debug('create a string range rule: %j', rule)
   return rule
 }
 
@@ -70,17 +71,17 @@ const _rangeNumberRule = (min, max, msg, trigger) => {
   let numberValidator = (rule, value, callback) => {
     if (minValue !== -1 && maxValue !== -1) {
       if (value > maxValue || value < minValue) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应介于[' + minValue + ' - ' + maxValue + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.numberRangeBetween', {min: minValue, max: maxValue})
         callback(new Error(message))
       }
     } else if (minValue !== -1) {
       if (value < minValue) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应大于[' + minValue + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.numberRangeLarge', {min: minValue})
         callback(new Error(message))
       }
     } else if (maxValue !== -1) {
       if (value > maxValue) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应小于[' + maxValue + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.numberRangeSmall', {max: maxValue})
         callback(new Error(message))
       }
     }
@@ -92,7 +93,7 @@ const _rangeNumberRule = (min, max, msg, trigger) => {
   } else {
     rule.trigger = 'blur'
   }
-  logger.debug('创建了一个数值范围规则： %j', rule)
+  logger.debug('create a number range rule: %j', rule)
   return rule
 }
 
@@ -115,17 +116,17 @@ const _rangeDateRule = (min, max, msg, trigger) => {
   let dateValidator = (rule, value, callback) => {
     if (minValue !== null && maxValue !== null) {
       if (value.getTime() > maxValue.getTime() || value.getTime() < minValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应介于[' + min + ' - ' + max + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.dateRangeBetween', {min, max})
         callback(new Error(message))
       }
     } else if (minValue !== null) {
       if (value.getTime() < minValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应晚于[' + min + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.dateRangeLarge', {min})
         callback(new Error(message))
       }
     } else if (maxValue !== null) {
       if (value.getTime() > maxValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值应早于[' + max + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.dateRangeSmall', {max})
         callback(new Error(message))
       }
     }
@@ -137,7 +138,7 @@ const _rangeDateRule = (min, max, msg, trigger) => {
   } else {
     rule.trigger = 'blur'
   }
-  logger.debug('创建了一个日期范围规则：%j.', rule)
+  logger.debug('create a date range rule: %j.', rule)
   return rule
 }
 
@@ -146,17 +147,17 @@ const _rangeArrayRule = (min, max, msg, trigger) => {
   let arrayValidator = (rule, value, callback) => {
     if (minValue !== -1 && maxValue !== -1) {
       if (value.length > maxValue || value.length < minValue) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值个数应介于[' + minValue + ' - ' + maxValue + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.arrayRangeBetween', {min: minValue, max: maxValue})
         callback(new Error(message))
       }
     } else if (minValue !== -1) {
       if (value.length < minValue) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值个数应大于[' + minValue + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.arrayRangeLarge', {min: minValue})
         callback(new Error(message))
       }
     } else if (maxValue !== -1) {
       if (value.length > maxValue) {
-        let message = (!msg && msg !== '') ? msg : '数据字段的值个数应小于[' + maxValue + ']'
+        let message = (!msg && msg !== '') ? msg : locale.i18n.t('message.validate.arrayRangeSmall', {max: maxValue})
         callback(new Error(message))
       }
     }
@@ -168,14 +169,14 @@ const _rangeArrayRule = (min, max, msg, trigger) => {
   } else {
     rule.trigger = 'blur'
   }
-  logger.debug('创建了一个数组个数范围规则：%j.', rule)
+  logger.debug('create a array range rule: %j.', rule)
   return rule
 }
 
 const rangeRule = (param) => {
   let {type, min, max, msg, trigger} = param || {}
   if (!min && !max) {
-    throw new Error('范围校验规则至少要设定最大值或者最小值之间的一个')
+    throw new Error('You need set the min or max value for the range rule.')
   }
   if (!type) {
     type = 'string'
@@ -199,7 +200,7 @@ const emailRule = (param) => {
   if (msg && typeof msg === 'string' && msg !== '') {
     rule.message = msg
   } else {
-    rule.message = '电子邮件格式错误'
+    rule.message = locale.i18n.t('message.validate.email')
   }
   if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger
@@ -215,7 +216,7 @@ const customRule = (param) => {
   if (validator && typeof validator === 'function') {
     rule.validator = validator
   } else {
-    throw new Error('自定义校验规则需要输入自定义的校验函数')
+    throw new Error('You need define a custom validator for the custom rule.')
   }
   if (trigger !== null && trigger !== undefined && trigger !== '') {
     rule.trigger = trigger

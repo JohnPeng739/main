@@ -1,3 +1,4 @@
+import locale from '@/assets/lang'
 import ajax from '@/utils/ajax'
 import notify from '@/utils/notify'
 import formValidateRules from '@/utils/form-validate-rules'
@@ -13,7 +14,7 @@ import DialogPane from '@/components/dialog-pane.vue'
 
 import LayoutNormal from '@/layout/normal/index.vue'
 
-export {ajax, notify, formValidateRules, echartsUtils,
+export {locale, ajax, notify, formValidateRules, echartsUtils,
   Icon, PaginatePane,
   TagNormal, TagCouple,
   DialogPane,

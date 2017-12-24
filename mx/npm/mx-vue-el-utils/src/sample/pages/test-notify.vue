@@ -16,6 +16,8 @@
     <br/><br/>
     <el-input v-model="formValidateWarnMessage" style="width: 400px;"></el-input>
     <el-button @click="handleFormValidateWarnClick">Click for Form Validate Warn</el-button>
+    <br/><br/>
+    <el-date-picker v-model="date"></el-date-picker>
   </div>
 </template>
 
@@ -30,7 +32,8 @@
       return {
         duration: 3000,
         confirmType: 'none',
-        formValidateWarnMessage: 'This is a test form validate warn message.'
+        formValidateWarnMessage: 'This is a test form validate warn message.',
+        date: ''
       }
     },
     methods: {

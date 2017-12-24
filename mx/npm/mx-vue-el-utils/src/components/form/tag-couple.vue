@@ -1,12 +1,3 @@
-<style rel="stylesheet/less" lang="less" scoped>
-  @import "../../style/base.less";
-  @import "../../style/tag.less";
-
-  .tag-row {
-    display: inline-block;
-  }
-</style>
-
 <template>
   <div>
     <el-tag class="tag" v-for="item in tags" :key="item" :closable="!disabled" :close-transition="false" :type="type"
@@ -78,7 +69,7 @@
           let tag = left + this.separator + right
           let tagIndex = this.getTagIndex(tags, left)
           if (tagIndex >= 0) {
-            notify.warn('你输入的标签内容[' + tag + ']已经存在，请检查数据。')
+            notify.warn(this.$t('message.tag.existed', {tag}))
             return
           }
           let oldIndex = -1

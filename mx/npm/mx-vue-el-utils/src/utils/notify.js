@@ -1,15 +1,16 @@
 import {Message, MessageBox, Notification} from 'element-ui'
+import locale from '@/assets/lang'
 
 let error = (message) => Message({type: 'error', message})
 
 let warn = (message) => Message({type: 'warning', message})
 
-let info = (message, duration) => Notification({title: '提示', message, duration: duration || 3000})
+let info = (message, duration) => Notification({title: locale.i18n.t('message.title.prompt'), message, duration: duration || 3000})
 
 let confirm = (message, fnOk, fnCancel) => {
-  MessageBox.confirm(message, '请确认', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
+  MessageBox.confirm(message, locale.i18n.t('message.title.confirm'), {
+    confirmButtonText: locale.i18n.t('button.ok'),
+    cancelButtonText: locale.i18n.t('button.cancel'),
     type: 'warning'
   }).then(() => {
     if (fnOk && typeof fnOk === 'function') {
@@ -22,6 +23,8 @@ let confirm = (message, fnOk, fnCancel) => {
   })
 }
 
-let formValidateWarn = (message) => warn(message || '表单数据校验失败，请检查输入的数据。')
+let formValidateWarn = (message) => {
+  warn(message || locale.i18n.t('message.validate.default'))
+}
 
 export default {error, warn, info, confirm, formValidateWarn}

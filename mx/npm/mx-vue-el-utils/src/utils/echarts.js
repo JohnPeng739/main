@@ -1,4 +1,5 @@
 import { round } from 'mx-app-utils'
+import locale from '@/assets/lang'
 
 /**
  * 创建一个仪表盘配置信息对象
@@ -14,7 +15,7 @@ const createGaugeOption = function (gauge, title, min, max, value, valueTitle, u
   min = min || 0
   max = max || 100
   value = round(value || (Math.random() * 100), 0)
-  valueTitle = valueTitle || '值'
+  valueTitle = valueTitle || locale.i18n.t('message.title.value')
   unitTitle = unitTitle || ''
   return {
     title: {text: title, top: 'bottom', left: 'center'},
@@ -47,7 +48,7 @@ const createGaugeOption = function (gauge, title, min, max, value, valueTitle, u
  */
 const freshGaugeValue = function (gauge, option, value, valueDigits, min, max) {
   if (!option) {
-    throw new Error('未初始化仪表盘。')
+    throw new Error('The gauge is not be initialized.')
   }
   if (value && typeof value === 'number') {
     option.series[0].data[0].value = round(value, valueDigits || 0)
@@ -93,7 +94,7 @@ const createPieOption = function (pie, title, items) {
 
 const freshPieValue = function (pie, option, dataItems, sumTotal) {
   if (!option) {
-    throw new Error('为初始化饼图。')
+    throw new Error('The pie is not be initialized.')
   }
   if (dataItems && dataItems.length > 0) {
     let width = pie.getWidth() / (dataItems.length * 2)
@@ -118,7 +119,7 @@ const freshPieValue = function (pie, option, dataItems, sumTotal) {
           data: [{
             symbol: 'circle',
             symbolSize: 65,
-            name: '总数',
+            name: locale.i18n.t('message.title.total'),
             x: width + index * 2 * width,
             y: height,
             value: round(total),
@@ -144,7 +145,7 @@ const createGraphOption = function (title, nodes, links, type) {
       }
     })
   } else {
-    throw new Error('图节点数据未设置。')
+    throw new Error('Not set the graph\'s node data.')
   }
   if (links && links.length > 0) {
     links.forEach(row => {

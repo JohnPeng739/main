@@ -1,6 +1,4 @@
 <style rel="stylesheet/less" lang="less" scoped>
-  @import "../../style/base.less";
-
   .gauge {
     width: 300px;
     height: 300px;

@@ -1,16 +1,12 @@
-<style rel="stylesheet/less" lang="less" scoped>
-  @import "../style/dialog.less";
-</style>
-
 <template>
   <keep-alive>
     <el-dialog :visible.sync="visible" :title="title" :modal-append-to-body="false" :close-on-click-modal="false"
                :width="width">
       <slot name="form"></slot>
       <div slot="footer" class="dialog-footer">
-        <el-button class="button" @click.native="handleReset" :disabled="readonly">重置</el-button>
-        <el-button class="button" @click.native="handleSubmit" :disabled="readonly">保存</el-button>
-        <el-button class="button" @click.native="handleClose">关闭</el-button>
+        <el-button class="button" @click.native="handleReset" :disabled="readonly">{{$t('button.reset')}}</el-button>
+        <el-button class="button" @click.native="handleSubmit" :disabled="readonly">{{$t('button.submit')}}</el-button>
+        <el-button class="button" @click.native="handleClose">{{$t('button.close')}}</el-button>
       </div>
     </el-dialog>
   </keep-alive>

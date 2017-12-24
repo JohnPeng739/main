@@ -1,25 +1,3 @@
-<style rel="stylesheet/less" lang="less" scoped>
-  @import "../../style/base.less";
-
-  .nav-icon {
-     font-size: 20px;
-     padding-right: 10px;
-   }
-
-  .sub-nav-icon {
-    font-size: 18px;
-    padding-right: 10px;
-  }
-
-  .menu-item {
-    font-size: 16px;
-  }
-
-  .submenu-item {
-    font-size: 14px;
-  }
-</style>
-
 <template>
   <el-submenu v-if="isRole(item)" :index="item.path">
     <template slot="title">

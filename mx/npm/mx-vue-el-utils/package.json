@@ -1,6 +1,6 @@
 {
   "name": "mx-vue-el-utils",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "一个基于Vue、ElementUI的前端项目框架组件库。",
   "private": false,
   "license": "MIT",
@@ -35,11 +35,13 @@
     "mockjs": "^1.0.1-beta3",
     "mx-app-utils": "^1.5.3",
     "vue": "^2.5.13",
+    "vue-i18n": "^7.3.3",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
+    "autoprefixer-loader": "^3.2.0",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",

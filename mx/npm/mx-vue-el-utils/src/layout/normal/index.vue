@@ -1,58 +1,3 @@
-<style rel="stylesheet/less" lang="less">
-  @import "../../style/base.less";
-
-  body {
-    margin: 0;
-  }
-
-  .border {
-    border: 1px solid @content-color;
-  }
-
-  .layout-main {
-    overflow: hidden;
-  }
-
-  .header-row {
-    background-color: @header-bg-color;
-    color: @header-color;
-    width: 100%;
-    height: @header-height;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-  }
-
-  .content-row {
-    overflow: hidden;
-    margin-top: @header-height;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    background-color: lighten(@header-bg-color, 50%);
-    .layout-nav {
-      float: left;
-      vertical-align: top;
-      min-height: @content-min-height;
-    }
-    .layout-right {
-      margin-top: 10px;
-      overflow: hidden;
-      .breadcrumb-item {
-        color: @content-color;
-        font-style: italic;
-      }
-      .content-body {
-        min-height: @content-min-height - 45px;
-        margin: 10px;
-        background: @content-bg-color;
-        border-radius: 4px;
-      }
-    }
-  }
-</style>
-
 <template>
   <div class="layout-main">
     <div class="header-row">
@@ -67,7 +12,7 @@
       <div class="layout-right">
         <el-breadcrumb>
           <el-breadcrumb-item>
-            当前位置：
+            {{$t('message.title.current')}}
             <span class="breadcrumb-item">{{pathName}}</span>
           </el-breadcrumb-item>
         </el-breadcrumb>

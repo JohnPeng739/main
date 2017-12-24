@@ -1,57 +1,25 @@
-<style rel="stylesheet/less" lang="less" scoped>
-  @import "../style/base.less";
-
-  .layout-content {
-    magin: 0 auto;
-    .layout-page {
-      margin: 10px 30%;
-    }
-  }
-
-  .layout-paginate {
-    margin-left: 20%;
-  }
-
-  .layout-buttons {
-    display: inline-block;
-    float: right;
-    margin: 0 10px 0 3px;
-    .button {
-      padding: 10px;
-      font-size: @content-text-font-size;
-      color: @button-color;
-      &:hover {
-        color: @button-hover-color
-      }
-    }
-    .button-icon {
-      font-size: 12px;
-    }
-  }
-</style>
-
 <template>
   <div>
     <el-row type="flex">
       <el-col :span="24">
-        <span class="layout-buttons">
+        <span class="pg-layout-buttons">
           <el-button v-if="showAdd" class="button" :plain="true" type="text" @click.native="handleOperate('add')">
-            <icon class="button-icon" name="add"></icon>添加</el-button>
+            <icon class="button-icon" name="add"></icon>{{$t('button.add')}}</el-button>
           <el-button v-if="showEdit" class="button" :plain="true" type="text" @click.native="handleOperate('edit')">
-            <icon class="button-icon" name="edit"></icon>修改</el-button>
+            <icon class="button-icon" name="edit"></icon>{{$t('button.edit')}}</el-button>
           <el-button v-if="showDelete" class="button" :plain="true" type="text" @click.native="handleOperate('delete')">
-            <icon class="button-icon" name="delete"></icon>删除</el-button>
+            <icon class="button-icon" name="delete"></icon>{{$t('button.delete')}}</el-button>
           <el-button v-if="showDetail" class="button" :plain="true" type="text" @click.native="handleOperate('detail')">
-            <icon class="button-icon" name="details"></icon>详情</el-button>
+            <icon class="button-icon" name="details"></icon>{{$t('button.detail')}}</el-button>
           <el-button v-if="showRefresh" class="button" :plain="true" type="text"
                      @click.native="handleOperate('refresh')">
-            <icon class="button-icon" name="refresh"></icon>刷新</el-button>
+            <icon class="button-icon" name="refresh"></icon>{{$t('button.refresh')}}</el-button>
         </span>
       </el-col>
     </el-row>
     <el-row type="flex">
       <el-col :span="24">
-        <div class="layout-content">
+        <div class="pg-layout-content">
           <slot></slot>
           <div class="layout-paginate">
             <el-pagination @size-change="handleSizeChange" @current-change="handlePageChange" :total="pagination.total"

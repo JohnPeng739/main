@@ -50,6 +50,9 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
+      }, {
+        test: /\.less$/,
+        loader: 'file-load?name=[name].less'
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

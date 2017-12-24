@@ -1,28 +1,3 @@
-<style rel="stylesheet/less" lang="less" scoped>
-  @import "../../style/base.less";
-
-  .toolbar {
-    float: right;
-    padding-right: 20px;
-    .tools {
-      text-align: center;
-      width: @button-width - 30px;
-      color: @header-color;
-      &:hover {
-        color: @header-hover-color;
-      }
-      .tool-icon {
-        font-size: 24px;
-        padding-top: 10px;
-      }
-      .tool-title {
-        font-size: 12px;
-        padding-top: 2px;
-      }
-    }
-  }
-</style>
-
 <template>
   <div class="toolbar">
     <el-button v-for="item in favorityTools" v-if="isRole(item)" :key="item.path" @click="handleGoto(item.path)"

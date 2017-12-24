@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
-import ajax from '../../../src/utils/ajax'
-// import { ajax } from '../../../dist/mx-vue-el-utils.min'
+// import ajax from '../../../src/utils/ajax'
+import { ajax } from '../../../dist/mx-vue-el-utils.min'
 
 let pagination = {total: 100, size: 20, page: 3}
 let checked = {a: 'a', b: 'b', c: 123, d: false}

@@ -1,10 +1,11 @@
 import {ajax, logger} from 'mx-app-utils'
+import locale from '@/assets/lang'
 import notify from './notify'
 
 let defaultError = (errorMessage) => {
   if (errorMessage.response) {
     logger.debug(errorMessage.response.status)
-    let msg = '访问服务器错误，错误号：' + errorMessage.response.status + ', 错误信息：' + errorMessage.response.statusText + '。'
+    let msg = locale.i18n.t('error.ajax.default', {stats: errorMessage.response.status, text: errorMessage.response.statusText})
     notify.error(msg)
   } else {
     notify.error(errorMessage)

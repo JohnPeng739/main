@@ -17,7 +17,7 @@ const env = process.env.NODE_ENV === 'testing'
 
 const webpackConfig = merge(baseWebpackConfig, {
   entry: {
-    "mx-vue-el-utils": './src/index.js'
+    'mx-vue-el-utils': './src/index.js'
   },
   module: {
     rules: utils.styleLoaders({
@@ -51,7 +51,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     // extract css into its own file
     new ExtractTextPlugin({
-      filename: 'css/index.min.css',
+      filename: 'style/css/index.min.css',
       // filename: utils.assetsPath('css/[name].[contenthash].css'),
       // Setting the following option to `false` will not extract CSS from codesplit chunks.
       // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
@@ -63,8 +63,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     // duplicated CSS from different components can be deduped.
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
-        ? { safe: true, map: { inline: false } }
-        : { safe: true }
+        ? {safe: true, map: {inline: false}}
+        : {safe: true}
     }),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
@@ -79,10 +79,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     //    removeComments: true,
     //    collapseWhitespace: true,
     //    removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
+    // more options:
+    // https://github.com/kangax/html-minifier#options-quick-reference
     //  },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+    // necessary to consistently work with multiple chunks via CommonsChunkPlugin
     //  chunksSortMode: 'dependency'
     //}),
     // keep module.id stable when vender modules does not change
@@ -118,6 +118,11 @@ const webpackConfig = merge(baseWebpackConfig, {
     //  minChunks: 1
     //}),
 
+    // copy custom less assets
+    new CopyWebpackPlugin([{
+      from: path.resolve('src/style'),
+      to: 'style/less'
+    }])
     // copy custom static assets
     //new CopyWebpackPlugin([
     //  {

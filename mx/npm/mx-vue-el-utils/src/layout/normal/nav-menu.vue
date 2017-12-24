@@ -1,20 +1,3 @@
-<style rel="stylesheet/less" lang="less" scoped>
-  @import "../../style/base.less";
-
-  .nav-menu:not(.el-menu--collapse) {
-    width: 200px;
-  }
-
-  .nav-icon {
-    font-size: 20px;
-    padding-right: 10px;
-  }
-
-  .menu-item {
-    font-size: 16px;
-  }
-</style>
-
 <template>
   <el-menu :default-active="defaultActive" :collapse="toggled" unique-opened router class="nav-menu">
     <template v-for="item in navData">
