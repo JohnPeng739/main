@@ -1,4 +1,12 @@
 <style rel="stylesheet/less" lang="less">
+  @import "./style/base.less";
+  @import "~mx-vue-el-utils/dist/style/less/dialog.less";
+  @import "~mx-vue-el-utils/dist/style/less/tag.less";
+  @import "~mx-vue-el-utils/dist/style/less/pagination.less";
+  @import "~mx-vue-el-utils/dist/style/less/layout-normal.less";
+
+  @import "../style/rbac.less";
+
   @font-face {
     font-family: 'Material Icons';
     font-style: normal;

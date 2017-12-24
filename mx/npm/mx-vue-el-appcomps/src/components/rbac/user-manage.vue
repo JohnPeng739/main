@@ -1,80 +1,73 @@
-<style rel="stylesheet/less" lang="less" scoped>
-  .dialog-form {
-    padding: 0;
-    margin: 0;
-  }
-</style>
-
 <template>
   <div>
     <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick">
       <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row>
-        <el-table-column prop="fullName" label="姓名" :width="100"></el-table-column>
-        <el-table-column prop="sex" label="性别" :width="80">
+        <el-table-column prop="fullName" :label="$t('rbac.user.fields.name')" :width="100"></el-table-column>
+        <el-table-column prop="sex" :label="$t('rbac.user.fields.sex')" :width="80">
           <template slot-scope="scope">
-            <span v-if="scope.row.sex === 'FEMALE'">女性</span>
-            <span v-else-if="scope.row.sex === 'MALE'">男性</span>
-            <span v-else>未知</span>
+            <span v-if="scope.row.sex === 'FEMALE'">{{$t('rbac.user.fields.FEMALE')}}</span>
+            <span v-else-if="scope.row.sex === 'MALE'">{{$t('rbac.user.fields.MALE')}}</span>
+            <span v-else>{{$t('rbac.user.fields.NA')}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="birthday" label="出生日期" :width="100">
+        <el-table-column prop="birthday" :label="$t('rbac.user.fields.birthday')" :width="100">
           <template slot-scope="scope">
             {{parseDate(scope.row.birthday)}}
           </template>
         </el-table-column>
-        <el-table-column prop="department" label="部门" :width="100">
+        <el-table-column prop="department" :label="$t('rbac.user.fields.department')" :width="100">
           <template slot-scope="scope">
             {{getDepartmentName(scope.row.department)}}
           </template>
         </el-table-column>
-        <el-table-column prop="station" label="岗位" :width="120"></el-table-column>
-        <el-table-column prop="desc" label="描述"></el-table-column>
+        <el-table-column prop="station" :label="$t('rbac.user.fields.station')" :width="120"></el-table-column>
+        <el-table-column prop="desc" :label="$t('rbac.user.fields.desc')"></el-table-column>
       </el-table>
     </paginate-pane>
     <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit">
       <el-form ref="formUser" slot="form" :model="formUser" :rules="rulesUser" label-width="80px" class="dialog-form">
         <el-row type="flex">
           <el-col :span="6">
-            <el-form-item prop="firstName" label="姓">
+            <el-form-item prop="firstName" :label="$t('rbac.user.fields.firstName')">
               <el-input v-model="formUser.firstName" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item prop="middleName" label="辈">
+            <el-form-item prop="middleName" :label="$t('rbac.user.fields.middleName')">
               <el-input v-model="formUser.middleName" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item prop="lastName" label="名">
+            <el-form-item prop="lastName" :label="$t('rbac.user.fields.lastName')">
               <el-input v-model="formUser.lastName" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item prop="station" label="岗位">
+            <el-form-item prop="station" :label="$t('rbac.user.fields.station')">
               <el-input v-model="formUser.station" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item prop="desc" label="">
+            <el-form-item prop="desc" :label="$t('rbac.user.fields.desc')">
               <el-input type="textarea" v-model="formUser.desc" :rows="4" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flext">
           <el-col :span="6">
-            <el-form-item prop="sex" label="性别">
+            <el-form-item prop="sex" :label="$t('rbac.user.fields.sex')">
               <el-select v-model="formUser.sex">
-                <el-option value="FEMALE" label="女性"></el-option>
-                <el-option value="MALE" label="男性"></el-option>
-                <el-option value="NA" label="未知"></el-option>
+                <el-option value="FEMALE" :label="$t('rbac.user.fields.FEMALE')"></el-option>
+                <el-option value="MALE" :label="$t('rbac.user.fields.MALE')"></el-option>
+                <el-option value="NA" :label="$t('rbac.user.fields.NA')"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item prop="birthday" label="出生日期">
+            <el-form-item prop="birthday" :label="$t('rbac.user.fields.birthday')">
               <el-date-picker v-model="formUser.birthday" type="date" :readonly="readonly"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -104,8 +97,8 @@
         selected: null,
         formUser: this.newUser(),
         rulesUser: {
-          firstName: [formValidateRules.requiredRule({msg: '必须输入名'})],
-          lastName: [formValidateRules.requiredRule({msg: '必须输入姓'})]
+          firstName: [formValidateRules.requiredRule({msg: this.$t('rbac.user.validate.requiredFirstName')})],
+          lastName: [formValidateRules.requiredRule({msg: this.$t('rbac.user.validate.requiredLastName')})]
         }
       }
     },
@@ -118,29 +111,40 @@
       title () {
         switch (this.operate) {
           case 'add':
-            return '新增用户'
+            return this.$t('rbac.user.title.add')
           case 'edit':
-            return '修改用户信息'
+            return this.$t('rbac.user.title.edit')
           case 'detail':
           default:
-            return '显示用户详情'
+            return this.$t('rbac.user.title.detail')
         }
       },
       newUser () {
-        return {id: undefined, firstName: '', middleName: '', lastName: '', fullName: '', desc: '', station: '', sex: 'MALE', birthday: 0, department: {id: '', code: '', name: '', desc: ''}}
+        return {
+          id: undefined,
+          firstName: '',
+          middleName: '',
+          lastName: '',
+          fullName: '',
+          desc: '',
+          station: '',
+          sex: 'MALE',
+          birthday: 0,
+          department: {id: '', code: '', name: '', desc: ''}
+        }
       },
       parseDate (longDate) {
         if (longDate) {
           return formatter.formatDate(longDate)
         } else {
-          return 'NA'
+          return this.$t('NA')
         }
       },
       getDepartmentName (department) {
         if (department && department.name) {
           return department.name
         } else {
-          return 'NA'
+          return this.$t('NA')
         }
       },
       refreshData (pagination) {
@@ -149,7 +153,7 @@
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            notify.info('刷新用户数据成功。')
+            notify.info(this.$t('rbac.user.message.refreshSuccess'))
           }
         })
       },
@@ -181,7 +185,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  notify.info('添加用户数据成功。')
+                  notify.info(this.$t('rbac.user.message.addUserSuccess'))
                 }
               })
             } else if (this.operate === 'edit') {
@@ -191,7 +195,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  notify.info('修改用户数据成功。')
+                  notify.info(this.$t('rbac.user.message.editUserSuccess'))
                 }
               })
             }
@@ -215,7 +219,7 @@
           case 'delete':
           case 'detail':
             if (!this.selected) {
-              notify.info('请先选中一个用户进行操作。')
+              notify.info(this.$t('rbac.user.message.needChooseUser'))
               break
             }
             if (operate === 'delete') {
@@ -225,7 +229,7 @@
               ajax.del(url, data => {
                 if (data) {
                   this.refreshData(pagination)
-                  notify.info('删除用户数据成功。')
+                  notify.info(this.$t('rbac.user.message.deleteUserSuccess'))
                 }
               })
             } else {
