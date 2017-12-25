@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import UserManage from '@/components/rbac/user-manage.vue'
-
-UserManage.tableMaxHeight = 500
+import RoleManage from '@/components/rbac/role-manage.vue'
+import DepartManage from '@/components/rbac/department-manage.vue'
+import PrivilegeManage from '@/components/rbac/privilege-manage.vue'
+import LoginHistory from '@/components/rbac/login-history-manage.vue'
+import AccreditManage from '@/components/rbac/accredit-manage.vue'
 
 export const navData = [{
   path: '/',
@@ -63,19 +66,19 @@ const router = new Router({
     component: UserManage
   }, {
     path: '/manage/role',
-    component: UserManage
+    component: RoleManage
   }, {
     path: '/manage/privilege',
-    component: UserManage
+    component: PrivilegeManage
   }, {
     path: '/manage/department',
-    component: UserManage
+    component: DepartManage
   }, {
     path: '/manage/accredit',
-    component: UserManage
+    component: AccreditManage
   }, {
     path: '/manage/login',
-    component: UserManage
+    component: LoginHistory
   }]
 })
 

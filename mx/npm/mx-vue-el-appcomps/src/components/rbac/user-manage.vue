@@ -6,9 +6,9 @@
         <el-table-column prop="fullName" :label="$t('rbac.user.fields.name')" :width="100"></el-table-column>
         <el-table-column prop="sex" :label="$t('rbac.user.fields.sex')" :width="80">
           <template slot-scope="scope">
-            <span v-if="scope.row.sex === 'FEMALE'">{{$t('rbac.user.fields.FEMALE')}}</span>
-            <span v-else-if="scope.row.sex === 'MALE'">{{$t('rbac.user.fields.MALE')}}</span>
-            <span v-else>{{$t('rbac.user.fields.NA')}}</span>
+            <span v-if="scope.row.sex === 'FEMALE'">{{$t('rbac.common.fields.FEMALE')}}</span>
+            <span v-else-if="scope.row.sex === 'MALE'">{{$t('rbac.common.fields.MALE')}}</span>
+            <span v-else>{{$t('rbac.common.fields.NA')}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="birthday" :label="$t('rbac.user.fields.birthday')" :width="100">
@@ -22,7 +22,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="station" :label="$t('rbac.user.fields.station')" :width="120"></el-table-column>
-        <el-table-column prop="desc" :label="$t('rbac.user.fields.desc')"></el-table-column>
+        <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
       </el-table>
     </paginate-pane>
     <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit">
@@ -51,18 +51,18 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item prop="desc" :label="$t('rbac.user.fields.desc')">
+            <el-form-item prop="desc" :label="$t('rbac.common.fields.desc')">
               <el-input type="textarea" v-model="formUser.desc" :rows="4" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row type="flext">
+        <el-row type="flex">
           <el-col :span="6">
             <el-form-item prop="sex" :label="$t('rbac.user.fields.sex')">
               <el-select v-model="formUser.sex">
-                <el-option value="FEMALE" :label="$t('rbac.user.fields.FEMALE')"></el-option>
-                <el-option value="MALE" :label="$t('rbac.user.fields.MALE')"></el-option>
-                <el-option value="NA" :label="$t('rbac.user.fields.NA')"></el-option>
+                <el-option value="FEMALE" :label="$t('rbac.common.fields.FEMALE')"></el-option>
+                <el-option value="MALE" :label="$t('rbac.common.fields.MALE')"></el-option>
+                <el-option value="NA" :label="$t('rbac.common.fields.NA')"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
@@ -82,12 +82,12 @@
   import { ajax, notify, formValidateRules, PaginatePane, DialogPane } from 'mx-vue-el-utils'
 
   export default {
-    name: 'page-rbac-manage',
+    name: 'page-user-manage',
     components: {PaginatePane, DialogPane},
     props: {
       tableMaxHeight: {
         type: Number,
-        default: 560
+        default: 550
       }
     },
     data () {
@@ -109,14 +109,15 @@
     },
     methods: {
       title () {
+        let module = this.$t('rbac.user.module')
         switch (this.operate) {
           case 'add':
-            return this.$t('rbac.user.title.add')
+            return this.$t('rbac.common.title.add', {module})
           case 'edit':
-            return this.$t('rbac.user.title.edit')
+            return this.$t('rbac.common.title.edit', {module})
           case 'detail':
           default:
-            return this.$t('rbac.user.title.detail')
+            return this.$t('rbac.common.title.detail', {module})
         }
       },
       newUser () {
@@ -137,7 +138,7 @@
         if (longDate) {
           return formatter.formatDate(longDate)
         } else {
-          return this.$t('NA')
+          return this.$t('rbac.common.fields.NA')
         }
       },
       getDepartmentName (department) {
@@ -153,7 +154,7 @@
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            notify.info(this.$t('rbac.user.message.refreshSuccess'))
+            notify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.user.module')}))
           }
         })
       },
@@ -185,7 +186,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  notify.info(this.$t('rbac.user.message.addUserSuccess'))
+                  notify.info(this.$t('rbac.common.message.addSuccess', {module: this.$t('rbac.user.module')}))
                 }
               })
             } else if (this.operate === 'edit') {
@@ -195,7 +196,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  notify.info(this.$t('rbac.user.message.editUserSuccess'))
+                  notify.info(this.$t('rbac.common.message.editSuccess', {module: this.$t('rbac.user.module')}))
                 }
               })
             }
@@ -219,7 +220,7 @@
           case 'delete':
           case 'detail':
             if (!this.selected) {
-              notify.info(this.$t('rbac.user.message.needChooseUser'))
+              notify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.user.module')}))
               break
             }
             if (operate === 'delete') {
@@ -229,7 +230,7 @@
               ajax.del(url, data => {
                 if (data) {
                   this.refreshData(pagination)
-                  notify.info(this.$t('rbac.user.message.deleteUserSuccess'))
+                  notify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.$t('rbac.user.module')}))
                 }
               })
             } else {

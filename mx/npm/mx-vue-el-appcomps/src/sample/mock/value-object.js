@@ -2,7 +2,10 @@ let dict = {
   'id': '@id',
   'code': '@word',
   'name': '@cname',
-  'desc': '@cparagraph'
+  'desc': '@cparagraph',
+  'createdTime': '@integer(1413763339001, 1513763339001)',
+  'updatedTime': '@integer(1413763339001, 1513763339001)',
+  'operator': '@word'
 }
 
 let user = {
