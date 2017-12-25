@@ -6,6 +6,7 @@ import TestTag from '../pages/test-tag.vue'
 import TestPage from '../pages/test-page.vue'
 import TestEcharts from '../pages/test-echarts.vue'
 import TestDialog from '../pages/test-dialog.vue'
+import TestChoose from '../pages/test-choose.vue'
 
 export const navData = [{
   path: '/',
@@ -35,6 +36,10 @@ export const navData = [{
     path: '/tests/dialog',
     icon: 'apps',
     name: '对话框'
+  }, {
+    path: '/tests/chooseInput',
+    icon: 'apps',
+    name: '可选择输入框'
   }]
 }]
 
@@ -61,6 +66,9 @@ const router = new Router({
   }, {
     path: '/tests/dialog',
     component: TestDialog
+  }, {
+    path: '/tests/chooseInput',
+    component: TestChoose
   }, {
     path: '',
     component: TestHome

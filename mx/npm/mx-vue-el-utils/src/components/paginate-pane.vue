@@ -4,16 +4,16 @@
       <el-col :span="24">
         <span class="pg-layout-buttons">
           <el-button v-if="showAdd" class="button" :plain="true" type="text" @click.native="handleOperate('add')">
-            <icon class="button-icon" name="add"></icon>{{$t('button.add')}}</el-button>
+            <icon name="add"></icon>{{$t('button.add')}}</el-button>
           <el-button v-if="showEdit" class="button" :plain="true" type="text" @click.native="handleOperate('edit')">
-            <icon class="button-icon" name="edit"></icon>{{$t('button.edit')}}</el-button>
+            <icon name="edit"></icon>{{$t('button.edit')}}</el-button>
           <el-button v-if="showDelete" class="button" :plain="true" type="text" @click.native="handleOperate('delete')">
-            <icon class="button-icon" name="delete"></icon>{{$t('button.delete')}}</el-button>
+            <icon name="delete"></icon>{{$t('button.delete')}}</el-button>
           <el-button v-if="showDetail" class="button" :plain="true" type="text" @click.native="handleOperate('detail')">
-            <icon class="button-icon" name="details"></icon>{{$t('button.detail')}}</el-button>
+            <icon name="details"></icon>{{$t('button.detail')}}</el-button>
           <el-button v-if="showRefresh" class="button" :plain="true" type="text"
                      @click.native="handleOperate('refresh')">
-            <icon class="button-icon" name="refresh"></icon>{{$t('button.refresh')}}</el-button>
+            <icon name="refresh"></icon>{{$t('button.refresh')}}</el-button>
         </span>
       </el-col>
     </el-row>

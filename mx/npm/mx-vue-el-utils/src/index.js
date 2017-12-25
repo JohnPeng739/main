@@ -7,6 +7,9 @@ import echartsUtils from '@/utils/echarts.js'
 import Icon from '@/components/icon.vue'
 import PaginatePane from '@/components/paginate-pane.vue'
 
+import ChooseInput from '@/components/form/choose-input.vue'
+import ChooseTag from '@/components/form/choose-tag.vue'
+
 import TagNormal from '@/components/form/tag-normal.vue'
 import TagCouple from '@/components/form/tag-couple.vue'
 
@@ -16,6 +19,7 @@ import LayoutNormal from '@/layout/normal/index.vue'
 
 export {locale, ajax, notify, formValidateRules, echartsUtils,
   Icon, PaginatePane,
+  ChooseInput, ChooseTag,
   TagNormal, TagCouple,
   DialogPane,
   LayoutNormal

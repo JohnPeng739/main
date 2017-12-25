@@ -3,7 +3,7 @@
     <template v-for="item in navData">
       <nav-sub-menu v-if="item.children && isRole(item)" :role="role" :item="item"></nav-sub-menu>
       <el-menu-item v-else-if="isRole(item)" :index="item.path" class="menu-item">
-        <icon :name="item.icon" class="nav-icon"></icon>
+        <icon :name="item.icon" class="menu-item"></icon>
         <span slot="title" class="menu-item">{{item.name}}</span>
       </el-menu-item>
     </template>

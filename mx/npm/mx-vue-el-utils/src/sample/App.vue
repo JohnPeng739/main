@@ -1,9 +1,15 @@
 <style rel="stylesheet/less" lang="less">
   @import "./style/base.less";
-  @import "../../dist/style/less/layout-normal";
+  @import "../../dist/style/less/button.less";
+  @import "../../dist/style/less/layout-normal.less";
   @import "../../dist/style/less/dialog.less";
   @import "../../dist/style/less/tag.less";
   @import "../../dist/style/less/pagination.less";
+  // @import "../style/button.less";
+  // @import "../style/layout-normal.less";
+  // @import "../style/dialog.less";
+  // @import "../style/tag.less";
+  // @import "../style/pagination.less";
 
   @font-face {
     font-family: 'Material Icons';
@@ -21,7 +27,7 @@
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
-    font-size: 24px; /* Preferred icon size */
+    // font-size: 24px; /* Preferred icon size */
     display: inline-block;
     line-height: 1;
     text-transform: none;
@@ -51,9 +57,9 @@
 </template>
 
 <script>
-  import {logger} from 'mx-app-utils'
-  // import LayoutNormal from '@/layout/normal/index.vue'
-  import {LayoutNormal} from '../../dist/mx-vue-el-utils.min'
+  import { logger } from 'mx-app-utils'
+  import LayoutNormal from '@/layout/normal/index.vue'
+  // import {LayoutNormal} from '../../dist/mx-vue-el-utils.min'
   import { navData } from './router'
 
   export default {

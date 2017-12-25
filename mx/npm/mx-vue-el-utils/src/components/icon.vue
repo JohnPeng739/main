@@ -5,15 +5,8 @@
 </template>
 
 <script>
-  import 'element-ui/'
-
   export default {
-    name: 'DsIcon',
-    data () {
-      return {
-        active: false
-      }
-    },
+    name: 'material-icon',
     props: {
       name: {
         type: String,

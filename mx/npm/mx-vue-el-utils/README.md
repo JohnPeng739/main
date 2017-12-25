@@ -1,6 +1,6 @@
 # mx-vue-el-utils
 ====
-<h5>版本： V1.1.1</h5>
+<h5>版本： V1.2.0</h5>
 一个非常简单使用的面向HTML5的WEB开发的框架模块，使用了VUE 2和Element-UI。目前封装了:
 
 1. 工具类：<br/>
@@ -11,6 +11,8 @@
   2.1 form组件：tagNormal和tagCouple两个常规的标签组件；<br/>
   2.2 Icon组件：支持所有material design图标；<br/>
   2.3 PaginatePane组件：支持常规新增、修改、删除、详情、刷新和分页显示的面板组件。<br/>
+  2.4 添加了一个基于Input控件的选择组件，支持定义显示内容，数据为JSON对象。<br/>
+  2.5 添加了一个基于tag控件的选择组件，支持定义显示内容，数据为JSON对象。<br/>
 3. 布局：<br/>
   3.1 normal布局组件(LayoutNormal)：常规的顶栏+左边栏导航布局。<br/>
 4. 对话框（DialogPane）<br/>
@@ -35,6 +37,10 @@
 
 
 ## 修改历史
+**1.2.0**<br>
+1. 添加了ChooseInput和ChooseTag控件。
+2. 修改了图标和按钮控件的样式控制。
+
 **1.1.1**<br>
 1. 提供了多语种资源文件的合并功能，在setLanguage方法中添加了...messages参数。
 
