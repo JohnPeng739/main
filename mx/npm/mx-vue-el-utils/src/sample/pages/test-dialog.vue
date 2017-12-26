@@ -1,12 +1,3 @@
-<style rel="stylesheet/less" lang="less" scoped>
-  @import "../style/base.less";
-
-  .dialog-form {
-    font-size: @content-text-font-size;
-    font-weight: @content-text-weight;
-  }
-</style>
-
 <template>
   <div>
     <el-select v-model="operate">
@@ -15,7 +6,7 @@
       <el-option value="detail" label="详情"></el-option>
     </el-select>
     <button type="primary" @click="handleShowModalDialog">显示模态对话框</button>
-    <dialog-pane ref="dialogPane" :title="title" v-on:reset="handleReset" v-on:submit="handleSubmit">
+    <dialog-pane ref="dialogPane" :title="title" v-on:reset="handleReset" v-on:submit="handleSubmit" class="layout-dialog">
       <el-form ref="formUser" slot="form" :model="formUser" :rules="rulesUser" label-width="100px" class="dialog-form">
         <el-form-item prop="code" label="代码">
           <el-input v-model="formUser.code" :readonly="readonly"></el-input>

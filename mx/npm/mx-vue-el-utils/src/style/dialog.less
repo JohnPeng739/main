@@ -1,4 +1,11 @@
-.dialog-form {
-  font-size: @content-text-font-size;
-  font-weight: @content-text-weight;
+@import "./button.less";
+
+.layout-dialog {
+  .dialog-form {
+    font-size: @content-text-font-size;
+    font-weight: @content-text-weight;
+  }
+  .button {
+    .button-border;
+  }
 }

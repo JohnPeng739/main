@@ -8,7 +8,7 @@
       </el-row>
       <el-row type="flex">
         <el-col :span="24">
-          <div class="pg-layout-buttons">
+          <div class="tag-popover">
             <el-button class="button" @click="handleCancel">{{$t('button.cancel')}}</el-button>
             <el-button class="button" @click="handleOk">{{$t('button.ok')}}</el-button>
           </div>

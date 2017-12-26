@@ -1,6 +1,6 @@
 <template>
   <div>
-    <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick">
+    <paginate-pane ref="paginatePane" :buttons-layout="buttonsLayout" v-on:buttonHandle="handleButtonClick">
       <el-table :data="tableData" :max-height="560" class="layout-table" highlight-current-row
                 @current-change="handleCurrentChange">
         <el-table-column prop="code" label="代码"></el-table-column>
@@ -13,16 +13,17 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  // import notify from '@/utils/notify'
-  // import PaginatePane from '@/components/paginate-pane'
-  import { notify, PaginatePane } from '../../../dist/mx-vue-el-utils.min'
+  import notify from '@/utils/notify'
+  import PaginatePane from '@/components/paginate-pane'
+  // import { notify, PaginatePane } from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-paginate-content',
     components: {PaginatePane},
     data () {
       return {
-        tableData: []
+        tableData: [],
+        buttonsLayout: ['delete', 'details', 'edit', 'refresh', 'add', {code: 'custom', name: '自定义', icon: 'apps'}]
       }
     },
     methods: {

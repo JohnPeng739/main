@@ -3,17 +3,11 @@
     <el-row type="flex">
       <el-col :span="24">
         <span class="pg-layout-buttons">
-          <el-button v-if="showAdd" class="button" :plain="true" type="text" @click.native="handleOperate('add')">
-            <icon name="add"></icon>{{$t('button.add')}}</el-button>
-          <el-button v-if="showEdit" class="button" :plain="true" type="text" @click.native="handleOperate('edit')">
-            <icon name="edit"></icon>{{$t('button.edit')}}</el-button>
-          <el-button v-if="showDelete" class="button" :plain="true" type="text" @click.native="handleOperate('delete')">
-            <icon name="delete"></icon>{{$t('button.delete')}}</el-button>
-          <el-button v-if="showDetail" class="button" :plain="true" type="text" @click.native="handleOperate('detail')">
-            <icon name="details"></icon>{{$t('button.detail')}}</el-button>
-          <el-button v-if="showRefresh" class="button" :plain="true" type="text"
-                     @click.native="handleOperate('refresh')">
-            <icon name="refresh"></icon>{{$t('button.refresh')}}</el-button>
+          <el-button v-for="item in buttons" :key="item.code" :plain="true" type="text"
+                     @click.native="handdleButtonClick(item.code)" class="button">
+            <icon v-if="item.icon" :name="item.icon"></icon>
+            {{item.name}}
+          </el-button>
         </span>
       </el-col>
     </el-row>
@@ -36,26 +30,12 @@
   import { logger } from 'mx-app-utils'
   import Icon from '@/components/icon'
 
+  let defaultButtons = ['add', 'edit', 'delete', 'details', 'refresh']
+
   export default {
     name: 'paginate-content-pane',
     components: {Icon},
-    props: {
-      showAdd: {
-        default: true
-      },
-      showEdit: {
-        default: true
-      },
-      showDelete: {
-        default: true
-      },
-      showDetail: {
-        default: true
-      },
-      showRefresh: {
-        default: true
-      }
-    },
+    props: ['buttonsLayout'],
     data () {
       return {
         pagination: {
@@ -63,6 +43,27 @@
           size: 20,
           page: 1
         }
+      }
+    },
+    computed: {
+      buttons () {
+        let layout = this.buttonsLayout
+        if (layout === null || layout === undefined) {
+          layout = defaultButtons
+        }
+        let buttons = []
+        if (layout && layout instanceof Array) {
+          layout.forEach(button => {
+            if (button) {
+              if (typeof button === 'string' && defaultButtons.indexOf(button) >= 0) {
+                buttons.push({code: button, name: this.$t('button.' + button), icon: button})
+              } else if (button.code && button.name) {
+                buttons.push(button)
+              }
+            }
+          })
+        }
+        return buttons
       }
     },
     methods: {
@@ -73,7 +74,7 @@
           logger.debug('Set paginate: %j.', pagination)
         }
       },
-      handleOperate (operate) {
+      handdleButtonClick (operate) {
         this.$emit('buttonHandle', operate, this.pagination)
       },
       handleSizeChange (size) {

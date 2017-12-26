@@ -3,7 +3,7 @@ export default {
     add: '新增',
     edit: '修改',
     delete: '删除',
-    detail: '详情',
+    details: '详情',
     refresh: '刷新',
     ok: '确定',
     cancel: '取消',

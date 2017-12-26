@@ -3,7 +3,7 @@ export default {
     add: 'Add',
     edit: 'Edit',
     delete: 'Delete',
-    detail: 'Detail',
+    details: 'Detail',
     refresh: 'Refresh',
     ok: 'Ok',
     cancel: 'Cancel',
