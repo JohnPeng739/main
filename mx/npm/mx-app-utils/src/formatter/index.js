@@ -1,6 +1,7 @@
 import util from 'util'
 
-let formatRegExp = /%[sdj%]/g
+const argsRegExp = /%[sdj%]/g
+const objRegExp = /(%|)\{([0-9a-zA-Z_]+)\}/g
 
 /**
  * 根据参数格式化字符串，支持：%s（字符串）、%d（数字）、%j（JSON对象）。
@@ -8,8 +9,8 @@ let formatRegExp = /%[sdj%]/g
  */
 function format() {
     let args = arguments
-    let hasFormat = args && args[0] && args[0].match && args[0].match(formatRegExp) !== null
-    let tokens = (hasFormat) ? args[0].match(formatRegExp) : []
+    let hasFormat = args && args[0] && args[0].match && args[0].match(argsRegExp) !== null
+    let tokens = (hasFormat) ? args[0].match(argsRegExp) : []
     let ptokens = tokens.filter(t => t === '%%')
     let msg
     let meta = null
@@ -23,6 +24,38 @@ function format() {
     }
     msg = util.format.apply(null, args)
     return msg
+}
+
+/**
+ * 将对象中的属性进行变量格式化，支持花括号标识的变量
+ * @param string 格式字符串
+ * @param args 对象
+ * @returns {*|XML|void} 格式化后的字符串
+ */
+function formatObj(string, ...args) {
+    if (args.length === 1 && typeof args[0] === 'object') {
+        args = args[0]
+    }
+    if (!args || !args.hasOwnProperty) {
+        args = {}
+    }
+    return string.replace(objRegExp, (match, prefix, i, index) => {
+        let result
+        if (string[index - 1] === '{' &&
+            string[index + match.length] === '}') {
+            return i
+        } else {
+            result = Object.prototype.hasOwnProperty.call(args, i) ? args[i] : null;
+            if (result === null || result === undefined) {
+                return '{' + i + '}'
+            }
+            return result
+        }
+    })
+}
+
+function formatArgs() {
+    return format.apply(this, arguments)
 }
 
 function long2Date(longDatetime) {
@@ -83,7 +116,7 @@ function formatDatetime(longDatetime) {
     let hours = date.getHours()
     let minute = date.getMinutes()
     let second = date.getSeconds()
-    return formatDate(longDatetime) + ' ' + formatFixedLenNumber(hours, 2) + ':' +formatFixedLenNumber(minute, 2)
+    return formatDate(longDatetime) + ' ' + formatFixedLenNumber(hours, 2) + ':' + formatFixedLenNumber(minute, 2)
         + ':' + formatFixedLenNumber(second, 2)
 }
 
@@ -100,6 +133,8 @@ function formatTimestamp(longDatetime) {
 
 export default {
     format: format,
+    formatArgs: formatArgs,
+    formatObj: formatObj,
     formatDate: formatDate,
     formatDatetime: formatDatetime,
     formatTimestamp: formatTimestamp,

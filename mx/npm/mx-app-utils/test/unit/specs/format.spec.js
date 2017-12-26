@@ -1,9 +1,8 @@
-import {formatter} from '../../../dist/mx-app-utils.min'
+// import {formatter} from '../../../dist/mx-app-utils.min'
+import formatter from '../../../src/formatter'
 
-describe('formatter default', () => {
+describe('formatter format', () => {
     it('formatter for string', () => {
-        console.log(formatter)
-        console.log(formatter.format)
         expect(formatter.format('This is a test message.')).toBe('This is a test message.')
     })
     it('formatter for string parameter', () => {
@@ -27,6 +26,54 @@ describe('formatter default', () => {
         let json = {a: 'a', b: 22}
         expect(formatter.format('This is a test message, a: %s, b: %d, json: %j, %%.', 'a', 12, json))
             .toBe('This is a test message, a: a, b: 12, json: {"a":"a","b":22}, %.')
+    })
+})
+
+describe('formatter formatArgs', () => {
+    it('formatter for string', () => {
+        expect(formatter.formatArgs('This is a test message.')).toBe('This is a test message.')
+    })
+    it('formatter for string parameter', () => {
+        expect(formatter.formatArgs('This is a test message, a: %s, b: %s.', 'a', 'b'))
+            .toBe('This is a test message, a: a, b: b.')
+    })
+    it('formatter for int parameter', () => {
+        expect(formatter.formatArgs('This is a test message, a: %d, b: %d.', 10, 22))
+            .toBe('This is a test message, a: 10, b: 22.')
+    })
+    it('formatter for json parameter', () => {
+        let json = {a: 'a', b: 12}
+        expect(formatter.formatArgs('This is a test message, json: %j.', json))
+            .toBe('This is a test message, json: {"a":"a","b":12}.')
+    })
+    it('formatter for %', () => {
+        expect(formatter.formatArgs('This is a test message, %.'))
+            .toBe('This is a test message, %.')
+    })
+    it('formatter for mixture', () => {
+        let json = {a: 'a', b: 22}
+        expect(formatter.formatArgs('This is a test message, a: %s, b: %d, json: %j, %%.', 'a', 12, json))
+            .toBe('This is a test message, a: a, b: 12, json: {"a":"a","b":22}, %.')
+    })
+})
+
+describe('formatter formatObj', () => {
+    it('test blank', () => {
+        expect(formatter.formatObj('')).toBe('')
+        expect(formatter.formatObj('{code}')).toBe('{code}')
+        expect(formatter.formatObj('{code}', {})).toBe('{code}')
+        expect(formatter.formatObj('{code}', {name: 'name'})).toBe('{code}')
+    })
+    it('test object', () => {
+        expect(formatter.formatObj('{code}', {code: 'code'})).toBe('code')
+        expect(formatter.formatObj('a{code}', {code: 'code'})).toBe('acode')
+        expect(formatter.formatObj('a {code} b', {code: 'code'})).toBe('a code b')
+        expect(formatter.formatObj('{code} {name}', {code: 'code'})).toBe('code {name}')
+        expect(formatter.formatObj('{code} {name}', {code: 'code', name: 'name'})).toBe('code name')
+        expect(formatter.formatObj('{code} {name}', {name: 'name'})).toBe('{code} name')
+        expect(formatter.formatObj('{code} {name}', {code: 'code', name: 'name'})).toBe('code name')
+        expect(formatter.formatObj('a {code} - {name} c', {code: 'code', name: 'name'})).toBe('a code - name c')
+        expect(formatter.formatObj('{code} {age}', {code: 'code', name: 'name', age: 18})).toBe('code 18')
     })
 })
 
