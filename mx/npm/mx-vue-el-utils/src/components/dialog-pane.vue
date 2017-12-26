@@ -1,6 +1,6 @@
 <template>
   <keep-alive>
-    <el-dialog :visible.sync="visible" :title="title" :modal-append-to-body="false" :close-on-click-modal="false"
+    <el-dialog :visible.sync="visible" :title="title" :modal-append-to-body="true" :close-on-click-modal="false"
                :width="width">
       <slot name="form"></slot>
       <div slot="footer">
@@ -44,17 +44,17 @@
         logger.debug('operate: %s.', operate)
       },
       hide () {
-        this.handleClose()
+        this.visible = false
       },
       handleClose () {
         logger.debug('Close the dialog.')
-        this.visible = false
+        this.hide()
       },
       handleReset () {
         this.$emit('reset')
       },
       handleSubmit () {
-        this.$emit('submit')
+        this.$emit('submit', () => this.hide())
       }
     }
   }

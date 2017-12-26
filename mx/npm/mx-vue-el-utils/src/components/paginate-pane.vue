@@ -67,9 +67,9 @@
     },
     methods: {
       setPagination (pagination) {
-        let {total, size, page} = this.pagination
-        if (pagination && (pagination.total !== total || pagination.size !== size || pagination.page !== page)) {
-          this.pagination = pagination
+        let {total} = this.pagination
+        if (pagination && (pagination.total !== total)) {
+          this.pagination.total = pagination.total
           logger.debug('Set paginate: %j.', pagination)
         }
       },

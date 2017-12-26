@@ -25,6 +25,7 @@ export default {
     tag: {
       existed: 'You entered tag[{tag}] already exists, please check the data.'
     },
+    choose: 'Please choose data.',
     validate: {
       default: 'The form data validation fails, please check the input data.',
       required: 'You need enter any data.',

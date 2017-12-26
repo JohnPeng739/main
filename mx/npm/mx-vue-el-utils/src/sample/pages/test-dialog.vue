@@ -33,7 +33,7 @@
   // import notify from '@/utils/notify'
   // import formValidateRules from '@/utils/form-validate-rules'
   // import DialogPane from '@/components/dialog-pane.vue'
-  import {notify, formValidateRules, DialogPane} from '../../../dist/mx-vue-el-utils.min'
+  import { notify, formValidateRules, DialogPane } from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-dialog-page',
@@ -44,7 +44,10 @@
         formUser: {code: 'abcd', name: '123143434545674567'},
         rulesUser: {
           code: [formValidateRules.requiredRule({msg: '必须输入代码'}), formValidateRules.rangeRule({min: 3, max: 10})],
-          name: [formValidateRules.requiredRule({msg: '必须输入名称'}), formValidateRules.rangeRule({type: 'string', min: 10})]
+          name: [formValidateRules.requiredRule({msg: '必须输入名称'}), formValidateRules.rangeRule({
+            type: 'string',
+            min: 10
+          })]
         }
       }
     },
@@ -69,13 +72,13 @@
         let {operate} = this
         this.$refs['dialogPane'].show(operate, '60%')
       },
-      handleSubmit () {
+      handleSubmit (done) {
         this.$refs['formUser'].validate(valid => {
           if (valid) {
             let {code, name} = this.formUser
             let data = {code, name}
             logger.debug('submit data: %j.', data)
-            this.$refs['dialogPane'].hide()
+            done()
           } else {
             logger.debug('invalide form value.')
             notify.formValidateWarn()

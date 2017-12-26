@@ -1,6 +1,6 @@
 # mx-vue-el-utils
 ====
-<h5>版本： V1.2.0</h5>
+<h5>版本： V1.2.1</h5>
 一个非常简单使用的面向HTML5的WEB开发的框架模块，使用了VUE 2和Element-UI。目前封装了:
 
 1. 工具类：<br/>
@@ -22,7 +22,7 @@
     npm i mx-vue-el-utils --save
 
 ## 用法
-    import {locale, ajax, notify, formValidateRules, TagNormal, TagCouple, Icon, DialogPane, LayoutNormal} from ‘mx-vue-el-utils'
+    import {locale, ajax, notify, formValidateRules, ChooseInput, ChooseTag, TagNormal, TagCouple, Icon, DialogPane, LayoutNormal} from ‘mx-vue-el-utils'
     import 'mx-vue-el-utils/mx-vue-el-utils.min.css'
 
     locale.setLanguage('zhCN')
@@ -37,6 +37,11 @@
 
 
 ## 修改历史
+**1.2.1**<br>
+1. 重构了ChooseInput和ChooseTag中确认数据的方法，提供了done函数。
+2. 修改了DialogPane中遮罩插入方式。
+3. 增加了ChooseInput和ChooseTag中的语言翻译（en和zhCN）。
+
 **1.2.0**<br>
 1. 添加了ChooseInput和ChooseTag控件。
 2. 修改了图标和按钮控件的样式控制。

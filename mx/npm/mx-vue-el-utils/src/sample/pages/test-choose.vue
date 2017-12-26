@@ -12,7 +12,7 @@
     <h1>测试 可选择输入框</h1>
     <br/>
     <div class="content">
-      <choose-input ref="input1" v-model="chooseInput" v-on:selected="handleSelectedInput" displayField="name"
+      <choose-input ref="input1" v-model="chooseInput" v-on:selected="handleSelectedInput" displayFormat="{code} - {name}"
                     placeholder="请选择..."
                     :popover-width="400" :readonly="true">
         <el-table :data="tableData" highlight-current-row @current-change="handleCurrentChange">
@@ -23,7 +23,7 @@
       <p>{{JSON.stringify(chooseInput)}}</p>
     </div>
     <br/><br/>
-    <choose-tag ref="tag1" v-model="chooseTag" displayField="name" v-on:selected="handleSelectedTag" :disabled="false"
+    <choose-tag ref="tag1" v-model="chooseTag" displayFormat="{code} - {name}" v-on:selected="handleSelectedTag" :disabled="false"
                 type="gray" :popover-width="400">
       <el-table :data="tableData" highlight-current-row @current-change="handleCurrentChange">
         <el-table-column prop="code" label="Code"></el-table-column>
@@ -51,15 +51,11 @@
       }
     },
     methods: {
-      handleSelectedInput () {
-        if (this.selected) {
-          this.$refs['input1'].setSelected(this.selected)
-        }
+      handleSelectedInput (done) {
+        done(this.selected)
       },
-      handleSelectedTag () {
-        if (this.selected) {
-          this.$refs['tag1'].addTag(this.selected)
-        }
+      handleSelectedTag (done) {
+        done(this.selected)
       },
       handleCurrentChange (currentRow, oldCurrentRow) {
         this.selected = currentRow

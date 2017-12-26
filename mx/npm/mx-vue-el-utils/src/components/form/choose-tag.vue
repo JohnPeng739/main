@@ -22,11 +22,12 @@
 </template>
 
 <script>
+  import {formatter} from 'mx-app-utils'
   import notify from '@/utils/notify'
 
   export default {
     name: 'choose-tag',
-    props: ['value', 'displayField', 'disabled', 'type', 'popoverWidth'],
+    props: ['value', 'displayFormat', 'disabled', 'type', 'popoverWidth'],
     data () {
       return {
         visible: false
@@ -39,20 +40,10 @@
     },
     methods: {
       getDisplayName (item) {
-        if (item && item[this.displayField]) {
-          return item[this.displayField]
+        if (item !== null && item !== undefined) {
+          return formatter.formatObj(this.displayFormat, item)
         } else {
           return ''
-        }
-      },
-      addTag (tag) {
-        if (tag && tag.id && tag[this.displayField]) {
-          if (this.tags.indexOf(tag) >= 0) {
-            notify.warn(this.$t('message.tag.existed', {tag: tag[this.displayField]}))
-          } else {
-            this.tags.push(tag)
-            this.visible = false
-          }
         }
       },
       handleDeleteTag (tag) {
@@ -60,7 +51,19 @@
         this.$emit('input', this.tags)
       },
       handleOk () {
-        this.$emit('selected')
+        this.$emit('selected', (selected) => {
+          let tag = selected
+          if (tag !== null && tag !== undefined) {
+            if (this.tags.indexOf(tag) >= 0) {
+              notify.warn(this.$t('message.tag.existed', {tag: this.getDisplayName(tag)}))
+            } else {
+              this.tags.push(tag)
+              this.visible = false
+            }
+          } else {
+            notify.info(this.$t('message.choose'))
+          }
+        })
       },
       handleCancel () {
         this.visible = false

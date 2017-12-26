@@ -24,26 +24,34 @@
 </template>
 
 <script>
+  import {formatter} from 'mx-app-utils'
+  import notify from '@/utils/notify'
   import Icon from '@/components/icon.vue'
 
   export default {
     name: 'choose-input',
-    props: ['value', 'displayField', 'popoverWidth', 'readonly', 'placeholder', 'disabled', 'size'],
+    props: ['value', 'displayFormat', 'popoverWidth', 'readonly', 'placeholder', 'disabled', 'size'],
     components: {Icon},
     data () {
       return {
-        dataDisplay: '',
         visible: false
       }
     },
-    methods: {
-      setSelected (selected) {
-        if (selected !== null && selected !== undefined) {
-          this.dataDisplay = selected[this.displayField]
-          this.$emit('input', selected)
-          this.hide()
+    computed: {
+      dataDisplay: {
+        get  () {
+          let {value, displayFormat} = this
+          if (value === null || value === undefined) {
+            return ''
+          }
+          return formatter.formatObj(displayFormat, value)
+        },
+        set (newValue) {
+          // do nothing
         }
-      },
+      }
+    },
+    methods: {
       hide () {
         this.visible = false
       },
@@ -51,12 +59,15 @@
         this.hide()
       },
       handleOk () {
-        this.$emit('selected')
-      }
-    },
-    mounted () {
-      if (this.value && this.value[this.displayField]) {
-        this.dataDisplay = this.value[this.displayField]
+        this.$emit('selected', (selected) => {
+          if (selected !== null && selected !== undefined) {
+            this.dataDisplay = selected[this.displayField]
+            this.$emit('input', selected)
+            this.hide()
+          } else {
+            notify.info(this.$t('message.choose'))
+          }
+        })
       }
     }
   }

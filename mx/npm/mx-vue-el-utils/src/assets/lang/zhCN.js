@@ -25,6 +25,7 @@ export default {
     tag: {
       existed: '你输入的标签[{tag}]已经存在，请检查数据。'
     },
+    choose: '请选择数据。',
     validate: {
       default: '表单数据校验失败，请检查输入的数据。',
       required: '数据字段必须输入数据。',
