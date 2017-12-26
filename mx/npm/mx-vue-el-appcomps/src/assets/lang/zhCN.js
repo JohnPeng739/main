@@ -20,7 +20,7 @@ export default {
       title: {
         add: '创建一个新{module}',
         edit: '修改{module}信息',
-        detail: '显示{module}信息'
+        details: '显示{module}信息'
       },
       message: {
         refreshSuccess: '刷新{module}列表数据成功。',

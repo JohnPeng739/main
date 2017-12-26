@@ -1,6 +1,5 @@
 <template>
-  <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick" :show-add="false" :show-edit="false"
-                 :show-delete="false" :show-detail="false">
+  <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick" :buttons-layout="['refresh']">
     <el-table :data="tableData" :max-height="tableMaxHeight" highlight-current-row>
       <el-table-column prop="createdTime" :label="$t('rbac.logs.fields.time')" :width="170">
         <template slot-scope="scope">

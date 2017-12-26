@@ -1,7 +1,6 @@
 <template>
   <div>
-    <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick" :show-add="false" :show-edit="false"
-                   :show-delete="false">
+    <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick" :buttons-layout="['details', 'refresh']">
       <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row>
         <el-table-column :label="$t('rbac.common.fields.name')" :width="150">
@@ -27,7 +26,7 @@
         </el-table-column>
       </el-table>
     </paginate-pane>
-    <dialog-pane ref="dialogPane" :title="title()">
+    <dialog-pane ref="dialogPane" :title="title()" class="layout-dialog">
       <el-form ref="formLoginHistory" slot="form" :model="formLoginHistory" label-width="130px" class="dialog-form">
         <el-row type="flex">
           <el-col :span="8">
@@ -79,20 +78,20 @@
     data () {
       return {
         tableData: [],
-        operate: 'detail',
+        operate: 'details',
         selected: null,
         formLoginHistory: {id: undefined, account: {code: '', name: ''}, online: true, loginTime: undefined, logoutTime: undefined}
       }
     },
     computed: {
       readonly () {
-        return this.operate === 'detail'
+        return this.operate === 'details'
       }
     },
     methods: {
       title () {
         let module = this.$t('rbac.loginHistory.module')
-        return this.$t('rbac.common.title.detail', {module})
+        return this.$t('rbac.common.title.details', {module})
       },
       parseDatetime (longDate) {
         if (longDate) {
@@ -140,7 +139,7 @@
           case 'refresh':
             this.refreshData(pagination)
             break
-          case 'detail':
+          case 'details':
             if (!this.selected) {
               notify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.loginHistory.module')}))
               break

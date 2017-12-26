@@ -25,7 +25,7 @@
         <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
       </el-table>
     </paginate-pane>
-    <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit">
+    <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit" class="layout-dialog">
       <el-form ref="formUser" slot="form" :model="formUser" :rules="rulesUser" label-width="130px" class="dialog-form">
         <el-row type="flex">
           <el-col :span="8">
@@ -102,7 +102,7 @@
     data () {
       return {
         tableData: [],
-        operate: 'detail',
+        operate: 'details',
         selected: null,
         formUser: this.newUser(),
         rulesUser: {
@@ -113,7 +113,7 @@
     },
     computed: {
       readonly () {
-        return this.operate === 'detail'
+        return this.operate === 'details'
       }
     },
     methods: {
@@ -126,7 +126,7 @@
             return this.$t('rbac.common.title.edit', {module})
           case 'detail':
           default:
-            return this.$t('rbac.common.title.detail', {module})
+            return this.$t('rbac.common.title.details', {module})
         }
       },
       newUser () {
@@ -227,7 +227,7 @@
             break
           case 'edit':
           case 'delete':
-          case 'detail':
+          case 'details':
             if (!this.selected) {
               notify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.user.module')}))
               break

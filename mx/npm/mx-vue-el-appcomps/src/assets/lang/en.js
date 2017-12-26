@@ -20,7 +20,7 @@ export default {
       title: {
         add: 'Create a new {module}',
         edit: 'Edit the {module}\'s information',
-        detail: 'Show the {module}\'s information'
+        details: 'Show the {module}\'s information'
       },
       message: {
         refreshSuccess: 'Refresh the {module}\'s list successfully.',

@@ -1,6 +1,7 @@
 <template>
   <div>
-    <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick" :show-edit="false">
+    <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick"
+                   :buttonsLayout="['add', 'delete', 'details', 'refresh']">
       <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row>
         <el-table-column prop="src" :label="$t('rbac.accredit.fields.src')" :width="100">
@@ -37,7 +38,7 @@
         <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
       </el-table>
     </paginate-pane>
-    <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit">
+    <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit" class="layout-dialog">
       <el-form ref="formAccredit" slot="form" :model="formAccredit" :rules="rulesAccredit" label-width="130px"
                class="dialog-form">
         <el-row type="flex">
@@ -104,7 +105,7 @@
     data () {
       return {
         tableData: [],
-        operate: 'detail',
+        operate: 'details',
         selected: null,
         formAccredit: this.newAccredit(),
         rulesAccredit: {
@@ -117,7 +118,7 @@
     },
     computed: {
       readonly () {
-        return this.operate === 'detail'
+        return this.operate === 'details'
       }
     },
     methods: {
@@ -130,7 +131,7 @@
             return this.$t('rbac.common.title.edit', {module})
           case 'detail':
           default:
-            return this.$t('rbac.common.title.detail', {module})
+            return this.$t('rbac.common.title.details', {module})
         }
       },
       newAccredit () {
@@ -236,7 +237,7 @@
             this.showData(this.newAccredit(), operate)
             break
           case 'delete':
-          case 'detail':
+          case 'details':
             if (!this.selected) {
               notify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.accredit.module')}))
               break

@@ -18,7 +18,7 @@
         <el-table-column prop="operator" :label="$t('rbac.common.fields.operator')" :width="130"></el-table-column>
         <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
       </el-table>
-      <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit">
+      <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit" class="layout-dialog">
         <el-form ref="formCommon" slot="form" :model="formCommon" :rules="rulesCommon" label-width="80px"
                  class="dialog-form">
           <el-row type="flex">
@@ -57,7 +57,7 @@
     data () {
       return {
         tableData: [],
-        operate: 'detail',
+        operate: 'details',
         selected: null,
         formCommon: this.newDict(),
         rulesCommon: {
@@ -68,7 +68,7 @@
     },
     computed: {
       readonly () {
-        return this.operate === 'detail'
+        return this.operate === 'details'
       },
       moduleName () {
         return this.$t('rbac.' + this.module + '.module')
@@ -87,7 +87,7 @@
             return this.$t('rbac.common.title.edit', {module})
           case 'detail':
           default:
-            return this.$t('rbac.common.title.detail', {module})
+            return this.$t('rbac.common.title.details', {module})
         }
       },
       newDict () {
@@ -164,7 +164,7 @@
             break
           case 'edit':
           case 'delete':
-          case 'detail':
+          case 'details':
             if (!this.selected) {
               notify.info(this.$t('rbac.common.message.needChoose', {module: this.moduleName}))
               break

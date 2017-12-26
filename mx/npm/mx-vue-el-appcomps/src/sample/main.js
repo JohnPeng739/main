@@ -15,7 +15,7 @@ import zhCN from '@/assets/lang/zhCN'
 Vue.config.productionTip = false
 
 Vue.use(VueI18n)
-locale.setLanguage('en', {en, zhCN})
+locale.setLanguage('zhCN', {en, zhCN})
 Vue.use(ElementUI, {locale: locale.elLocale})
 
 if (mocks && mocks.length > 0) {
