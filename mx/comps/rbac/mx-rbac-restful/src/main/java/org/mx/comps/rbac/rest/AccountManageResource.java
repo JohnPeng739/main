@@ -7,6 +7,7 @@ import org.mx.comps.rbac.dal.entity.LoginHistory;
 import org.mx.comps.rbac.rest.vo.*;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.dal.Pagination;
+import org.mx.dal.entity.OperateLog;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
@@ -37,6 +38,47 @@ public class AccountManageResource {
 
     @Autowired
     private SessionDataStore sessionDataStore = null;
+
+    @Path("logs")
+    @GET
+    public DataVO<List<OperateLogVO>> logs() {
+        try {
+            List<OperateLog> logs = accessor.list(OperateLog.class);
+            List<OperateLogVO> vos = OperateLogVO.transformLogVOs(logs);
+            return new DataVO(vos);
+        } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new DataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
+        }
+    }
+
+    @Path("logs")
+    @POST
+    public PaginationDataVO<List<OperateLogVO>> logs(Pagination pagination) {
+        if (pagination == null) {
+            pagination = new Pagination();
+        }
+        try {
+            List<OperateLog> logs = accessor.list(pagination, OperateLog.class);
+            List<OperateLogVO> vos = OperateLogVO.transformLogVOs(logs);
+            return new PaginationDataVO(pagination, vos);
+        } catch (UserInterfaceException ex) {
+            return new PaginationDataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(ex);
+            }
+            return new PaginationDataVO<>(
+                    new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
+        }
+    }
 
     @Path("loginHistories")
     @GET
