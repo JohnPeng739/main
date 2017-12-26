@@ -26,26 +26,21 @@
       </el-table>
     </paginate-pane>
     <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit">
-      <el-form ref="formUser" slot="form" :model="formUser" :rules="rulesUser" label-width="80px" class="dialog-form">
+      <el-form ref="formUser" slot="form" :model="formUser" :rules="rulesUser" label-width="130px" class="dialog-form">
         <el-row type="flex">
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item prop="firstName" :label="$t('rbac.user.fields.firstName')">
               <el-input v-model="formUser.firstName" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item prop="middleName" :label="$t('rbac.user.fields.middleName')">
               <el-input v-model="formUser.middleName" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item prop="lastName" :label="$t('rbac.user.fields.lastName')">
               <el-input v-model="formUser.lastName" :readonly="readonly"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item prop="station" :label="$t('rbac.user.fields.station')">
-              <el-input v-model="formUser.station" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -57,7 +52,7 @@
           </el-col>
         </el-row>
         <el-row type="flex">
-          <el-col :span="6">
+          <el-col :span="12">
             <el-form-item prop="sex" :label="$t('rbac.user.fields.sex')">
               <el-select v-model="formUser.sex">
                 <el-option value="FEMALE" :label="$t('rbac.common.fields.FEMALE')"></el-option>
@@ -66,9 +61,22 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="12">
             <el-form-item prop="birthday" :label="$t('rbac.user.fields.birthday')">
               <el-date-picker v-model="formUser.birthday" type="date" :readonly="readonly"></el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row type="flex">
+          <el-col :span="12">
+            <el-form-item prop="department" :label="$t('rbac.user.fields.department')">
+              <choose-dict-input v-model="formUser.department" restUrl="/rest/departments"
+                                 displayFormat="{code} - {name}" :disabled="readonly"></choose-dict-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="station" :label="$t('rbac.user.fields.station')">
+              <el-input v-model="formUser.station" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -80,14 +88,15 @@
 <script>
   import { logger, formatter } from 'mx-app-utils'
   import { ajax, notify, formValidateRules, PaginatePane, DialogPane } from 'mx-vue-el-utils'
+  import ChooseDictInput from '@/components/choose-dict-input.vue'
 
   export default {
     name: 'page-user-manage',
-    components: {PaginatePane, DialogPane},
+    components: {PaginatePane, DialogPane, ChooseDictInput},
     props: {
       tableMaxHeight: {
         type: Number,
-        default: 550
+        default: 540
       }
     },
     data () {
@@ -131,7 +140,7 @@
           station: '',
           sex: 'MALE',
           birthday: 0,
-          department: {id: '', code: '', name: '', desc: ''}
+          department: undefined
         }
       },
       parseDate (longDate) {
@@ -169,7 +178,7 @@
         }
         this.formUser = {id, firstName, middleName, lastName, desc, station, sex, birthday, department}
         this.operate = operate
-        this.$refs['dialogPane'].show(operate, '80%')
+        this.$refs['dialogPane'].show(operate, '90%')
         logger.debug('show dialog, operate: %s, data: %j.', operate, data)
       },
       handleSubmit () {

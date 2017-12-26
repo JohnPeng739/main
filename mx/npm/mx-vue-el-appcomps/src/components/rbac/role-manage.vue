@@ -11,7 +11,7 @@
     props: {
       tableMaxHeight: {
         type: Number,
-        default: 550
+        default: 540
       }
     }
   }

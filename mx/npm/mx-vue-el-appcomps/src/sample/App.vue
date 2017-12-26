@@ -1,5 +1,6 @@
 <style rel="stylesheet/less" lang="less">
   @import "./style/base.less";
+  @import "~mx-vue-el-utils/dist/style/less/button.less";
   @import "~mx-vue-el-utils/dist/style/less/dialog.less";
   @import "~mx-vue-el-utils/dist/style/less/tag.less";
   @import "~mx-vue-el-utils/dist/style/less/pagination.less";
@@ -23,7 +24,6 @@
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
-    font-size: 24px; /* Preferred icon size */
     display: inline-block;
     line-height: 1;
     text-transform: none;

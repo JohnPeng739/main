@@ -5,29 +5,29 @@
                 highlight-current-row>
         <el-table-column prop="code" :label="$t('rbac.common.fields.code')" :width="100"></el-table-column>
         <el-table-column prop="name" :label="$t('rbac.common.fields.name')" :width="120"></el-table-column>
-        <el-table-column prop="createdTime" :label="$t('rbac.common.fields.createdTime')" :width="170">
+        <el-table-column prop="createdTime" :label="$t('rbac.common.fields.createdTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.createdTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="updatedTime" :label="$t('rbac.common.fields.updatedTime')" :width="170">
+        <el-table-column prop="updatedTime" :label="$t('rbac.common.fields.updatedTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.updatedTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="operator" :label="$t('rbac.common.fields.operator')" :width="100"></el-table-column>
+        <el-table-column prop="operator" :label="$t('rbac.common.fields.operator')" :width="130"></el-table-column>
         <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
       </el-table>
       <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit">
         <el-form ref="formCommon" slot="form" :model="formCommon" :rules="rulesCommon" label-width="80px"
                  class="dialog-form">
           <el-row type="flex">
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item prop="code" :label="$t('rbac.common.fields.code')">
                 <el-input v-model="formCommon.code" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="12">
               <el-form-item prop="name" :label="$t('rbac.common.fields.name')">
                 <el-input v-model="formCommon.name" :readonly="readonly"></el-input>
               </el-form-item>

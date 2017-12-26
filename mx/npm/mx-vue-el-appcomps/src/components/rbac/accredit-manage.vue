@@ -30,30 +30,35 @@
         </el-table-column>
         <el-table-column prop="closed" :label="$t('rbac.accredit.fields.closed')" :width="100">
           <template slot-scope="scope">
-            {{scope.row.closed ? $t('rbac.common.fields.closed') : ''}}
+            <span v-if="scope.row.closed" class="online">{{$t('rbac.common.fields.closed')}}</span>
+            <span v-else></span>
           </template>
         </el-table-column>
         <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
       </el-table>
     </paginate-pane>
     <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit">
-      <el-form ref="formAccredit" slot="form" :model="formAccredit" :rules="rulesAccredit" label-width="100px" class="dialog-form">
+      <el-form ref="formAccredit" slot="form" :model="formAccredit" :rules="rulesAccredit" label-width="130px"
+               class="dialog-form">
         <el-row type="flex">
           <el-col :span="12">
             <el-form-item prop="src" :label="$t('rbac.accredit.fields.src')">
-              <el-input v-model="formAccredit.src" :readonly="readonly"></el-input>
+              <choose-dict-input v-model="formAccredit.src" restUrl="/rest/accounts" displayFormat="{code} - {name}"
+                                 :disabled="readonly"></choose-dict-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item prop="tar" :label="$t('rbac.accredit.fields.tar')">
-              <el-input v-model="formAccredit.tar" :readonly="readonly"></el-input>
+              <choose-dict-input v-model="formAccredit.tar" restUrl="/rest/accounts" displayFormat="{code} - {name}"
+                                 :disabled="readonly"></choose-dict-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="24">
             <el-form-item prop="roles" :label="$t('rbac.accredit.fields.roles')">
-              <tag-normal v-model="formAccredit.roles" :disabled="readonly"></tag-normal>
+              <choose-dict-tag v-model="formAccredit.roles" restUrl="/rest/roles" displayFormat="{code} - {name}"
+                               :disabled="readonly"></choose-dict-tag>
             </el-form-item>
           </el-col>
         </el-row>
@@ -84,16 +89,16 @@
 <script>
   import { logger, formatter } from 'mx-app-utils'
   import { ajax, notify, formValidateRules, TagNormal, PaginatePane, DialogPane } from 'mx-vue-el-utils'
-
-  // TODO 需要使用新的标签控件选择角色
+  import ChooseDictInput from '@/components/choose-dict-input.vue'
+  import ChooseDictTag from '@/components/choose-dict-tag.vue'
 
   export default {
     name: 'page-accredit-manage',
-    components: {TagNormal, PaginatePane, DialogPane},
+    components: {TagNormal, PaginatePane, DialogPane, ChooseDictInput, ChooseDictTag},
     props: {
       tableMaxHeight: {
         type: Number,
-        default: 550
+        default: 540
       }
     },
     data () {
@@ -131,8 +136,8 @@
       newAccredit () {
         return {
           id: undefined,
-          src: {id: undefined, code: '', name: ''},
-          tar: {id: undefined, code: '', name: ''},
+          src: undefined,
+          tar: undefined,
           roles: [],
           startTime: new Date(),
           endTime: undefined,
@@ -178,12 +183,6 @@
           return
         }
         let {id, src, tar, roles, startTime, endTime, desc} = data
-        if (src === null || src === undefined) {
-          src = {id: undefined, code: '', name: ''}
-        }
-        if (tar === null && tar === undefined) {
-          tar = {id: undefined, code: '', name: ''}
-        }
         if (roles === null && roles === undefined) {
           roles = []
         }
@@ -195,7 +194,7 @@
         }
         this.formAccredit = {id, src, tar, roles, startTime, endTime, desc}
         this.operate = operate
-        this.$refs['dialogPane'].show(operate, '80%')
+        this.$refs['dialogPane'].show(operate, '90%')
         logger.debug('show dialog, operate: %s, data: %j.', operate, data)
       },
       handleSubmit () {

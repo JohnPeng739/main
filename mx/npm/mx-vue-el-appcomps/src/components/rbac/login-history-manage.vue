@@ -21,25 +21,26 @@
         </el-table-column>
         <el-table-column prop="online" :label="$t('rbac.loginHistory.fields.online')" :width="150">
           <template slot-scope="scope">
-            {{scope.row.online ? $t('rbac.common.fields.online') : $t('rbac.common.fields.offline')}}
+            <span v-if="scope.row.online" class="online">{{$t('rbac.common.fields.online')}}</span>
+            <span v-else class="offline">{{$t('rbac.common.fields.offline')}}</span>
           </template>
         </el-table-column>
       </el-table>
     </paginate-pane>
     <dialog-pane ref="dialogPane" :title="title()">
-      <el-form ref="formLoginHistory" slot="form" :model="formLoginHistory" label-width="100px" class="dialog-form">
+      <el-form ref="formLoginHistory" slot="form" :model="formLoginHistory" label-width="130px" class="dialog-form">
         <el-row type="flex">
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item :label="$t('rbac.common.fields.code')">
               <el-input v-model="formLoginHistory.account.code" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item :label="$t('rbac.common.fields.name')">
               <el-input v-model="formLoginHistory.account.name" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item :label="$t('rbac.loginHistory.fields.online')">
               <el-switch v-model="formLoginHistory.online" :disabled="readonly"></el-switch>
             </el-form-item>
@@ -72,7 +73,7 @@
     props: {
       tableMaxHeight: {
         type: Number,
-        default: 550
+        default: 540
       }
     },
     data () {
@@ -131,7 +132,7 @@
         }
         this.formLoginHistory = {id, account, online, loginTime, logoutTime}
         this.operate = operate
-        this.$refs['dialogPane'].show(operate, '80%')
+        this.$refs['dialogPane'].show(operate, '90%')
         logger.debug('show dialog, operate: %s, data: %j.', operate, data)
       },
       handleButtonClick (operate, pagination) {
