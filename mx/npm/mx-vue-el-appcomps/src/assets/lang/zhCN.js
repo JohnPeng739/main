@@ -84,6 +84,13 @@ export default {
         roles: '你至少要选择一个角色。',
         startTime: '你需要输入开始时间。'
       }
+    },
+    logs: {
+      module: '操作日志',
+      fields: {
+        time: '时间',
+        content: '内容'
+      }
     }
   }
 }

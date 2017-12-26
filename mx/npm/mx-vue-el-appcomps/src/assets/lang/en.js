@@ -84,6 +84,13 @@ export default {
         roles: 'You need choose the roles at least one.',
         startTime: 'You need enter the started time.'
       }
+    },
+    logs: {
+      module: 'Operate logs',
+      fields: {
+        time: 'Time',
+        content: 'Content'
+      }
     }
   }
 }

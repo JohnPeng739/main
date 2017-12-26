@@ -1,3 +1,10 @@
+let log = {
+  'id': '@id',
+  'operator': '@word',
+  'content': '@cparagraph',
+  'createdTime': '@integer(1413763339001, 1513763339001)'
+}
+
 let dict = {
   'id': '@id',
   'code': '@word',
@@ -65,4 +72,4 @@ let loginHistory = {
   'online|1': true
 }
 
-export {user, account, role, privilege, department, accredit, loginHistory}
+export {log, user, account, role, privilege, department, accredit, loginHistory}

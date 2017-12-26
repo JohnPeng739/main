@@ -6,6 +6,7 @@ import DepartManage from '@/components/rbac/department-manage.vue'
 import PrivilegeManage from '@/components/rbac/privilege-manage.vue'
 import LoginHistory from '@/components/rbac/login-history-manage.vue'
 import AccreditManage from '@/components/rbac/accredit-manage.vue'
+import OperateLog from '@/components/rbac/operate-log-manage.vue'
 
 export const navData = [{
   path: '/',
@@ -73,6 +74,9 @@ const router = new Router({
   }, {
     path: '/manage/department',
     component: DepartManage
+  }, {
+    path: '/manage/logs',
+    component: OperateLog
   }, {
     path: '/manage/accredit',
     component: AccreditManage

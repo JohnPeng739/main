@@ -1,6 +1,26 @@
-import {account, loginHistory} from './value-object'
+import {log, account, loginHistory} from './value-object'
 
 export default [{
+  path: /\/rest\/logs(\?\w=\w(&\w=\w)*)?/,
+  type: 'get',
+  data: {
+    errorCode: 0,
+    'data|5-20': [log]
+  }
+}, {
+  path: /\/rest\/logs(\?\w=\w(&\w=\w)*)?/,
+  type: 'post',
+  data: {
+    errorCode: 0,
+    erroeMessage: '',
+    pagination: {
+      'total': 100,
+      'size': 20,
+      'page': 1
+    },
+    'data|5-20': [log]
+  }
+}, {
   path: /\/rest\/loginHistories(\?\w=\w(&\w=\w)*)?/,
   type: 'get',
   data: {
