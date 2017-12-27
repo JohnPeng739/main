@@ -5,7 +5,6 @@
   @import "~mx-vue-el-utils/dist/style/less/tag.less";
   @import "~mx-vue-el-utils/dist/style/less/pagination.less";
   @import "~mx-vue-el-utils/dist/style/less/layout-normal.less";
-
   @import "../style/rbac.less";
 
   @font-face {
@@ -47,39 +46,11 @@
 </style>
 
 <template>
-  <layout-normal :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
-                 v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto">
-  </layout-normal>
+  <router-view></router-view>
 </template>
 
 <script>
-  import {logger} from 'mx-app-utils'
-  import {LayoutNormal} from 'mx-vue-el-utils'
-  import { navData } from './router'
-
   export default {
-    name: 'app',
-    components: {LayoutNormal},
-    data () {
-      return {
-        title: 'The Demo System',
-        loginUserName: 'Josh Peng',
-        role: 'admin',
-        tools: ['/tests/notify', '/tests/tag', '/tests/page'],
-        navData: navData
-      }
-    },
-    methods: {
-      handleGoto (path) {
-        logger.debug('Router click: %s', path)
-        this.$router.push(path)
-      },
-      handleLogout () {
-        logger.debug('logout')
-      },
-      handleShowUserInfo () {
-        logger.debug('show user info: ' + this.loginUserName + '.')
-      }
-    }
+    name: 'app'
   }
 </script>

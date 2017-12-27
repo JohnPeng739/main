@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import LoginPage from '../pages/login.vue'
 import UserManage from '@/components/rbac/user-manage.vue'
+import AccountManage from '@/components/rbac/account-manage.vue'
 import RoleManage from '@/components/rbac/role-manage.vue'
 import DepartManage from '@/components/rbac/department-manage.vue'
 import PrivilegeManage from '@/components/rbac/privilege-manage.vue'
@@ -57,41 +59,50 @@ const router = new Router({
     path: '/',
     redirect: '/home'
   }, {
+    path: '/login',
+    component: LoginPage
+  }, {
     path: '/home',
-    redirect: '/manage/user'
-  }, {
-    path: '/manage/user',
-    component: UserManage
-  }, {
-    path: '/manage/account',
-    component: UserManage
-  }, {
-    path: '/manage/role',
-    component: RoleManage
-  }, {
-    path: '/manage/privilege',
-    component: PrivilegeManage
-  }, {
-    path: '/manage/department',
-    component: DepartManage
-  }, {
-    path: '/manage/logs',
-    component: OperateLog
-  }, {
-    path: '/manage/accredit',
-    component: AccreditManage
-  }, {
-    path: '/manage/login',
-    component: LoginHistory
+    component: resolve => require(['../layout.vue'], resolve),
+    children: [{
+      path: '',
+      component: OperateLog
+    }, {
+      path: '/manage/user',
+      component: UserManage,
+      meta: {needAuth: true}
+    }, {
+      path: '/manage/account',
+      component: AccountManage,
+      meta: {needAuth: true}
+    }, {
+      path: '/manage/role',
+      component: RoleManage,
+      meta: {needAuth: true}
+    }, {
+      path: '/manage/privilege',
+      component: PrivilegeManage,
+      meta: {needAuth: true}
+    }, {
+      path: '/manage/department',
+      component: DepartManage,
+      meta: {needAuth: true}
+    }, {
+      path: '/manage/login',
+      component: LoginHistory
+    }, {
+      path: '/manage/logs',
+      component: OperateLog
+    }, {
+      path: '/manage/accredit',
+      component: AccreditManage,
+      meta: {needAuth: true}
+    }]
   }]
 })
 
-/*
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.donotNeedAuth)) {
-    // 不需要认证
-    next()
-  } else {
+  if (to.matched.some(record => record.meta.needAuth)) {
     // 需要认证
     let user = JSON.parse(sessionStorage.getItem('auth.user'))
     if (!user && to.path !== '/login') {
@@ -99,7 +110,10 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
     }
+  } else {
+    // 不需要认证
+    next()
   }
 })
-*/
+
 export default router

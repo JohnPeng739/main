@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import {locale} from 'mx-vue-el-utils'
 import App from './App'
 import router from './router'
+import store from './store'
 
 import Mock from 'mockjs'
 import mocks from './mock'
@@ -41,6 +42,7 @@ new Vue({
   i18n: locale.i18n,
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })

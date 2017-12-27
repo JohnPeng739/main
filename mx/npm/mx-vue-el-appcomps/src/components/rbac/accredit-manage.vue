@@ -109,9 +109,9 @@
         selected: null,
         formAccredit: this.newAccredit(),
         rulesAccredit: {
-          src: [formValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.src')})],
-          tar: [formValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.tar')})],
-          roles: [formValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.roles')})],
+          src: [formValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.src'), trigger: 'change'})],
+          tar: [formValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.tar'), trigger: 'change'})],
+          roles: [formValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.roles'), trigger: 'change'})],
           startTime: [formValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.startTime')})]
         }
       }

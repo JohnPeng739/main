@@ -13,9 +13,11 @@ export default {
         createdTime: 'Created time',
         updatedTime: 'Updated time',
         operator: 'Operator',
+        roles: 'Roles',
         online: 'Online',
         offline: 'Offline',
-        closed: 'Closed'
+        closed: 'Closed',
+        from: 'From'
       },
       title: {
         add: 'Create a new {module}',
@@ -90,6 +92,29 @@ export default {
       fields: {
         time: 'Time',
         content: 'Content'
+      }
+    },
+    account: {
+      module: 'account',
+      fields: {
+        owner: 'Owner',
+        oldPassword: 'Old password',
+        password: 'New password',
+        confirm: 'Confirm'
+      },
+      title: {
+        allocate: 'Assign',
+        password: 'Change password'
+      },
+      validate: {
+        requiredOwner: 'You need choose a user for the account.',
+        requiredRoles: 'You need choose a role at least.',
+        requiredPassword: 'You need enter the password.',
+        requiredConfirm: 'You need enter the confirm password.',
+        passwordMatch: 'The password does not match the confirm password.'
+      },
+      message: {
+        changePasswordSuccess: 'Change the password successfully for the account[{code} - {name}].'
       }
     }
   }

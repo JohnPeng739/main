@@ -1,11 +1,11 @@
 <template>
-  <choose-input ref="chooseDict" v-model="chooseDict" v-on:selected="handleSelected" displayFormat="{code} - {name}"
+  <choose-input ref="chooseDict" v-model="chooseDict" v-on:selected="handleSelected" displayFormat="{fullName}"
                 placeholder="请选择..." :popover-width="550" :readonly="true" :disabled="disabled">
     <el-row type="flex">
       <el-col :span="24">
         <el-table :data="tableData" :max-height="400" highlight-current-row @current-change="handleCurrentChange">
-          <el-table-column prop="code" :label="$t('rbac.common.fields.code')"></el-table-column>
-          <el-table-column prop="name" :label="$t('rbac.common.fields.name')"></el-table-column>
+          <el-table-column prop="fullName" :label="$t('rbac.user.fields.name')"></el-table-column>
+          <el-table-column prop="station" :label="$t('rbac.user.fields.station')"></el-table-column>
         </el-table>
       </el-col>
     </el-row>
@@ -23,9 +23,9 @@
   import { ajax, ChooseInput } from 'mx-vue-el-utils'
 
   export default {
-    name: 'choose-dict-input',
+    name: 'choose-user-input',
     components: {ChooseInput},
-    props: ['value', 'restUrl', 'disabled'],
+    props: ['value', 'disabled'],
     data () {
       return {
         tableData: [],
@@ -49,7 +49,7 @@
     },
     methods: {
       refresh () {
-        let url = this.restUrl
+        let url = '/rest/users'
         logger.debug('send POST "%s".', url)
         ajax.post(url, this.pagination, (pagination, data) => {
           this.pagination.total = pagination.total

@@ -21,6 +21,20 @@ export default [{
     'data|5-20': [log]
   }
 }, {
+  path: /\/rest\/login(\?\w=\w(&\w=\w)*)?/,
+  type: 'post',
+  data: {
+    errorCode: 0,
+    data: loginHistory
+  }
+}, {
+  path: /\/rest\/logout\/\w(\?\w=\w(&\w=\w)*)?/,
+  type: 'get',
+  data: {
+    errorCode: 0,
+    data: loginHistory
+  }
+}, {
   path: /\/rest\/loginHistories(\?\w=\w(&\w=\w)*)?/,
   type: 'get',
   data: {
@@ -80,19 +94,5 @@ export default [{
   data: {
     errorCode: 0,
     data: account
-  }
-}, {
-  path: /\/rest\/accounts\/login(\?\w=\w(&\w=\w)*)?/,
-  type: 'post',
-  data: {
-    errorCode: 0,
-    data: loginHistory
-  }
-}, {
-  path: /\/rest\/accounts\/\w\/logout(\?\w=\w(&\w=\w)*)?/,
-  type: 'get',
-  data: {
-    errorCode: 0,
-    data: loginHistory
   }
 }]

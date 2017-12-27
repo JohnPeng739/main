@@ -4,8 +4,8 @@
     <el-row type="flex">
       <el-col :span="24">
         <el-table :data="tableData" :max-height="400" highlight-current-row @current-change="handleCurrentChange">
-          <el-table-column prop="code" label="Code"></el-table-column>
-          <el-table-column prop="name" label="Name"></el-table-column>
+          <el-table-column prop="code" :label="$t('rbac.common.fields.code')"></el-table-column>
+          <el-table-column prop="name" :label="$t('rbac.common.fields.name')"></el-table-column>
         </el-table>
       </el-col>
     </el-row>
