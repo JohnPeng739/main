@@ -9,7 +9,8 @@ export default {
     cancel: 'Cancel',
     reset: 'Reset',
     submit: 'Submit',
-    close: 'Close'
+    close: 'Close',
+    choose: 'Choose...'
   },
   message: {
     title: {

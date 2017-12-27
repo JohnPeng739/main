@@ -9,7 +9,8 @@ export default {
     cancel: '取消',
     reset: '重置',
     submit: '提交',
-    close: '关闭'
+    close: '关闭',
+    choose: '选择...'
   },
   message: {
     title: {

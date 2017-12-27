@@ -16,9 +16,10 @@
       </el-row>
     </el-popover>
     <el-input v-model="dataDisplay" :readonly="readonly" :placeholder="placeholder" :size="size">
-      <el-button slot="append" :disabled="disabled" v-popover:popover>
-        <icon name="search"></icon>
+      <el-button v-if="showClear" type="text" slot="suffix" size="mini" :disabled="disabled" @click="handleClear">
+        <icon name="close"></icon>
       </el-button>
+      <el-button slot="append" :disabled="disabled" v-popover:popover>{{$t('button.choose')}}</el-button>
     </el-input>
   </div>
 </template>
@@ -38,6 +39,10 @@
       }
     },
     computed: {
+      showClear () {
+        let data = this.value
+        return data !== null && data !== undefined
+      },
       dataDisplay: {
         get  () {
           let {value, displayFormat} = this
@@ -54,6 +59,9 @@
     methods: {
       hide () {
         this.visible = false
+      },
+      handleClear () {
+        this.$emit('input', undefined)
       },
       handleCancel () {
         this.hide()
