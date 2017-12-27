@@ -23,13 +23,13 @@
     data () {
       return {
         visible: false,
-        operate: 'detail',
-        width: '50%'
+        operate: 'details',
+        width: '60%'
       }
     },
     computed: {
       readonly () {
-        return this.operate === 'detail'
+        return this.operate === 'details'
       }
     },
     methods: {
