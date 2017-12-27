@@ -49,39 +49,38 @@ const router = new Router({
     path: '/',
     redirect: '/home'
   }, {
-    path: '/home',
-    component: TestHome
-  }, {
-    path: '/tests/notify',
-    component: TestNotify
-  }, {
-    path: '/tests/tag',
-    component: TestTag
-  }, {
-    path: '/tests/page',
-    component: TestPage
-  }, {
-    path: '/tests/echarts',
-    component: TestEcharts
-  }, {
-    path: '/tests/dialog',
-    component: TestDialog
-  }, {
-    path: '/tests/chooseInput',
-    component: TestChoose
-  }, {
     path: '',
-    component: TestHome
-  }
-  ]
+    component: resolve => require(['../layout.vue'], resolve),
+    children: [{
+      path: '/home',
+      component: TestHome
+    }, {
+      path: '/tests/notify',
+      component: TestNotify
+    }, {
+      path: '/tests/tag',
+      component: TestTag
+    }, {
+      path: '/tests/page',
+      component: TestPage
+    }, {
+      path: '/tests/echarts',
+      component: TestEcharts
+    }, {
+      path: '/tests/dialog',
+      component: TestDialog
+    }, {
+      path: '/tests/chooseInput',
+      component: TestChoose
+    }, {
+      path: '',
+      component: TestHome
+    }]
+  }]
 })
 
-/*
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.donotNeedAuth)) {
-    // 不需要认证
-    next()
-  } else {
+  if (to.matched.some(record => record.meta.needAuth)) {
     // 需要认证
     let user = JSON.parse(sessionStorage.getItem('auth.user'))
     if (!user && to.path !== '/login') {
@@ -89,7 +88,10 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
     }
+  } else {
+    // 不需要认证
+    next()
   }
 })
-*/
+
 export default router
