@@ -10,6 +10,6 @@ import org.springframework.context.annotation.Import;
  * @author : john.peng created on date : 2017/12/13
  */
 @Configuration
-@Import({RbacRestConfig.class, CompsRbacMongodbConfig.class})
+// @Import({RbacRestConfig.class, CompsRbacMongodbConfig.class})
 public class RbacRestMongodbConfig {
 }

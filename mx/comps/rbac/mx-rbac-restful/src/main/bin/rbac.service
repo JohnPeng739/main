@@ -1,0 +1,13 @@
+[Unit]
+Description=MX RBAC Restful service
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/rbac.pid
+ExecStart=/opt/rbac-service/bin/rbac-service.sh start
+ExecStop=/opt/rbac-service/bin/rbac-service.sh stop
+
+[Install]
+WantedBy=multi-user.target
