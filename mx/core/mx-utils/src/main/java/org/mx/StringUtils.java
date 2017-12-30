@@ -1,9 +1,10 @@
 package org.mx;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 字符串工具类，包括一些常用的字符串相关方法。
@@ -20,6 +21,13 @@ public class StringUtils {
      * 默认的字符分割符，包含了：逗号，分号，空格，TAB，回车换行。
      */
     public static final String DELIMITERS = ",; \t\n";
+    public static final long KB = 1024;
+    public static final long MB = KB * KB;
+    public static final long GB = KB * MB;
+    public static final long TB = KB * GB;
+    public static final long PB = KB * TB;
+    private static final Pattern SPACE_PATTERN = Pattern.compile("([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T|P)B?",
+            Pattern.CASE_INSENSITIVE);
 
     /**
      * 默认的构造函数
@@ -339,6 +347,141 @@ public class StringUtils {
     }
 
     /**
+     * 将字符串转换为boolean值，如果不是合法的boolean字符串，则使用默认值。
+     *
+     * @param str          字符串
+     * @param defaultValue 默认值
+     * @return boolean值
+     */
+    public static boolean string2Boolean(String str, boolean defaultValue) {
+        if ("true".equalsIgnoreCase(str)) {
+            return true;
+        } else if ("false".equalsIgnoreCase(str)) {
+            return false;
+        } else {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * 将字符串转换为int值，如果不是合法的数值，则使用默认值。
+     *
+     * @param str          字符串
+     * @param radix        数制，支持二进制、八进制、十进制、十六进制
+     * @param defaultValue 默认int值
+     * @return int值
+     */
+    public static int string2Int(String str, Radix radix, int defaultValue) {
+        try {
+            if (!StringUtils.isBlank(str)) {
+                String check = new String(str).toLowerCase();
+                if (check.startsWith("0b") || (check.startsWith("08") && radix == Radix.Octonary) || check.startsWith("0x")) {
+                    str = str.substring(2);
+                }
+                return Integer.parseInt(str, radix.getRadix());
+            }
+        } catch (NumberFormatException ex) {
+            // do nothing
+        }
+        return defaultValue;
+    }
+
+    /**
+     * 将字符串转换为long值，如果不是合法的数值，则使用默认值。
+     *
+     * @param str          字符串
+     * @param radix        数制，支持二进制、八进制、十进制、十六进制
+     * @param defaultValue 默认long值
+     * @return long值
+     */
+    public static long string2Long(String str, Radix radix, long defaultValue) {
+        try {
+            if (!StringUtils.isBlank(str)) {
+                String check = new String(str).toLowerCase();
+                if (check.startsWith("0b") || (check.startsWith("08") && radix == Radix.Octonary) || check.startsWith("0x")) {
+                    str = str.substring(2);
+                }
+                return Long.parseLong(str, radix.getRadix());
+            }
+        } catch (NumberFormatException ex) {
+            // do nothing
+        }
+        return defaultValue;
+    }
+
+    /**
+     * 将字符串转换为float值，如果不是合法的数值，则使用默认值。
+     *
+     * @param str          字符串
+     * @param defaultValue 默认float值
+     * @return float值
+     */
+    public static float string2Float(String str, float defaultValue) {
+        try {
+            if (!StringUtils.isBlank(str)) {
+                return Float.parseFloat(str);
+            }
+        } catch (NumberFormatException ex) {
+            // do nothing
+        }
+        return defaultValue;
+    }
+
+    /**
+     * 将字符串转换为double值，如果不是合法的数值，则使用默认值。
+     *
+     * @param str          字符串
+     * @param defaultValue 默认double值
+     * @return double值
+     */
+    public static double string2Double(String str, double defaultValue) {
+        try {
+            if (!StringUtils.isBlank(str)) {
+                return Double.parseDouble(str);
+            }
+        } catch (NumberFormatException ex) {
+            // do nothing
+        }
+        return defaultValue;
+    }
+
+    /**
+     * 将字符串转换为空间大小，如果不是合法的空间大小字符串，则使用默认值。
+     *
+     * @param size         空间大小字符串
+     * @param defaultValue 默认值
+     * @return 空间大小
+     */
+    public static long string2Size(String size, long defaultValue) {
+        if (StringUtils.isBlank(size)) {
+            return defaultValue;
+        }
+        final Matcher matcher = SPACE_PATTERN.matcher(size);
+        if (matcher.matches()) {
+            try {
+                final double value = NumberFormat.getNumberInstance(Locale.getDefault()).parse(matcher.group(1)).doubleValue();
+                final String units = matcher.group(3);
+                if (units.isEmpty()) {
+                    return (long) value;
+                } else if (units.equalsIgnoreCase("K")) {
+                    return (long) (value * KB);
+                } else if (units.equalsIgnoreCase("M")) {
+                    return (long) (value * MB);
+                } else if (units.equalsIgnoreCase("G")) {
+                    return (long) (value * GB);
+                } else if (units.equalsIgnoreCase("T")) {
+                    return (long) (value * TB);
+                } else if (units.equalsIgnoreCase("P")) {
+                    return (long) (value * PB);
+                }
+            } catch (final ParseException e) {
+                // do nothing
+            }
+        }
+        return defaultValue;
+    }
+
+    /**
      * 将指定的字符串按照长度进行截断，截断后添加“...”
      *
      * @param src    字符串
@@ -387,6 +530,38 @@ public class StringUtils {
             str = str.substring(0, i) + "\n" + str.substring(i + 5);
         }
         return str;
+    }
+
+    /**
+     * 数制枚举
+     */
+    public enum Radix {
+        /**
+         * 二进制
+         */
+        Binary(2),
+        /**
+         * 八进制
+         */
+        Octonary(8),
+        /**
+         * 十进制
+         */
+        Decimal(10),
+        /**
+         * 十六进制
+         */
+        Hexadecimal(16);
+
+        int radix = 10;
+
+        Radix(int radix) {
+            this.radix = radix;
+        }
+
+        int getRadix() {
+            return radix;
+        }
     }
 
 }

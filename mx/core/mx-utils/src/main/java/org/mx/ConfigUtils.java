@@ -75,10 +75,10 @@ public class ConfigUtils {
      * @param key          配置项名
      * @param defaultValue 默认值
      * @return 值
-     * @see #getIntValue(String, Radix, int)
+     * @see #getIntValue(String, StringUtils.Radix, int)
      */
     public static int getIntValue(String key, int defaultValue) {
-        return getIntValue(key, Radix.Decimal, defaultValue);
+        return getIntValue(key, StringUtils.Radix.Decimal, defaultValue);
     }
 
     /**
@@ -89,16 +89,8 @@ public class ConfigUtils {
      * @param defaultValue 默认值
      * @return 值
      */
-    public static int getIntValue(String key, Radix radix, int defaultValue) {
-        try {
-            String value = config.getValue(key);
-            return Integer.parseInt(value, radix.getRadix());
-        } catch (NumberFormatException ex) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("The String is not match number format.", ex);
-            }
-        }
-        return defaultValue;
+    public static int getIntValue(String key, StringUtils.Radix radix, int defaultValue) {
+        return StringUtils.string2Int(config.getValue(key), radix, defaultValue);
     }
 
     /**
@@ -109,14 +101,7 @@ public class ConfigUtils {
      * @return 值
      */
     public static boolean getBooleanValue(String key, boolean defaultValue) {
-        String value = config.getValue(key);
-        if ("true".equalsIgnoreCase(value)) {
-            return true;
-        } else if ("false".equalsIgnoreCase(value)) {
-            return false;
-        } else {
-            return defaultValue;
-        }
+        return StringUtils.string2Boolean(config.getValue(key), defaultValue);
     }
 
     /**
@@ -140,10 +125,10 @@ public class ConfigUtils {
      * @param key          配置项名
      * @param defaultValue 默认值
      * @return 值
-     * @see #getLongValue(String, Radix, long)
+     * @see #getLongValue(String, StringUtils.Radix, long)
      */
     public static long getLongValue(String key, long defaultValue) {
-        return getLongValue(key, Radix.Decimal, defaultValue);
+        return getLongValue(key, StringUtils.Radix.Decimal, defaultValue);
     }
 
     /**
@@ -154,16 +139,8 @@ public class ConfigUtils {
      * @param defaultValue 默认值
      * @return 值
      */
-    public static long getLongValue(String key, Radix radix, long defaultValue) {
-        try {
-            String value = config.getValue(key);
-            return Long.parseLong(value, radix.getRadix());
-        } catch (NumberFormatException ex) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("The String is not match number format.", ex);
-            }
-        }
-        return defaultValue;
+    public static long getLongValue(String key, StringUtils.Radix radix, long defaultValue) {
+        return StringUtils.string2Long(config.getValue(key), radix, defaultValue);
     }
 
     /**
@@ -174,15 +151,7 @@ public class ConfigUtils {
      * @return 值
      */
     public static float getFloatValue(String key, float defaultValue) {
-        try {
-            String value = config.getValue(key);
-            return Float.valueOf(value);
-        } catch (NumberFormatException ex) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("The String is not match number format.", ex);
-            }
-        }
-        return defaultValue;
+        return StringUtils.string2Float(config.getValue(key), defaultValue);
     }
 
     /**
@@ -193,46 +162,6 @@ public class ConfigUtils {
      * @return 值
      */
     public static double getDoubleValue(String key, double defaultValue) {
-        try {
-            String value = config.getValue(key);
-            return Double.valueOf(value);
-        } catch (NumberFormatException ex) {
-            if (LOG.isTraceEnabled()) {
-                LOG.trace("The String is not match number format.", ex);
-            }
-        }
-        return defaultValue;
-    }
-
-    /**
-     * 数制枚举
-     */
-    public enum Radix {
-        /**
-         * 二进制
-         */
-        Binary(2),
-        /**
-         * 八进制
-         */
-        Octonary(8),
-        /**
-         * 十进制
-         */
-        Decimal(10),
-        /**
-         * 十六进制
-         */
-        Hexadecimal(16);
-
-        int radix = 10;
-
-        Radix(int radix) {
-            this.radix = radix;
-        }
-
-        int getRadix() {
-            return radix;
-        }
+        return StringUtils.string2Double(config.getValue(key), defaultValue);
     }
 }
