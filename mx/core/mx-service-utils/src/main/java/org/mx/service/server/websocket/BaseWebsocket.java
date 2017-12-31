@@ -68,7 +68,7 @@ public class BaseWebsocket {
     @OnWebSocketFrame
     public void onFrame(Session session, Frame frame) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Got a frame.");
+            logger.debug(String.format("Got a frame: %s.", frame.getClass().getName()));
         }
     }
 
