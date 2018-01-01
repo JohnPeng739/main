@@ -24,12 +24,16 @@ public class TypeUtils {
         if (bytes == null || bytes.length <= 0) {
             return "";
         }
-        StringBuilder sb = new StringBuilder(bytes[0]);
+        StringBuilder sb = new StringBuilder(String.valueOf(byte2IpInt(bytes[0])));
         for (int index = 1; index < bytes.length; index++) {
             sb.append(".");
-            sb.append(bytes[index]);
+            sb.append(byte2IpInt(bytes[index]));
         }
         return sb.toString();
+    }
+
+    private static int byte2IpInt(byte b) {
+        return b >= 0 ? b : b + 256;
     }
 
     /**
