@@ -12,8 +12,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
 import org.eclipse.jetty.server.Server;
 import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,13 +22,13 @@ import org.mx.comps.file.websocket.FileUploadWebsocket;
 import org.mx.service.server.AbstractServerFactory;
 import org.mx.service.server.ServletServerFactory;
 import org.mx.service.server.WebsocketServerFactory;
+import org.mx.service.ws.client.BaseWebsocketClientListener;
+import org.mx.service.ws.client.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -156,38 +154,40 @@ public class TestServers {
 
         try {
             // test websocket client
-            TestWebsocketClient client = new TestWebsocketClient(new URI("ws://localhost:9997/wsupload"));
-            client.connect();
+            TestWebsocketListener listener = new TestWebsocketListener();
+            WsClientInvoke invoke = new WsClientInvoke();
+            invoke.init("ws://localhost:9997/wsupload", listener);
             Thread.sleep(1000);
-            assertEquals(WebSocket.READYSTATE.OPEN, client.getReadyState());
-            client.send(createInitCmd().toJSONString());
+            assertEquals(WebSocket.READYSTATE.OPEN, invoke.getState());
+            invoke.send(createInitCmd().toJSONString());
             Thread.sleep(1000);
-            String textMsg = client.textMsg;
+            String textMsg = listener.textMsg;
             JSONObject json = JSON.parseObject(textMsg);
             assertEquals("init", json.getString("command"));
             assertEquals("simple", json.getString("processorType"));
             assertEquals("ok", json.getString("result"));
-            client.send(createStartCmd().toJSONString());
+            invoke.send(createStartCmd().toJSONString());
             Thread.sleep(1000);
-            textMsg = client.textMsg;
+            textMsg = listener.textMsg;
             json = JSON.parseObject(textMsg);
             assertEquals("start", json.getString("command"));
             assertEquals(TestProcessorSimple.directory, json.getString("directory"));
             assertEquals(TestProcessorSimple.filename, json.getString("filename"));
             assertEquals(0, json.getIntValue("offset"));
             assertEquals("ok", json.getString("result"));
-            client.send(TestProcessorSimple.msg.getBytes());
+            invoke.send(TestProcessorSimple.msg.getBytes());
             Thread.sleep(1000);
 
-            client.send(createCancelCmd().toJSONString());
+            invoke.send(createCancelCmd().toJSONString());
             Thread.sleep(1000);
-            textMsg = client.textMsg;
+            textMsg = listener.textMsg;
             json = JSON.parseObject(textMsg);
             assertEquals("cancel", json.getString("command"));
             assertEquals("ok", json.getString("result"));
-            client.send(createFinishCmd().toJSONString());
+            invoke.send(createFinishCmd().toJSONString());
             Thread.sleep(1000);
-            textMsg = client.textMsg;
+            // 这里后台应该抛出异常，前端收到error消息。
+            textMsg = listener.textMsg;
             json = JSON.parseObject(textMsg);
             assertEquals("finish", json.getString("command"));
             assertEquals("error", json.getString("result"));
@@ -199,27 +199,28 @@ public class TestServers {
             res.close();
             httpClient.close();
 
-            client.send(createStartCmd().toJSONString());
+            invoke.send(createStartCmd().toJSONString());
             Thread.sleep(1000);
-            textMsg = client.textMsg;
+            textMsg = listener.textMsg;
             json = JSON.parseObject(textMsg);
             assertEquals("start", json.getString("command"));
             assertEquals(TestProcessorSimple.directory, json.getString("directory"));
             assertEquals(TestProcessorSimple.filename, json.getString("filename"));
             assertEquals(0, json.getIntValue("offset"));
             assertEquals("ok", json.getString("result"));
-            client.send(TestProcessorSimple.msg.getBytes());
+            invoke.send(TestProcessorSimple.msg.getBytes());
             Thread.sleep(1000);
 
-            client.send(createFinishCmd().toJSONString());
+            invoke.send(createFinishCmd().toJSONString());
             Thread.sleep(1000);
-            textMsg = client.textMsg;
+            textMsg = listener.textMsg;
             json = JSON.parseObject(textMsg);
             assertEquals("finish", json.getString("command"));
             assertEquals("ok", json.getString("result"));
-            client.close();
+            invoke.close();
             Thread.sleep(1000);
-            assertEquals(WebSocket.READYSTATE.CLOSED, client.getReadyState());
+            assertEquals(WebSocket.READYSTATE.CLOSED, invoke.getState());
+            invoke.close();
 
             testServlet();
             FileUtils.deleteFile(new File(System.getProperty("user.dir"), "data"));
@@ -229,26 +230,22 @@ public class TestServers {
         }
     }
 
-    private class TestWebsocketClient extends WebSocketClient {
+    private class TestWebsocketListener extends BaseWebsocketClientListener {
         private String textMsg;
         private byte[] binaryMsg;
 
-        public TestWebsocketClient(URI serverUri) {
-            super(serverUri);
-        }
-
         @Override
-        public void onOpen(ServerHandshake handshakedata) {
+        public void onOpen() {
             //
         }
 
         @Override
-        public void onMessage(ByteBuffer bytes) {
-            this.binaryMsg = bytes.array();
+        public void onBinaryMessage(byte[] bytes) {
+            this.binaryMsg = bytes;
         }
 
         @Override
-        public void onMessage(String message) {
+        public void onTextMessage(String message) {
             this.textMsg = message;
         }
 

@@ -44,20 +44,20 @@ public class FileUploadWebsocket extends BaseWebsocket {
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#onConnection(Session)
+     * @see BaseWebsocket#afterConnect(Session)
      */
     @Override
-    public void onConnection(Session session) {
-        super.onConnection(session);
+    public void afterConnect(Session session) {
+        super.afterConnect(session);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#onClose(Session, int, String)
+     * @see BaseWebsocket#beforeClose(Session, int, String)
      */
     @Override
-    public void onClose(Session session, int statusCode, String reason) {
+    public void beforeClose(Session session, int statusCode, String reason) {
         if (writeProcessor.isOpened()) {
             writeProcessor.close();
         } else {
@@ -65,30 +65,30 @@ public class FileUploadWebsocket extends BaseWebsocket {
                 logger.error("The FileWriteProcessor has been closed.");
             }
         }
-        super.onClose(session, statusCode, reason);
+        super.beforeClose(session, statusCode, reason);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#onError(Session, Throwable)
+     * @see BaseWebsocket#afterError(Session, Throwable)
      */
     @Override
-    public void onError(Session session, Throwable throwable) {
+    public void afterError(Session session, Throwable throwable) {
         boolean closeFileForError = env.getProperty(CLOSE_FILE_FOR_ERROR, Boolean.class, true);
         if (closeFileForError) {
             writeProcessor.close();
         }
-        super.onError(session, throwable);
+        super.afterError(session, throwable);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#onBinaryMessage(Session, InputStream)
+     * @see BaseWebsocket#receiveBinary(Session, InputStream)
      */
     @Override
-    public void onBinaryMessage(Session session, InputStream in) {
+    public void receiveBinary(Session session, InputStream in) {
         if (writeProcessor.isOpened()) {
             writeProcessor.write(in);
         } else {
@@ -96,7 +96,7 @@ public class FileUploadWebsocket extends BaseWebsocket {
                 logger.error("The FileWriteProcessor is not opened.");
             }
         }
-        super.onBinaryMessage(session, in);
+        super.receiveBinary(session, in);
     }
 
     /**
@@ -112,10 +112,10 @@ public class FileUploadWebsocket extends BaseWebsocket {
      * filename: 'filename.txt'
      * }
      *
-     * @see BaseWebsocket#onTextMessage(Session, String)
+     * @see BaseWebsocket#receiveText(Session, String)
      */
     @Override
-    public void onTextMessage(Session session, String message) {
+    public void receiveText(Session session, String message) {
         if (StringUtils.isBlank(message)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The command data is blank.");
@@ -153,6 +153,6 @@ public class FileUploadWebsocket extends BaseWebsocket {
                 logger.error(ex);
             }
         }
-        super.onTextMessage(session, message);
+        super.receiveText(session, message);
     }
 }
