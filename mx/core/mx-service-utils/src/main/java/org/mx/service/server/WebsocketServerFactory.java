@@ -52,6 +52,8 @@ public class WebsocketServerFactory extends AbstractServerFactory {
         }
         final int port = env.getProperty("websocket.port", Integer.class, 9997);
         String websocketClassesStr = "websocket.service.classes";
+        String allows = env.getProperty("websocket.security.allows", "");
+        String blocks = env.getProperty("websocket.security.blocks", "");
         String websocketServiceClassesDef = this.env.getProperty(websocketClassesStr);
         if (StringUtils.isBlank(websocketServiceClassesDef)) {
             if (logger.isWarnEnabled()) {
@@ -65,6 +67,9 @@ public class WebsocketServerFactory extends AbstractServerFactory {
                     if (websocketClasses != null && !websocketClasses.isEmpty()) {
                         websocketClasses.forEach((clazz) -> {
                             BaseWebsocket websocket = (BaseWebsocket) this.context.getBean(clazz);
+                            if (!StringUtils.isBlank(allows) || !StringUtils.isBlank(blocks)) {
+                                websocket.setSecurity(allows, blocks);
+                            }
                             socketBeans.put(websocket.getPath(), websocket);
                         });
                     }
