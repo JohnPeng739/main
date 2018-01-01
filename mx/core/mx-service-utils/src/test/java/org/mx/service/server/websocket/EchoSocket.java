@@ -35,8 +35,8 @@ public class EchoSocket extends BaseWebsocket {
     }
 
     @Override
-    public void onConnection(Session session) {
-        super.onConnection(session);
+    public void afterConnect(Session session) {
+        super.afterConnect(session);
         try {
             session.getRemote().sendString("Server is ok.");
         } catch (Exception ex) {
@@ -47,7 +47,7 @@ public class EchoSocket extends BaseWebsocket {
     }
 
     @Override
-    public void onTextMessage(Session session, String message) {
+    public void receiveText(Session session, String message) {
         try {
             session.getRemote().sendString(String.format("Server echo: %s.", message));
         } catch (IOException ex) {
@@ -55,11 +55,12 @@ public class EchoSocket extends BaseWebsocket {
                 logger.error(ex);
             }
         }
-        super.onTextMessage(session, message);
+        super.receiveText(session, message);
     }
 
     @Override
-    public void onBinaryMessage(Session session, InputStream in) {
+    public void receiveBinary(Session session, InputStream in) {
+        super.receiveBinary(session, in);
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buffer = new byte[8192];
@@ -80,12 +81,12 @@ public class EchoSocket extends BaseWebsocket {
                 logger.error("some errors.", ex);
             }
         }
-        super.onBinaryMessage(session, in);
+        super.receiveBinary(session, in);
     }
 
     @Override
-    public void onClose(Session session, int statusCode, String reason) {
-        super.onClose(session, statusCode, reason);
+    public void beforeClose(Session session, int statusCode, String reason) {
+        super.beforeClose(session, statusCode, reason);
         closeLatch.countDown();
     }
 }

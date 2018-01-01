@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.extensions.Frame;
+import org.eclipse.jetty.websocket.common.frames.PingFrame;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
 
@@ -56,8 +57,9 @@ public class BaseWebsocket {
 
     /**
      * 添加指定的过滤规则，按照IP字节顺序过滤
+     *
      * @param filter 过滤规则
-     * @param set 存放过滤集合
+     * @param set    存放过滤集合
      */
     private void addFilter(String filter, Set<List<Byte>> set) {
         String[] ips = StringUtils.split(filter, ",", true, true);
@@ -72,7 +74,7 @@ public class BaseWebsocket {
                 }
                 List<Byte> list = new ArrayList<>();
                 for (String seg : segs) {
-                    list.add((byte)Integer.parseInt(seg));
+                    list.add((byte) Integer.parseInt(seg));
                 }
                 set.add(list);
             }
@@ -105,10 +107,17 @@ public class BaseWebsocket {
         }
     }
 
+    /**
+     * 判定指定的seg是否在过滤规则中
+     *
+     * @param filter 过滤规则，白名单 or 黑名单
+     * @param segs   IP字节数组
+     * @return 如果存在，返回true，否则返回false。
+     */
     private boolean found(Set<List<Byte>> filter, byte[] segs) {
         for (List<Byte> list : filter) {
             boolean found = true;
-            for (int index = 0; index < Math.min(list.size(), segs.length); index ++) {
+            for (int index = 0; index < Math.min(list.size(), segs.length); index++) {
                 if (list.get(index) != segs[index]) {
                     found = false;
                 }
@@ -120,6 +129,12 @@ public class BaseWebsocket {
         return false;
     }
 
+    /**
+     * 判定指定会话是否允许连接
+     *
+     * @param session 会话
+     * @return 允许连接返回true，否则返回false。
+     */
     private boolean allow(Session session) {
         if (allows.isEmpty() && blocks.isEmpty()) {
             return true;
@@ -133,18 +148,101 @@ public class BaseWebsocket {
     }
 
     /**
+     * 默认的连接成功回调方法
+     *
+     * @param session 会话
+     */
+    protected void afterConnect(Session session) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Allow the connection: %s.",
+                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress())));
+        }
+    }
+
+    /**
+     * 默认的关闭前回调方法
+     *
+     * @param session    会话
+     * @param statusCode 关闭号
+     * @param reason     关闭原因
+     */
+    protected void beforeClose(Session session, int statusCode, String reason) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Connection closed, status: %d, reason: %s.", statusCode, reason));
+        }
+    }
+
+    /**
+     * 默认的发生错误后的回调方法
+     *
+     * @param session   会话
+     * @param throwable 错误异常
+     */
+    protected void afterError(Session session, Throwable throwable) {
+        if (logger.isErrorEnabled()) {
+            logger.error("Got error.", throwable);
+        }
+    }
+
+    /**
+     * 默认的ping帧接收回调方法
+     *
+     * @param session 会话
+     */
+    protected void receivePing(Session session) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Got a ping frame.");
+        }
+    }
+
+    /**
+     * 默认的消息帧接收回调方法
+     *
+     * @param session 会话
+     * @param frame   消息帧
+     */
+    protected void receiveFrame(Session session, Frame frame) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Got a frame: %s.", frame.getClass().getName()));
+        }
+        if (frame instanceof PingFrame) {
+            this.receivePing(session);
+        }
+    }
+
+    /**
+     * 默认的二进制消息接收回调方法
+     *
+     * @param session 会话
+     * @param in      输入流
+     */
+    protected void receiveBinary(Session session, InputStream in) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Got a binary message.");
+        }
+    }
+
+    /**
+     * 默认的文本消息接收回调方法
+     *
+     * @param session 会话
+     * @param message 文本消息
+     */
+    protected void receiveText(Session session, String message) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Got a text message: %s.", message));
+        }
+    }
+
+    /**
      * 客户端连接服务器时被回调，进行黑白名单判定
      *
      * @param session 会话
      */
     @OnWebSocketConnect
-    public void onConnection(Session session) {
+    public final void onConnection(Session session) {
         if (allow(session)) {
-            // TODO 处理在线
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Allow the connection: %s.",
-                        TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress())));
-            }
+            this.afterConnect(session);
         } else {
             try {
                 session.disconnect();
@@ -169,10 +267,8 @@ public class BaseWebsocket {
      * @param reason     关闭原因
      */
     @OnWebSocketClose
-    public void onClose(Session session, int statusCode, String reason) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Connection closed, status: %d, reason: %s.", statusCode, reason));
-        }
+    public final void onClose(Session session, int statusCode, String reason) {
+        this.beforeClose(session, statusCode, reason);
     }
 
     /**
@@ -182,10 +278,8 @@ public class BaseWebsocket {
      * @param throwable 错误异常
      */
     @OnWebSocketError
-    public void onError(Session session, Throwable throwable) {
-        if (logger.isErrorEnabled()) {
-            logger.error("Got error.", throwable);
-        }
+    public final void onError(Session session, Throwable throwable) {
+        this.afterError(session, throwable);
     }
 
     /**
@@ -195,10 +289,8 @@ public class BaseWebsocket {
      * @param frame   消息帧
      */
     @OnWebSocketFrame
-    public void onFrame(Session session, Frame frame) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Got a frame: %s.", frame.getClass().getName()));
-        }
+    public final void onFrame(Session session, Frame frame) {
+        this.receiveFrame(session, frame);
     }
 
     /**
@@ -208,10 +300,8 @@ public class BaseWebsocket {
      * @param in      输入流
      */
     @OnWebSocketMessage
-    public void onBinaryMessage(Session session, InputStream in) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Got a binary message.");
-        }
+    public final void onBinaryMessage(Session session, InputStream in) {
+        this.receiveBinary(session, in);
     }
 
     /**
@@ -221,9 +311,7 @@ public class BaseWebsocket {
      * @param message 文本消息
      */
     @OnWebSocketMessage
-    public void onTextMessage(Session session, String message) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Got a text message: %s.", message));
-        }
+    public final void onTextMessage(Session session, String message) {
+        this.receiveText(session, message);
     }
 }
