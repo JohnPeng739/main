@@ -15,6 +15,24 @@ public class TypeUtils {
     }
 
     /**
+     * 将字节数组转换为IPv4格式的字符串。
+     *
+     * @param bytes 字节数组
+     * @return IPv4格式的字符串
+     */
+    public static String byteArray2Ipv4(byte[] bytes) {
+        if (bytes == null || bytes.length <= 0) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder(bytes[0]);
+        for (int index = 1; index < bytes.length; index++) {
+            sb.append(".");
+            sb.append(bytes[index]);
+        }
+        return sb.toString();
+    }
+
+    /**
      * 将字节数组转换为十六进制的字符串，一个字节转换为两位长度的十六进制。
      *
      * @param byteArray 待转换的字节数组
