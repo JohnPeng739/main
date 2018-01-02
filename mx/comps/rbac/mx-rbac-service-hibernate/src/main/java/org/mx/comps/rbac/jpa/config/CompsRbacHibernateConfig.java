@@ -1,4 +1,4 @@
-package org.mx.comps.rbac.config;
+package org.mx.comps.rbac.jpa.config;
 
 import org.mx.dal.config.DalHibernateConfig;
 import org.mx.dal.config.JpaEntityPackagesDefine;

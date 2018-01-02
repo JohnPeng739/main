@@ -16,22 +16,22 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.4/f63a3475d68f37da7a72f973daa1e5886efe80aa/mx-dal-hibernate-1.1.4.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.1.5/mx-dal-hibernate-1.1.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.4/ac9417517bef588150bc06c0fb078edb00264cae/mx-dal-hibernate-1.1.4-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.1.5/mx-dal-hibernate-1.1.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.1/eeba01440dcdfa14e9460769201f27b1f93c7fad/mx-utils-2.1.1.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/e4fbebed8f3c63d4df6c465cd1e21cf3efb3534c/mx-utils-2.1.4.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.1/b8d7020ff8e6339f2a0ee554cabfad6d2f913e0/mx-utils-2.1.1-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/1c2bca749e025487168f9de555be73730294d2c2/mx-utils-2.1.4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -49,11 +49,11 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.3/1b469e0914684018633d54a3eba55b5e3fb6cf28/mx-service-utils-1.3.3.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/ccea76665e8f086ed6c106024c5442831f75236a/mx-service-utils-1.3.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.3/52cd3ead1001a3c106f1c9b23e37924f8f14ea88/mx-service-utils-1.3.3-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/b3ed07bb78b33b700b0d714d31bf0096a98e14bc/mx-service-utils-1.3.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -241,6 +241,28 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-server-impl/9.2.14.v20151106/5bca5905d72c85a55a8befcb61fe658335f376eb/javax-websocket-server-impl-9.2.14.v20151106-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.4/2f8a3c0c53550b237d8f7a98a417397395af8b80/httpclient-4.5.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.4/67fd2133e2289b0f21b5c686ecb4194aa421e173/httpclient-4.5.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.6/e842df4d47bcdc24cc8c8221cd5f2e3e743f2709/Java-WebSocket-1.3.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.6/73abe75317444c91ef04eb162a17de25970eec10/Java-WebSocket-1.3.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -648,6 +670,28 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/javax.websocket/javax.websocket-api/1.0/107b0fdc7ca320b54dc1393e01585be5883ff348/javax.websocket-api-1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.7/5442c20f3568da63b17e0066b06cd88c2999dc14/httpcore-4.4.7.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.7/dbb124345936763ca84054f648b84675c5a45285/httpcore-4.4.7-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/11fb3d88ae7e3b757d70237064210ceb954a5a04/commons-codec-1.10-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -972,22 +1016,22 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.4/f63a3475d68f37da7a72f973daa1e5886efe80aa/mx-dal-hibernate-1.1.4.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.1.5/mx-dal-hibernate-1.1.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.4/ac9417517bef588150bc06c0fb078edb00264cae/mx-dal-hibernate-1.1.4-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.1.5/mx-dal-hibernate-1.1.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.1/eeba01440dcdfa14e9460769201f27b1f93c7fad/mx-utils-2.1.1.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/e4fbebed8f3c63d4df6c465cd1e21cf3efb3534c/mx-utils-2.1.4.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.1/b8d7020ff8e6339f2a0ee554cabfad6d2f913e0/mx-utils-2.1.1-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/1c2bca749e025487168f9de555be73730294d2c2/mx-utils-2.1.4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1005,11 +1049,11 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.3/1b469e0914684018633d54a3eba55b5e3fb6cf28/mx-service-utils-1.3.3.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/ccea76665e8f086ed6c106024c5442831f75236a/mx-service-utils-1.3.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.3/52cd3ead1001a3c106f1c9b23e37924f8f14ea88/mx-service-utils-1.3.3-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/b3ed07bb78b33b700b0d714d31bf0096a98e14bc/mx-service-utils-1.3.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1197,6 +1241,28 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-server-impl/9.2.14.v20151106/5bca5905d72c85a55a8befcb61fe658335f376eb/javax-websocket-server-impl-9.2.14.v20151106-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.4/2f8a3c0c53550b237d8f7a98a417397395af8b80/httpclient-4.5.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.4/67fd2133e2289b0f21b5c686ecb4194aa421e173/httpclient-4.5.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.6/e842df4d47bcdc24cc8c8221cd5f2e3e743f2709/Java-WebSocket-1.3.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.6/73abe75317444c91ef04eb162a17de25970eec10/Java-WebSocket-1.3.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1604,6 +1670,28 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/javax.websocket/javax.websocket-api/1.0/107b0fdc7ca320b54dc1393e01585be5883ff348/javax.websocket-api-1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.7/5442c20f3568da63b17e0066b06cd88c2999dc14/httpcore-4.4.7.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.7/dbb124345936763ca84054f648b84675c5a45285/httpcore-4.4.7-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/11fb3d88ae7e3b757d70237064210ceb954a5a04/commons-codec-1.10-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1928,11 +2016,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.4/f63a3475d68f37da7a72f973daa1e5886efe80aa/mx-dal-hibernate-1.1.4.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.1.5/mx-dal-hibernate-1.1.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal-hibernate/1.1.4/ac9417517bef588150bc06c0fb078edb00264cae/mx-dal-hibernate-1.1.4-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal-hibernate/1.1.5/mx-dal-hibernate-1.1.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1950,11 +2038,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.1/eeba01440dcdfa14e9460769201f27b1f93c7fad/mx-utils-2.1.1.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/e4fbebed8f3c63d4df6c465cd1e21cf3efb3534c/mx-utils-2.1.4.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.1/b8d7020ff8e6339f2a0ee554cabfad6d2f913e0/mx-utils-2.1.1-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/1c2bca749e025487168f9de555be73730294d2c2/mx-utils-2.1.4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1972,11 +2060,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.3/1b469e0914684018633d54a3eba55b5e3fb6cf28/mx-service-utils-1.3.3.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/ccea76665e8f086ed6c106024c5442831f75236a/mx-service-utils-1.3.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.3/52cd3ead1001a3c106f1c9b23e37924f8f14ea88/mx-service-utils-1.3.3-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/b3ed07bb78b33b700b0d714d31bf0096a98e14bc/mx-service-utils-1.3.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2175,6 +2263,28 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-server-impl/9.2.14.v20151106/5bca5905d72c85a55a8befcb61fe658335f376eb/javax-websocket-server-impl-9.2.14.v20151106-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.4/2f8a3c0c53550b237d8f7a98a417397395af8b80/httpclient-4.5.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.4/67fd2133e2289b0f21b5c686ecb4194aa421e173/httpclient-4.5.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.6/e842df4d47bcdc24cc8c8221cd5f2e3e743f2709/Java-WebSocket-1.3.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.6/73abe75317444c91ef04eb162a17de25970eec10/Java-WebSocket-1.3.6-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2582,6 +2692,28 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/javax.websocket/javax.websocket-api/1.0/107b0fdc7ca320b54dc1393e01585be5883ff348/javax.websocket-api-1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.7/5442c20f3568da63b17e0066b06cd88c2999dc14/httpcore-4.4.7.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.7/dbb124345936763ca84054f648b84675c5a45285/httpcore-4.4.7-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/11fb3d88ae7e3b757d70237064210ceb954a5a04/commons-codec-1.10-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

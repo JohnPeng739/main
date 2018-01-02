@@ -2,7 +2,7 @@ package org.mx.comps.rbac;
 
 import org.junit.After;
 import org.junit.Before;
-import org.mx.comps.rbac.config.CompsRbacHibernateConfig;
+import org.mx.comps.rbac.jpa.config.CompsRbacHibernateConfig;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

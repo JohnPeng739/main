@@ -10,7 +10,7 @@ import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import org.junit.After;
 import org.junit.Before;
-import org.mx.comps.rbac.config.CompsRbacMongodbConfig;
+import org.mx.comps.rbac.mongodb.config.CompsRbacMongodbConfig;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

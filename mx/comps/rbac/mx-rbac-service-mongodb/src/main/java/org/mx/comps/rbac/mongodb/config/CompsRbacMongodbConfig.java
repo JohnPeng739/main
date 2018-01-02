@@ -1,4 +1,4 @@
-package org.mx.comps.rbac.config;
+package org.mx.comps.rbac.mongodb.config;
 
 import org.mx.dal.config.DalMongodbConfig;
 import org.springframework.context.annotation.ComponentScan;
