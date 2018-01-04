@@ -24,6 +24,7 @@ public class BaseWebsocket {
 
     private String path = "/";
 
+    private ConnectionManager manager = null;
     private Set<ConnectFilterRule> connectFilterRules = null;
 
     /**
@@ -50,6 +51,15 @@ public class BaseWebsocket {
      */
     public String getPath() {
         return path;
+    }
+
+    /**
+     * 设置连接管理器
+     *
+     * @param manager 连接管理器
+     */
+    public void setConnectionManager(ConnectionManager manager) {
+        this.manager = manager;
     }
 
     /**
@@ -170,7 +180,7 @@ public class BaseWebsocket {
     @OnWebSocketConnect
     public final void onConnection(Session session) {
         if (allow(session)) {
-            ConnectionManager.getManager().registryConnection(session);
+            manager.registryConnection(session);
             this.afterConnect(session);
         } else {
             try {
@@ -198,7 +208,7 @@ public class BaseWebsocket {
     @OnWebSocketClose
     public final void onClose(Session session, int statusCode, String reason) {
         this.beforeClose(session, statusCode, reason);
-        ConnectionManager.getManager().unregistryConnection(session);
+        manager.unregistryConnection(session);
     }
 
     /**

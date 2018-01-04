@@ -11,6 +11,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
 import org.mx.service.server.websocket.BaseWebsocket;
 import org.mx.service.ws.ConnectRuleFactory;
+import org.mx.service.ws.ConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -34,6 +35,8 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     private ApplicationContext context = null;
     @Autowired
     private ConnectRuleFactory ruleFactory = null;
+    @Autowired
+    private ConnectionManager manager = null;
 
     private Map<String, BaseWebsocket> socketBeans = null;
 
@@ -69,6 +72,7 @@ public class WebsocketServerFactory extends AbstractServerFactory {
                     if (websocketClasses != null && !websocketClasses.isEmpty()) {
                         websocketClasses.forEach((clazz) -> {
                             BaseWebsocket websocket = (BaseWebsocket) this.context.getBean(clazz);
+                            websocket.setConnectionManager(manager);
                             if (ruleFactory != null) {
                                 websocket.setConnectFilterRules(ruleFactory.getRules());
                             }

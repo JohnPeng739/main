@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.service.ws.rule.ConnectFilterRule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,9 @@ public class ConnectRuleFactory {
 
     @Autowired
     private Environment env = null;
+
+    @Autowired
+    private ApplicationContext context = null;
 
     private Set<ConnectFilterRule> rules = null;
 
@@ -65,7 +69,7 @@ public class ConnectRuleFactory {
             }
             try {
                 ConnectFilterRule rule = (ConnectFilterRule) Class.forName(clazz).newInstance();
-                rule.init(env, key);
+                rule.init(context, key);
                 rules.add(rule);
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Init connect filter rule successfully, key: %s, class: %s",
