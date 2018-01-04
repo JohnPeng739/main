@@ -6,14 +6,12 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.extensions.Frame;
 import org.eclipse.jetty.websocket.common.frames.PingFrame;
-import org.mx.StringUtils;
 import org.mx.TypeUtils;
+import org.mx.service.ws.ConnectionManager;
+import org.mx.service.ws.rule.ConnectFilterRule;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -25,15 +23,14 @@ public class BaseWebsocket {
     private static final Log logger = LogFactory.getLog(BaseWebsocket.class);
 
     private String path = "/";
-    private Set<List<Byte>> allows, blocks;
+
+    private Set<ConnectFilterRule> connectFilterRules = null;
 
     /**
      * 默认的构造函数
      */
     public BaseWebsocket() {
         super();
-        this.allows = new HashSet<>();
-        this.blocks = new HashSet<>();
     }
 
     /**
@@ -56,95 +53,12 @@ public class BaseWebsocket {
     }
 
     /**
-     * 添加指定的过滤规则，按照IP字节顺序过滤
+     * 设置Websocket连接过滤规则列表
      *
-     * @param filter 过滤规则
-     * @param set    存放过滤集合
+     * @param rules 规则列表
      */
-    private void addFilter(String filter, Set<List<Byte>> set) {
-        String[] ips = StringUtils.split(filter, ",", true, true);
-        if (ips == null || ips.length <= 0) {
-            return;
-        }
-        try {
-            for (String ip : ips) {
-                String[] segs = StringUtils.split(ip, ".", true, true);
-                if (segs == null || segs.length <= 0) {
-                    continue;
-                }
-                List<Byte> list = new ArrayList<>();
-                for (String seg : segs) {
-                    list.add((byte) Integer.parseInt(seg));
-                }
-                set.add(list);
-            }
-        } catch (NumberFormatException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Parse filter fail, filter: %s.", ex);
-            }
-        }
-    }
-
-    /**
-     * 设置过滤的黑白名单，以白名单为优先
-     *
-     * @param allows 半角逗号分割的白名单IP
-     * @param blocks 半角逗号分割的黑名单IP
-     */
-    public void setSecurity(String allows, String blocks) {
-        if (!StringUtils.isBlank(allows)) {
-            // 设置白名单
-            this.addFilter(allows, this.allows);
-        }
-        if (this.allows.isEmpty() && !StringUtils.isBlank(blocks)) {
-            // 设置黑名单
-            this.addFilter(blocks, this.blocks);
-        }
-        if (this.allows.isEmpty() && this.blocks.isEmpty()) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("There may not be set the security role for Websocket server.");
-            }
-        }
-    }
-
-    /**
-     * 判定指定的seg是否在过滤规则中
-     *
-     * @param filter 过滤规则，白名单 or 黑名单
-     * @param segs   IP字节数组
-     * @return 如果存在，返回true，否则返回false。
-     */
-    private boolean found(Set<List<Byte>> filter, byte[] segs) {
-        for (List<Byte> list : filter) {
-            boolean found = true;
-            for (int index = 0; index < Math.min(list.size(), segs.length); index++) {
-                if (list.get(index) != segs[index]) {
-                    found = false;
-                }
-            }
-            if (found) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判定指定会话是否允许连接
-     *
-     * @param session 会话
-     * @return 允许连接返回true，否则返回false。
-     */
-    private boolean allow(Session session) {
-        if (allows.isEmpty() && blocks.isEmpty()) {
-            return true;
-        } else {
-            byte[] segs = session.getRemoteAddress().getAddress().getAddress();
-            if (!allows.isEmpty()) {
-                return found(allows, segs);
-            }
-            return !found(blocks, segs);
-        }
+    public void setConnectFilterRules(Set<ConnectFilterRule> rules) {
+        this.connectFilterRules = rules;
     }
 
     /**
@@ -168,7 +82,7 @@ public class BaseWebsocket {
      */
     protected void beforeClose(Session session, int statusCode, String reason) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Connection closed, status: %d, reason: %s.", statusCode, reason));
+            logger.debug(String.format("ConnectionPoint closed, status: %d, reason: %s.", statusCode, reason));
         }
     }
 
@@ -234,6 +148,20 @@ public class BaseWebsocket {
         }
     }
 
+    private boolean allow(Session session) {
+        if (connectFilterRules == null || connectFilterRules.isEmpty()) {
+            // 如果没有设置规则，默认允许所有连接
+            return true;
+        }
+        for (ConnectFilterRule rule : connectFilterRules) {
+            if (!rule.filter(session)) {
+                // 只要有一个规则不允许连接，就拒绝连接
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * 客户端连接服务器时被回调，进行黑白名单判定
      *
@@ -242,6 +170,7 @@ public class BaseWebsocket {
     @OnWebSocketConnect
     public final void onConnection(Session session) {
         if (allow(session)) {
+            ConnectionManager.getManager().registryConnection(session);
             this.afterConnect(session);
         } else {
             try {
@@ -269,6 +198,7 @@ public class BaseWebsocket {
     @OnWebSocketClose
     public final void onClose(Session session, int statusCode, String reason) {
         this.beforeClose(session, statusCode, reason);
+        ConnectionManager.getManager().unregistryConnection(session);
     }
 
     /**

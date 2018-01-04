@@ -10,6 +10,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
 import org.mx.service.server.websocket.BaseWebsocket;
+import org.mx.service.ws.ConnectRuleFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -31,6 +32,9 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     private Environment env = null;
     @Autowired
     private ApplicationContext context = null;
+    @Autowired
+    private ConnectRuleFactory ruleFactory = null;
+
     private Map<String, BaseWebsocket> socketBeans = null;
 
     public WebsocketServerFactory() {
@@ -52,8 +56,6 @@ public class WebsocketServerFactory extends AbstractServerFactory {
         }
         final int port = env.getProperty("websocket.port", Integer.class, 9997);
         String websocketClassesStr = "websocket.service.classes";
-        String allows = env.getProperty("websocket.security.allows", "");
-        String blocks = env.getProperty("websocket.security.blocks", "");
         String websocketServiceClassesDef = this.env.getProperty(websocketClassesStr);
         if (StringUtils.isBlank(websocketServiceClassesDef)) {
             if (logger.isWarnEnabled()) {
@@ -67,8 +69,8 @@ public class WebsocketServerFactory extends AbstractServerFactory {
                     if (websocketClasses != null && !websocketClasses.isEmpty()) {
                         websocketClasses.forEach((clazz) -> {
                             BaseWebsocket websocket = (BaseWebsocket) this.context.getBean(clazz);
-                            if (!StringUtils.isBlank(allows) || !StringUtils.isBlank(blocks)) {
-                                websocket.setSecurity(allows, blocks);
+                            if (ruleFactory != null) {
+                                websocket.setConnectFilterRules(ruleFactory.getRules());
                             }
                             socketBeans.put(websocket.getPath(), websocket);
                         });

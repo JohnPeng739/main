@@ -3,7 +3,10 @@ package org.mx.service.server.config;
 import org.mx.service.server.HttpServerFactory;
 import org.mx.service.server.WebsocketServerFactory;
 import org.mx.service.server.ServletServerFactory;
+import org.mx.service.ws.ConnectRuleFactory;
+import org.mx.service.ws.ConnectionManager;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -36,5 +39,15 @@ public class ServerConfig {
     @Bean(initMethod = "init", destroyMethod = "destroy")
     public WebsocketServerFactory websocketServerFactory() {
         return new WebsocketServerFactory();
+    }
+
+    @Bean(initMethod = "init")
+    public ConnectRuleFactory connectRuleFactory() {
+        return new ConnectRuleFactory();
+    }
+
+    @Bean(initMethod = "init", destroyMethod = "destroy")
+    public ConnectionManager connectionManager() {
+        return new ConnectionManager();
     }
 }
