@@ -3,17 +3,14 @@ package org.mx.service.server.websocket;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.StatusCode;
-import org.eclipse.jetty.websocket.api.annotations.*;
-import org.java_websocket.util.ByteBufferUtils;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.*;
+import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,7 +23,7 @@ public class EchoSocket extends BaseWebsocket {
     private final CountDownLatch closeLatch;
 
     public EchoSocket() {
-        super("/echo");
+        super("/echo", false);
         closeLatch = new CountDownLatch(1);
     }
 
@@ -49,6 +46,8 @@ public class EchoSocket extends BaseWebsocket {
     @Override
     public void receiveText(Session session, String message) {
         try {
+            // 手动确认
+            super.confirmConnections(session);
             session.getRemote().sendString(String.format("Server echo: %s.", message));
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
@@ -62,6 +61,8 @@ public class EchoSocket extends BaseWebsocket {
     public void receiveBinary(Session session, InputStream in) {
         super.receiveBinary(session, in);
         try {
+            // 手动确认
+            super.confirmConnections(session);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] buffer = new byte[8192];
             long size = 0;

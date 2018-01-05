@@ -44,11 +44,17 @@ public final class ConnectionManager {
         String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
-        if (!connections.containsKey(key)) {
-            connections.put(key, session);
+        synchronized (ConnectionManager.this.cleanMutex) {
+            if (!connections.containsKey(key)) {
+                connections.put(key, session);
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Registry a connection, key: %s.", key));
+                }
+            }
+            connectionsPerIp.compute(ip, (k, v) -> v == null ? new ConnectionPerIp(ip) : v.increment());
         }
-        if (connectionsPerIp.containsKey(ip)) {
-            connectionsPerIp.compute(key, (k, v) -> v == null ? new ConnectionPerIp(ip) : v.increment());
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Registry IP: %s, number: %d.", ip, connectionsPerIp.get(ip).connectNumber));
         }
     }
 
@@ -56,8 +62,10 @@ public final class ConnectionManager {
         String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
-        if (connections.containsKey(key)) {
-            connections.remove(key);
+        synchronized (ConnectionManager.this.cleanMutex) {
+            if (connections.containsKey(key)) {
+                connections.remove(key);
+            }
         }
         // 对于connectionsPerIp，由守护线程来进行清理。
     }
@@ -66,31 +74,96 @@ public final class ConnectionManager {
         String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
-        if (connections.containsKey(key) && connectionsPerIp.containsKey(ip)) {
-            connectionsPerIp.compute(key, (k, v) -> v.confirm());
+        synchronized (ConnectionManager.this.cleanMutex) {
+            if (connections.containsKey(key) && connectionsPerIp.containsKey(ip)) {
+                connectionsPerIp.compute(ip, (k, v) -> v.confirm());
+            }
         }
     }
 
+    /**
+     * 阻断指定会话及其相同IP的会话
+     * @param session 会话
+     */
+    public void blockConnection(Session session) {
+        try {
+            String blockIp = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
+            int port = session.getRemoteAddress().getPort();
+            session.disconnect();
+            // 阻断并清除该IP的其他连接
+            synchronized (ConnectionManager.this.cleanMutex) {
+                // 清除无效的连接
+                if (connections != null && !connections.isEmpty()) {
+                    connections.forEach((key, blockSession) -> {
+                        if (connectionsPerIp.containsKey(blockIp)) {
+                            try {
+                                if (logger.isDebugEnabled()) {
+                                    logger.debug(String.format("block the connection: %s.", key));
+                                }
+                                blockSession.disconnect();
+                            } catch (IOException ex) {
+                                if (logger.isErrorEnabled()) {
+                                    logger.error("Disconnect remote fail.", ex);
+                                }
+                            }
+                            connections.remove(key);
+                        }
+                    });
+                }
+            }
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("The connection[%s:%d] is blocked by the rules.",
+                        TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                        session.getRemoteAddress().getPort()));
+            }
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Disconnect the remote[%s:%d] fail.",
+                        TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                        session.getRemoteAddress().getPort()), ex);
+            }
+        }
+    }
+
+    /**
+     * 判断会话是否涉嫌DDOS攻击
+     * @param session 会话
+     * @return 返回true表示为可疑的DDOS攻击，否则返回false。
+     */
     public boolean isDdos(Session session) {
         String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
         if (connectionsPerIp.containsKey(ip)) {
             ConnectionPerIp connect = connectionsPerIp.get(ip);
             // 判断是否存在DDOS
-            // 规则：在10秒内超过20次连接请求 或 30秒内没有确认连接
+            // 规则：在10秒内超过20次连接请求 或 10秒内没有确认连接
             long currentTime = System.currentTimeMillis();
+            logger.debug(String.format("in ddos judge, ip: %s:%d, time: %ds, number: %d.", ip,
+                    session.getRemoteAddress().getPort(),
+                    (currentTime - connect.lastConnectTime) / 1000, connect.connectNumber));
             if (((currentTime - connect.lastConnectTime) > (maxIdleSec * 1000) && !connect.confirmed) ||
-                    (currentTime - connect.lastConnectTime) < (testCycleSec * 1000) && connect.connectNumber > maxNumber) {
+                    ((currentTime - connect.lastConnectTime) < (testCycleSec * 1000) && connect.connectNumber >= maxNumber)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Has DDOS, ip: %s:%d, time: %ds, number: %d.", ip,
+                            session.getRemoteAddress().getPort(),
+                            (currentTime - connect.lastConnectTime) / 1000, connect.connectNumber));
+                }
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * 管理器初始化方法，被Spring IoC调用
+     */
     public void init() {
         cleanTimer = new Timer();
         cleanTimer.scheduleAtFixedRate(new CleanTask(), cleanPeriodMs, cleanPeriodMs);
     }
 
+    /**
+     * 管理器销毁方法，被Spring IoC调用
+     */
     public void destroy() {
         // 断开所有连接
         if (connections != null && !connections.isEmpty()) {
@@ -105,7 +178,11 @@ public final class ConnectionManager {
         cleanTimer = null;
     }
 
+    /**
+     * 定时清理无效会话的任务
+     */
     private class CleanTask extends TimerTask {
+        private int num;
 
         /**
          * {@inheritDoc}
@@ -115,17 +192,27 @@ public final class ConnectionManager {
         @Override
         public void run() {
             synchronized (ConnectionManager.this.cleanMutex) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Start clean the invalidated session.");
+                }
+                num = 0;
                 clean();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Clean %d sessions successfully.", num));
+                }
             }
         }
 
+        /**
+         * 定时清理无效连接
+         */
         private void clean() {
             // 清除有DDOS嫌疑的连接
             if (connectionsPerIp != null && !connectionsPerIp.isEmpty()) {
                 connectionsPerIp.forEach((ip, connect) -> {
                     long currentTime = System.currentTimeMillis();
                     if (((currentTime - connect.lastConnectTime) > (maxIdleSec + 1) * 1000 && !connect.confirmed) ||
-                            (currentTime - connect.lastConnectTime) < (testCycleSec * 1000) && connect.connectNumber > maxNumber) {
+                            ((currentTime - connect.lastConnectTime) < (testCycleSec * 1000) && connect.connectNumber >= maxNumber)) {
                         connectionsPerIp.remove(ip);
                     }
                 });
@@ -136,7 +223,11 @@ public final class ConnectionManager {
                     String[] segs = StringUtils.split(key, ":", true, true);
                     if (!connectionsPerIp.containsKey(segs[0])) {
                         try {
+                            logger.warn(String.format("The connection[%s:%d] is close by clean task.",
+                                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                                    session.getRemoteAddress().getPort()));
                             session.disconnect();
+                            num ++;
                         } catch (IOException ex) {
                             if (logger.isErrorEnabled()) {
                                 logger.error("Disconnect remote fail.", ex);

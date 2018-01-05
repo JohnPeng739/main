@@ -6,11 +6,11 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.extensions.Frame;
 import org.eclipse.jetty.websocket.common.frames.PingFrame;
+import org.mx.StringUtils;
 import org.mx.TypeUtils;
 import org.mx.service.ws.ConnectionManager;
 import org.mx.service.ws.rule.ConnectFilterRule;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
@@ -25,6 +25,7 @@ public class BaseWebsocket {
     private String path = "/";
 
     private ConnectionManager manager = null;
+    private boolean autoConfirmConnection = true;
     private Set<ConnectFilterRule> connectFilterRules = null;
 
     /**
@@ -39,9 +40,10 @@ public class BaseWebsocket {
      *
      * @param path 访问路径
      */
-    public BaseWebsocket(String path) {
+    public BaseWebsocket(String path, boolean autoConfirmConnection) {
         this();
         this.path = path;
+        this.autoConfirmConnection = autoConfirmConnection;
     }
 
     /**
@@ -78,8 +80,9 @@ public class BaseWebsocket {
      */
     protected void afterConnect(Session session) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Allow the connection: %s.",
-                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress())));
+            logger.debug(String.format("Allow the connection: %s:%d.",
+                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    session.getRemoteAddress().getPort()));
         }
     }
 
@@ -92,7 +95,9 @@ public class BaseWebsocket {
      */
     protected void beforeClose(Session session, int statusCode, String reason) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("ConnectionPoint closed, status: %d, reason: %s.", statusCode, reason));
+            logger.debug(String.format("ConnectionPoint closed, from: %s:%d, status: %d, reason: %s.",
+                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    session.getRemoteAddress().getPort(), statusCode, reason));
         }
     }
 
@@ -104,7 +109,9 @@ public class BaseWebsocket {
      */
     protected void afterError(Session session, Throwable throwable) {
         if (logger.isErrorEnabled()) {
-            logger.error("Got error.", throwable);
+            logger.error(String.format("Got error, from: %s:%d.",
+                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    session.getRemoteAddress().getPort()), throwable);
         }
     }
 
@@ -115,7 +122,9 @@ public class BaseWebsocket {
      */
     protected void receivePing(Session session) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Got a ping frame.");
+            logger.debug(String.format("Got a ping frame, from: %s:%d.",
+                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    session.getRemoteAddress().getPort()));
         }
     }
 
@@ -127,7 +136,9 @@ public class BaseWebsocket {
      */
     protected void receiveFrame(Session session, Frame frame) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Got a frame: %s.", frame.getClass().getName()));
+            logger.debug(String.format("Got a frame, from: %s:%d, frame: %s.",
+                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    session.getRemoteAddress().getPort(), frame.getClass().getName()));
         }
         if (frame instanceof PingFrame) {
             this.receivePing(session);
@@ -142,7 +153,9 @@ public class BaseWebsocket {
      */
     protected void receiveBinary(Session session, InputStream in) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Got a binary message.");
+            logger.debug(String.format("Got a binary message, from: %s:%d.",
+                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    session.getRemoteAddress().getPort()));
         }
     }
 
@@ -154,10 +167,27 @@ public class BaseWebsocket {
      */
     protected void receiveText(Session session, String message) {
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Got a text message: %s.", message));
+            logger.debug(String.format("Got a text message, from: %s:%d,message: %s.",
+                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    session.getRemoteAddress().getPort(), message));
         }
     }
 
+    /**
+     * 确认连接有效
+     *
+     * @param session 连接会话
+     */
+    protected void confirmConnections(Session session) {
+        manager.confirmConnection(session);
+    }
+
+    /**
+     * 判断指定的会话是否允许连接
+     *
+     * @param session 会话
+     * @return 允许连接返回true，否则返回false。
+     */
     private boolean allow(Session session) {
         if (connectFilterRules == null || connectFilterRules.isEmpty()) {
             // 如果没有设置规则，默认允许所有连接
@@ -183,18 +213,7 @@ public class BaseWebsocket {
             manager.registryConnection(session);
             this.afterConnect(session);
         } else {
-            try {
-                session.disconnect();
-                if (logger.isWarnEnabled()) {
-                    logger.warn(String.format("The connection[%s] is blocked by the rules.",
-                            TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress())));
-                }
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(String.format("Disconnect the remote[%s] fail.",
-                            TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress())), ex);
-                }
-            }
+            manager.blockConnection(session);
         }
     }
 
@@ -241,6 +260,9 @@ public class BaseWebsocket {
      */
     @OnWebSocketMessage
     public final void onBinaryMessage(Session session, InputStream in) {
+        if (autoConfirmConnection) {
+            confirmConnections(session);
+        }
         this.receiveBinary(session, in);
     }
 
@@ -252,6 +274,10 @@ public class BaseWebsocket {
      */
     @OnWebSocketMessage
     public final void onTextMessage(Session session, String message) {
+        if (!StringUtils.isBlank(message) && autoConfirmConnection) {
+            // 收到有效消息，且采用自动确认方式
+            confirmConnections(session);
+        }
         this.receiveText(session, message);
     }
 }

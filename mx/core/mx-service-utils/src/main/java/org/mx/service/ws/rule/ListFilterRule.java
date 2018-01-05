@@ -8,6 +8,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,12 @@ public class ListFilterRule implements ConnectFilterRule {
     private static final Log logger = LogFactory.getLog(ListFilterRule.class);
 
     private Set<List<Byte>> allows, blocks;
+
+    public ListFilterRule() {
+        super();
+        this.allows = new HashSet<>();
+        this.blocks = new HashSet<>();
+    }
 
     /**
      * 添加指定的过滤规则，按照IP字节顺序过滤
