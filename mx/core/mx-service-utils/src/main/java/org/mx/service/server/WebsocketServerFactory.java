@@ -33,10 +33,6 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     private Environment env = null;
     @Autowired
     private ApplicationContext context = null;
-    @Autowired
-    private ConnectRuleFactory ruleFactory = null;
-    @Autowired
-    private ConnectionManager manager = null;
 
     private Map<String, BaseWebsocket> socketBeans = null;
 
@@ -72,10 +68,6 @@ public class WebsocketServerFactory extends AbstractServerFactory {
                     if (websocketClasses != null && !websocketClasses.isEmpty()) {
                         websocketClasses.forEach((clazz) -> {
                             BaseWebsocket websocket = (BaseWebsocket) this.context.getBean(clazz);
-                            websocket.setConnectionManager(manager);
-                            if (ruleFactory != null) {
-                                websocket.setConnectFilterRules(ruleFactory.getRules());
-                            }
                             socketBeans.put(websocket.getPath(), websocket);
                         });
                     }

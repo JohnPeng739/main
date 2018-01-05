@@ -80,14 +80,14 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-service-utils') {
-  version = '1.3.7'
+  version = '1.3.8'
   description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
   dependencies {
     compile(
       project(':mx-utils'),
       project(':mx-dal'),
-      libs.'spring-context',
+      project(':mx-spring'),
       libs.'jersey-server',
       libs.'jersey-media-jackson',
       libs.'jersey-jetty-http',

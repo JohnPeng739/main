@@ -8,8 +8,10 @@ import org.eclipse.jetty.websocket.api.extensions.Frame;
 import org.eclipse.jetty.websocket.common.frames.PingFrame;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
+import org.mx.service.ws.ConnectRuleFactory;
 import org.mx.service.ws.ConnectionManager;
 import org.mx.service.ws.rule.ConnectFilterRule;
+import org.mx.spring.SpringContextHolder;
 
 import java.io.InputStream;
 import java.util.Set;
@@ -24,9 +26,8 @@ public class BaseWebsocket {
 
     private String path = "/";
 
-    private ConnectionManager manager = null;
+    private ConnectionManager manager1 = null;
     private boolean autoConfirmConnection = true;
-    private Set<ConnectFilterRule> connectFilterRules = null;
 
     /**
      * 默认的构造函数
@@ -54,24 +55,6 @@ public class BaseWebsocket {
      */
     public String getPath() {
         return path;
-    }
-
-    /**
-     * 设置连接管理器
-     *
-     * @param manager 连接管理器
-     */
-    public void setConnectionManager(ConnectionManager manager) {
-        this.manager = manager;
-    }
-
-    /**
-     * 设置Websocket连接过滤规则列表
-     *
-     * @param rules 规则列表
-     */
-    public void setConnectFilterRules(Set<ConnectFilterRule> rules) {
-        this.connectFilterRules = rules;
     }
 
     /**
@@ -180,6 +163,7 @@ public class BaseWebsocket {
      * @param session 连接会话
      */
     protected void confirmConnections(Session session) {
+        ConnectionManager manager = SpringContextHolder.getBean(ConnectionManager.class);
         manager.confirmConnection(session);
     }
 
@@ -190,6 +174,8 @@ public class BaseWebsocket {
      * @return 允许连接返回true，否则返回false。
      */
     private boolean allow(Session session) {
+        ConnectRuleFactory factory = SpringContextHolder.getBean(ConnectRuleFactory.class);
+        Set<ConnectFilterRule> connectFilterRules = factory.getRules();
         if (connectFilterRules == null || connectFilterRules.isEmpty()) {
             // 如果没有设置规则，默认允许所有连接
             return true;
@@ -210,6 +196,7 @@ public class BaseWebsocket {
      */
     @OnWebSocketConnect
     public final void onConnection(Session session) {
+        ConnectionManager manager = SpringContextHolder.getBean(ConnectionManager.class);
         if (allow(session)) {
             manager.registryConnection(session);
             this.afterConnect(session);
@@ -228,6 +215,7 @@ public class BaseWebsocket {
     @OnWebSocketClose
     public final void onClose(Session session, int statusCode, String reason) {
         this.beforeClose(session, statusCode, reason);
+        ConnectionManager manager = SpringContextHolder.getBean(ConnectionManager.class);
         manager.unregistryConnection(session);
     }
 

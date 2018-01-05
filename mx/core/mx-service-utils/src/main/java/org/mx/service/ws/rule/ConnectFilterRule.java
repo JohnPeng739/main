@@ -19,10 +19,9 @@ public interface ConnectFilterRule {
     /**
      * 初始化规则
      *
-     * @param context Spring IoC中的上下文
      * @param key     规则对应的Key，用于获取相应的配置项
      */
-    void init(ApplicationContext context, String key);
+    void init(String key);
 
     /**
      * 判定指定会话是否允许连接

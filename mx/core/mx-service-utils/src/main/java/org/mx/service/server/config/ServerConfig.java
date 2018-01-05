@@ -5,10 +5,8 @@ import org.mx.service.server.WebsocketServerFactory;
 import org.mx.service.server.ServletServerFactory;
 import org.mx.service.ws.ConnectRuleFactory;
 import org.mx.service.ws.ConnectionManager;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.mx.spring.config.SpringConfig;
+import org.springframework.context.annotation.*;
 
 /**
  * REST服务器的Java Configure定义
@@ -17,6 +15,7 @@ import org.springframework.context.annotation.PropertySource;
  * @author : john.peng date : 2017/10/6
  */
 @Configuration
+@Import({SpringConfig.class})
 @PropertySource({"classpath:server.properties"})
 public class ServerConfig {
     /**

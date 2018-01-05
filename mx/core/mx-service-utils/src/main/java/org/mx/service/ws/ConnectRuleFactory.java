@@ -69,7 +69,7 @@ public class ConnectRuleFactory {
             }
             try {
                 ConnectFilterRule rule = (ConnectFilterRule) Class.forName(clazz).newInstance();
-                rule.init(context, key);
+                rule.init(key);
                 rules.add(rule);
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Init connect filter rule successfully, key: %s, class: %s",

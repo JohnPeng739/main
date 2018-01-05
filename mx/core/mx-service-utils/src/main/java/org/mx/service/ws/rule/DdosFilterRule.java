@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.service.ws.ConnectionManager;
+import org.mx.spring.SpringContextHolder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -33,18 +34,18 @@ public class DdosFilterRule implements ConnectFilterRule {
     /**
      * {@inheritDoc}
      *
-     * @see ConnectFilterRule#init(ApplicationContext, String)
+     * @see ConnectFilterRule#init(String)
      */
     @Override
-    public void init(ApplicationContext context, String key) {
-        if (context == null || StringUtils.isBlank(key)) {
+    public void init(String key) {
+        if (StringUtils.isBlank(key)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The ddos filter rule' configuration error");
             }
             return;
         }
-        Environment env = context.getEnvironment();
-        manager = context.getBean(ConnectionManager.class);
+        Environment env = SpringContextHolder.getApplicationContext().getEnvironment();
+        manager = SpringContextHolder.getBean(ConnectionManager.class);
         testCycleSec = env.getProperty(String.format("%s.testCycleSec", key), Integer.class, 10);
         maxNumber = env.getProperty(String.format("%s.maxNumber", key), Integer.class, 30);
         maxIdleSec = env.getProperty(String.format("%s.maxIdleSec", key), Integer.class, 30);

@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
-import org.springframework.context.ApplicationContext;
+import org.mx.spring.SpringContextHolder;
 import org.springframework.core.env.Environment;
 
 import java.util.ArrayList;
@@ -101,17 +101,17 @@ public class ListFilterRule implements ConnectFilterRule {
     /**
      * {@inheritDoc}
      *
-     * @see ConnectFilterRule#init(ApplicationContext, String)
+     * @see ConnectFilterRule#init(String)
      */
     @Override
-    public void init(ApplicationContext context, String key) {
-        if (context == null || StringUtils.isBlank(key)) {
+    public void init(String key) {
+        if (StringUtils.isBlank(key)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The list filter rule' configuration error");
             }
             return;
         }
-        Environment env = context.getEnvironment();
+        Environment env = SpringContextHolder.getApplicationContext().getEnvironment();
         String allows = env.getProperty(String.format("%s.allows", key));
         if (!StringUtils.isBlank(allows)) {
             // 设置白名单
