@@ -26,20 +26,45 @@ public final class ConnectionManager {
     private ConcurrentMap<String, ConnectionPerIp> connectionsPerIp = null;
     private Timer cleanTimer = null;
     private int cleanPeriodMs = 30 * 1000;
-    private int testCycleSec = 10, maxNumber = 30, maxIdleSec = 30;
+    private int testCycleSec = 10, maxNumber = 30, maxIdleSec = 10;
 
+    /**
+     * 默认的构造函数
+     */
     public ConnectionManager() {
         super();
         this.connections = new ConcurrentHashMap<>();
         this.connectionsPerIp = new ConcurrentHashMap<>();
     }
 
+    /**
+     * 设置DDOS攻击规则检测参数
+     *
+     * @param testCycleSec 检测周期，单位秒，默认为10秒
+     * @param maxNumber    检测周期内允许最大连接数，默认为30个
+     * @param maxIdleSec   连接确认最大超时值，单位秒，默认为10秒
+     */
     public void setDdosParameters(int testCycleSec, int maxNumber, int maxIdleSec) {
         this.testCycleSec = testCycleSec;
         this.maxNumber = maxNumber;
         this.maxIdleSec = maxIdleSec;
     }
 
+    /**
+     * 获取指定连接关键字的会话
+     *
+     * @param connectKey 关键字，形如：10.1.1.21:4582
+     * @return 会话对象，如果会话不存在则返回null。
+     */
+    public Session getSession(String connectKey) {
+        return connections.get(connectKey);
+    }
+
+    /**
+     * 注册连接
+     *
+     * @param session 会话
+     */
     public void registryConnection(Session session) {
         String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
@@ -58,6 +83,11 @@ public final class ConnectionManager {
         }
     }
 
+    /**
+     * 注销连接
+     *
+     * @param session 会话
+     */
     public void unregistryConnection(Session session) {
         String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
@@ -70,6 +100,11 @@ public final class ConnectionManager {
         // 对于connectionsPerIp，由守护线程来进行清理。
     }
 
+    /**
+     * 确认连接有效
+     *
+     * @param session 会话
+     */
     public void confirmConnection(Session session) {
         String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
@@ -83,6 +118,7 @@ public final class ConnectionManager {
 
     /**
      * 阻断指定会话及其相同IP的会话
+     *
      * @param session 会话
      */
     public void blockConnection(Session session) {
@@ -127,6 +163,7 @@ public final class ConnectionManager {
 
     /**
      * 判断会话是否涉嫌DDOS攻击
+     *
      * @param session 会话
      * @return 返回true表示为可疑的DDOS攻击，否则返回false。
      */
@@ -227,7 +264,7 @@ public final class ConnectionManager {
                                     TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
                                     session.getRemoteAddress().getPort()));
                             session.disconnect();
-                            num ++;
+                            num++;
                         } catch (IOException ex) {
                             if (logger.isErrorEnabled()) {
                                 logger.error("Disconnect remote fail.", ex);
