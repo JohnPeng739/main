@@ -38,7 +38,8 @@ public class BaseWebsocket {
     /**
      * 默认的构造函数
      *
-     * @param path 访问路径
+     * @param path                  访问路径
+     * @param autoConfirmConnection 如果设置为true，则在收到消息后自动确认连接；否则需要应用手工确认连接。
      */
     public BaseWebsocket(String path, boolean autoConfirmConnection) {
         this();
