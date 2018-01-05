@@ -14,6 +14,7 @@
     <orderEntry type="sourceFolder" forTests="false"/>
     <orderEntry module-name="mx-utils" type="module" scope="PROVIDED"/>
     <orderEntry module-name="mx-dal" type="module" scope="PROVIDED"/>
+    <orderEntry module-name="mx-spring" type="module" scope="PROVIDED"/>
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
@@ -753,6 +754,7 @@
     </orderEntry>
     <orderEntry module-name="mx-utils" type="module" scope="RUNTIME"/>
     <orderEntry module-name="mx-dal" type="module" scope="RUNTIME"/>
+    <orderEntry module-name="mx-spring" type="module" scope="RUNTIME"/>
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
@@ -1492,6 +1494,7 @@
     </orderEntry>
     <orderEntry module-name="mx-utils" type="module" scope="TEST"/>
     <orderEntry module-name="mx-dal" type="module" scope="TEST"/>
+    <orderEntry module-name="mx-spring" type="module" scope="TEST"/>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>

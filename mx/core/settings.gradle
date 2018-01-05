@@ -1,6 +1,7 @@
 rootProject.name = 'core'
 
 include 'mx-utils'
+include 'mx-spring'
 include 'mx-dal'
 include 'mx-dal-hibernate'
 include 'mx-dal-mongodb'

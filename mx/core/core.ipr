@@ -180,6 +180,7 @@
       <module filepath="$PROJECT_DIR$/mx-dal-hibernate/mx-dal-hibernate.iml" fileurl="file://$PROJECT_DIR$/mx-dal-hibernate/mx-dal-hibernate.iml" />
       <module filepath="$PROJECT_DIR$/mx-dal-mongodb/mx-dal-mongodb.iml" fileurl="file://$PROJECT_DIR$/mx-dal-mongodb/mx-dal-mongodb.iml" />
       <module filepath="$PROJECT_DIR$/mx-service-utils/mx-service-utils.iml" fileurl="file://$PROJECT_DIR$/mx-service-utils/mx-service-utils.iml" />
+      <module filepath="$PROJECT_DIR$/mx-spring/mx-spring.iml" fileurl="file://$PROJECT_DIR$/mx-spring/mx-spring.iml" />
       <module filepath="$PROJECT_DIR$/mx-utils/mx-utils.iml" fileurl="file://$PROJECT_DIR$/mx-utils/mx-utils.iml" />
     </modules>
   </component>
