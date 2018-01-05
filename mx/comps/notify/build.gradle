@@ -1,0 +1,26 @@
+plugins {
+  id 'com.jfrog.bintray' version '1.8.0'
+}
+
+apply from: '../../../dependencies.gradle'
+
+apply from: '../../../allprojects.gradle'
+
+project(':server') {
+  version = '1.0.0'
+  description = 'Notification service based on websocket & restful.'
+
+  dependencies {
+    compile(
+      libs.'mx-utils',
+      libs.'mx-service-utils'
+    )
+    testCompile(
+      libs.'spring-test',
+      libs.'httpclient',
+      libs.'java-websocket'
+    )
+  }
+}
+
+apply from: '../../../subproject.gradle'

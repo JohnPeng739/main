@@ -1,0 +1,3 @@
+rootProject.name = 'notify'
+
+include 'server'
