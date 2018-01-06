@@ -1,0 +1,57 @@
+<!--pages/family/family.wxml-->
+<view class="container">
+  <block wx:if="{{type === 'create'}}">
+    <form class="section" bindsubmit="bindCreateFamily">
+      <view class="section">
+        <view class="section-label section__title">家庭</view>
+        <view class="section-input">
+          <input class="border" name="family" value="{{myFamily.name}}" placeholder="请输入家庭名称"></input>
+        </view>
+      </view>
+      <view class="section">
+        <view class="title">家主大人</view>
+        <view class="row">
+          <image class="form-owner-avatar" src="{{myFamily.owner.avatarUrl}}"></image>
+          <text class="section-nickname">{{myFamily.owner.nickName}}</text>
+          <picker bindchange="bindOwnerTypeChange" range="{{ownerTypes}}">
+            <view class="picker">{{ownerTypes[ownerTypeIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+      <view class="section">
+        <view class="title">家庭成员</view>
+        <view class="row">
+          <view class="member" wx:for="{{myFamily.members}}" wx:key="nickName" wx:for-item="member">
+            <image class="member-avatar" src="{{member.avatarUrl}}" background-size="cover"></image>
+            <text class="member-nickname">{{member.nickName}}</text>
+          </view>
+          <image class="add-member" bindtap="bindAddMember" src="../../images/add.jpeg"></image>
+        </view>
+      </view>
+      <view class="validate-tips">{{tips}}</view>
+      <button class="submit-button" type="primary" form-type="submit">建立家庭</button>
+    </form>
+  </block>
+  <block wx:else>
+    <view class="title">{{myFamily.name}}</view>
+    <view class="section">
+      <view class="title">家主大人</view>
+      <view class="row">
+        <image class="form-owner-avatar" src="{{myFamily.owner.avatarUrl}}"></image>
+        <text class="section-nickname">{{myFamily.owner.nickName}}</text>
+        <view class="picker">{{ownerTypes[ownerTypeIndex]}}</view>
+      </view>
+    </view>
+    <view class="section">
+      <view class="title">家庭成员</view>
+      <view class="row">
+        <view class="member" wx:for="{{myFamily.members}}" wx:key="nickName" wx:for-item="member">
+          <image class="member-avatar" src="{{member.avatarUrl}}" background-size="cover"></image>
+          <text class="member-nickname">{{member.nickName}}</text>
+        </view>
+      </view>
+    </view>
+    <button wx:if="{{type === 'join'}}" class="submit-button" type="primary" bindtap="bindJoinFamily">加入家庭</button>
+    <button wx:else class="submit-button" type="primary" bindtap="bindFamilyBill">家庭账单</button>
+  </block>
+</view>

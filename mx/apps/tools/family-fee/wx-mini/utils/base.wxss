@@ -1,0 +1,63 @@
+.border {
+  border: 1rpx solid #ddd;
+}
+
+.border-warn {
+  border: 1rpx dashed red;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 30rpx 50rpx 10rpx 50rpx;
+}
+
+.section {
+  clear: both;
+  width: 100%;
+  padding-top: 20rpx;
+}
+
+.row {
+  margin-top: 15rpx;
+}
+
+.title {
+  padding-top: 50rpx;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.validate-tips {
+  padding-top: 40rpx;
+  color: red;
+}
+
+.section-label {
+  float: left;
+  text-align: center;
+  padding: 0;
+}
+
+.section-input {
+  float: right;
+  padding: 0 0 0 15rpx;
+}
+
+.digit-input {
+  text-align: right;
+}
+
+.button-row {
+  margin: 50rpx 0 0 0;
+  padding: 0;
+  width: 100%;
+  height: 80rpx;
+}
+
+.image-icon {
+  width: 36rpx;
+  height: 36rpx;
+}

@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/family/family",
+    "pages/budget/budget",
+    "pages/cource/cource",
+    "pages/income/income",
+    "pages/spending/spending",
+    "pages/bill/bill"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  }
+}

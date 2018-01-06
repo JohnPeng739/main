@@ -1,0 +1,6 @@
+/* pages/spending/spending.wxss */
+@import "/utils/base";
+
+.picker {
+  width: 100%;
+}

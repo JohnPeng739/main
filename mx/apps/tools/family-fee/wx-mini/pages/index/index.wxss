@@ -1,0 +1,52 @@
+/**index.wxss**/
+@import "/utils/base";
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 20%;
+}
+
+.user-motto {
+  margin-top: 80rpx;
+  color: red;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+  padding-bottom: 20px;
+}
+
+.usermotto {
+  margin-top: 100px;
+  padding: 20px;
+}
+
+.section-avatar {
+  float: left;
+  margin-top: 10rpx;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+}
+
+.section-nickname {
+  float: left;
+  width: 40%;
+}
+
+.section-family {
+  float: right;
+  width: 40%;
+  text-align: right;
+}
+
+.title {
+  padding-top: 20rpx;
+  font-weight: 800;
+}
+
+.progress {
+  padding-top: 10rpx;
+}
