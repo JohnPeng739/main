@@ -6,8 +6,16 @@ package org.mx.comps.notify.online;
  * @author : john.peng created on date : 2018/1/3
  */
 public class OnlineDevice {
-    private String deviceId, state;
-    private long lastTime, lastLongitude, lastLatitude;
+    private String deviceId, state, connectKey;
+    private long lastTime;
+    private double lastLongitude, lastLatitude;
+
+    public void update(String state, long lastTime, double lastLongitude, double lastLatitude) {
+        this.state = state;
+        this.lastTime = lastTime;
+        this.lastLongitude = lastLongitude;
+        this.lastLatitude = lastLatitude;
+    }
 
     public String getDeviceId() {
         return deviceId;
@@ -17,15 +25,19 @@ public class OnlineDevice {
         return state;
     }
 
+    public String getConnectKey() {
+        return connectKey;
+    }
+
     public long getLastTime() {
         return lastTime;
     }
 
-    public long getLastLongitude() {
+    public double getLastLongitude() {
         return lastLongitude;
     }
 
-    public long getLastLatitude() {
+    public double getLastLatitude() {
         return lastLatitude;
     }
 
@@ -37,15 +49,19 @@ public class OnlineDevice {
         this.state = state;
     }
 
+    public void setConnectKey(String connectKey) {
+        this.connectKey = connectKey;
+    }
+
     public void setLastTime(long lastTime) {
         this.lastTime = lastTime;
     }
 
-    public void setLastLongitude(long lastLongitude) {
+    public void setLastLongitude(double lastLongitude) {
         this.lastLongitude = lastLongitude;
     }
 
-    public void setLastLatitude(long lastLatitude) {
+    public void setLastLatitude(double lastLatitude) {
         this.lastLatitude = lastLatitude;
     }
 }

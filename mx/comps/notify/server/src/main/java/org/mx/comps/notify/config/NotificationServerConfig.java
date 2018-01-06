@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Import;
 @Import({ServerConfig.class})
 @ComponentScan({
         "org.mx.comps.notify.websocket",
-        "org.mx.comps.notify.online.impl",
-        "org.mx.comps.notify.processor.impl"
+        "org.mx.comps.notify.processor",
+        "org.mx.comps.notify.online.impl"
 })
 public class NotificationServerConfig {
 }

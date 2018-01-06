@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.mx.StringUtils;
-import org.mx.comps.notify.processor.MessageProcesscor;
+import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.service.server.websocket.BaseWebsocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class NotificationWebsocket extends BaseWebsocket {
     private static final Log logger = LogFactory.getLog(NotificationWebsocket.class);
 
     @Autowired
-    private MessageProcesscor messageProcesscor = null;
+    private MessageProcessorChain processorChain = null;
 
     /**
      * {@inheritDoc}
@@ -61,7 +61,7 @@ public class NotificationWebsocket extends BaseWebsocket {
         } else {
             try {
                 JSONObject json = JSON.parseObject(message);
-                messageProcesscor.processJsonCommand(session, json);
+                processorChain.processJsonCommand(session, json);
             } catch (Exception ex) {
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("Parse message into JSONObject fail, message: %s.", message), ex);
@@ -78,7 +78,7 @@ public class NotificationWebsocket extends BaseWebsocket {
      */
     @Override
     protected void receiveBinary(Session session, InputStream in) {
-        messageProcesscor.processBinaryData(session, in);
+        processorChain.processBinaryData(session, in);
         super.receiveBinary(session, in);
     }
 }
