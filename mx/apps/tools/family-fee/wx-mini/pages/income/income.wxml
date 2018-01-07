@@ -38,6 +38,6 @@
       <view class="section">
         <textarea class="border" name="description" value="{{spending.desc}}" auto-height placeholder="请输入收入描述" style="width: 100%;"></textarea>
       </view>
-    <button class="button-row" type="primary" form-type="submit">记入家庭</button>
+    <button class="button single" type="primary" form-type="submit">记入家庭</button>
   </form>
 </view>

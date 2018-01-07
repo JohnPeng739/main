@@ -6,7 +6,8 @@
     "pages/cource/cource",
     "pages/income/income",
     "pages/spending/spending",
-    "pages/bill/bill"
+    "pages/bill/bill",
+    "pages/test/test"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -21,7 +21,12 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+const isBlank = str => {
+  return !(str && typeof str === 'string' && str.length > 0)
+}
+
 module.exports = {
   formatDate: formatDate,
-  formatTime: formatTime
+  formatTime: formatTime,
+  isBlank: isBlank
 }

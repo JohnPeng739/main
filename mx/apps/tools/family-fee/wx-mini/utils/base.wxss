@@ -21,7 +21,11 @@
 }
 
 .row {
-  margin-top: 15rpx;
+  position: relative;
+  border-bottom: 2rpx solid #eee;
+  height: 120rpx;
+  line-height:120rpx;
+  overflow: hidden;
 }
 
 .title {
@@ -48,13 +52,23 @@
 
 .digit-input {
   text-align: right;
+  padding: 0 20rpx 0 15rpx;
 }
 
-.button-row {
-  margin: 50rpx 0 0 0;
-  padding: 0;
-  width: 100%;
+.button {
   height: 80rpx;
+}
+
+.button.single {
+  margin: 50rpx 0 0 0;
+  width: 100%;
+}
+
+.button.item {
+  display: inline-block;
+  margin: 20rpx 20rpx;
+  width: 200rpx;
+  text-align: center;
 }
 
 .image-icon {

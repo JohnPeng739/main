@@ -1,0 +1,9 @@
+<!--pages/test/test.wxml-->
+<view>
+  <view wx:for="{{items}}" wx:key="id" wx:for-item="item" class="item">
+    <view bindtouchstart="bindTouchStart" bindtouchmove="bindTouchMove" bindtouchend="bindTouchEnd" data-index="{{index}}" style="{{item.myStyle}}" class="inner txt">
+      {{index}} {{item.name}}
+    </view>
+    <view data-index="{{index}}" bindtap="bindRemove" class="inner remove">删除</view>
+  </view>
+</view>

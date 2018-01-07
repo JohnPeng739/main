@@ -1,8 +1,14 @@
-/* pages/budget/budget.wxss */
-@import "/utils/base";
+/* pages/test/test.wxss */
+.item {
+  position: relative;
+  border-top: 2rpx solid #eee;
+  height: 120rpx;
+  line-height:120rpx;
+  overflow: hidden;
+}
 
-.button-row {
-  text-align: center;
+.item:last-child {
+  border-bottom: 2rpx solid #eee;
 }
 
 .inner {

@@ -1,7 +1,7 @@
 <!--index.wxml-->
 <view class="container">
   <view class="section" wx:if="{{!hasUserInfo && canIUse}}">
-    <button class="button-row" open-type="getUserInfo" type="primary" bindgetuserinfo="getUserInfo">开始使用Family Fee</button>
+    <button class="button single" open-type="getUserInfo" type="primary" bindgetuserinfo="getUserInfo">开始使用Family Fee</button>
     <view class="user-motto">{{motto}}</view>
   </view>
   <block wx:else>
@@ -25,17 +25,18 @@
         <view class="title">本年账单</view>
         <progress class="progress" percent="30" stroke-width="15" active="true"></progress>
       </view>
-      <button class="button-row" id="../spending/spending" type="primary" bindtap="gotoPage">记支出</button>
-      <button class="button-row" id="../income/income" bindtap="gotoPage">记收入</button>
-      <button class="button-row" id="../budget/budget" bindtap="gotoPage">调预算</button>
-      <button class="button-row" id="../cource/cource" bindtap="gotoPage">变科目</button>
-      <button class="button-row" id="../family/family" bindtap="gotoPage">我们家</button>
+      <button class="button.single" id="../spending/spending" type="primary" bindtap="gotoPage">记支出</button>
+      <button class="button.single" id="../income/income" bindtap="gotoPage">记收入</button>
+      <button class="button.single" id="../budget/budget" bindtap="gotoPage">调预算</button>
+      <button class="button.single" id="../cource/cource" bindtap="gotoPage">变科目</button>
+      <button class="button.single" id="../family/family" bindtap="gotoPage">我们家</button>
+      <button class="button.single" id="../test/test" bindtap="gotoPage">测试</button>
     </block>
     <block wx:else>
       <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
       <text class="userinfo-nickname">欢迎，{{userInfo.nickName}}！</text>
-      <button class="button-row" id="../family/family?type=create" type="primary" bindtap="gotoPage">建立家庭账本</button>
-      <button class="button-row" id="../family/family?type=join" bindtap="gotoPage">加入家庭</button>
+      <button class="button.single" id="../family/family?type=create" type="primary" bindtap="gotoPage">建立家庭账本</button>
+      <button class="button.single" id="../family/family?type=join" bindtap="gotoPage">加入家庭</button>
     </block>
   </block>
 </view>

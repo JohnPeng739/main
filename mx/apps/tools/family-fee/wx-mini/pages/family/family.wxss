@@ -16,7 +16,7 @@
 
 .form-owner-avatar {
   float: left;
-  margin-top: 10rpx;
+  margin-top: 40rpx;
   width: 36rpx;
   height: 36rpx;
   border-radius: 50%;
