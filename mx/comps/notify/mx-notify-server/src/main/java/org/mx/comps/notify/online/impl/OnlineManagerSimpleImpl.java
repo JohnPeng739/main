@@ -42,7 +42,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
     /**
      * {@inheritDoc}
      *
-     * @see OnlineManager#getOnlineDevices(Predicate<OnlineDevice>)
+     * @see OnlineManager#getConnectionSessions(Predicate)
      */
     @Override
     public Set<OnlineDevice> getOnlineDevices(Predicate<OnlineDevice> filter) {
