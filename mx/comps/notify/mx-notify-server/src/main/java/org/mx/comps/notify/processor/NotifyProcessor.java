@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
+import org.mx.DateUtils;
 import org.mx.StringUtils;
 import org.mx.comps.notify.online.OnlineManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class NotifyProcessor {
     @Autowired
     private OnlineManager onlineManager = null;
 
+    @Autowired
+    private NotifyProcessListener listener = null;
+
     /**
      * 获取本机推送会话集合
      *
@@ -53,10 +57,11 @@ public class NotifyProcessor {
                         onlineDevice -> devices.contains(onlineDevice.getDeviceId()));
                 devices.forEach(device -> {
                     if (!sessions.containsKey(device)) {
-                        set.maybeCluster = true;
+                        set.invalidDevices.add(device);
                     }
                 });
                 set.sessions.addAll(sessions.values());
+                set.maybeCluster = !set.invalidDevices.isEmpty();
                 return set;
             case "ips":
                 List<String> ips = Arrays.asList(StringUtils.split(tar, ",", true, true));
@@ -128,9 +133,21 @@ public class NotifyProcessor {
      * @param data 通知数据
      */
     public final void notifyProcess(JSONObject data) {
+        if (listener != null) {
+            listener.before(data);
+        }
         String src = data.getString("src");
         String tarType = data.getString("tarType");
         String tar = data.getString("tar");
+        long expiredTime = data.getLongValue("expiredTime");
+        long currentTime = System.currentTimeMillis();
+        if (expiredTime > 0 && currentTime > expiredTime) {
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("The notify command is expired, expired time: %s, current: %s.",
+                        DateUtils.get23Date(new Date(expiredTime)), DateUtils.get23Date(new Date(currentTime))));
+            }
+            return;
+        }
         boolean needAck = data.getBooleanValue("needAck");
         JSONObject message = data.getJSONObject("message");
         TarSessionSet set = this.getTarSessionSet(tarType, tar);
@@ -139,15 +156,21 @@ public class NotifyProcessor {
         json.put("needAck", needAck);
         json.put("pushTime", System.currentTimeMillis());
         json.put("message", message);
-        if (notifyPush(set, json)) {
+        boolean success = notifyPush(set, json);
+        if (success) {
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("Push notify success, num: %d.", set.sessions.size()));
             }
         }
+        if (listener != null) {
+            listener.after(data, success, set.invalidDevices);
+        }
     }
 
+    // 内部描述推送信息的类定义
     public class TarSessionSet {
         protected boolean maybeCluster = false;
+        protected Set<String> invalidDevices = new HashSet<>();
         protected Set<Session> sessions = new HashSet<>();
     }
 }

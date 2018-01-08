@@ -6,7 +6,7 @@ apply from: '../../../dependencies.gradle'
 
 apply from: '../../../allprojects.gradle'
 
-project(':server') {
+project(':mx-notify-server') {
   version = '1.0.0'
   description = 'Notification service based on websocket & restful.'
 

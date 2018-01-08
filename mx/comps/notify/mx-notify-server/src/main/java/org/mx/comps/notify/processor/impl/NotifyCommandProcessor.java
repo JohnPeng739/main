@@ -2,7 +2,6 @@ package org.mx.comps.notify.processor.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import org.eclipse.jetty.websocket.api.Session;
-import org.mx.TypeUtils;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.comps.notify.processor.NotifyProcessor;
@@ -20,6 +19,7 @@ public class NotifyCommandProcessor implements MessageProcessor {
 
     /**
      * {@inheritDoc}
+     *
      * @see MessageProcessor#getCommand()
      */
     @Override
@@ -29,6 +29,7 @@ public class NotifyCommandProcessor implements MessageProcessor {
 
     /**
      * {@inheritDoc}
+     *
      * @see MessageProcessor#processJsonCommand(Session, JSONObject)
      */
     @Override
@@ -47,6 +48,7 @@ public class NotifyCommandProcessor implements MessageProcessor {
 
     /**
      * {@inheritDoc}
+     *
      * @see MessageProcessor#processBinaryData(Session, InputStream)
      */
     @Override

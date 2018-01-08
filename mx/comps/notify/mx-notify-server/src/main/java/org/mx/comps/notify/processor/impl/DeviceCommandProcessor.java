@@ -33,15 +33,16 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
     public boolean processJsonCommand(Session session, JSONObject json) {
         String command = json.getString("command");
         String type = json.getString("type");
+        JSONObject data = json.getJSONObject("data");
         String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         OnlineDevice device = new OnlineDevice();
-        device.setDeviceId(json.getString("deviceId"));
-        device.setState(json.getString("state"));
+        device.setDeviceId(data.getString("deviceId"));
+        device.setState(data.getString("state"));
         device.setConnectKey(String.format("%s:%d", ip, port));
-        device.setLastTime(json.getLongValue("lastTime"));
-        device.setLastLongitude(json.getDoubleValue("lastLongitude"));
-        device.setLastLatitude(json.getDoubleValue("lastLatitude"));
+        device.setLastTime(data.getLongValue("lastTime"));
+        device.setLastLongitude(data.getDoubleValue("lastLongitude"));
+        device.setLastLatitude(data.getDoubleValue("lastLatitude"));
         return processCommand(command, type, device);
     }
 

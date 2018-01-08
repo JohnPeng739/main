@@ -25,7 +25,7 @@ ext.versions = [
   'mongodb-driver'	: '3.5.0',
   'mongodb-embed'	: '2.0.0',
   zookeeper	: '3.4.9',
-  'mx-utils'    : '2.1.4',
+  'mx-utils'    : '2.1.5',
   'mx-spring'	: '1.0.1',
   'mx-service-utils'	: '1.3.9',
   'mx-dal'      : '1.1.4',
@@ -36,7 +36,8 @@ ext.versions = [
   'mx-rbac-service-mongodb'	: '1.0.2',
   'mx-rbac-restful'	: '3.1.1',
 
-  'mx-file-service'	: '1.0.4'
+  'mx-file-service'	: '1.0.4',
+  'mx-notify-server'	: '1.0.0'
 ]
 
 ext.libs = [
@@ -112,6 +113,6 @@ ext.libs = [
   "mx-rbac-service-mongodb"	: "org.mx.comps:mx-rbac-service-mongodb:${versions.'mx-rbac-service-mongodb'}",
   "mx-rbac-restful"		: "org.mx.comps:mx-rbac-restful:${versions.'mx-rbac-restful'}",
 
-  "mx-file-service"	: "org.mx.comps:mx-file-service:${versions.'mx-file-service'}"
-
+  "mx-file-service"	: "org.mx.comps:mx-file-service:${versions.'mx-file-service'}",
+  "mx-notify-server"	: "org.mx.comps:mx-notify-server:${versions.'mx-notify-server'}"
 ]

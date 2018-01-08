@@ -49,7 +49,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module filepath="$PROJECT_DIR$/notify.iml" fileurl="file://$PROJECT_DIR$/notify.iml"/>
-      <module filepath="$PROJECT_DIR$/server/server.iml" fileurl="file://$PROJECT_DIR$/server/server.iml"/>
+      <module filepath="$PROJECT_DIR$/mx-notify-server/mx-notify-server.iml" fileurl="file://$PROJECT_DIR$/mx-notify-server/mx-notify-server.iml"/>
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" assert-keyword="true" jdk-15="true" project-jdk-type="JavaSDK" assert-jdk-15="true" project-jdk-name="1.8">

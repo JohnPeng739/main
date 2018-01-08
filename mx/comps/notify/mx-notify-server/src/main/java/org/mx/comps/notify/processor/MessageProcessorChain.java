@@ -4,6 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
+import org.mx.comps.notify.processor.impl.NotifyCommandProcessor;
+import org.mx.comps.notify.processor.impl.PongCommandProcessor;
+import org.mx.comps.notify.processor.impl.RegistryCommandProcessor;
+import org.mx.comps.notify.processor.impl.UnregistryCommandProcessor;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
@@ -30,6 +34,10 @@ public class MessageProcessorChain {
     public MessageProcessorChain() {
         super();
         this.processors = new HashSet<>();
+        this.processors.add(new RegistryCommandProcessor());
+        this.processors.add(new UnregistryCommandProcessor());
+        this.processors.add(new PongCommandProcessor());
+        this.processors.add(new NotifyCommandProcessor());
     }
 
     /**
@@ -56,7 +64,7 @@ public class MessageProcessorChain {
             }
             return;
         }
-        if (processors == null || !processors.isEmpty()) {
+        if (processors == null || processors.isEmpty()) {
             if (logger.isWarnEnabled()) {
                 logger.warn("There has not any command processors.");
             }

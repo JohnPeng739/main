@@ -8,29 +8,29 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false"/>
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true"/>
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true"/>
-      <excludeFolder url="file://$MODULE_DIR$/build"/>
       <excludeFolder url="file://$MODULE_DIR$/.gradle"/>
+      <excludeFolder url="file://$MODULE_DIR$/build"/>
     </content>
     <orderEntry type="sourceFolder" forTests="false"/>
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/e4fbebed8f3c63d4df6c465cd1e21cf3efb3534c/mx-utils-2.1.4.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.5/fcab6f196f13e629f5872363b82c1f4f29ed705/mx-utils-2.1.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/1c2bca749e025487168f9de555be73730294d2c2/mx-utils-2.1.4-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.5/94dfb69ff212625d62ac84901fa6eef33ca39046/mx-utils-2.1.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/ccea76665e8f086ed6c106024c5442831f75236a/mx-service-utils-1.3.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-service-utils/1.3.9/mx-service-utils-1.3.9.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/b3ed07bb78b33b700b0d714d31bf0096a98e14bc/mx-service-utils-1.3.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-service-utils/1.3.9/mx-service-utils-1.3.9-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -103,22 +103,22 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal/1.1.3/4fddbca68322af7ec2a575843e05700d04bffa19/mx-dal-1.1.3.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.1.4/mx-dal-1.1.4.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal/1.1.3/a09ccf1ebcd016bf731292a5bca501a6666dd08c/mx-dal-1.1.3-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.1.4/mx-dal-1.1.4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-spring/1.0.1/mx-spring-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-spring/1.0.1/mx-spring-1.0.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -213,17 +213,6 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/c4f4a76171671ccf293be8995a498eab7fa8ed24/commons-dbcp2-2.1.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -235,44 +224,11 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/cce6c251249e48f0a86aa578c2a0e262efa5a1e0/spring-core-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/b278822fc694d9b5a943fef1d4c9fd28ad2b92a6/spring-core-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -543,6 +499,17 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -559,6 +526,50 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/2c9dcae4975caff05a627b99fae76e6fef2a3a0e/commons-pool2-2.4.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/cce6c251249e48f0a86aa578c2a0e262efa5a1e0/spring-core-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/b278822fc694d9b5a943fef1d4c9fd28ad2b92a6/spring-core-4.3.8.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -785,22 +796,22 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/e4fbebed8f3c63d4df6c465cd1e21cf3efb3534c/mx-utils-2.1.4.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.5/fcab6f196f13e629f5872363b82c1f4f29ed705/mx-utils-2.1.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/1c2bca749e025487168f9de555be73730294d2c2/mx-utils-2.1.4-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.5/94dfb69ff212625d62ac84901fa6eef33ca39046/mx-utils-2.1.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/ccea76665e8f086ed6c106024c5442831f75236a/mx-service-utils-1.3.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-service-utils/1.3.9/mx-service-utils-1.3.9.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/b3ed07bb78b33b700b0d714d31bf0096a98e14bc/mx-service-utils-1.3.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-service-utils/1.3.9/mx-service-utils-1.3.9-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -873,22 +884,22 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal/1.1.3/4fddbca68322af7ec2a575843e05700d04bffa19/mx-dal-1.1.3.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.1.4/mx-dal-1.1.4.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal/1.1.3/a09ccf1ebcd016bf731292a5bca501a6666dd08c/mx-dal-1.1.3-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.1.4/mx-dal-1.1.4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-spring/1.0.1/mx-spring-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-spring/1.0.1/mx-spring-1.0.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -983,17 +994,6 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/c4f4a76171671ccf293be8995a498eab7fa8ed24/commons-dbcp2-2.1.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1005,44 +1005,11 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/cce6c251249e48f0a86aa578c2a0e262efa5a1e0/spring-core-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/b278822fc694d9b5a943fef1d4c9fd28ad2b92a6/spring-core-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1313,6 +1280,17 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1329,6 +1307,50 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/2c9dcae4975caff05a627b99fae76e6fef2a3a0e/commons-pool2-2.4.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/cce6c251249e48f0a86aa578c2a0e262efa5a1e0/spring-core-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/b278822fc694d9b5a943fef1d4c9fd28ad2b92a6/spring-core-4.3.8.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1555,22 +1577,22 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/e4fbebed8f3c63d4df6c465cd1e21cf3efb3534c/mx-utils-2.1.4.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.5/fcab6f196f13e629f5872363b82c1f4f29ed705/mx-utils-2.1.5.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.4/1c2bca749e025487168f9de555be73730294d2c2/mx-utils-2.1.4-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.5/94dfb69ff212625d62ac84901fa6eef33ca39046/mx-utils-2.1.5-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/ccea76665e8f086ed6c106024c5442831f75236a/mx-service-utils-1.3.5.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-service-utils/1.3.9/mx-service-utils-1.3.9.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-service-utils/1.3.5/b3ed07bb78b33b700b0d714d31bf0096a98e14bc/mx-service-utils-1.3.5-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-service-utils/1.3.9/mx-service-utils-1.3.9-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1687,22 +1709,22 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal/1.1.3/4fddbca68322af7ec2a575843e05700d04bffa19/mx-dal-1.1.3.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.1.4/mx-dal-1.1.4.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-dal/1.1.3/a09ccf1ebcd016bf731292a5bca501a6666dd08c/mx-dal-1.1.3-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-dal/1.1.4/mx-dal-1.1.4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-spring/1.0.1/mx-spring-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-spring/1.0.1/mx-spring-1.0.1-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1841,33 +1863,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2132,6 +2132,39 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/2c9dcae4975caff05a627b99fae76e6fef2a3a0e/commons-pool2-2.4.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

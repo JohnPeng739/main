@@ -1,16 +1,19 @@
 package org.mx.comps.notify.online.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.service.ws.ConnectionManager;
 import org.mx.spring.SpringContextHolder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -23,9 +26,14 @@ import java.util.stream.Collectors;
  */
 @Component("onlineManagerSimple")
 public class OnlineManagerSimpleImpl implements OnlineManager {
+    private static final Log logger = LogFactory.getLog(OnlineManagerSimpleImpl.class);
+
     private final Serializable onlineDeviceMutex = "ONLINE_DEVICE";
     private ConcurrentMap<String, OnlineDevice> onlineDevices = null;
 
+    /**
+     * 默认的构造函数
+     */
     public OnlineManagerSimpleImpl() {
         super();
         this.onlineDevices = new ConcurrentHashMap<>();
@@ -59,6 +67,9 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
             } else {
                 onlineDevices.put(key, onlineDevice);
             }
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Registry [%s] successfully.", key));
+            }
         }
         return true;
     }
@@ -74,6 +85,9 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
             String key = String.format("%s@%s", onlineDevice.getDeviceId(), onlineDevice.getConnectKey());
             if (onlineDevices.containsKey(key)) {
                 onlineDevices.remove(key);
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Unregistry [%s] successfully.", key));
+                }
                 return true;
             } else {
                 return false;
@@ -95,12 +109,16 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
                 device.update(onlineDevice.getState(), onlineDevice.getLastTime(), onlineDevice.getLastLongitude(),
                         onlineDevice.getLastLatitude());
                 onlineDevices.put(key, device);
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Pong [%s] successfully.", key));
+                }
             }
         }
     }
 
     /**
      * {@inheritDoc}
+     *
      * @see OnlineManager#getConnectionSessions(Predicate)
      */
     @Override
