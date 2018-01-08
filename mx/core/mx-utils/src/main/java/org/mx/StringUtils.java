@@ -174,40 +174,38 @@ public class StringUtils {
     /**
      * 组合数据对象列表成为一个字符串
      *
-     * @param list 数据对象列表
+     * @param coll 数据对象列表
      * @return 组合后的字符串
      */
-    public static String merge(List<?> list) {
-        return merge(list, DEFAULT_SEPARATOR);
+    public static String merge(Collection<?> coll) {
+        return merge(coll, DEFAULT_SEPARATOR);
     }
 
     /**
      * 组合数据对象列表成为一个字符串
      *
-     * @param list     数据对象列表
+     * @param coll     数据对象列表
      * @param separate 组合分割符
      * @return 组合后的字符串
      */
-    public static String merge(List<?> list, char separate) {
-        return merge(list, String.valueOf(separate));
+    public static String merge(Collection<?> coll, char separate) {
+        return merge(coll, String.valueOf(separate));
     }
 
     /**
      * 组合数据对象列表成为一个字符串
      *
-     * @param list     数据对象列表
+     * @param coll     数据对象列表
      * @param separate 组合分割符
      * @return 组合后的字符串
      */
-    public static String merge(List<?> list, String separate) {
+    public static String merge(Collection<?> coll, String separate) {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < list.size(); i++) {
-            sb.append(list.get(i).toString());
-            if (i < list.size() - 1) {
-                sb.append(separate);
-            }
+        for (Object obj : coll) {
+            sb.append(obj.toString());
+            sb.append(separate);
         }
-        return sb.toString();
+        return sb.length() >= separate.length() ? sb.substring(0, sb.length() - separate.length()) : sb.toString();
     }
 
     /**
