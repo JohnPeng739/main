@@ -28,7 +28,7 @@ public class TestIntegerTopNRate {
 		assertEquals(rate.getValueType(), GeneralTopNRate.ValueType.Integer);
 		int[] vs = null;
 		int total = 0;
-		while (System.currentTimeMillis() % 1000 > 100) {
+		while (System.currentTimeMillis() % 1000 > 200) {
 		    Thread.sleep(10);
         }
 		long t0 = System.currentTimeMillis();
