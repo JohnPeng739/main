@@ -7,6 +7,12 @@ package org.mx.comps.file;
  */
 public interface FileServiceDescriptor {
     /**
+     * 获取根目录
+     *
+     * @return 根
+     */
+    String getRoot();
+    /**
      * 获取本文件管理描述对象关联的文件唯一ID
      *
      * @return 文件ID

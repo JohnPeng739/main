@@ -27,8 +27,8 @@ import org.mx.service.ws.client.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,7 +109,7 @@ public class TestServers {
         try {
             testServlet();
 
-            FileUtils.deleteFile(new File(System.getProperty("user.dir"), "data"));
+            FileUtils.deleteFile(Paths.get(System.getProperty("user.dir"), "data"));
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
@@ -223,7 +223,7 @@ public class TestServers {
             invoke.close();
 
             testServlet();
-            FileUtils.deleteFile(new File(System.getProperty("user.dir"), "data"));
+            FileUtils.deleteFile(Paths.get(System.getProperty("user.dir"), "data"));
         } catch (Exception ex) {
             ex.printStackTrace();
             fail(ex.getMessage());

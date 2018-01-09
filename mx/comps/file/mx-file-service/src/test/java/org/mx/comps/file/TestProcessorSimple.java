@@ -13,7 +13,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,14 +35,14 @@ public class TestProcessorSimple {
         assertFalse(writeProcessor.isOpened());
         boolean hashed = context.getEnvironment().getProperty("file.simple.hashed", Boolean.class, true);
 
-        File file = new File(directory, filename);
+        Path file = Paths.get(directory, filename);
         FileServiceListener listener = new FileServiceListener() {
             @Override
             public void errored(FileServiceDescriptor descriptor, String error) {
                 assertNotNull(descriptor);
                 assertFalse(StringUtils.isBlank(descriptor.getId()));
                 if (!hashed) {
-                    assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                    assertEquals(file.toString(), descriptor.getPath());
                 }
             }
 
@@ -50,7 +51,7 @@ public class TestProcessorSimple {
                 assertNotNull(descriptor);
                 assertFalse(StringUtils.isBlank(descriptor.getId()));
                 if (!hashed) {
-                    assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                    assertEquals(file.toString(), descriptor.getPath());
                 }
             }
 
@@ -59,7 +60,7 @@ public class TestProcessorSimple {
                 assertNotNull(descriptor);
                 assertFalse(StringUtils.isBlank(descriptor.getId()));
                 if (!hashed) {
-                    assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                    assertEquals(file.toString(), descriptor.getPath());
                 }
             }
 
@@ -68,7 +69,7 @@ public class TestProcessorSimple {
                 assertNotNull(descriptor);
                 assertFalse(StringUtils.isBlank(descriptor.getId()));
                 if (!hashed) {
-                    assertEquals(file.getAbsolutePath(), descriptor.getPath());
+                    assertEquals(file.toString(), descriptor.getPath());
                 }
             }
         };
@@ -84,7 +85,7 @@ public class TestProcessorSimple {
             assertTrue(writeProcessor.isOpened());
             if (!hashed) {
                 assertEquals(filename, writeProcessor.getFileServiceDescriptor().getFilename());
-                assertEquals(file.getAbsolutePath(), writeProcessor.getFileServiceDescriptor().getPath());
+                assertEquals(file.toString(), writeProcessor.getFileServiceDescriptor().getPath());
             }
             writeProcessor.write(new ByteArrayInputStream(msg.getBytes()));
             assertTrue(writeProcessor.isOpened());
@@ -114,7 +115,7 @@ public class TestProcessorSimple {
 
         FileWriteProcessor writeProcessor = context.getBean("simpleFilePersistProcessor", FileWriteProcessor.class);
         assertNotNull(writeProcessor);
-        File file = new File(directory, filename);
+        Path file = Paths.get(directory, filename);
         boolean hashed = context.getEnvironment().getProperty("file.simple.hashed", Boolean.class, true);
         try {
             FileReadProcessor readProcessor = context.getBean("simpleFilePersistProcessor", FileReadProcessor.class);
@@ -130,7 +131,7 @@ public class TestProcessorSimple {
             assertEquals(msg.getBytes().length, readProcessor.getFileServiceDescriptor().getLength());
             if (!hashed) {
                 assertEquals(filename, readProcessor.getFileServiceDescriptor().getFilename());
-                assertEquals(file.getAbsolutePath(), readProcessor.getFileServiceDescriptor().getPath());
+                assertEquals(file.toString(), readProcessor.getFileServiceDescriptor().getPath());
             }
             ByteArrayOutputStream out = new ByteArrayOutputStream(100);
             readProcessor.read(out);
@@ -138,7 +139,7 @@ public class TestProcessorSimple {
             readProcessor.close();
             assertFalse(readProcessor.isOpened());
 
-            FileUtils.deleteFile(new File(System.getProperty("user.dir"), "data"));
+            FileUtils.deleteFile(Paths.get(System.getProperty("user.dir"), "data"));
         } catch (Exception ex) {
             fail(ex.getMessage());
         }

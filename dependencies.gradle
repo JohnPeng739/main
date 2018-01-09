@@ -36,7 +36,7 @@ ext.versions = [
   'mx-rbac-service-mongodb'	: '1.0.2',
   'mx-rbac-restful'	: '3.1.1',
 
-  'mx-file-service'	: '1.0.4',
+  'mx-file-service'	: '1.1.1',
   'mx-notify-server'	: '1.0.2'
 ]
 

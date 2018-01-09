@@ -2,6 +2,7 @@ package org.mx.comps.file.processor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.FileUtils;
 import org.mx.comps.file.FileReadProcessor;
 import org.mx.comps.file.FileServiceDescriptor;
 import org.mx.comps.file.FileServiceListener;
@@ -11,7 +12,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * 一个简单的文件持久化实现类，直接根据指定的目录和文件名进行存储。
@@ -76,13 +83,13 @@ public abstract class RandomAccessFileProcessor implements FileWriteProcessor, F
      * @param offset 操作偏移量
      */
     protected void initRandomAccessFile(String root, String mode, long offset) {
-        File file = new File(root, fileServiceDescriptor.getPath());
+        Path path = Paths.get(root, fileServiceDescriptor.getPath());
         try {
-            if (!file.getParentFile().exists()) {
+            if (!Files.exists(path.getParent())) {
                 // 如果父级目录不存在，则创建父级目录。
-                file.getParentFile().mkdirs();
+                Files.createDirectories(path.getParent());
             }
-            randomAccessFile = new RandomAccessFile(file, mode);
+            randomAccessFile = new RandomAccessFile(path.toFile(), mode);
             if (offset > 0) {
                 // 如果指定了偏移量，则预先设置操作偏移量。
                 randomAccessFile.seek(offset);
@@ -129,19 +136,12 @@ public abstract class RandomAccessFileProcessor implements FileWriteProcessor, F
      */
     @Override
     public void read(OutputStream out) {
-        if (isOpened()) {
-            byte[] buffer = new byte[8192];
-            int len;
-            try {
-                randomAccessFile.seek(0l);
-                while ((len = randomAccessFile.read(buffer)) > 0) {
-                    out.write(buffer, 0, len);
-                    out.flush();
-                }
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Read file's data fail.", ex);
-                }
+        Path path = Paths.get(fileServiceDescriptor.getRoot(), fileServiceDescriptor.getPath());
+        try {
+            Files.copy(path, out);
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Read file's data fail.", ex);
             }
         }
     }
@@ -155,6 +155,7 @@ public abstract class RandomAccessFileProcessor implements FileWriteProcessor, F
     public void write(InputStream in) {
         Assert.notNull(in, "The InputStream is null.");
         Assert.isTrue(isOpened(), "The Processor is not opened.");
+        // 写入文件不能使用Paths和Files改造，因为要支持seek。
         byte[] buffer = new byte[8192];
         int len;
         try {
@@ -172,10 +173,8 @@ public abstract class RandomAccessFileProcessor implements FileWriteProcessor, F
         if (isOpened()) {
             close();
             // 删除文件
-            File deleteFile = new File(root, fileServiceDescriptor.getPath());
-            if (deleteFile.exists() && deleteFile.isFile()) {
-                deleteFile.delete();
-            }
+            Path path = Paths.get(root, fileServiceDescriptor.getPath());
+            FileUtils.deleteFile(path);
             if (fileServiceListener != null) {
                 // cancel
                 fileServiceListener.canceled(fileServiceDescriptor);

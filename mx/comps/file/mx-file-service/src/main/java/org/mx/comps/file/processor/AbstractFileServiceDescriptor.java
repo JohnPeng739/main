@@ -8,6 +8,8 @@ import org.mx.comps.file.FileServiceDescriptor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -18,7 +20,35 @@ import java.security.NoSuchAlgorithmException;
 public abstract class AbstractFileServiceDescriptor implements FileServiceDescriptor {
     private static final Log logger = LogFactory.getLog(AbstractFileServiceDescriptor.class);
 
-    protected String root;
+    private String root;
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see FileServiceDescriptor#getRoot()
+     */
+    @Override
+    public String getRoot() {
+        return root;
+    }
+
+    /**
+     * 设置文件操作的根路径
+     *
+     * @param root 根路径
+     */
+    public void setRoot(String root) {
+        if (StringUtils.isBlank(root)) {
+            root = System.getProperty("user.dir");
+        }
+        try {
+            this.root = new File(root).getCanonicalPath();
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Set the root fail.", ex);
+            }
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -45,15 +75,8 @@ public abstract class AbstractFileServiceDescriptor implements FileServiceDescri
      */
     @Override
     public String getPath() {
-        try {
-            return getFile().getCanonicalPath().replace('\\', '/')
-                    .substring(root.length() + 1);
-        } catch (IOException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Get file path fail.", ex);
-            }
-            return null;
-        }
+        return this.getFile().toString().replace('\\', '/')
+                .substring(root.length() + 1);
     }
 
     /**
@@ -63,7 +86,7 @@ public abstract class AbstractFileServiceDescriptor implements FileServiceDescri
      */
     @Override
     public String getParentPath() {
-        return getFile().getParent().replace('\\', '/')
+        return this.getFile().getParent().toString().replace('\\', '/')
                 .substring(root.length() + 1);
     }
 
@@ -74,7 +97,7 @@ public abstract class AbstractFileServiceDescriptor implements FileServiceDescri
      */
     @Override
     public String getFilename() {
-        return getFile().getName();
+        return this.getFile().getFileName().toString();
     }
 
     /**
@@ -84,30 +107,17 @@ public abstract class AbstractFileServiceDescriptor implements FileServiceDescri
      */
     @Override
     public long getLength() {
-        File file = getFile();
-        if (file.exists() && file.isFile()) {
-            return file.length();
-        } else {
-            return -1l;
-        }
-    }
-
-    /**
-     * 设置文件操作的根路径
-     *
-     * @param root 根路径
-     */
-    public void setRoot(String root) {
-        if (StringUtils.isBlank(root)) {
-            root = System.getProperty("user.dir");
-        }
+        Path file = this.getFile();
         try {
-            this.root = new File(root).getCanonicalPath();
+            if (Files.exists(file) && Files.isRegularFile(file)) {
+                return Files.size(file);
+            }
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
-                logger.error("Set the root fail.", ex);
+                logger.error(String.format("Get file size fail, file: %s.", file.toString()));
             }
         }
+        return -1l;
     }
 
     /**
@@ -115,5 +125,5 @@ public abstract class AbstractFileServiceDescriptor implements FileServiceDescri
      *
      * @return 文件对象
      */
-    protected abstract File getFile();
+    protected abstract Path getFile();
 }

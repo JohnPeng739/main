@@ -7,7 +7,7 @@ apply from: '../../../dependencies.gradle'
 apply from: '../../../allprojects.gradle'
 
 project(':mx-file-service') {
-  version = '1.1.0'
+  version = '1.1.1'
   description = 'File service component base Websocket upload &amp; Servlet download.'
 
   dependencies {

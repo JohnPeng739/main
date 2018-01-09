@@ -38,7 +38,7 @@ public class FileUploadWebsocket extends BaseWebsocket {
     private FileWriteProcessor writeProcessor = null;
 
     public FileUploadWebsocket() {
-        super(FILE_UPLOAD_URI_PATH);
+        super(FILE_UPLOAD_URI_PATH, true);
     }
 
     /**

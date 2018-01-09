@@ -6,6 +6,8 @@ import org.mx.StringUtils;
 import org.mx.comps.file.processor.AbstractFileServiceDescriptor;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,9 +52,8 @@ public class FileServiceCategoryDescriptor extends AbstractFileServiceDescriptor
      * @see AbstractFileServiceDescriptor#getFile()
      */
     @Override
-    protected File getFile() {
+    protected Path getFile() {
         String directory = StringUtils.merge(categories, "/");
-        File file = new File(super.root, directory);
-        return new File(file, filename);
+        return Paths.get(super.getRoot(), directory, filename);
     }
 }
