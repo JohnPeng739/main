@@ -119,6 +119,17 @@ public class TestServer {
             invoke.close();
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.CLOSED, invoke.getState());
+
+            msg = "hello, john,********";
+            invoke.send(msg);
+            Thread.sleep(1000);
+            assertEquals(String.format("Server echo: %s.", msg), listener.textMsg);
+            invoke.send(msg.getBytes());
+            Thread.sleep(1000);
+            assertEquals(msg, new String(listener.binaryMsg));
+            invoke.close();
+            Thread.sleep(1000);
+            assertEquals(WebSocket.READYSTATE.CLOSED, invoke.getState());
         } catch (Exception ex) {
             fail(ex.getMessage());
         }

@@ -20,6 +20,9 @@ public class WsClientInvoke {
     private static final Log logger = LogFactory.getLog(WsClientInvoke.class);
 
     private WebSocketClient client = null;
+    private String uri = null;
+    private boolean reconnect = true;
+    private BaseWebsocketClientListener listener = null;
 
     /**
      * 初始化Websocket客户端调用器
@@ -29,6 +32,25 @@ public class WsClientInvoke {
      * @throws UserInterfaceServiceErrorException 初始化过程中发生的异常
      */
     public void init(final String uri, final BaseWebsocketClientListener listener) throws UserInterfaceServiceErrorException {
+        this.init(uri, listener, true);
+    }
+
+    /**
+     * 初始化Websocket客户端调用器
+     *
+     * @param uri       连接Websocket服务器的URI
+     * @param listener  客户端异步响应监听器，设置为null表示不监听。
+     * @param reconnect 是否需要重连
+     * @throws UserInterfaceServiceErrorException 初始化过程中发生的异常
+     */
+    public void init(final String uri, final BaseWebsocketClientListener listener, boolean reconnect) throws UserInterfaceServiceErrorException {
+        this.uri = uri;
+        this.listener = listener;
+        this.reconnect = reconnect;
+        this.init();
+    }
+
+    private void init() throws UserInterfaceServiceErrorException {
         try {
             client = new WebSocketClient(new URI(uri)) {
                 /**
@@ -87,7 +109,8 @@ public class WsClientInvoke {
                 }
             };
             client.connect();
-        } catch (URISyntaxException ex) {
+            Thread.sleep(50);
+        } catch (URISyntaxException | InterruptedException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Initialize the weboscket client fail, uri: %s.", uri), ex);
             }
@@ -112,6 +135,16 @@ public class WsClientInvoke {
         }
     }
 
+    private void reconnect() {
+        if (client == null || client.getReadyState() != WebSocket.READYSTATE.OPEN) {
+            this.close();
+            this.init();
+            if (logger.isDebugEnabled()) {
+                logger.debug("Websocket client reconnect successfully.");
+            }
+        }
+    }
+
     /**
      * 关闭Websocket客户端
      */
@@ -130,15 +163,10 @@ public class WsClientInvoke {
      * @param message 文本消息
      */
     public void send(String message) {
-        if (client != null) {
-            client.send(message);
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Send text message successfully, message: %s.", message));
-            }
-        } else {
-            if (logger.isErrorEnabled()) {
-                logger.error("The Websocket client is null.");
-            }
+        this.reconnect();
+        client.send(message);
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Send text message successfully, message: %s.", message));
         }
     }
 
@@ -148,20 +176,15 @@ public class WsClientInvoke {
      * @param message 二进制消息
      */
     public void send(byte[] message) {
-        if (client != null) {
-            if (message != null) {
-                client.send(message);
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Send binary message successfully, message length: %d.", message.length));
-                }
-            } else {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("The binary message is null.");
-                }
+        this.reconnect();
+        if (message != null) {
+            client.send(message);
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Send binary message successfully, message length: %d.", message.length));
             }
         } else {
-            if (logger.isErrorEnabled()) {
-                logger.error("The Websocket client is null.");
+            if (logger.isWarnEnabled()) {
+                logger.warn("The binary message is null.");
             }
         }
     }
