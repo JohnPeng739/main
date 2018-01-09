@@ -1,89 +1,38 @@
 package org.mx.comps.notify;
 
-import com.alibaba.fastjson.JSONObject;
 import org.java_websocket.WebSocket;
 import org.junit.Test;
-import org.mx.service.rest.client.RestClientInvoke;
+import org.mx.comps.notify.client.NotifyBean;
+import org.mx.comps.notify.client.NotifyRestClient;
+import org.mx.comps.notify.client.NotifyWsClient;
+import org.mx.comps.notify.test.TestNotifyEvent;
 import org.mx.service.ws.client.BaseWebsocketClientListener;
-import org.mx.service.ws.client.WsClientInvoke;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class TestNotifySend extends BaseTest {
-    private JSONObject createRegistry() {
-        JSONObject json = new JSONObject();
-        json.put("command", "registry");
-        json.put("type", "system");
-        json.put("data", createDevice());
-        return json;
-    }
-
-    private JSONObject createUnregistry() {
-        JSONObject json = new JSONObject();
-        json.put("command", "unregistry");
-        json.put("type", "system");
-        json.put("data", createDevice());
-        return json;
-    }
-
-    private JSONObject createPong() {
-        JSONObject json = new JSONObject();
-        json.put("command", "pong");
-        json.put("type", "system");
-        json.put("data", createDevice());
-        return json;
-    }
-
-    private JSONObject createNotify() {
-        JSONObject json = new JSONObject();
-        json.put("command", "notify");
-        json.put("type", "user");
-        json.put("data", createData());
-        return json;
-    }
-
-    private JSONObject createDevice() {
-        JSONObject json = new JSONObject();
-        json.put("deviceId", "device01");
-        json.put("state", "connect");
-        json.put("lastTime", System.currentTimeMillis());
-        json.put("lastLongitude", 129.1242);
-        json.put("lastLatitude", 33.1241);
-        return json;
-    }
-
-    private JSONObject createData() {
-        JSONObject json = new JSONObject();
-        json.put("src", "system");
-        json.put("tarType", "ips");
-        json.put("tar", "127.0.0.1");
-        json.put("needAck", true);
-        json.put("expiredTime", -1);
-        json.put("message", createDevice());
-        return json;
-    }
-
     @Test
     public void test() {
         assertNotNull(context);
-        WsClientInvoke wsClientInvoke = new WsClientInvoke();
-        RestClientInvoke restClientInvoke = new RestClientInvoke();
+        NotifyWsClient wsClient = new NotifyWsClient("ws://localhost:9997", false, new BaseWebsocketClientListener());
+        NotifyRestClient restClient = new NotifyRestClient("http://localhost:9999/rest/notify/send");
         try {
-            wsClientInvoke.init("ws://localhost:9997", new BaseWebsocketClientListener());
             Thread.sleep(500);
-            assertEquals(WebSocket.READYSTATE.OPEN, wsClientInvoke.getState());
-            wsClientInvoke.send(createRegistry().toJSONString());
-            wsClientInvoke.send(createPong().toJSONString());
-            wsClientInvoke.send(createNotify().toJSONString());
-            restClientInvoke.post("http://localhost:9999/rest/notify/send", createData(), JSONObject.class);
-            wsClientInvoke.send(createUnregistry().toJSONString());
+            assertEquals(WebSocket.READYSTATE.OPEN, wsClient.getState());
+            wsClient.regiesty("device01", "registry", 129.1234, 31.1234);
+            wsClient.pong("device01", "alive", 129.1234, 31.1234);
+            TestNotifyEvent event = new TestNotifyEvent("id", "address", "description");
+            wsClient.notify("system", NotifyBean.TarType.IPs, "127.0.0.1", -1, true, event);
+
+            NotifyBean<TestNotifyEvent> notify = new NotifyBean<>("test system **", NotifyBean.TarType.IPs, "127.0.0.1",
+                    -1, true, event);
+            assertEquals(true, restClient.sendNotify(notify));
+            wsClient.unregistry("device01");
         } catch (Exception ex) {
             fail(ex.getMessage());
         } finally {
-            restClientInvoke.close();
-            wsClientInvoke.close();
+            restClient.close();
+            wsClient.close();
         }
     }
 }

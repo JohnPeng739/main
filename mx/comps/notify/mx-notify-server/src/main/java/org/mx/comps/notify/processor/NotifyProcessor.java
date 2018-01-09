@@ -50,7 +50,7 @@ public class NotifyProcessor {
         TarSessionSet set = new TarSessionSet();
         Map<String, Session> sessions;
         switch (tarType) {
-            case "devices":
+            case "Devices":
                 List<String> devices = Arrays.asList(StringUtils.split(
                         tar, ",", true, true));
                 sessions = onlineManager.getConnectionSessions(
@@ -63,7 +63,7 @@ public class NotifyProcessor {
                 set.sessions.addAll(sessions.values());
                 set.maybeCluster = !set.invalidDevices.isEmpty();
                 return set;
-            case "ips":
+            case "IPs":
                 List<String> ips = Arrays.asList(StringUtils.split(tar, ",", true, true));
                 sessions = onlineManager.getConnectionSessions(onlineDevice -> {
                     for (String ip : ips) {
@@ -76,19 +76,19 @@ public class NotifyProcessor {
                 set.maybeCluster = true;
                 set.sessions.addAll(sessions.values());
                 return set;
-            case "states":
+            case "States":
                 List<String> states = Arrays.asList(StringUtils.split(tar, ",", true, true));
                 sessions = onlineManager.getConnectionSessions(onlineDevice -> states.contains(onlineDevice.getState()));
                 set.maybeCluster = true;
                 set.sessions.addAll(sessions.values());
                 return set;
-            case "later":
+            case "Later":
                 long later = Long.parseLong(tar);
                 sessions = onlineManager.getConnectionSessions(onlineDevice -> onlineDevice.getRegistryTime() >= later);
                 set.maybeCluster = true;
                 set.sessions.addAll(sessions.values());
                 return set;
-            case "early":
+            case "Early":
                 long early = Long.parseLong(tar);
                 sessions = onlineManager.getConnectionSessions(onlineDevice -> onlineDevice.getRegistryTime() <= early);
                 set.maybeCluster = true;

@@ -68,6 +68,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
                 onlineDevices.put(key, device);
             } else {
                 onlineDevice.setRegistryTime(System.currentTimeMillis());
+                onlineDevice.setLastTime(System.currentTimeMillis());
                 onlineDevices.put(key, onlineDevice);
             }
             if (logger.isDebugEnabled()) {
