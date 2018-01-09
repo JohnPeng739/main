@@ -11,6 +11,7 @@ import org.mx.spring.SpringContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -61,10 +62,12 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
             String key = String.format("%s@%s", onlineDevice.getDeviceId(), onlineDevice.getConnectKey());
             if (onlineDevices.containsKey(key)) {
                 OnlineDevice device = onlineDevices.get(key);
+                device.setRegistryTime(System.currentTimeMillis());
                 device.update(onlineDevice.getState(), onlineDevice.getLastTime(), onlineDevice.getLastLongitude(),
                         onlineDevice.getLastLatitude());
                 onlineDevices.put(key, device);
             } else {
+                onlineDevice.setRegistryTime(System.currentTimeMillis());
                 onlineDevices.put(key, onlineDevice);
             }
             if (logger.isDebugEnabled()) {

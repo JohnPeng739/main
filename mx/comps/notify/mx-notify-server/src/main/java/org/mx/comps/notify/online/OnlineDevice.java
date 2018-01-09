@@ -7,7 +7,7 @@ package org.mx.comps.notify.online;
  */
 public class OnlineDevice {
     private String deviceId, state, connectKey;
-    private long lastTime;
+    private long registryTime, lastTime;
     private double lastLongitude, lastLatitude;
 
     /**
@@ -77,6 +77,24 @@ public class OnlineDevice {
      */
     public void setConnectKey(String connectKey) {
         this.connectKey = connectKey;
+    }
+
+    /**
+     * 获取注册时间
+     *
+     * @return 注册时间
+     */
+    public long getRegistryTime() {
+        return registryTime;
+    }
+
+    /**
+     * 设置注册时间
+     *
+     * @param registryTime 时间
+     */
+    public void setRegistryTime(long registryTime) {
+        this.registryTime = registryTime;
     }
 
     /**

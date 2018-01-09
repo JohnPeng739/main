@@ -84,13 +84,13 @@ public class NotifyProcessor {
                 return set;
             case "later":
                 long later = Long.parseLong(tar);
-                sessions = onlineManager.getConnectionSessions(onlineDevice -> onlineDevice.getLastTime() >= later);
+                sessions = onlineManager.getConnectionSessions(onlineDevice -> onlineDevice.getRegistryTime() >= later);
                 set.maybeCluster = true;
                 set.sessions.addAll(sessions.values());
                 return set;
             case "early":
                 long early = Long.parseLong(tar);
-                sessions = onlineManager.getConnectionSessions(onlineDevice -> onlineDevice.getLastTime() <= early);
+                sessions = onlineManager.getConnectionSessions(onlineDevice -> onlineDevice.getRegistryTime() <= early);
                 set.maybeCluster = true;
                 set.sessions.addAll(sessions.values());
                 return set;
