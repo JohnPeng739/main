@@ -6,18 +6,23 @@ import org.apache.commons.logging.LogFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
+
 /**
  * 类工具，包括：包扫描等功能。
  *
  * @author : john.peng date : 2017/10/6
- *
- * 修改了在Windows环境下存在的扫描类中存在的bug。
+ *         <p>
+ *         修改了在Windows环境下存在的扫描类中存在的bug。
  * @author : chunliang.li date : 2017/11/25
  */
 public class ClassUtils {
@@ -68,12 +73,11 @@ public class ClassUtils {
                         String path = url.getPath();
                         String root = path.substring(0, path.length() - packageName.length());
                         // update by lichunliang window得到的root前有一个"/" 20171124 start
-                        if(System.getProperty("os.name").toUpperCase().contains("WINDOWS"))
-                        {
+                        if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
                             root = root.substring(1);
                         }
                         // update by lichunliang window得到的root前有一个"/" 20171124 end
-                        scanPackageByFile(new File(path), root, recurse, ignoreInlineClass, list);
+                        scanPackageByFile(Paths.get(path), root, packageName, recurse, ignoreInlineClass, list);
                         break;
                     default:
                         if (logger.isWarnEnabled()) {
@@ -94,30 +98,37 @@ public class ClassUtils {
      *
      * @param path              指定的文件路径
      * @param root              传递的根目录，便于迭代处理
+     * @param packageName
      * @param recurse           是否迭代扫描子目录
      * @param ignoreInlineClass 是否忽略内部类文件
      * @param list              扫描到的所有类文件名列表
      */
-    private static void scanPackageByFile(File path, String root, boolean recurse, boolean ignoreInlineClass, List<String> list) {
-        if (path != null) {
-            if (path.isFile() && path.getName().endsWith(".class") && (!ignoreInlineClass || path.getName().indexOf("$") < 0)) {
-                String classPath = path.getAbsolutePath();
-                classPath = classPath.substring(root.length(), classPath.length() - ".class".length());
-                // list.add(classPath.replaceAll("/", "\\."));
-                // update by lichunliang 要考虑windows"\" 20171124 start
-                list.add(classPath.replaceAll("[/\\\\]", "\\."));
-                // update by lichunliang 要考虑windows"\" 20171124 end
-            } else {
-                if (path.isDirectory() && recurse) {
-                    File[] children = path.listFiles();
-                    if (children == null || children.length <= 0) {
-                        return;
-                    }
-                    for (File child : children) {
-                        scanPackageByFile(child, root, recurse, ignoreInlineClass, list);
-                    }
+    private static void scanPackageByFile(Path path, String root, String packageName, boolean recurse, boolean ignoreInlineClass, List<String> list) {
+        try {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    String file = dir.toString();
+                    return recurse || packageName.equals(file.substring(root.length())) ? CONTINUE : SKIP_SUBTREE;
                 }
 
+                @Override
+                public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                    String file = path.toString();
+                    if (Files.isRegularFile(path) && file.endsWith(".class") && (!ignoreInlineClass || file.indexOf("$") < 0)) {
+                        String classPath = file;
+                        classPath = classPath.substring(root.length(), classPath.length() - ".class".length());
+                        // list.add(classPath.replaceAll("/", "\\."));
+                        // update by lichunliang 要考虑windows"\" 20171124 start
+                        list.add(classPath.replaceAll("[/\\\\]", "\\."));
+                        // update by lichunliang 要考虑windows"\" 20171124 end
+                    }
+                    return CONTINUE;
+                }
+            });
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Scan package by file fail, path: %s.", path.toFile().getAbsolutePath()));
             }
         }
     }

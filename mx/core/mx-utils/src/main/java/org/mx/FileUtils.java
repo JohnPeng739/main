@@ -1,6 +1,13 @@
 package org.mx;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.EnumSet;
+
+import static java.nio.file.FileVisitResult.CONTINUE;
 
 /**
  * 文件处理工具类
@@ -24,7 +31,34 @@ public class FileUtils {
      * @see #deleteFile(File)
      */
     public static void deleteFile(String filePath) throws IOException {
-        deleteFile(new File(filePath));
+        deleteFile(Paths.get(filePath));
+    }
+
+    /**
+     * 删除指定的文件或目录，如果是目录，将会删除子目录及其包含的文件。
+     *
+     * @param file 待删除的文件或目录
+     * @throws IOException 删除过程中发生的异常
+     */
+    public static void deleteFile(Path file) throws IOException {
+        Files.walkFileTree(file, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException ex) throws IOException {
+                if (ex == null) {
+                    Files.delete(dir);
+                    return CONTINUE;
+                } else {
+                    // directory iteration failed
+                    throw ex;
+                }
+            }
+        });
     }
 
     /**
@@ -32,6 +66,7 @@ public class FileUtils {
      *
      * @param file 待删除的文件或目录对象
      * @throws IOException 删除过程中发生的异常
+     * @deprecated 升级成Paths实现，未来版本可能删除此方法
      */
     public static void deleteFile(File file) throws IOException {
         if (file.isDirectory()) {
@@ -63,8 +98,9 @@ public class FileUtils {
      */
     public static String saveFile(String filePath, InputStream is) throws IOException {
         String date = DateUtils.get8TimeNow(), fileName = DigestUtils.uuid().replaceAll("-", "");
-        File parent = new File(filePath, date);
-        return saveFile(parent.getAbsolutePath(), fileName, is);
+        Path path = Paths.get(filePath, date, fileName);
+        Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
+        return path.toFile().getAbsolutePath();
     }
 
     /**
@@ -77,24 +113,54 @@ public class FileUtils {
      * @throws IOException 保存过程中发生的异常
      */
     public static String saveFile(String filePath, String fileName, InputStream is) throws IOException {
-        File file = new File(filePath, fileName);
-        File parent = file.getParentFile();
-        if (parent.exists() && !parent.isDirectory()) {
-            parent.delete();
+        Path path = Paths.get(fileName, fileName);
+        Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
+        return path.toFile().getAbsolutePath();
+    }
+
+    /**
+     * 复制指定的文件或目录
+     *
+     * @param source 源
+     * @param target 目标
+     * @throws IOException 复制过程中发生的异常
+     */
+    public static void copyFile(String source, String target) throws IOException {
+        if (StringUtils.isBlank(source) || StringUtils.isBlank(target) || source.equals(target)) {
+            throw new IllegalArgumentException(String.format("source: %s, target: %s. ", source, target));
         }
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-        try (OutputStream os = new FileOutputStream(file)) {
-            byte[] buff = new byte[2048];
-            int len = 0;
-            do {
-                len = is.read(buff, 0, 2048);
-                if (len > 0) {
-                    os.write(buff, 0, len);
-                }
-            } while (len == 2048);
-        }
-        return file.getAbsolutePath();
+        copyFile(Paths.get(source), Paths.get(target));
+    }
+
+    /**
+     * 复制指定的的文件或目录
+     *
+     * @param source 源
+     * @param target 目标
+     * @throws IOException 复制过程中发生的异常
+     */
+    public static void copyFile(Path source, Path target) throws IOException {
+        Files.walkFileTree(source, EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE,
+                new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                            throws IOException {
+                        Path targetdir = target.resolve(source.relativize(dir));
+                        try {
+                            Files.copy(dir, targetdir);
+                        } catch (FileAlreadyExistsException ex) {
+                            if (!Files.isDirectory(targetdir))
+                                throw ex;
+                        }
+                        return CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                            throws IOException {
+                        Files.copy(file, target.resolve(source.relativize(file)));
+                        return CONTINUE;
+                    }
+                });
     }
 }
