@@ -66,7 +66,7 @@ public final class ConnectionManager {
      * @param session 会话
      */
     public void registryConnection(Session session) {
-        String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
+        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
         synchronized (ConnectionManager.this.cleanMutex) {
@@ -89,7 +89,7 @@ public final class ConnectionManager {
      * @param session 会话
      */
     public void unregistryConnection(Session session) {
-        String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
+        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
         synchronized (ConnectionManager.this.cleanMutex) {
@@ -106,7 +106,7 @@ public final class ConnectionManager {
      * @param session 会话
      */
     public void confirmConnection(Session session) {
-        String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
+        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
         synchronized (ConnectionManager.this.cleanMutex) {
@@ -123,7 +123,7 @@ public final class ConnectionManager {
      */
     public void blockConnection(Session session) {
         try {
-            String blockIp = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
+            String blockIp = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
             int port = session.getRemoteAddress().getPort();
             session.disconnect();
             // 阻断并清除该IP的其他连接
@@ -149,13 +149,13 @@ public final class ConnectionManager {
             }
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("The connection[%s:%d] is blocked by the rules.",
-                        TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                        TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                         session.getRemoteAddress().getPort()));
             }
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Disconnect the remote[%s:%d] fail.",
-                        TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                        TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                         session.getRemoteAddress().getPort()), ex);
             }
         }
@@ -168,7 +168,7 @@ public final class ConnectionManager {
      * @return 返回true表示为可疑的DDOS攻击，否则返回false。
      */
     public boolean isDdos(Session session) {
-        String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
+        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
         if (connectionsPerIp.containsKey(ip)) {
             ConnectionPerIp connect = connectionsPerIp.get(ip);
             // 判断是否存在DDOS
@@ -261,7 +261,7 @@ public final class ConnectionManager {
                     if (!connectionsPerIp.containsKey(segs[0])) {
                         try {
                             logger.warn(String.format("The connection[%s:%d] is close by clean task.",
-                                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                                    TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                                     session.getRemoteAddress().getPort()));
                             session.disconnect();
                             num++;

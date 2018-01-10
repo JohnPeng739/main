@@ -65,7 +65,7 @@ public class BaseWebsocket {
     protected void afterConnect(Session session) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Allow the connection: %s:%d.",
-                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                     session.getRemoteAddress().getPort()));
         }
     }
@@ -80,7 +80,7 @@ public class BaseWebsocket {
     protected void beforeClose(Session session, int statusCode, String reason) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("ConnectionPoint closed, from: %s:%d, status: %d, reason: %s.",
-                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                     session.getRemoteAddress().getPort(), statusCode, reason));
         }
     }
@@ -94,7 +94,7 @@ public class BaseWebsocket {
     protected void afterError(Session session, Throwable throwable) {
         if (logger.isErrorEnabled()) {
             logger.error(String.format("Got error, from: %s:%d.",
-                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                     session.getRemoteAddress().getPort()), throwable);
         }
     }
@@ -107,7 +107,7 @@ public class BaseWebsocket {
     protected void receivePing(Session session) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Got a ping frame, from: %s:%d.",
-                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                     session.getRemoteAddress().getPort()));
         }
     }
@@ -121,7 +121,7 @@ public class BaseWebsocket {
     protected void receiveFrame(Session session, Frame frame) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Got a frame, from: %s:%d, frame: %s.",
-                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                     session.getRemoteAddress().getPort(), frame.getClass().getName()));
         }
         if (frame instanceof PingFrame) {
@@ -138,7 +138,7 @@ public class BaseWebsocket {
     protected void receiveBinary(Session session, InputStream in) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Got a binary message, from: %s:%d.",
-                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                     session.getRemoteAddress().getPort()));
         }
     }
@@ -152,7 +152,7 @@ public class BaseWebsocket {
     protected void receiveText(Session session, String message) {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Got a text message, from: %s:%d,message: %s.",
-                    TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress()),
+                    TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
                     session.getRemoteAddress().getPort(), message));
         }
     }

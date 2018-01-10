@@ -78,8 +78,8 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="18" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+            <state relative-caret-position="259">
+              <caret line="82" column="19" lean-forward="false" selection-start-line="82" selection-start-column="19" selection-end-line="82" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -94,6 +94,15 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>Ipv</find>
+    </findStrings>
+    <dirStrings>
+      <dir>$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service</dir>
+      <dir>$PROJECT_DIR$/mx-service-utils</dir>
+    </dirStrings>
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
@@ -139,9 +148,7 @@
         <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/rule/ConnectFilterRule.java" />
         <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectRuleFactory.java" />
         <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/WebsocketServerFactory.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/websocket/BaseWebsocket.java" />
         <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/config/ServerConfig.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionManager.java" />
         <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/StringUtils.java" />
         <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/TestServer.java" />
         <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/client/WsClientInvoke.java" />
@@ -153,6 +160,8 @@
         <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/StartServer.java" />
         <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestTypeUtils.java" />
         <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/TypeUtils.java" />
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionManager.java" />
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/websocket/BaseWebsocket.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
       </list>
     </option>
@@ -289,7 +298,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.TestTypeUtils.testIpv4">
+  <component name="RunManager" selected="JUnit.server in mx-service-utils">
     <configuration default="false" name="TestServer.testWebsocketServer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea">
         <pattern>
@@ -303,32 +312,6 @@
       <option name="PACKAGE_NAME" value="org.mx.service.server" />
       <option name="MAIN_CLASS_NAME" value="org.mx.service.server.TestServer" />
       <option name="METHOD_NAME" value="testWebsocketServer" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
-    <configuration default="false" name="TestClassUtils.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" runner="idea">
-        <pattern>
-          <option name="PATTERN" value="org.mx.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <module name="mx-utils" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.mx" />
-      <option name="MAIN_CLASS_NAME" value="org.mx.TestClassUtils" />
-      <option name="METHOD_NAME" value="test" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" />
       <option name="PARAMETERS" />
@@ -411,6 +394,28 @@
         <value defaultName="moduleWithDependencies" />
       </option>
       <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="false" name="server in mx-service-utils" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" runner="idea" />
+      <module name="mx-service-utils" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="directory" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <dir value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server" />
       <patterns />
       <method />
     </configuration>
@@ -732,18 +737,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="JUnit.TestServer.testWebsocketServer" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.TestClassUtils.test" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.TestIntegerTopNRate.test1" />
-      <item index="3" class="java.lang.String" itemvalue="Application.StartServer" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.TestTypeUtils.testIpv4" />
+      <item index="1" class="java.lang.String" itemvalue="JUnit.TestIntegerTopNRate.test1" />
+      <item index="2" class="java.lang.String" itemvalue="Application.StartServer" />
+      <item index="3" class="java.lang.String" itemvalue="JUnit.TestTypeUtils.testIpv4" />
+      <item index="4" class="java.lang.String" itemvalue="JUnit.server in mx-service-utils" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.TestTypeUtils.testIpv4" />
-        <item index="1" class="java.lang.String" itemvalue="Application.StartServer" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.TestServer.testWebsocketServer" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.TestIntegerTopNRate.test1" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.TestClassUtils.test" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.server in mx-service-utils" />
+        <item index="1" class="java.lang.String" itemvalue="JUnit.TestTypeUtils.testIpv4" />
+        <item index="2" class="java.lang.String" itemvalue="Application.StartServer" />
+        <item index="3" class="java.lang.String" itemvalue="JUnit.TestServer.testWebsocketServer" />
+        <item index="4" class="java.lang.String" itemvalue="JUnit.TestIntegerTopNRate.test1" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -857,14 +862,11 @@
       <workItem from="1515462997579" duration="3320000" />
       <workItem from="1515482314059" duration="8527000" />
       <workItem from="1515567310649" duration="1694000" />
-      <workItem from="1515572710326" duration="5771000" />
+      <workItem from="1515572710326" duration="7166000" />
     </task>
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TestTypeUtils_testIpv4 - 2018.01.10 at 18h 39m 20s.xml">
-      <configuration name="TestTypeUtils.testIpv4" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="TestTypeUtils_testIpv4 - 2018.01.10 at 18h 40m 18s.xml">
       <configuration name="TestTypeUtils.testIpv4" configurationId="JUnit" />
     </history-entry>
@@ -892,9 +894,12 @@
     <history-entry file="TestTypeUtils_testIpv4 - 2018.01.10 at 18h 49m 47s.xml">
       <configuration name="TestTypeUtils.testIpv4" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="server_in_mx-service-utils - 2018.01.10 at 19h 31m 28s.xml">
+      <configuration name="server in mx-service-utils" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="231310000" />
+    <option name="totallyTimeSpent" value="232705000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -926,13 +931,14 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4010767" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.71467024" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="17" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.66890985" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23047177" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="BPMNPalette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="19" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="15" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -942,7 +948,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1134,13 +1139,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectRuleFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
-          <caret line="71" column="31" lean-forward="true" selection-start-line="71" selection-start-column="31" selection-end-line="71" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mx-utils/src/main/java/org/mx/StringUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-4811">
@@ -1160,6 +1158,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
           <caret line="142" column="70" lean-forward="false" selection-start-line="142" selection-start-column="70" selection-end-line="142" selection-end-column="70" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1281,14 +1280,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="250" column="0" lean-forward="false" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/StartServer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -1321,14 +1312,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
           <caret line="3068" column="71" lean-forward="true" selection-start-line="3068" selection-start-column="71" selection-end-line="3068" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/websocket/BaseWebsocket.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="261">
-          <caret line="269" column="0" lean-forward="false" selection-start-line="269" selection-start-column="0" selection-end-line="269" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1378,10 +1361,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="25" column="49" lean-forward="false" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectRuleFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="71" column="31" lean-forward="true" selection-start-line="71" selection-start-column="31" selection-end-line="71" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/websocket/BaseWebsocket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="82" column="42" lean-forward="false" selection-start-line="82" selection-start-column="42" selection-end-line="82" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="18" lean-forward="false" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+        <state relative-caret-position="259">
+          <caret line="82" column="19" lean-forward="false" selection-start-line="82" selection-start-column="19" selection-end-line="82" selection-end-column="19" />
           <folding />
         </state>
       </provider>
