@@ -257,8 +257,12 @@ public final class ConnectionManager {
             // 清除无效的连接
             if (connections != null && !connections.isEmpty()) {
                 connections.forEach((key, session) -> {
-                    String[] segs = StringUtils.split(key, ":", true, true);
-                    if (!connectionsPerIp.containsKey(segs[0])) {
+                    int index = key.lastIndexOf(":");
+                    String tarKey = "";
+                    if (index >= 0) {
+                        tarKey = key.substring(0, index - 1);
+                    }
+                    if (!connectionsPerIp.containsKey(tarKey)) {
                         try {
                             logger.warn(String.format("The connection[%s:%d] is close by clean task.",
                                     TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()),
