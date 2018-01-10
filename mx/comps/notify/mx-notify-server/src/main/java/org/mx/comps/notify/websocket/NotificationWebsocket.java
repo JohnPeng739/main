@@ -27,6 +27,10 @@ public class NotificationWebsocket extends BaseWebsocket {
     @Autowired
     private MessageProcessorChain processorChain = null;
 
+    public NotificationWebsocket() {
+        super("/notify", false);
+    }
+
     /**
      * {@inheritDoc}
      *

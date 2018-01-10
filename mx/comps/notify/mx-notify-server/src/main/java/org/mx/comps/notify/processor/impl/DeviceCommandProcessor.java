@@ -34,7 +34,7 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
         String command = json.getString("command");
         String type = json.getString("type");
         JSONObject data = json.getJSONObject("data");
-        String ip = TypeUtils.byteArray2Ipv4(session.getRemoteAddress().getAddress().getAddress());
+        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         OnlineDevice device = new OnlineDevice();
         device.setDeviceId(data.getString("deviceId"));

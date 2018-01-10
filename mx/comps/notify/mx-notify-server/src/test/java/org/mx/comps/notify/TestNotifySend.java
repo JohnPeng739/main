@@ -14,7 +14,7 @@ public class TestNotifySend extends BaseTest {
     @Test
     public void test() {
         assertNotNull(context);
-        NotifyWsClient wsClient = new NotifyWsClient("ws://localhost:9997", false, new BaseWebsocketClientListener());
+        NotifyWsClient wsClient = new NotifyWsClient("ws://localhost:9997/notify", false, new BaseWebsocketClientListener());
         NotifyRestClient restClient = new NotifyRestClient("http://localhost:9999/rest/notify/send");
         try {
             Thread.sleep(500);

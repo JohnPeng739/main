@@ -4,6 +4,7 @@ import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.comps.notify.processor.MessageProcessorChain;
+import org.mx.service.ws.ConnectionManager;
 import org.mx.spring.SpringContextHolder;
 
 /**
@@ -34,7 +35,10 @@ public class RegistryCommandProcessor extends DeviceCommandProcessor {
         if (COMMAND.equals(command) && MessageProcessorChain.TYPE_SYSTEM.equals(type)) {
             // 注册指令
             OnlineManager onlineManager = SpringContextHolder.getBean(OnlineManager.class);
-            onlineManager.registryDevice(onlineDevice);
+            ConnectionManager connectionManager = SpringContextHolder.getBean(ConnectionManager.class);
+            if (onlineManager.registryDevice(onlineDevice)) {
+                connectionManager.confirmConnection(connectionManager.getSession(onlineDevice.getConnectKey()));
+            }
             return true;
         } else {
             return false;
