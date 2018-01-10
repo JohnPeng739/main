@@ -114,6 +114,9 @@ public class NotifyProcessor {
         Set<Session> sessions = set.sessions;
         boolean success = true;
         for (Session session : sessions) {
+            if (session == null) {
+                continue;
+            }
             try {
                 String text = message.toJSONString();
                 session.getRemote().sendString(text);
