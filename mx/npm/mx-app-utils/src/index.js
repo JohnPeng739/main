@@ -5,6 +5,7 @@ import ajax from './ajax'
 import logger from './logger'
 import formatter from './formatter'
 import parser from './parser'
+import MyWebSocket from './websocket'
 
 function clone(obj) {
     //
@@ -74,4 +75,4 @@ function round(value, digits) {
     }
 }
 
-export {ajax, logger, formatter, parser, timestamp, mixin, clone, round}
+export {ajax, logger, formatter, parser, MyWebSocket, timestamp, mixin, clone, round}

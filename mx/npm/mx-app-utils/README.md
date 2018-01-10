@@ -1,12 +1,13 @@
 # mx-app-utils
 ====
-<h5>版本： V1.5.5</h5>
+<h5>版本： V1.6.0</h5>
 一个非常简单使用的面向HTML5的WEB开发的工具类模块。目前封装了:
 1. logger：LOG（debug、info、warn、error）
 2. ajax：使用axios的简单AJAX调用工具方法
 3. formatter: 支持格式化字符串、日期格式化等方法
 4. parser: 支持日期、json等解析和转换
 5. round、mixin、clone和timestamp的工具方法
+6. MyWebSocket: 一个通用的Js WebSocket客户端
 
 ## 安装
     npm i mx-app-utils --save
@@ -28,6 +29,9 @@
 
 
 ## 修改历史
+**1.6.0**<br>
+1. 添加了一个通用的Js WebSocket客户端MyWebSocket。
+
 **1.5.5**<br>
 1. 添加了针对对象属性的变量格式化方法(formatObj)，并重命名了针对参数列表的变量格式化方法(format, formatArgs)。
 
