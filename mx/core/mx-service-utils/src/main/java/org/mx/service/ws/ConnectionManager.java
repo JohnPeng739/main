@@ -260,7 +260,7 @@ public final class ConnectionManager {
                     int index = key.lastIndexOf(":");
                     String tarKey = "";
                     if (index >= 0) {
-                        tarKey = key.substring(0, index - 1);
+                        tarKey = key.substring(0, index);
                     }
                     if (!connectionsPerIp.containsKey(tarKey)) {
                         try {
