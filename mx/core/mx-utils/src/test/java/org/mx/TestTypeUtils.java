@@ -33,9 +33,9 @@ public class TestTypeUtils {
         assertArrayEquals(new byte[]{(byte) 0x7f, 0, 0, 1}, TypeUtils.Ip2byteArray("127.0.0.1"));
         assertArrayEquals(new byte[]{(byte) 0x7f, 0}, TypeUtils.Ip2byteArray("127.0"));
         assertArrayEquals(new byte[]{(byte) 0xc0, (byte) 0xa8, 0, (byte) 0xf8}, TypeUtils.Ip2byteArray("192.168.0.248"));
-        assertArrayEquals(new byte[]{1}, TypeUtils.Ip2byteArray("::1"));
+        assertArrayEquals(new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}, TypeUtils.Ip2byteArray("::1"));
         assertArrayEquals(new byte[]{(byte) 0xfe, (byte) 0x80, 0, 0, 0, 0, 0, 0,
-                (byte) 0x18, (byte) 0xc6, (byte) 0x7d, (byte) 0xf6, (byte) 0x18, (byte) 0xf0, (byte) 0x50, (byte) 0x2f},
+                        (byte) 0x18, (byte) 0xc6, (byte) 0x7d, (byte) 0xf6, (byte) 0x18, (byte) 0xf0, (byte) 0x50, (byte) 0x2f},
                 TypeUtils.Ip2byteArray("fe80::18c6:7df6:18f0:502f"));
     }
 }

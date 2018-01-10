@@ -140,6 +140,9 @@ public class TypeUtils {
         if (values.length > 16) {
             System.arraycopy(values, values.length - 16, tar, 0, 16);
             return tar;
+        } else if (values.length < 16) {
+            System.arraycopy(values, 0, tar, 16 - values.length, values.length);
+            return tar;
         } else {
             return values;
         }
