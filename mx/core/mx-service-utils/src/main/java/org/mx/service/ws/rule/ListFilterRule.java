@@ -4,13 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
+import org.mx.TypeUtils;
 import org.mx.spring.SpringContextHolder;
 import org.springframework.core.env.Environment;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 基于白名单、黑名单的连接过滤规则实现
@@ -20,7 +18,7 @@ import java.util.Set;
 public class ListFilterRule implements ConnectFilterRule {
     private static final Log logger = LogFactory.getLog(ListFilterRule.class);
 
-    private Set<List<Byte>> allows, blocks;
+    private Set<byte[]> allows, blocks;
 
     public ListFilterRule() {
         super();
@@ -34,22 +32,17 @@ public class ListFilterRule implements ConnectFilterRule {
      * @param filter 过滤规则
      * @param set    存放过滤集合
      */
-    private void addFilter(String filter, Set<List<Byte>> set) {
+    private void addFilter(String filter, Set<byte[]> set) {
         String[] ips = StringUtils.split(filter, ",", true, true);
         if (ips == null || ips.length <= 0) {
             return;
         }
         try {
             for (String ip : ips) {
-                String[] segs = StringUtils.split(ip, ".", true, true);
-                if (segs == null || segs.length <= 0) {
-                    continue;
+                byte[] values = TypeUtils.Ip2byteArray(ip);
+                if (values != null && values.length > 0) {
+                    set.add(values);
                 }
-                List<Byte> list = new ArrayList<>();
-                for (String seg : segs) {
-                    list.add((byte) Integer.parseInt(seg));
-                }
-                set.add(list);
             }
         } catch (NumberFormatException ex) {
             if (logger.isErrorEnabled()) {
@@ -65,11 +58,11 @@ public class ListFilterRule implements ConnectFilterRule {
      * @param segs   IP字节数组
      * @return 如果存在，返回true，否则返回false。
      */
-    private boolean found(Set<List<Byte>> filter, byte[] segs) {
-        for (List<Byte> list : filter) {
+    private boolean found(Set<byte[]> filter, byte[] segs) {
+        for (byte[] list : filter) {
             boolean found = true;
-            for (int index = 0; index < Math.min(list.size(), segs.length); index++) {
-                if (list.get(index) != segs[index]) {
+            for (int index = 0; index < Math.min(list.length, segs.length); index++) {
+                if (list[index] != segs[index]) {
                     found = false;
                 }
             }
