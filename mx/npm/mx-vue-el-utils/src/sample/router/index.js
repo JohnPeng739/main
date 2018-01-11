@@ -7,6 +7,7 @@ import TestPage from '../pages/test-page.vue'
 import TestEcharts from '../pages/test-echarts.vue'
 import TestDialog from '../pages/test-dialog.vue'
 import TestChoose from '../pages/test-choose.vue'
+import TestWebsocket from '../pages/test-ws.vue'
 
 export const navData = [{
   path: '/',
@@ -40,6 +41,10 @@ export const navData = [{
     path: '/tests/chooseInput',
     icon: 'apps',
     name: '可选择输入框'
+  }, {
+    path: '/tests/websocket',
+    icon: 'apps',
+    name: 'WebSocket'
   }]
 }]
 
@@ -72,6 +77,9 @@ const router = new Router({
     }, {
       path: '/tests/chooseInput',
       component: TestChoose
+    }, {
+      path: '/tests/websocket',
+      component: TestWebsocket
     }, {
       path: '',
       component: TestHome
