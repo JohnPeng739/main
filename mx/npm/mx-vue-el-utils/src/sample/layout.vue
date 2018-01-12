@@ -1,6 +1,7 @@
 <template>
   <layout-normal :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
-                 v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto">
+                 notice-path="notice" :notice-value="noticeValue" v-on:logout="handleLogout"
+                 v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
   </layout-normal>
 </template>
 
@@ -18,7 +19,8 @@
         title: 'The Demo System',
         role: 'admin',
         tools: ['/tests/notify', '/tests/tag', '/tests/page'],
-        navData: navData
+        navData: navData,
+        noticeValue: 123
       }
     },
     computed: {
@@ -27,6 +29,10 @@
       }
     },
     methods: {
+      handleShowNotice () {
+        this.noticeValue = 0
+        logger.debug('show notices.')
+      },
       handleGoto (path) {
         logger.debug('Router click: %s', path)
         this.$router.push(path)

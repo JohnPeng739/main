@@ -1,10 +1,12 @@
 export default {
+  NA: '未知',
   button: {
     add: '新增',
     edit: '修改',
     delete: '删除',
     details: '详情',
     refresh: '刷新',
+    notice: '通知',
     ok: '确定',
     cancel: '取消',
     reset: '重置',

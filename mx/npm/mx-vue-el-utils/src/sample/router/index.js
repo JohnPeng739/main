@@ -8,6 +8,7 @@ import TestEcharts from '../pages/test-echarts.vue'
 import TestDialog from '../pages/test-dialog.vue'
 import TestChoose from '../pages/test-choose.vue'
 import TestWebsocket from '../pages/test-ws.vue'
+import TestNotice from '../pages/test-notice.vue'
 
 export const navData = [{
   path: '/',
@@ -80,6 +81,9 @@ const router = new Router({
     }, {
       path: '/tests/websocket',
       component: TestWebsocket
+    }, {
+      path: '/tests/notice',
+      component: TestNotice
     }, {
       path: '',
       component: TestHome

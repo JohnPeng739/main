@@ -14,7 +14,11 @@
 
   export default {
     name: 'tag-normal',
-    props: ['value', 'type', 'disabled'],
+    props: {
+      value: {},
+      type: String,
+      disabled: {type: Boolean, default: false}
+    },
     data () {
       return {
         inputVisible: false,

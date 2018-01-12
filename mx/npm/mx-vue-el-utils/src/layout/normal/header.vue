@@ -26,7 +26,10 @@
   export default {
     name: 'layout-normal-header',
     components: {Icon},
-    props: ['title', 'loginUserName'],
+    props: {
+      title: String,
+      loginUserName: String
+    },
     data () {
       return {}
     },

@@ -27,7 +27,13 @@
 
   export default {
     name: 'choose-tag',
-    props: ['value', 'displayFormat', 'disabled', 'type', 'popoverWidth'],
+    props: {
+      value: {},
+      displayFormat: String,
+      disabled: {type: Boolean, default: false},
+      type: String,
+      popoverWidth: {type: Number, default: 400}
+    },
     data () {
       return {
         visible: false

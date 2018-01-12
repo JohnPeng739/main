@@ -20,7 +20,12 @@
 
   export default {
     name: 'tag-couple',
-    props: ['value', 'type', 'disabled', 'separator'],
+    props: {
+      value: {},
+      type: String,
+      disabled: {type: Boolean, default: false},
+      separator: {type: String, default: ':'}
+    },
     data () {
       return {
         inputVisible: false,

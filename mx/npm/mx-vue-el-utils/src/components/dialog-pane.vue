@@ -18,7 +18,7 @@
   export default {
     name: 'dialog-pane',
     props: {
-      title: ''
+      title: {type: String, default: ''}
     },
     data () {
       return {

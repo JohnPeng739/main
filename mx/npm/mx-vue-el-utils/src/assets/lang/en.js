@@ -1,10 +1,12 @@
 export default {
+  NA: 'NA',
   button: {
     add: 'Add',
     edit: 'Edit',
     delete: 'Delete',
     details: 'Detail',
     refresh: 'Refresh',
+    notice: 'Notice',
     ok: 'Ok',
     cancel: 'Cancel',
     reset: 'Reset',

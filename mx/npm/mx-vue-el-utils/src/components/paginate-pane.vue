@@ -35,7 +35,9 @@
   export default {
     name: 'paginate-content-pane',
     components: {Icon},
-    props: ['buttonsLayout'],
+    props: {
+      buttonLayout: Array
+    },
     data () {
       return {
         pagination: {

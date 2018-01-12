@@ -17,7 +17,11 @@
   export default {
     name: 'layout-normal-nav-menu',
     components: {Icon, NavSubMenu},
-    props: ['toggled', 'navData', 'role'],
+    props: {
+      toggled: Boolean,
+      navData: Array,
+      role: String
+    },
     computed: {
       defaultActive () {
         return this.$route.path

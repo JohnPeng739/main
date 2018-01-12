@@ -18,7 +18,10 @@
   export default {
     name: 'layout-normal-nav-sub-menu',
     components: {Icon},
-    props: ['item', 'role'],
+    props: {
+      item: {},
+      role: String
+    },
     methods: {
       isRole (item) {
         let role = this.role

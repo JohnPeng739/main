@@ -1,14 +1,16 @@
 <template>
   <div class="layout-main">
     <div class="header-row">
-      <layout-header :title="title" :loginUserName="loginUserName" :navData="navData"
+      <layout-header :title="title" :login-user-name="loginUserName" :nav-data="navData"
                      v-on:navToggled="handleNavToggled" v-on:logout="handleLogout"
                      v-on:showUserInfo="handleShowUserInfo">
-        <layout-nav-favority-tools :role="role" :favorityTools="favorityTools" v-on:goto="handleGoto"></layout-nav-favority-tools>
+        <layout-nav-favority-tools :role="role" :favority-tools="favorityTools" :notice-path="noticePath"
+                                   :notice-value="noticeValue" v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
+        </layout-nav-favority-tools>
       </layout-header>
     </div>
     <div type="flex" class="content-row">
-      <layout-nav-menu :toggled="toggled" :role="role" :navData="navData" v-on:goto="handleGoto" class="layout-nav"></layout-nav-menu>
+      <layout-nav-menu :toggled="toggled" :role="role" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav"></layout-nav-menu>
       <div class="layout-right">
         <el-breadcrumb>
           <el-breadcrumb-item>
@@ -35,7 +37,15 @@
   export default {
     name: 'layout-normal',
     components: {LayoutHeader, LayoutNavFavorityTools, LayoutNavMenu},
-    props: ['title', 'loginUserName', 'role', 'tools', 'navData'],
+    props: {
+      title: String,
+      loginUserName: {type: String, default: ''},
+      role: String,
+      tools: Array,
+      navData: Array,
+      noticePath: String,
+      noticeValue: {type: Number, deault: 0}
+    },
     data () {
       return {
         toggled: false
@@ -84,6 +94,9 @@
       },
       getMenuItem (path) {
         return this.findMenuItem(path, this.navData)
+      },
+      handleShowNotice () {
+        this.$emit('showNotice')
       },
       handleGoto (path) {
         this.$emit('goto', path)

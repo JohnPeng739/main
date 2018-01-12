@@ -31,7 +31,15 @@
 
   export default {
     name: 'choose-input',
-    props: ['value', 'displayFormat', 'popoverWidth', 'readonly', 'placeholder', 'disabled', 'size'],
+    props: {
+      value: {},
+      displayFormat: String,
+      popoverWidth: {type: Number, default: 400},
+      readonly: {type: Boolean, default: false},
+      placeholder: String,
+      disabled: {type: Boolean, default: false},
+      size: {type: String, default: 'small'}
+    },
     components: {Icon},
     data () {
       return {
