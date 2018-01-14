@@ -11,14 +11,12 @@ import org.mx.spring.SpringContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 一个简单的在线设备管理实现
@@ -43,11 +41,21 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
     /**
      * {@inheritDoc}
      *
-     * @see OnlineManager#getConnectionSessions(Predicate)
+     * @see OnlineManager#getOnlineDevices(List)
      */
     @Override
-    public Set<OnlineDevice> getOnlineDevices(Predicate<OnlineDevice> filter) {
-        return onlineDevices.values().stream().filter(filter).collect(Collectors.toSet());
+    public Set<OnlineDevice> getOnlineDevices(List<Predicate<OnlineDevice>> filters) {
+        if (filters != null && !filters.isEmpty()) {
+            Stream<OnlineDevice> stream = onlineDevices.values().stream();
+            for (Predicate<OnlineDevice> filter : filters) {
+                stream = stream.filter(filter);
+            }
+            return stream.collect(Collectors.toSet());
+        } else {
+            Set<OnlineDevice> set = new HashSet<>();
+            set.addAll(onlineDevices.values());
+            return set;
+        }
     }
 
     /**

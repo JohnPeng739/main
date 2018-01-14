@@ -2,6 +2,7 @@ package org.mx.comps.notify.online;
 
 import org.eclipse.jetty.websocket.api.Session;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -12,7 +13,13 @@ import java.util.function.Predicate;
  * @author : john.peng created on date : 2018/1/3
  */
 public interface OnlineManager {
-    Set<OnlineDevice> getOnlineDevices(Predicate<OnlineDevice> filter);
+    /**
+     * 根据条件过滤在线设备列表
+     *
+     * @param filters 过滤条件
+     * @return 在线设备列表
+     */
+    Set<OnlineDevice> getOnlineDevices(List<Predicate<OnlineDevice>> filters);
 
     /**
      * 注册设备
