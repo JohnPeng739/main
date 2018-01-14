@@ -11,7 +11,7 @@ import java.util.List;
  * @author : john.peng created on date : 2018/1/14
  */
 public class OnlineDeviceVO {
-    private String deviceId, state;
+    private String deviceId, state, connect;
     private long registryTime, lastTime;
     private double lastLongitude, lastLatitude;
 
@@ -27,6 +27,7 @@ public class OnlineDeviceVO {
         }
         vo.deviceId = device.getDeviceId();
         vo.state = device.getState();
+        vo.connect = device.getConnectKey();
         vo.registryTime = device.getRegistryTime();
         vo.lastTime = device.getLastTime();
         vo.lastLongitude = device.getLastLongitude();
@@ -85,6 +86,24 @@ public class OnlineDeviceVO {
      */
     public void setState(String state) {
         this.state = state;
+    }
+
+    /**
+     * 获取连接串
+     *
+     * @return 连接串
+     */
+    public String getConnect() {
+        return connect;
+    }
+
+    /**
+     * 设置连接串
+     *
+     * @param connect 连接串
+     */
+    public void setConnect(String connect) {
+        this.connect = connect;
     }
 
     /**
