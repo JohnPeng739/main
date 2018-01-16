@@ -2,6 +2,8 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpRequest;
+import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
 import org.mx.comps.rbac.rest.vo.*;
@@ -18,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.*;
+import javax.xml.ws.spi.http.HttpContext;
 import java.util.List;
 
 @Component
@@ -236,7 +240,9 @@ public class AccountManageResource {
 
     @Path("accounts/login")
     @POST
-    public DataVO<LoginHistoryVO> login(@QueryParam("userCode") String userCode, AuthenticateAccountPasswordVO vo) {
+    @AuthenticateAround
+    public DataVO<LoginHistoryVO> login(@QueryParam("userCode") String userCode, @Context Request request,
+                                        AuthenticateAccountPasswordVO vo) {
         sessionDataStore.setCurrentUserCode(userCode);
         String accountCode = vo.getAccountCode(), password = vo.getPassword();
         boolean forced = vo.isForcedReplace();
@@ -260,7 +266,9 @@ public class AccountManageResource {
 
     @Path("accounts/{id}/logout")
     @GET
-    public DataVO<LoginHistoryVO> logout(@PathParam("id") String id, @QueryParam("userCode") String userCode) {
+    @AuthenticateAround
+    public DataVO<LoginHistoryVO> logout(@PathParam("id") String id, @QueryParam("userCode") String userCode,
+                                         @Context Request request) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             LoginHistory loginHistory = accountManageService.logout(id);

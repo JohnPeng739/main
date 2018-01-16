@@ -7,14 +7,16 @@ apply from: '../../../dependencies.gradle'
 apply from: '../../../allprojects.gradle'
 
 project(':mx-rbac-service') {
-  version = '3.1.2'
+  version = '3.1.3'
   description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
 
   dependencies {
     compile(
       libs.'mx-utils',
       libs.'mx-dal',
-      libs.'mx-service-utils'
+      libs.'mx-service-utils',
+      libs.'java-jwt',
+      libs.'aspectj'
     )
   }
 }
@@ -26,7 +28,8 @@ project(':mx-rbac-service-hibernate') {
   dependencies {
     compile(
       project(':mx-rbac-service'),
-      libs.'mx-dal-hibernate'
+      libs.'mx-dal-hibernate',
+      libs.'spring-tx'
     )
   }
 }
@@ -47,7 +50,7 @@ project(':mx-rbac-service-mongodb') {
 }
 
 project(':mx-rbac-restful') {
-  version = '3.1.1'
+  version = '3.1.2'
   description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
 
   dependencies {

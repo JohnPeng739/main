@@ -1,4 +1,6 @@
 ext.versions = [
+  'java-jwt'	: '3.3.0',
+  aspectj	: '1.8.9',
   spring	: '4.3.8.RELEASE',
   'spring-data-jpa'	: '2.0.0.RELEASE',
   'spring-mongodb'	: '1.10.4.RELEASE',
@@ -41,6 +43,9 @@ ext.versions = [
 ]
 
 ext.libs = [
+  "java-jwt"		: "com.auth0:java-jwt:${versions.'java-jwt'}",
+
+  "aspectj"		: "org.aspectj:aspectjweaver:${versions.aspectj}",
   "spring-context"	: "org.springframework:spring-context:${versions.spring}",
   "spring-data-jpa"	: "org.springframework.data:spring-data-jpa:${versions.'spring-data-jpa'}",
   "spring-tx"		: "org.springframework:spring-tx:${versions.spring}",
