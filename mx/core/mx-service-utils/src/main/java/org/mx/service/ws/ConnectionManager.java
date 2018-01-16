@@ -2,13 +2,14 @@ package org.mx.service.ws;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.eclipse.jetty.websocket.api.Session;
-import org.mx.StringUtils;
 import org.mx.TypeUtils;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +25,7 @@ public final class ConnectionManager {
     private final Serializable cleanMutex = "CLEAN_TASK";
     private ConcurrentMap<String, Session> connections = null;
     private ConcurrentMap<String, ConnectionPerIp> connectionsPerIp = null;
+    private ConcurrentHashSet<String> blockIps = null;
     private Timer cleanTimer = null;
     private int cleanPeriodMs = 30 * 1000;
     private int testCycleSec = 10, maxNumber = 30, maxIdleSec = 10;
@@ -35,6 +37,7 @@ public final class ConnectionManager {
         super();
         this.connections = new ConcurrentHashMap<>();
         this.connectionsPerIp = new ConcurrentHashMap<>();
+        this.blockIps = new ConcurrentHashSet<>();
     }
 
     /**
@@ -48,6 +51,15 @@ public final class ConnectionManager {
         this.testCycleSec = testCycleSec;
         this.maxNumber = maxNumber;
         this.maxIdleSec = maxIdleSec;
+    }
+
+    /**
+     * 获取当前已经被阻断的IP地址列表
+     *
+     * @return 阻断IP地址列表
+     */
+    public Set<String> getBlockIPs() {
+        return blockIps;
     }
 
     /**
@@ -126,6 +138,7 @@ public final class ConnectionManager {
             String blockIp = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
             int port = session.getRemoteAddress().getPort();
             session.disconnect();
+            blockIps.add(blockIp);
             // 阻断并清除该IP的其他连接
             synchronized (ConnectionManager.this.cleanMutex) {
                 // 清除无效的连接
@@ -250,6 +263,7 @@ public final class ConnectionManager {
                     long currentTime = System.currentTimeMillis();
                     if (((currentTime - connect.lastConnectTime) > (maxIdleSec + 1) * 1000 && !connect.confirmed) ||
                             ((currentTime - connect.lastConnectTime) < (testCycleSec * 1000) && connect.connectNumber >= maxNumber)) {
+                        blockIps.add(ip);
                         connectionsPerIp.remove(ip);
                     }
                 });
