@@ -1,14 +1,11 @@
 package org.mx.spring;
 
-import org.springframework.context.ApplicationContext;
-
 /**
  * 初始化任务抽象类
  *
  * @author : john.peng created on date : 2018/1/17
  */
 public abstract class InitializeTask {
-    protected ApplicationContext context = null;
     private String name = "default";
     private boolean longTimeTask = false;
 
@@ -47,15 +44,6 @@ public abstract class InitializeTask {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * 设置Spring IoC上下文
-     *
-     * @param context 上下文
-     */
-    public void setContext(ApplicationContext context) {
-        this.context = context;
     }
 
     /**
