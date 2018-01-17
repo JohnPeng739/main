@@ -26,7 +26,19 @@ public class StringUtils {
     public static final long GB = KB * MB;
     public static final long TB = KB * GB;
     public static final long PB = KB * TB;
-    private static final Pattern SPACE_PATTERN = Pattern.compile("([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T|P)B?",
+    public static final long SEC = 1000;
+    public static final long MIN = 60 * SEC;
+    public static final long HOUR = 60 * MIN;
+    public static final long DAY = 24 * HOUR;
+    public static final long WEEK = 7 * DAY;
+    public static final long MON = 30 * DAY;
+    public static final long QUAR = 3 * MON;
+    public static final long YEAR = 12 * MON;
+    private static final Pattern SPACE_PATTERN = Pattern.compile(
+            "([0-9]+([\\.,][0-9]+)?)\\s*(|K|M|G|T|P)B?",
+            Pattern.CASE_INSENSITIVE);
+    private static final Pattern TIME_PERIOD_PATTERN = Pattern.compile(
+            "([0-9]+([\\.,][0-9]+)?)\\s*(|SEC|MIN|HOUR|DAY|WEEK|MON|QUAR|YEAR)",
             Pattern.CASE_INSENSITIVE);
 
     /**
@@ -471,6 +483,48 @@ public class StringUtils {
                     return (long) (value * TB);
                 } else if (units.equalsIgnoreCase("P")) {
                     return (long) (value * PB);
+                }
+            } catch (final ParseException e) {
+                // do nothing
+            }
+        }
+        return defaultValue;
+    }
+
+    /**
+     * 将字符串转换为时间周期值，单位为毫秒，如果不是合法的时间周期字符串，则使用默认值。
+     *
+     * @param timePeriod   时间周期字符串
+     * @param defaultValue 默认值
+     * @return 时间周期，单位毫秒
+     */
+    public static long stirng2TimePeriod(String timePeriod, long defaultValue) {
+        if (StringUtils.isBlank(timePeriod)) {
+            return defaultValue;
+        }
+        final Matcher matcher = TIME_PERIOD_PATTERN.matcher(timePeriod);
+        if (matcher.matches()) {
+            try {
+                final double value = NumberFormat.getNumberInstance(Locale.getDefault()).parse(matcher.group(1)).doubleValue();
+                final String units = matcher.group(3);
+                if (units.isEmpty()) {
+                    return (long) value;
+                } else if (units.equalsIgnoreCase("SEC")) {
+                    return (long) (value * SEC);
+                } else if (units.equalsIgnoreCase("MIN")) {
+                    return (long) (value * MIN);
+                } else if (units.equalsIgnoreCase("HOUR")) {
+                    return (long) (value * HOUR);
+                } else if (units.equalsIgnoreCase("DAY")) {
+                    return (long) (value * DAY);
+                } else if (units.equalsIgnoreCase("WEEK")) {
+                    return (long) (value * WEEK);
+                } else if (units.equalsIgnoreCase("MON")) {
+                    return (long) (value * MON);
+                } else if (units.equalsIgnoreCase("QUAR")) {
+                    return (long) (value * QUAR);
+                } else if (units.equalsIgnoreCase("YEAR")) {
+                    return (long) (value * YEAR);
                 }
             } catch (final ParseException e) {
                 // do nothing

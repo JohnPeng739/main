@@ -207,28 +207,71 @@ public class TestStringUtils {
         assertEquals(-1, StringUtils.string2Size("", -1));
         assertEquals(0, StringUtils.string2Size("0", -1));
         assertEquals(0, StringUtils.string2Size("0K", -1));
-        assertEquals(0, StringUtils.string2Size("0M", -1));
+        assertEquals(0, StringUtils.string2Size("0Mb", -1));
         assertEquals(0, StringUtils.string2Size("0G", -1));
         assertEquals(0, StringUtils.string2Size("0T", -1));
         assertEquals(0, StringUtils.string2Size("0P", -1));
         assertEquals(12345, StringUtils.string2Size("12345", -1));
         assertEquals(1 * StringUtils.KB, StringUtils.string2Size("1K", -1));
         assertEquals(1 * StringUtils.MB, StringUtils.string2Size("1M", -1));
-        assertEquals(1 * StringUtils.GB, StringUtils.string2Size("1G", -1));
+        assertEquals(1 * StringUtils.GB, StringUtils.string2Size("1GB", -1));
         assertEquals(1 * StringUtils.TB, StringUtils.string2Size("1T", -1));
-        assertEquals(1 * StringUtils.PB, StringUtils.string2Size("1P", -1));
+        assertEquals(1 * StringUtils.PB, StringUtils.string2Size("1Pb", -1));
         assertEquals(1 * StringUtils.KB, StringUtils.string2Size("1 K", -1));
         assertEquals(1 * StringUtils.MB, StringUtils.string2Size("1 M", -1));
         assertEquals(1 * StringUtils.GB, StringUtils.string2Size("1 G", -1));
         assertEquals(1 * StringUtils.TB, StringUtils.string2Size("1 T", -1));
         assertEquals(1 * StringUtils.PB, StringUtils.string2Size("1 P", -1));
-        assertEquals(1 * StringUtils.KB, StringUtils.string2Size("1k", -1));
+        assertEquals(1 * StringUtils.KB, StringUtils.string2Size("1kb", -1));
         assertEquals(1 * StringUtils.MB, StringUtils.string2Size("1m", -1));
-        assertEquals(1 * StringUtils.GB, StringUtils.string2Size("1g", -1));
+        assertEquals(1 * StringUtils.GB, StringUtils.string2Size("1gB", -1));
         assertEquals(1 * StringUtils.TB, StringUtils.string2Size("1t", -1));
         assertEquals(1 * StringUtils.PB, StringUtils.string2Size("1p", -1));
         assertEquals(0.5 * StringUtils.KB, StringUtils.string2Size("0.5k", -1), 3);
         assertEquals(1.7 * StringUtils.KB, StringUtils.string2Size("1.7k", -1), 3);
         assertEquals(6.843 * StringUtils.KB, StringUtils.string2Size("6.843k", -1), 3);
+    }
+
+    @Test
+    public void testString2TimePeriod() {
+        assertEquals(-1, StringUtils.stirng2TimePeriod(null, -1));
+        assertEquals(-1, StringUtils.stirng2TimePeriod("", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0SEC", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0MIN", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0HOUR", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0DAY", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0WEEK", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0MON", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0QUAR", -1));
+        assertEquals(0, StringUtils.stirng2TimePeriod("0YEAR", -1));
+        assertEquals(12345, StringUtils.stirng2TimePeriod("12345", -1));
+        assertEquals(1 * StringUtils.SEC, StringUtils.stirng2TimePeriod("1SEC", -1));
+        assertEquals(1 * StringUtils.MIN, StringUtils.stirng2TimePeriod("1MIN", -1));
+        assertEquals(1 * StringUtils.HOUR, StringUtils.stirng2TimePeriod("1HOUR", -1));
+        assertEquals(1 * StringUtils.DAY, StringUtils.stirng2TimePeriod("1DAY", -1));
+        assertEquals(1 * StringUtils.WEEK, StringUtils.stirng2TimePeriod("1WEEK", -1));
+        assertEquals(1 * StringUtils.MON, StringUtils.stirng2TimePeriod("1MON", -1));
+        assertEquals(1 * StringUtils.QUAR, StringUtils.stirng2TimePeriod("1QUAR", -1));
+        assertEquals(1 * StringUtils.YEAR, StringUtils.stirng2TimePeriod("1YEAR", -1));
+        assertEquals(1 * StringUtils.SEC, StringUtils.stirng2TimePeriod("1 SEC", -1));
+        assertEquals(1 * StringUtils.MIN, StringUtils.stirng2TimePeriod("1 MIN", -1));
+        assertEquals(1 * StringUtils.HOUR, StringUtils.stirng2TimePeriod("1 HOUR", -1));
+        assertEquals(1 * StringUtils.DAY, StringUtils.stirng2TimePeriod("1 DAY", -1));
+        assertEquals(1 * StringUtils.WEEK, StringUtils.stirng2TimePeriod("1 WEEK", -1));
+        assertEquals(1 * StringUtils.MON, StringUtils.stirng2TimePeriod("1 MON", -1));
+        assertEquals(1 * StringUtils.QUAR, StringUtils.stirng2TimePeriod("1 QUAR", -1));
+        assertEquals(1 * StringUtils.YEAR, StringUtils.stirng2TimePeriod("1 YEAR", -1));
+        assertEquals(1 * StringUtils.SEC, StringUtils.stirng2TimePeriod("1Sec", -1));
+        assertEquals(1 * StringUtils.MIN, StringUtils.stirng2TimePeriod("1Min", -1));
+        assertEquals(1 * StringUtils.HOUR, StringUtils.stirng2TimePeriod("1hoUR", -1));
+        assertEquals(1 * StringUtils.DAY, StringUtils.stirng2TimePeriod("1day", -1));
+        assertEquals(1 * StringUtils.WEEK, StringUtils.stirng2TimePeriod("1weEK", -1));
+        assertEquals(1 * StringUtils.MON, StringUtils.stirng2TimePeriod("1mon", -1));
+        assertEquals(1 * StringUtils.QUAR, StringUtils.stirng2TimePeriod("1QuaR", -1));
+        assertEquals(1 * StringUtils.YEAR, StringUtils.stirng2TimePeriod("1YeaR", -1));
+        assertEquals(0.5 * StringUtils.MON, StringUtils.stirng2TimePeriod("0.5MON", -1), 3);
+        assertEquals(1.7 * StringUtils.YEAR, StringUtils.stirng2TimePeriod("1.7YEAR", -1), 3);
+        assertEquals(6.843 * StringUtils.HOUR, StringUtils.stirng2TimePeriod("6.843 hour", -1), 3);
     }
 }
