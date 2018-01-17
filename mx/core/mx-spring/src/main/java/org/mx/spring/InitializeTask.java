@@ -8,9 +8,28 @@ import org.springframework.context.ApplicationContext;
  * @author : john.peng created on date : 2018/1/17
  */
 public abstract class InitializeTask {
+    protected ApplicationContext context = null;
     private String name = "default";
     private boolean longTimeTask = false;
-    private ApplicationContext context = null;
+
+    /**
+     * 默认的构造函数
+     */
+    public InitializeTask() {
+        super();
+    }
+
+    /**
+     * 默认的构造函数
+     *
+     * @param name         任务名称
+     * @param longTimeTask 是否长时间任务，长时间任务将在独立的线程中执行。
+     */
+    public InitializeTask(String name, boolean longTimeTask) {
+        this();
+        this.name = name;
+        this.longTimeTask = longTimeTask;
+    }
 
     /**
      * 获取是否长时间任务，长时间任务将在独立线程中执行。
@@ -22,30 +41,12 @@ public abstract class InitializeTask {
     }
 
     /**
-     * 设置是否长时间任务，长时间任务将在独立线程中执行。
-     *
-     * @param longTimeTask 长时间任务设置为true，否则设置为false
-     */
-    protected void setLongTimeTask(boolean longTimeTask) {
-        this.longTimeTask = longTimeTask;
-    }
-
-    /**
      * 获取任务名称
      *
      * @return 名称
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * 设置任务名称
-     *
-     * @param name 名称
-     */
-    protected void setName(String name) {
-        this.name = name;
     }
 
     /**
