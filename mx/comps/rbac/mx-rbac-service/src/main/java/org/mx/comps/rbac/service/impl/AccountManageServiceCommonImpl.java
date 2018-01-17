@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.DigestUtils;
 import org.mx.StringUtils;
+import org.mx.comps.jwt.JwtService;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
 import org.mx.comps.rbac.dal.entity.Role;
@@ -33,6 +34,9 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
     private static final Log logger = LogFactory.getLog(AccountManageServiceCommonImpl.class);
 
     protected GeneralDictAccessor accessor = null;
+
+    @Autowired
+    private JwtService jwtService = null;
 
     @Autowired
     private OperateLogService operateLogService = null;
@@ -196,6 +200,8 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         }
         loginHistory.setLoginTime(new Date().getTime());
         loginHistory.setOnline(true);
+        // 设置令牌
+        loginHistory.setToken(jwtService.sign(account.getCode()));
         loginHistory = accessor.save(loginHistory, false);
         if (operateLogService != null) {
             operateLogService.writeLog(String.format("账户[code=%s, name=%s]登录系统成功。",

@@ -5,6 +5,11 @@ import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.glassfish.jersey.server.ContainerRequest;
+import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
+import org.mx.service.rest.vo.DataVO;
+import org.mx.service.rest.vo.PaginationDataVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.Request;
@@ -19,6 +24,9 @@ import javax.ws.rs.core.Request;
 public class AuthenticateAspect {
     private static final Log logger = LogFactory.getLog(AuthenticateAspect.class);
 
+    @Autowired
+    private JwtService jwtService = null;
+
     /**
      * Request参数在最后
      *
@@ -28,7 +36,7 @@ public class AuthenticateAspect {
      * @return 处理结果
      * @throws Throwable 处理过程中发生的异常
      */
-    @Around(value = "@annotation(around) && args(request)")
+    @Around(value = "@annotation(around) && args(..,request)")
     public Object aroundBefore(ProceedingJoinPoint pjp, AuthenticateAround around, Request request) throws Throwable {
         return around(pjp, around, request);
     }
@@ -47,8 +55,9 @@ public class AuthenticateAspect {
         return around(pjp, around, request);
     }
 
+    // 环绕截面
     private Object around(ProceedingJoinPoint pjp, AuthenticateAround around, Request request) throws Throwable {
-        Object result = authenticate(pjp);
+        Object result = authenticate(pjp, around, request);
         if (result == null) {
             // 身份认证成功，调取代理方法
             result = pjp.proceed();
@@ -56,11 +65,32 @@ public class AuthenticateAspect {
         return result;
     }
 
-    private Object authenticate(ProceedingJoinPoint pjp) {
-        // TODO 使用JWT进行身份认证
+    // 返回一个没有通过身份认证的结果
+    private Object notAuthenticate(AuthenticateAround around) {
+        Class<?> clazz = around.returnValueClass();
+        if (clazz.isAssignableFrom(DataVO.class)) {
+            return new DataVO<>(UserInterfaceRbacErrorException.RbacErrors.NOT_AUTHENTICATED);
+        } else if (clazz.isAssignableFrom(PaginationDataVO.class)) {
+            return new PaginationDataVO<>(UserInterfaceRbacErrorException.RbacErrors.NOT_AUTHENTICATED);
+        } else {
+            return "Not authenticate.";
+        }
+    }
+
+    // 进行身份认证
+    private Object authenticate(ProceedingJoinPoint pjp, AuthenticateAround around, Request request) {
         if (logger.isDebugEnabled()) {
             logger.debug("Starting authenticate ....");
         }
-        return null;
+        try {
+            if (jwtService.verify((ContainerRequest) request)) {
+                return null;
+            }
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("JWT verify fail.", ex);
+            }
+        }
+        return notAuthenticate(around);
     }
 }

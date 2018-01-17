@@ -19,4 +19,11 @@ public @interface AuthenticateAround {
      * @return JWT字段名
      */
     String value() default "authenticate";
+
+    /**
+     * 拦截方法的返回值类型
+     *
+     * @return 返回值类型
+     */
+    Class<?> returnValueClass();
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 public class LoginHistoryVO extends BaseVO {
     private AccountVO account;
+    private String token;
     private long loginTime, logoutTime;
     private boolean online;
 
@@ -19,6 +20,7 @@ public class LoginHistoryVO extends BaseVO {
         loginHistoryVO.loginTime = loginHistory.getLoginTime();
         loginHistoryVO.logoutTime = loginHistory.getLogoutTime();
         loginHistoryVO.online = loginHistory.isOnline();
+        loginHistoryVO.token = loginHistory.getToken();
         if (loginHistory.getAccount() != null) {
             AccountVO accountVO = new AccountVO();
             AccountVO.transform(loginHistory.getAccount(), accountVO);
@@ -39,35 +41,43 @@ public class LoginHistoryVO extends BaseVO {
         return loginHistoryVOs;
     }
 
-    public void setAccount(AccountVO account) {
-        this.account = account;
+    public String getToken() {
+        return token;
     }
 
-    public void setLoginTime(long loginTime) {
-        this.loginTime = loginTime;
-    }
-
-    public void setLogoutTime(long logoutTime) {
-        this.logoutTime = logoutTime;
-    }
-
-    public void setOnline(boolean online) {
-        this.online = online;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public AccountVO getAccount() {
         return account;
     }
 
+    public void setAccount(AccountVO account) {
+        this.account = account;
+    }
+
     public long getLoginTime() {
         return loginTime;
+    }
+
+    public void setLoginTime(long loginTime) {
+        this.loginTime = loginTime;
     }
 
     public long getLogoutTime() {
         return logoutTime;
     }
 
+    public void setLogoutTime(long logoutTime) {
+        this.logoutTime = logoutTime;
+    }
+
     public boolean isOnline() {
         return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 }

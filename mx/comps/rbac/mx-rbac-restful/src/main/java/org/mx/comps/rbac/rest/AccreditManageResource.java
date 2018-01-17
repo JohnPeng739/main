@@ -3,6 +3,7 @@ package org.mx.comps.rbac.rest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
+import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Accredit;
 import org.mx.comps.rbac.rest.vo.AccreditInfoVO;
 import org.mx.comps.rbac.rest.vo.AccreditVO;
@@ -41,6 +42,7 @@ public class AccreditManageResource {
 
     @Path("accredits")
     @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<AccreditVO>> accredits() {
         try {
             List<Accredit> accredits = accessor.list(Accredit.class);
@@ -50,7 +52,7 @@ public class AccreditManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List accredits fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -60,6 +62,7 @@ public class AccreditManageResource {
 
     @Path("accredits")
     @POST
+    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<AccreditVO>> accredits(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -72,7 +75,7 @@ public class AccreditManageResource {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List accredits fail.", ex);
             }
             return new PaginationDataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -82,6 +85,7 @@ public class AccreditManageResource {
 
     @Path("accredits/{id}")
     @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccreditVO> getAccredit(@QueryParam("id") String id) {
         if (StringUtils.isBlank(id)) {
             return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
@@ -95,7 +99,7 @@ public class AccreditManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Get accredit fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -105,6 +109,7 @@ public class AccreditManageResource {
 
     @Path("accredits/new")
     @POST
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccreditVO> newAccredit(@QueryParam("userCode") String userCode, AccreditInfoVO accreditInfoVO) {
         try {
             Accredit accredit = accreditManageService.accredit(accreditInfoVO.getAccreditInfo());
@@ -115,7 +120,7 @@ public class AccreditManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Create accredit fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -125,6 +130,7 @@ public class AccreditManageResource {
 
     @Path("accredits/{id}")
     @DELETE
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccreditVO> deleteAccredit(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
         if (StringUtils.isBlank(userCode) || StringUtils.isBlank(id)) {
             return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
@@ -140,7 +146,7 @@ public class AccreditManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Delete accredit fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(

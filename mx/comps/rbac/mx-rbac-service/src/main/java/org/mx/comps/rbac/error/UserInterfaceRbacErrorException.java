@@ -29,6 +29,9 @@ public class UserInterfaceRbacErrorException extends UserInterfaceException {
      * RBAC(基于角色的访问控制)操作错误枚举定义
      */
     public enum RbacErrors implements UserInterfaceError {
+        UNSUPPORTED_ALGORITHM("指定的JWT算法不存在。"),
+        NOT_AUTHENTICATED("没有通过身份认证。"),
+
         USER_NOT_FOUND( "指定的用户不存在。"),
 
         ACCOUNT_NOT_FOUND("指定的账户不存在。"),

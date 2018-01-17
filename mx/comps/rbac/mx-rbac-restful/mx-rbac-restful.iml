@@ -17,11 +17,11 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.8/59e23a529f3c96f10ab67268d6a96c0e553264ef/mx-utils-2.1.8.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.1.9/mx-utils-2.1.9.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.8/36dd8e8b0459c9b520582611c2619417a706c62b/mx-utils-2.1.8-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.1.9/mx-utils-2.1.9-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1051,11 +1051,11 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.8/59e23a529f3c96f10ab67268d6a96c0e553264ef/mx-utils-2.1.8.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.1.9/mx-utils-2.1.9.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.8/36dd8e8b0459c9b520582611c2619417a706c62b/mx-utils-2.1.8-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.1.9/mx-utils-2.1.9-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2096,11 +2096,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.8/59e23a529f3c96f10ab67268d6a96c0e553264ef/mx-utils-2.1.8.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.1.9/mx-utils-2.1.9.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.mx/mx-utils/2.1.8/36dd8e8b0459c9b520582611c2619417a706c62b/mx-utils-2.1.8-sources.jar!/"/>
+          <root url="jar:///Users/john/.m2/repository/org/mx/mx-utils/2.1.9/mx-utils-2.1.9-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

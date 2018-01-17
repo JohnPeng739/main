@@ -23,6 +23,20 @@ public interface LoginHistory extends Base, Comparable<LoginHistory> {
     void setAccount(Account account);
 
     /**
+     * 获取访问令牌
+     *
+     * @return 令牌
+     */
+    String getToken();
+
+    /**
+     * 设置访问令牌
+     *
+     * @param token 令牌
+     */
+    void setToken(String token);
+
+    /**
      * 获取登录时间
      *
      * @return 时间

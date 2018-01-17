@@ -2,6 +2,7 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.rest.vo.AccountInfoVO;
@@ -44,6 +45,7 @@ public class UserManageResource {
 
     @Path("users")
     @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<UserVO>> listUsers() {
         try {
             List<User> users = accessor.list(User.class);
@@ -53,7 +55,7 @@ public class UserManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List users fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -63,6 +65,7 @@ public class UserManageResource {
 
     @Path("users")
     @POST
+    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<UserVO>> listUsersPagination(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -75,7 +78,7 @@ public class UserManageResource {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List users fail.", ex);
             }
             return new PaginationDataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -85,6 +88,7 @@ public class UserManageResource {
 
     @Path("users/{id}")
     @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<UserVO> getUser(@PathParam("id") String id) {
         try {
             User user = accessor.getById(id, User.class);
@@ -95,7 +99,7 @@ public class UserManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Get user fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -105,6 +109,7 @@ public class UserManageResource {
 
     @Path("users/new")
     @POST
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<UserVO> newUser(@QueryParam("userCode") String userCode, UserInfoVO userInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
@@ -117,7 +122,7 @@ public class UserManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Create a user fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -127,6 +132,7 @@ public class UserManageResource {
 
     @Path("users/{userId}")
     @PUT
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<UserVO> saveUser(@QueryParam("userCode") String userCode, @PathParam("userId") String userId,
                                    UserInfoVO userInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
@@ -140,7 +146,7 @@ public class UserManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Save user fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -150,6 +156,7 @@ public class UserManageResource {
 
     @Path("users/{userId}")
     @DELETE
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<UserVO> deleteUser(@QueryParam("userCode") String userCode, @PathParam("userId") String userId) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
@@ -162,7 +169,7 @@ public class UserManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Delete user fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -172,6 +179,7 @@ public class UserManageResource {
 
     @Path("users/{userId}/allocate")
     @POST
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccountVO> allocateAccount(@QueryParam("userCode") String userCode, @PathParam("userId") String userId,
                                              AccountInfoVO accountInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
@@ -185,7 +193,7 @@ public class UserManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Allocate account fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(

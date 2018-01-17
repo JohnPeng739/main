@@ -2,7 +2,6 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpRequest;
 import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
@@ -20,10 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import javax.xml.ws.spi.http.HttpContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Component
@@ -45,7 +45,8 @@ public class AccountManageResource {
 
     @Path("logs")
     @GET
-    public DataVO<List<OperateLogVO>> logs() {
+    @AuthenticateAround(returnValueClass = DataVO.class)
+    public DataVO<List<OperateLogVO>> logs(@Context Request request) {
         try {
             List<OperateLog> logs = accessor.list(OperateLog.class);
             List<OperateLogVO> vos = OperateLogVO.transformLogVOs(logs);
@@ -54,7 +55,7 @@ public class AccountManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List logs fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -64,7 +65,8 @@ public class AccountManageResource {
 
     @Path("logs")
     @POST
-    public PaginationDataVO<List<OperateLogVO>> logs(Pagination pagination) {
+    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
+    public PaginationDataVO<List<OperateLogVO>> logs(Pagination pagination, @Context Request request) {
         if (pagination == null) {
             pagination = new Pagination();
         }
@@ -76,7 +78,7 @@ public class AccountManageResource {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List logs fail.", ex);
             }
             return new PaginationDataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -86,6 +88,7 @@ public class AccountManageResource {
 
     @Path("loginHistories")
     @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<LoginHistoryVO>> loginHistories() {
         try {
             List<LoginHistory> histories = accessor.list(LoginHistory.class);
@@ -95,7 +98,7 @@ public class AccountManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List login histories fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -105,6 +108,7 @@ public class AccountManageResource {
 
     @Path("loginHistories")
     @POST
+    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<LoginHistoryVO>> loginHistories(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -117,7 +121,7 @@ public class AccountManageResource {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List login histories fail.", ex);
             }
             return new PaginationDataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -127,6 +131,7 @@ public class AccountManageResource {
 
     @Path("accounts")
     @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<AccountVO>> listAccounts() {
         try {
             List<Account> accounts = accessor.list(Account.class);
@@ -135,7 +140,7 @@ public class AccountManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List accounts fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -145,6 +150,7 @@ public class AccountManageResource {
 
     @Path("accounts")
     @POST
+    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<AccountVO>> pagingAccounts(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -156,7 +162,7 @@ public class AccountManageResource {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List accounts fail.", ex);
             }
             return new PaginationDataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -166,6 +172,7 @@ public class AccountManageResource {
 
     @Path("accounts/{id}")
     @PUT
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccountVO> saveAccount(@PathParam("id") String id, @QueryParam("userCode") String userCode,
                                          AccountInfoVO accountInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
@@ -180,7 +187,7 @@ public class AccountManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Save account fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -190,6 +197,7 @@ public class AccountManageResource {
 
     @Path("accounts/{id}")
     @DELETE
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccountVO> invalidateAccount(@PathParam("id") String id, @QueryParam("userCode") String userCode) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
@@ -202,7 +210,7 @@ public class AccountManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Invalidate account fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -212,6 +220,7 @@ public class AccountManageResource {
 
     @Path("accounts/{id}/password/change")
     @POST
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccountVO> changePassword(@PathParam("id") String id, @QueryParam("userCode") String userCode, ChangePasswordVO vo) {
         sessionDataStore.setCurrentUserCode(userCode);
         if (vo == null) {
@@ -230,7 +239,7 @@ public class AccountManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error(String.format("Change user[%s] password fail.", userCode), ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -240,10 +249,9 @@ public class AccountManageResource {
 
     @Path("accounts/login")
     @POST
-    @AuthenticateAround
-    public DataVO<LoginHistoryVO> login(@QueryParam("userCode") String userCode, @Context Request request,
+    public DataVO<LoginHistoryVO> login(@Context Request request, @Context Response response,
                                         AuthenticateAccountPasswordVO vo) {
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(vo.getAccountCode());
         String accountCode = vo.getAccountCode(), password = vo.getPassword();
         boolean forced = vo.isForcedReplace();
         try {
@@ -256,7 +264,7 @@ public class AccountManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error(String.format("User[%s] login fail.", vo.getAccountCode()), ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -266,7 +274,7 @@ public class AccountManageResource {
 
     @Path("accounts/{id}/logout")
     @GET
-    @AuthenticateAround
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<LoginHistoryVO> logout(@PathParam("id") String id, @QueryParam("userCode") String userCode,
                                          @Context Request request) {
         sessionDataStore.setCurrentUserCode(userCode);
@@ -280,7 +288,7 @@ public class AccountManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error(String.format("User[%s] logout fail.", userCode), ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(

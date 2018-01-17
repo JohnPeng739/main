@@ -17,6 +17,8 @@ import javax.persistence.Table;
 public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
     @ManyToOne(targetEntity = AccountEntity.class)
     private Account account;
+    @Column(name = "TOKEN")
+    private String token;
     @Column(name = "LOGIN_TIME")
     private long loginTime;
     @Column(name = "LOGOUT_TIME")
@@ -26,11 +28,12 @@ public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
 
     @Override
     public int compareTo(LoginHistory o) {
-        return (int)(loginTime - o.getLoginTime());
+        return (int) (loginTime - o.getLoginTime());
     }
 
     /**
      * {@inheritDoc}
+     *
      * @see LoginHistory#getAccount()
      */
     @Override
@@ -40,33 +43,7 @@ public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
 
     /**
      * {@inheritDoc}
-     * @see LoginHistory#getLoginTime()
-     */
-    @Override
-    public long getLoginTime() {
-        return loginTime;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see LoginHistory#getLogoutTime()
-     */
-    @Override
-    public long getLogoutTime() {
-        return logoutTime;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see LoginHistory#isOnline()
-     */
-    @Override
-    public boolean isOnline() {
-        return online;
-    }
-
-    /**
-     * {@inheritDoc}
+     *
      * @see LoginHistory#setAccount(Account)
      */
     @Override
@@ -76,6 +53,37 @@ public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
 
     /**
      * {@inheritDoc}
+     *
+     * @see LoginHistory#getToken()
+     */
+    @Override
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see LoginHistory#setToken(String)
+     */
+    @Override
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see LoginHistory#getLoginTime()
+     */
+    @Override
+    public long getLoginTime() {
+        return loginTime;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see LoginHistory#setLoginTime(long)
      */
     @Override
@@ -85,6 +93,17 @@ public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
 
     /**
      * {@inheritDoc}
+     *
+     * @see LoginHistory#getLogoutTime()
+     */
+    @Override
+    public long getLogoutTime() {
+        return logoutTime;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see LoginHistory#setLogoutTime(long)
      */
     @Override
@@ -94,6 +113,17 @@ public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
 
     /**
      * {@inheritDoc}
+     *
+     * @see LoginHistory#isOnline()
+     */
+    @Override
+    public boolean isOnline() {
+        return online;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see LoginHistory#setOnline(boolean)
      */
     @Override

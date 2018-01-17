@@ -2,12 +2,12 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Privilege;
 import org.mx.comps.rbac.rest.vo.PrivilegeVO;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.service.GeneralAccessor;
-import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceException;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -37,6 +37,7 @@ public class PrivilegeManageResource {
 
     @Path("privileges")
     @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<PrivilegeVO>> privileges() {
         try {
             List<Privilege> privileges = accessor.list(Privilege.class);
@@ -46,7 +47,7 @@ public class PrivilegeManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List privileges fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -56,6 +57,7 @@ public class PrivilegeManageResource {
 
     @Path("privileges")
     @POST
+    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<PrivilegeVO>> privileges(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -68,7 +70,7 @@ public class PrivilegeManageResource {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("List privileges fail.", ex);
             }
             return new PaginationDataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -78,6 +80,7 @@ public class PrivilegeManageResource {
 
     @Path("privileges/{id}")
     @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> getPrivilege(@PathParam("id") String id) {
         try {
             Privilege privilege = accessor.getById(id, Privilege.class);
@@ -88,7 +91,7 @@ public class PrivilegeManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Get privilege fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -110,7 +113,7 @@ public class PrivilegeManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Save privilege fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
@@ -120,18 +123,21 @@ public class PrivilegeManageResource {
 
     @Path("privileges/new")
     @POST
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> savePrivilege(@QueryParam("userCode") String userCode, PrivilegeVO privilegeVO) {
         return savePrivilegeInfo(userCode, privilegeVO);
     }
 
     @Path("privileges/{id}")
     @PUT
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> savePrivilege(@QueryParam("userCode") String userCode, @PathParam("id") String id, PrivilegeVO privilegeVO) {
         return savePrivilegeInfo(userCode, privilegeVO);
     }
 
     @Path("privilege/{id}")
     @DELETE
+    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> savePrivilege(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
@@ -144,7 +150,7 @@ public class PrivilegeManageResource {
             return new DataVO<>(ex);
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Save privilege fail.", ex);
             }
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
