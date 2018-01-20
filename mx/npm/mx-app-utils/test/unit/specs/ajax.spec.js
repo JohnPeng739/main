@@ -26,9 +26,16 @@ describe('test ajax', () => {
             done()
         })
         let fnError = jest.fn(err => {
+            console.log(err)
             expect(1).toBe(0)
             done()
         })
+        let token = 'abcdefg'
+        ajax.setToken(token)
+        expect(ajax.getToken()).toBe('Bearer ' + token)
+        token = 'Bearer ' + 'abcdefg'
+        ajax.setToken(token)
+        expect(ajax.getToken()).toBe(token)
         ajax.get('/rest/get/success', fnSuccess, fnError)
     })
     it('test get error method', (done) => {

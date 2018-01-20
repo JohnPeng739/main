@@ -1,6 +1,6 @@
 # mx-app-utils
 ====
-<h5>版本： V1.6.0</h5>
+<h5>版本： V1.6.1</h5>
 一个非常简单使用的面向HTML5的WEB开发的工具类模块。目前封装了:
 1. logger：LOG（debug、info、warn、error）
 2. ajax：使用axios的简单AJAX调用工具方法
@@ -29,6 +29,9 @@
 
 
 ## 修改历史
+**1.6.1**<br>
+1. 为ajax添加token方法，便于设置全局的token串，用于身份认证。
+
 **1.6.0**<br>
 1. 添加了一个通用的Js WebSocket客户端MyWebSocket。
 
