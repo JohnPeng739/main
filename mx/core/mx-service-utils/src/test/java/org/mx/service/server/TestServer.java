@@ -63,6 +63,7 @@ public class TestServer {
 
             invoke.close();
         } catch (RestInvokeException ex) {
+            ex.printStackTrace();
             fail(ex.getMessage());
         }
     }
