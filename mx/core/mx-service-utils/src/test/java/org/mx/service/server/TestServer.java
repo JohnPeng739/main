@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mx.service.rest.client.RestClientInvoke;
 import org.mx.service.rest.client.RestInvokeException;
 import org.mx.service.server.config.TestConfig;
+import org.mx.service.server.config.TestConfigSsl;
 import org.mx.service.ws.client.BaseWebsocketClientListener;
 import org.mx.service.ws.client.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -91,6 +92,7 @@ public class TestServer {
             res.close();
             client.close();
         } catch (Exception ex) {
+            ex.printStackTrace();
             fail(ex.getMessage());
         }
     }

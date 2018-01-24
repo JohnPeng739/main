@@ -2,15 +2,20 @@ package org.mx.service.server;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.mx.StringUtils;
 import org.mx.service.server.servlet.BaseHttpServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -64,6 +69,22 @@ public class ServletServerFactory extends AbstractServerFactory {
                 }
             }
 
+            boolean security = this.env.getProperty("servlet.security", Boolean.class, false);
+            if (security) {
+                String keystorePath = env.getProperty("servlet.keystore", "./keystore");
+                SslContextFactory sslContextFactory = new SslContextFactory();
+                sslContextFactory.setKeyStorePath(keystorePath);
+                sslContextFactory.setKeyStorePassword("OBF:1j8x1iup1kfv1j9t1nl91fia1fek1nip1j591kcj1irx1j65");
+                sslContextFactory.setKeyManagerPassword("OBF:1k8a1lmp18jj18cg18ce18jj1lj11k5w");
+                ServerConnector sslConnector = new ServerConnector(server, sslContextFactory);
+                sslConnector.setPort(port);
+                server.setConnectors(new Connector[]{sslConnector});
+                if (logger.isDebugEnabled()) {
+                    logger.debug("The channel is security by ssl.");
+                }
+            } else {
+                //
+            }
             server.setStopAtShutdown(true);
             server.setStopTimeout(10);
             super.setServer(server);

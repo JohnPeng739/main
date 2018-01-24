@@ -2,7 +2,6 @@ package org.mx.service.ws;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.TypeUtils;
 
@@ -14,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Websocket连接管理器
@@ -25,7 +25,7 @@ public final class ConnectionManager {
     private final Serializable cleanMutex = "CLEAN_TASK";
     private ConcurrentMap<String, Session> connections = null;
     private ConcurrentMap<String, ConnectionPerIp> connectionsPerIp = null;
-    private ConcurrentHashSet<String> blockIps = null;
+    private ConcurrentSkipListSet<String> blockIps = null;
     private Timer cleanTimer = null;
     private int cleanPeriodMs = 30 * 1000;
     private int testCycleSec = 10, maxNumber = 30, maxIdleSec = 10;
@@ -37,7 +37,7 @@ public final class ConnectionManager {
         super();
         this.connections = new ConcurrentHashMap<>();
         this.connectionsPerIp = new ConcurrentHashMap<>();
-        this.blockIps = new ConcurrentHashSet<>();
+        this.blockIps = new ConcurrentSkipListSet<>();
     }
 
     /**

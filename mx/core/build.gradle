@@ -91,6 +91,7 @@ project(':mx-service-utils') {
       libs.'jersey-server',
       libs.'jersey-media-jackson',
       libs.'jersey-jetty-http',
+      libs.'jersey-jetty-servlet',
       libs.'jersey-hk2',
       libs.'jetty-server',
       libs.'jetty-servlet',
