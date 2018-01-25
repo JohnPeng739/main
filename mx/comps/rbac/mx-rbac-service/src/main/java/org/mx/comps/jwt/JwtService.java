@@ -1,8 +1,10 @@
 package org.mx.comps.jwt;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.mx.StringUtils;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Component;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * Jwt服务类
@@ -79,6 +84,17 @@ public class JwtService {
      * @return 如果验证通过，返回true；否则返回false
      */
     public boolean verify(ContainerRequest request) {
+        return verify(request, null);
+    }
+
+    /**
+     * Http请求的令牌身份认证，令牌一般在HTTP的token或Authorization头中。
+     *
+     * @param request  HTTP请求
+     * @param fnVerify 自定义的校验方法，接收数据结集合，校验成功返回true，否则返回false。
+     * @return 如果验证通过，返回true；否则返回false
+     */
+    public boolean verify(ContainerRequest request, Predicate<Map<String, Claim>> fnVerify) {
         init();
         String token = request.getHeaderString("token");
         if (StringUtils.isBlank(token)) {
@@ -91,16 +107,25 @@ public class JwtService {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.NOT_AUTHENTICATED);
         }
         DecodedJWT jwt = verifier.verify(token);
-        return jwt != null;
+        if (jwt == null) {
+            // 签名校验失败
+            return false;
+        } else if (fnVerify != null) {
+            // 有自定义校验方法
+            return fnVerify.test(jwt.getClaims());
+        } else {
+            // 签名校验成功，无自定义校验方法
+            return true;
+        }
     }
 
     /**
-     * 对登录后的用户生成身份令牌
+     * 根据传输的验证内容，对登录后的用户生成身份令牌
      *
-     * @param userCode 用户代码
+     * @param claims 需要验证的载荷内容
      * @return 身份令牌
      */
-    public String sign(String userCode) {
+    public String sign(Map<String, Object> claims) {
         init();
         Date expiredDate = new Date(System.currentTimeMillis() + timePeriod);
         if (expiredClock >= 0 && expiredClock <= 24) {
@@ -110,7 +135,39 @@ public class JwtService {
             calendar.set(Calendar.HOUR_OF_DAY, expiredClock);
             expiredDate = calendar.getTime();
         }
-        return JWT.create().withIssuer(issue).withSubject(subject).withExpiresAt(expiredDate)
-                .withClaim("user", userCode).sign(algorithm);
+        JWTCreator.Builder builder = JWT.create().withIssuer(issue).withSubject(subject).withExpiresAt(expiredDate);
+        if (claims != null && !claims.isEmpty()) {
+            claims.forEach((k, v) -> {
+                if (v instanceof Boolean) {
+                    builder.withClaim(k, (Boolean) v);
+                } else if (v instanceof Integer) {
+                    builder.withClaim(k, (Integer) v);
+                } else if (v instanceof Long) {
+                    builder.withClaim(k, (Long) v);
+                } else if (v instanceof Date) {
+                    builder.withClaim(k, (Date) v);
+                } else if (v instanceof String) {
+                    builder.withClaim(k, (String) v);
+                } else if (v instanceof Double) {
+                    builder.withClaim(k, (Double) v);
+                } else {
+                    // unsupported type, transform to string
+                    builder.withClaim(k, v.toString());
+                }
+            });
+        }
+        return builder.sign(algorithm);
+    }
+
+    /**
+     * 对登录后的用户生成身份令牌
+     *
+     * @param userCode 用户代码
+     * @return 身份令牌
+     */
+    public String sign(String userCode) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userCode);
+        return sign(map);
     }
 }
