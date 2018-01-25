@@ -2,6 +2,7 @@
   <layout-normal :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
                  notice-path="notice" :notice-value="noticeValue" v-on:logout="handleLogout"
                  v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
+    <router-view slot="content-body"></router-view>
   </layout-normal>
 </template>
 

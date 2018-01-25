@@ -20,7 +20,7 @@
         </el-breadcrumb>
         <div class="content-body">
           <transition name="el-zoom-in-top">
-            <router-view></router-view>
+            <slot name="content-body"></slot>
           </transition>
         </div>
       </div>
