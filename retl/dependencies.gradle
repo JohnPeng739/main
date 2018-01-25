@@ -25,7 +25,10 @@ ext.versions = [
   'mx-rest-utils'       : '1.1.8',
   'mx-dal'      : '1.0.7',
   'mx-dal-hibernate'    : '1.0.18',
-  'mx-dal-mongodb'      : '1.0.7'
+  'mx-dal-mongodb'      : '1.0.7',
+  'mx-comps-rbac-service'	: '3.0.0',
+  'mx-comps-rbac-service-hibernate'	: '3.0.0',
+  'mx-comps-rbac-restful'	: '3.0.0'
 ]
 
 ext.libs = [
@@ -90,5 +93,8 @@ ext.libs = [
   "mx-rest-utils"       : "org.mx:mx-rest-utils:${versions.'mx-rest-utils'}",
   "mx-dal"              : "org.mx:mx-dal:${versions.'mx-dal'}",
   "mx-dal-hibernate"    : "org.mx:mx-dal-hibernate:${versions.'mx-dal-hibernate'}",
-  "mx-dal-mongodb"      : "org.mx:mx-dal-mongodb:${versions.'mx-dal-mongodb'}"
+  "mx-dal-mongodb"      : "org.mx:mx-dal-mongodb:${versions.'mx-dal-mongodb'}",
+  "mx-comps-rbac-service"	: "org.mx:mx-comps-rbac-service:${versions.'mx-comps-rbac-service'}",
+  "mx-comps-rbac-service-hibernate"       : "org.mx:mx-comps-rbac-service-hibernate:${versions.'mx-comps-rbac-service-hibernate'}",
+  "mx-comps-rbac-restful"       : "org.mx:mx-comps-rbac-restful:${versions.'mx-comps-rbac-restful'}"
 ]
