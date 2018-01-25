@@ -2,7 +2,7 @@
   <el-row type="flex" justify="center">
     <el-col :span="8" class="header-col1">
       <el-button type="text" @click="handleNavToggled">
-        <icon name="apps" class="toggle-icon"></icon>
+        <mx-icon name="apps" class="toggle-icon"></mx-icon>
       </el-button>
       <div class="title">{{title}}</div>
     </el-col>
@@ -14,18 +14,18 @@
         <span class="account">{{loginUserName}}</span>
       </el-button>
       <el-button class="button" type="text" @click="handleLogout">
-        <icon name="exit_to_app" class="logout-icon"></icon>
+        <mx-icon name="exit_to_app" class="logout-icon"></mx-icon>
       </el-button>
     </el-col>
   </el-row>
 </template>
 
 <script>
-  import Icon from '@/components/icon.vue'
+  import MxIcon from '@/components/mx-icon'
 
   export default {
-    name: 'layout-normal-header',
-    components: {Icon},
+    name: 'mx-normal-header',
+    components: {MxIcon},
     props: {
       title: String,
       loginUserName: String

@@ -16,7 +16,7 @@
   import { logger } from 'mx-app-utils'
 
   export default {
-    name: 'dialog-pane',
+    name: 'mx-dialog',
     props: {
       title: {type: String, default: ''}
     },

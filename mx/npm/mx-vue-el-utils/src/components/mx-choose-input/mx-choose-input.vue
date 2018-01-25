@@ -17,7 +17,7 @@
     </el-popover>
     <el-input v-model="dataDisplay" :readonly="readonly" :placeholder="placeholder" :size="size">
       <el-button v-if="showClear" type="text" slot="suffix" size="mini" :disabled="disabled" @click="handleClear">
-        <icon name="close"></icon>
+        <mx-icon name="close"></mx-icon>
       </el-button>
       <el-button slot="append" :disabled="disabled" v-popover:popover>{{$t('button.choose')}}</el-button>
     </el-input>
@@ -26,11 +26,11 @@
 
 <script>
   import {formatter} from 'mx-app-utils'
-  import notify from '@/utils/notify'
-  import Icon from '@/components/icon.vue'
+  import MxNotify from '@/utils/mx-notify'
+  import MxIcon from '@/components/mx-icon'
 
   export default {
-    name: 'choose-input',
+    name: 'mx-choose-input',
     props: {
       value: {},
       displayFormat: String,
@@ -40,7 +40,7 @@
       disabled: {type: Boolean, default: false},
       size: {type: String, default: 'small'}
     },
-    components: {Icon},
+    components: {MxIcon},
     data () {
       return {
         visible: false
@@ -81,7 +81,7 @@
             this.$emit('input', selected)
             this.hide()
           } else {
-            notify.info(this.$t('message.choose'))
+            MxNotify.info(this.$t('message.choose'))
           }
         })
       }

@@ -36,8 +36,8 @@
 </template>
 
 <script>
-  import ChooseInput from '@/components/form/choose-input.vue'
-  import ChooseTag from '@/components/form/choose-tag.vue'
+  import ChooseInput from '@/components/form/mx-choose-input.vue'
+  import ChooseTag from '@/components/form/mx-choose-tag.vue'
 
   export default {
     name: 'page-test-choose-input',

@@ -1,14 +1,14 @@
-import {ajax, logger} from 'mx-app-utils'
-import locale from '@/assets/lang'
-import notify from './notify'
+import { ajax, logger } from 'mx-app-utils'
+import { t } from '../locale/index'
+import MxNotify from '../utils/mx-notify'
 
 let defaultError = (errorMessage) => {
   if (errorMessage.response) {
     logger.debug(errorMessage.response.status)
-    let msg = locale.i18n.t('error.ajax.default', {stats: errorMessage.response.status, text: errorMessage.response.statusText})
-    notify.error(msg)
+    let msg = t('error.ajax.default', {stats: errorMessage.response.status, text: errorMessage.response.statusText})
+    MxNotify.error(msg)
   } else {
-    notify.error(errorMessage)
+    MxNotify.error(errorMessage)
   }
 }
 
@@ -35,4 +35,7 @@ let put = (url, data, success, error) => ajax.put(preurl(url), data, success, er
 
 let del = (url, success, error) => ajax.del(preurl(url), success, error || defaultError)
 
-export default {get, post, put, del}
+let MxAjax = {get, post, put, del}
+
+export default MxAjax
+export { MxAjax }

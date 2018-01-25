@@ -3,7 +3,7 @@
     <template v-for="item in navData">
       <nav-sub-menu v-if="item.children && isRole(item)" :role="role" :item="item"></nav-sub-menu>
       <el-menu-item v-else-if="isRole(item)" :index="item.path" class="menu-item">
-        <icon :name="item.icon" class="menu-item"></icon>
+        <mx-icon :name="item.icon" class="menu-item"></mx-icon>
         <span slot="title" class="menu-item">{{item.name}}</span>
       </el-menu-item>
     </template>
@@ -11,12 +11,12 @@
 </template>
 
 <script>
-  import Icon from '@/components/icon.vue'
+  import MxIcon from '@/components/mx-icon'
   import NavSubMenu from './nav-sub-menu.vue'
 
   export default {
-    name: 'layout-normal-nav-menu',
-    components: {Icon, NavSubMenu},
+    name: 'mx-normal-nav-menu',
+    components: {MxIcon, NavSubMenu},
     props: {
       toggled: Boolean,
       navData: Array,

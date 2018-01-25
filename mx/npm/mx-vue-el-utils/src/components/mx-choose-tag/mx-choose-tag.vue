@@ -23,10 +23,10 @@
 
 <script>
   import {formatter} from 'mx-app-utils'
-  import notify from '@/utils/notify'
+  import MxNotify from '@/utils/mx-notify'
 
   export default {
-    name: 'choose-tag',
+    name: 'mx-choose-tag',
     props: {
       value: {},
       displayFormat: String,
@@ -61,13 +61,13 @@
           let tag = selected
           if (tag !== null && tag !== undefined) {
             if (this.tags.indexOf(tag) >= 0) {
-              notify.warn(this.$t('message.tag.existed', {tag: this.getDisplayName(tag)}))
+              MxNotify.warn(this.$t('message.tag.existed', {tag: this.getDisplayName(tag)}))
             } else {
               this.tags.push(tag)
               this.visible = false
             }
           } else {
-            notify.info(this.$t('message.choose'))
+            MxNotify.info(this.$t('message.choose'))
           }
         })
       },

@@ -2,25 +2,25 @@
   <div class="toolbar">
     <el-button v-for="item in favorityTools" v-if="isRole(item)" :key="item.path" @click="handleGoto(item.path)"
                type="text" class="tools">
-      <icon :name="item.icon" class="tool-icon"></icon>
+      <mx-icon :name="item.icon" class="tool-icon"></mx-icon>
       <div v-if="showTitle" class="tool-title">{{item.name}}</div>
     </el-button>
     <el-button @click="handleShowNotice" type="text" class="tools">
       <el-badge v-if="showNotice" :value="noticeValue" class="badge-item">
-        <icon name="event_note" class="tool-icon"></icon>
+        <mx-icon name="event_note" class="tool-icon"></mx-icon>
       </el-badge>
-      <icon v-else name="event_note" class="tool-icon"></icon>
+      <mx-icon v-else name="event_note" class="tool-icon"></mx-icon>
       <div v-if="showTitle" class="tool-title">{{$t('button.notice')}}</div>
     </el-button>
   </div>
 </template>
 
 <script>
-  import Icon from '@/components/icon.vue'
+  import MxIcon from '@/components/mx-icon'
 
   export default {
-    name: 'layout-normal-favority-tools',
-    components: {Icon},
+    name: 'mx-normal-favority-tools',
+    components: {MxIcon},
     props: {
       role: String,
       favorityTools: Array,

@@ -35,7 +35,7 @@
   import LayoutNavMenu from './nav-menu.vue'
 
   export default {
-    name: 'layout-normal',
+    name: 'mx-normal-layout',
     components: {LayoutHeader, LayoutNavFavorityTools, LayoutNavMenu},
     props: {
       title: String,

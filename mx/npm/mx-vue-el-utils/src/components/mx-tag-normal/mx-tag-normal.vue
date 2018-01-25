@@ -10,10 +10,10 @@
 </template>
 
 <script>
-  import notify from '@/utils/notify'
+  import MxNotify from '@/utils/mx-notify'
 
   export default {
-    name: 'tag-normal',
+    name: 'mx-tag-mx-normal',
     props: {
       value: {},
       type: String,
@@ -50,7 +50,7 @@
         if (tag) {
           let oldIndex = -1
           if (tags.indexOf(tag) >= 0) {
-            notify.warn(this.$t('message.tag.existed', {tag}))
+            MxNotify.warn(this.$t('message.tag.existed', {tag}))
             return
           } else {
             let old = this.oldValue

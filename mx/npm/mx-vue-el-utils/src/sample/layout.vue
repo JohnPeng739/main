@@ -7,7 +7,7 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  import LayoutNormal from '@/layout/normal/index.vue'
+  import LayoutNormal from '@/layout/mx-normal/index.vue'
   // import {LayoutNormal} from '../../dist/mx-vue-el-utils.min'
   import { navData } from './router'
 

@@ -19,7 +19,7 @@
 
 <script>
   import {TagNormal, TagCouple} from '../../../dist/mx-vue-el-utils.min'
-  // import TagNormal from '@/components/form/tag-normal'
+  // import TagNormal from '@/components/form/tag-mx-normal'
   // import TagCouple from '@/components/form/tag-couple'
 
   export default {

@@ -2,7 +2,7 @@
   @import "./style/base.less";
   /*
   @import "../../dist/style/less/button.less";
-  @import "../../dist/style/less/layout-normal.less";
+  @import "../../dist/style/less/layout-mx-normal.less";
   @import "../../dist/style/less/dialog.less";
   @import "../../dist/style/less/tag.less";
   @import "../../dist/style/less/pagination.less";

@@ -5,7 +5,7 @@
         <span class="pg-layout-buttons">
           <el-button v-for="item in buttons" :key="item.code" :plain="true" type="text"
                      @click.native="handdleButtonClick(item.code)" class="button">
-            <icon v-if="item.icon" :name="item.icon"></icon>
+            <mx-icon v-if="item.icon" :name="item.icon"></mx-icon>
             {{item.name}}
           </el-button>
         </span>
@@ -28,13 +28,13 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  import Icon from '@/components/icon'
+  import MxIcon from '@/components/mx-icon'
 
   let defaultButtons = ['add', 'edit', 'delete', 'details', 'refresh']
 
   export default {
-    name: 'paginate-content-pane',
-    components: {Icon},
+    name: 'mx-paginate-table',
+    components: {MxIcon},
     props: {
       buttonLayout: Array
     },

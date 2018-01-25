@@ -1,26 +1,71 @@
-import locale from '@/assets/lang'
-import ajax from '@/utils/ajax'
-import notify from '@/utils/notify'
-import formValidateRules from '@/utils/form-validate-rules'
-import echartsUtils from '@/utils/echarts.js'
+import locale from './locale'
 
-import Icon from '@/components/icon.vue'
-import PaginatePane from '@/components/paginate-pane.vue'
+import MxNotify from './utils/mx-notify'
+import MxAjax from './utils/mx-ajax'
+import MxEcharts from './utils/mx-echarts'
+import MxFormValidateRules from './utils/mx-form-validate-rules'
 
-import ChooseInput from '@/components/form/choose-input.vue'
-import ChooseTag from '@/components/form/choose-tag.vue'
+import MxIcon from './components/mx-icon'
+import MxDialog from './components/mx-dialog'
+import MxPaginateTable from './components/mx-paginate-table'
 
-import TagNormal from '@/components/form/tag-normal.vue'
-import TagCouple from '@/components/form/tag-couple.vue'
+import MxChooseTag from './components/mx-choose-tag'
+import MxChooseInput from './components/mx-choose-input'
+import MxTagNormal from './components/mx-tag-normal'
+import MxTagCouple from './components/mx-tag-couple'
 
-import DialogPane from '@/components/dialog-pane.vue'
+import MxNormalLayout from './layout/mx-normal'
 
-import LayoutNormal from '@/layout/normal/index.vue'
+const components = [
+  MxIcon,
+  MxDialog,
+  MxPaginateTable,
+  MxChooseTag,
+  MxChooseInput,
+  MxTagNormal,
+  MxTagCouple,
+  MxNormalLayout
+]
 
-export {locale, ajax, notify, formValidateRules, echartsUtils,
-  Icon, PaginatePane,
-  ChooseInput, ChooseTag,
-  TagNormal, TagCouple,
-  DialogPane,
-  LayoutNormal
+const install = function (Vue, opts = {}) {
+  locale.use(opts.locale)
+  locale.i18n(opts.i18n)
+  components.map(component => {
+    Vue.component(component.name, component)
+  })
+  Vue.prototype.$mxError = MxNotify.error
+  Vue.prototype.$mxWarn = MxNotify.warn
+  Vue.prototype.$mxInfo = MxNotify.info
+  Vue.prototype.$mxConfirm = MxNotify.confirm
+  Vue.prototype.$mxFormValidateWarn = MxNotify.formValidateWarn
+
+  Vue.prototype.$mxGet = MxAjax.get
+  Vue.prototype.$mxPost = MxAjax.post
+  Vue.prototype.$mxPut = MxAjax.put
+  Vue.prototype.$mxDel = MxAjax.del
 }
+
+if (typeof window !== 'undefined' && window.Vue) {
+  install(window.Vue)
+}
+
+module.exports = {
+  version: '1.2.4',
+  locale: locale.use,
+  i18n: locale.i18n,
+  install,
+  MxNotify,
+  MxAjax,
+  MxEcharts,
+  MxFormValidateRules,
+  MxIcon,
+  MxDialog,
+  MxPaginateTable,
+  MxChooseTag,
+  MxChooseInput,
+  MxTagNormal,
+  MxTagCouple,
+  MxNormalLayout
+}
+
+module.exports.default = module.exports

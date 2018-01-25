@@ -23,7 +23,7 @@
   import { logger } from 'mx-app-utils'
   // import notify from '@/utils/notify'
   // import formValidateRules from '@/utils/form-validate-rules'
-  // import DialogPane from '@/components/dialog-pane.vue'
+  // import DialogPane from '@/components/mx-dialog.vue'
   import { notify, formValidateRules, DialogPane } from '../../../dist/mx-vue-el-utils.min'
 
   export default {

@@ -16,10 +16,10 @@
 </template>
 
 <script>
-  import notify from '@/utils/notify'
+  import MxNotify from '@/utils/mx-notify'
 
   export default {
-    name: 'tag-couple',
+    name: 'mx-tag-couple',
     props: {
       value: {},
       type: String,
@@ -74,7 +74,7 @@
           let tag = left + this.separator + right
           let tagIndex = this.getTagIndex(tags, left)
           if (tagIndex >= 0) {
-            notify.warn(this.$t('message.tag.existed', {tag}))
+            MxNotify.warn(this.$t('message.tag.existed', {tag}))
             return
           }
           let oldIndex = -1
