@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
     @DBRef
     private Account account;
+    private String token;
     @Indexed
     private long loginTime;
     @Indexed
@@ -44,6 +45,26 @@ public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
     @Override
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see LoginHistory#getToken()
+     */
+    @Override
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see LoginHistory#setToken(String)
+     */
+    @Override
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /**
