@@ -109,6 +109,7 @@ public class DepartmentManageResource {
             Department department = departmentManageService.saveDepartment(departmentInfoVO.getDepartInfo());
             DepartmentVO vo = new DepartmentVO();
             DepartmentVO.transform(department, vo);
+            sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);

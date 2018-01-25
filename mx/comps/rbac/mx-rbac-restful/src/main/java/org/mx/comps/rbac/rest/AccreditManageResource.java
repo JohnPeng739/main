@@ -111,10 +111,12 @@ public class AccreditManageResource {
     @POST
     @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccreditVO> newAccredit(@QueryParam("userCode") String userCode, AccreditInfoVO accreditInfoVO) {
+        sessionDataStore.setCurrentUserCode(userCode);
         try {
             Accredit accredit = accreditManageService.accredit(accreditInfoVO.getAccreditInfo());
             AccreditVO vo = new AccreditVO();
             AccreditVO.transform(accredit, vo);
+            sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);

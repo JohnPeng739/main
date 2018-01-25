@@ -117,6 +117,7 @@ public class UserManageResource {
             User user = userManageService.saveUser(userInfoVO.getUserInfo());
             UserVO userVO = new UserVO();
             UserVO.transform(user, userVO);
+            sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -141,6 +142,7 @@ public class UserManageResource {
             User user = userManageService.saveUser(userInfoVO.getUserInfo());
             UserVO userVO = new UserVO();
             UserVO.transform(user, userVO);
+            sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -188,6 +190,7 @@ public class UserManageResource {
             Account account = userManageService.allocateAccount(accountInfoVO.getAccountInfo());
             AccountVO accountVO = new AccountVO();
             AccountVO.transform(account, accountVO);
+            sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(accountVO);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);

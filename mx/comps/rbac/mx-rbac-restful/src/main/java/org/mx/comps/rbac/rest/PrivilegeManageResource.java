@@ -99,8 +99,7 @@ public class PrivilegeManageResource {
         }
     }
 
-    private DataVO<PrivilegeVO> savePrivilegeInfo(String userCode, PrivilegeVO privilegeVO) {
-        sessionDataStore.setCurrentUserCode(userCode);
+    private DataVO<PrivilegeVO> savePrivilegeInfo(PrivilegeVO privilegeVO) {
         try {
             Privilege privilege = EntityFactory.createEntity(Privilege.class);
             PrivilegeVO.transform(privilegeVO, privilege);
@@ -125,14 +124,16 @@ public class PrivilegeManageResource {
     @POST
     @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> savePrivilege(@QueryParam("userCode") String userCode, PrivilegeVO privilegeVO) {
-        return savePrivilegeInfo(userCode, privilegeVO);
+        sessionDataStore.setCurrentUserCode(userCode);
+        return savePrivilegeInfo(privilegeVO);
     }
 
     @Path("privileges/{id}")
     @PUT
     @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> savePrivilege(@QueryParam("userCode") String userCode, @PathParam("id") String id, PrivilegeVO privilegeVO) {
-        return savePrivilegeInfo(userCode, privilegeVO);
+        sessionDataStore.setCurrentUserCode(userCode);
+        return savePrivilegeInfo(privilegeVO);
     }
 
     @Path("privilege/{id}")
