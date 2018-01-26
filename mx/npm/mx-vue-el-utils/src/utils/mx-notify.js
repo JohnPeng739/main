@@ -1,5 +1,5 @@
 import { Message, MessageBox, Notification } from 'element-ui'
-import { t } from '../locale'
+import { t } from '@/locale'
 
 let error = (message) => Message({type: 'error', message})
 

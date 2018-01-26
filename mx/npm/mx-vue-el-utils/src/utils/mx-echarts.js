@@ -1,5 +1,5 @@
 import { round } from 'mx-app-utils'
-import { t } from '../locale/index'
+import { t } from '@/locale'
 
 /**
  * 创建一个仪表盘配置信息对象

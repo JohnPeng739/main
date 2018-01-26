@@ -4,10 +4,10 @@
     <img src="../assets/logo.png">
     <br/><br/>
     some material icon:
-    <icon></icon>
-    <icon name="home"></icon>
-    <icon name="build"></icon>
-    <icon name="3d_rotation"></icon>
+    <mx-icon></mx-icon>
+    <mx-icon name="home"></mx-icon>
+    <mx-icon name="build"></mx-icon>
+    <mx-icon name="3d_rotation"></mx-icon>
     <br/><br/>
     <el-button @click="handleGoto('/tests/notify')">Notify</el-button>
     <el-button @click="handleGoto('/tests/tag')">Tag</el-button>
@@ -16,12 +16,8 @@
 </template>
 
 <script>
-  // import Icon from '@/components/icon'
-  import {Icon} from '../../../dist/mx-vue-el-utils.min'
-
   export default {
     name: 'home-page',
-    components: {Icon},
     data () {
       return {}
     },

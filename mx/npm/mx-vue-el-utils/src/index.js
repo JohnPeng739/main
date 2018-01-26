@@ -1,4 +1,4 @@
-import locale from './locale'
+import MxLocale from './locale'
 
 import MxNotify from './utils/mx-notify'
 import MxAjax from './utils/mx-ajax'
@@ -28,8 +28,8 @@ const components = [
 ]
 
 const install = function (Vue, opts = {}) {
-  locale.use(opts.locale)
-  locale.i18n(opts.i18n)
+  MxLocale.use(opts.locale)
+  MxLocale.i18n()
   components.map(component => {
     Vue.component(component.name, component)
   })
@@ -49,10 +49,10 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 }
 
-module.exports = {
+export default {
   version: '1.2.4',
-  locale: locale.use,
-  i18n: locale.i18n,
+  locale: MxLocale.use,
+  i18n: MxLocale.i18n,
   install,
   MxNotify,
   MxAjax,
@@ -68,4 +68,18 @@ module.exports = {
   MxNormalLayout
 }
 
-module.exports.default = module.exports
+export {
+  MxLocale,
+  MxNotify,
+  MxAjax,
+  MxEcharts,
+  MxFormValidateRules,
+  MxIcon,
+  MxDialog,
+  MxPaginateTable,
+  MxChooseTag,
+  MxChooseInput,
+  MxTagNormal,
+  MxTagCouple,
+  MxNormalLayout
+}

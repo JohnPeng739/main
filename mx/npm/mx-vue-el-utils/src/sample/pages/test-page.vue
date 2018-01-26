@@ -1,25 +1,21 @@
 <template>
   <div>
-    <paginate-pane ref="paginatePane" :buttons-layout="buttonsLayout" v-on:buttonHandle="handleButtonClick">
+    <mx-paginate-table ref="paginatePane" :buttons-layout="buttonsLayout" v-on:buttonHandle="handleButtonClick">
       <el-table :data="tableData" :max-height="560" class="layout-table" highlight-current-row
                 @current-change="handleCurrentChange">
         <el-table-column prop="code" label="代码"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="desc" label="描述"></el-table-column>
       </el-table>
-    </paginate-pane>
+    </mx-paginate-table>
   </div>
 </template>
 
 <script>
   import { logger } from 'mx-app-utils'
-  import notify from '@/utils/notify'
-  import PaginatePane from '@/components/paginate-pane'
-  // import { notify, PaginatePane } from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-paginate-content',
-    components: {PaginatePane},
     data () {
       return {
         tableData: [],
@@ -36,7 +32,7 @@
           data.push({code: 'code ' + index, name: 'name ' + index, desc: 'description ' + index})
         }
         this.tableData = data
-        notify.info('重新获取并加载数据成功。')
+        this.$mxInfo('重新获取并加载数据成功。')
       },
       handleButtonClick (operate, pagination) {
         logger.debug('Click a button, operate: %s, page: %j.', operate, pagination)

@@ -25,24 +25,25 @@ body {
   overflow: hidden;
   margin-top: @header-height;
   width: 100vw;
-  height: 100vh;
+  height: 90vh;
   z-index: 100;
   background-color: lighten(@header-bg-color, 50%);
   .layout-nav {
     float: left;
     vertical-align: top;
-    min-height: 100vh - @header-height;
+    min-height: 90vh;
   }
   .layout-right {
-    margin-top: 10px;
+    margin-top: 1vh;
     overflow: hidden;
     .breadcrumb-item {
       color: @content-color;
       font-style: italic;
     }
     .content-body {
-      min-height: 100vh - @header-height;
-      margin: 10px;
+      overflow: scroll;
+      min-height: 86vh;
+      margin: 1vh;
       background: @content-bg-color;
       border-radius: 4px;
     }

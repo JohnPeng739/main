@@ -1,20 +1,17 @@
 <template>
-  <layout-normal :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
+  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
                  notice-path="notice" :notice-value="noticeValue" v-on:logout="handleLogout"
                  v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
     <router-view slot="content-body"></router-view>
-  </layout-normal>
+  </mx-normal-layout>
 </template>
 
 <script>
   import { logger } from 'mx-app-utils'
-  import LayoutNormal from '@/layout/mx-normal/index.vue'
-  // import {LayoutNormal} from '../../dist/mx-vue-el-utils.min'
   import { navData } from './router'
 
   export default {
     name: 'app',
-    components: {LayoutNormal},
     data () {
       return {
         title: 'The Demo System',

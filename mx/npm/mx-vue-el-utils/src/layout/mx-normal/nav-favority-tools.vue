@@ -10,13 +10,14 @@
         <mx-icon name="event_note" class="tool-icon"></mx-icon>
       </el-badge>
       <mx-icon v-else name="event_note" class="tool-icon"></mx-icon>
-      <div v-if="showTitle" class="tool-title">{{$t('button.notice')}}</div>
+      <div v-if="showTitle" class="tool-title">{{t('button.notice')}}</div>
     </el-button>
   </div>
 </template>
 
 <script>
   import MxIcon from '@/components/mx-icon'
+  import {t} from '@/locale'
 
   export default {
     name: 'mx-normal-favority-tools',
@@ -29,7 +30,9 @@
       showTitle: {type: Boolean, default: true}
     },
     data () {
-      return {}
+      return {
+        t: t
+      }
     },
     computed: {
       showNotice () {

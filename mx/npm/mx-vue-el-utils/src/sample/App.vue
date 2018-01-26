@@ -1,17 +1,17 @@
 <style rel="stylesheet/less" lang="less">
   @import "./style/base.less";
-  /*
   @import "../../dist/style/less/button.less";
-  @import "../../dist/style/less/layout-mx-normal.less";
+  @import "../../dist/style/less/layout-normal.less";
   @import "../../dist/style/less/dialog.less";
   @import "../../dist/style/less/tag.less";
   @import "../../dist/style/less/pagination.less";
-  */
+  /*
   @import "../style/button.less";
   @import "../style/layout-normal.less";
   @import "../style/dialog.less";
   @import "../style/tag.less";
   @import "../style/pagination.less";
+  */
 
   @font-face {
     font-family: 'Material Icons';

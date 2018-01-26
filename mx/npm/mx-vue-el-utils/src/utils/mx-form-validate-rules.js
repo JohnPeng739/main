@@ -1,5 +1,5 @@
 import { logger, parser } from 'mx-app-utils'
-import { t } from '../locale/index'
+import { t } from '@/locale'
 
 const requiredRule = (param) => {
   let {type, msg, trigger} = param || {}

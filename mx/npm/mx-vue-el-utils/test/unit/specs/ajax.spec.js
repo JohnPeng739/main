@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 // import ajax from '../../../src/utils/ajax'
-import { ajax } from '../../../dist/mx-vue-el-utils.min'
+import { MxAjax } from '../../../dist/mx-vue-el-utils.min'
 
 let pagination = {total: 100, size: 20, page: 3}
 let checked = {a: 'a', b: 'b', c: 123, d: false}
@@ -24,7 +24,7 @@ describe('test ajax', () => {
       expect(data.d).toBe(checked.d)
       done()
     })
-    ajax.get('/rest/get/success', fnSuccess)
+    MxAjax.get('/rest/get/success', fnSuccess)
   })
   it('test get error method', (done) => {
     let fnSuccess = jest.fn(data => {
@@ -36,7 +36,7 @@ describe('test ajax', () => {
       expect(err).toBe(errorMsg)
       done()
     })
-    ajax.get('/rest/get/error', fnSuccess, fnError)
+    MxAjax.get('/rest/get/error', fnSuccess, fnError)
   })
   it('test post method', (done) => {
     let fnSuccess = jest.fn((pagination, data) => {
@@ -51,7 +51,7 @@ describe('test ajax', () => {
       expect(data.d).toBe(checked.d)
       done()
     })
-    ajax.post('/rest/post', checked, fnSuccess)
+    MxAjax.post('/rest/post', checked, fnSuccess)
   })
   it('test put method', (done) => {
     let fnSuccess = jest.fn(data => {
@@ -62,7 +62,7 @@ describe('test ajax', () => {
       expect(data.d).toBe(checked.d)
       done()
     })
-    ajax.put('/rest/put', checked, fnSuccess)
+    MxAjax.put('/rest/put', checked, fnSuccess)
   })
   it('test del method', (done) => {
     let fnSuccess = jest.fn(data => {
@@ -73,6 +73,6 @@ describe('test ajax', () => {
       expect(data.d).toBe(checked.d)
       done()
     })
-    ajax.del('/rest/delete', fnSuccess)
+    MxAjax.del('/rest/delete', fnSuccess)
   })
 })

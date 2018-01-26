@@ -17,6 +17,7 @@
 
 <script>
   import MxNotify from '@/utils/mx-notify'
+  import {t} from '@/locale'
 
   export default {
     name: 'mx-tag-couple',
@@ -74,7 +75,7 @@
           let tag = left + this.separator + right
           let tagIndex = this.getTagIndex(tags, left)
           if (tagIndex >= 0) {
-            MxNotify.warn(this.$t('message.tag.existed', {tag}))
+            MxNotify.warn(t('message.tag.existed', {tag}))
             return
           }
           let oldIndex = -1

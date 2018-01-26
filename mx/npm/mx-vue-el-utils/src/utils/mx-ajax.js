@@ -1,6 +1,6 @@
 import { ajax, logger } from 'mx-app-utils'
-import { t } from '../locale/index'
-import MxNotify from '../utils/mx-notify'
+import { t } from '@/locale/index'
+import MxNotify from '@/utils/mx-notify'
 
 let defaultError = (errorMessage) => {
   if (errorMessage.response) {
