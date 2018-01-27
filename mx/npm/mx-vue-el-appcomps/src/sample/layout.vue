@@ -1,18 +1,17 @@
 <template>
-  <layout-normal :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
-                 v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto">
-  </layout-normal>
+  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
+                    v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto">
+    <router-view slot="content-body"></router-view>
+  </mx-normal-layout>
 </template>
 
 <script>
-  import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'mx-app-utils'
-  import {notify, LayoutNormal} from 'mx-vue-el-utils'
+  import { mapGetters, mapActions } from 'vuex'
+  import { logger } from 'mx-app-utils'
   import { navData } from './router'
 
   export default {
     name: 'layout',
-    components: {LayoutNormal},
     data () {
       return {
         title: 'The Demo System',
@@ -35,7 +34,7 @@
         let success = (data) => {
           if (data && data.account) {
             let {code, name} = data.account
-            notify.info(this.$t('rbac.message.logoutSuccess', {code, name}))
+            this.$mxInfo(this.$t('rbac.message.logoutSuccess', {code, name}))
             this.$router.push('/login')
           }
         }

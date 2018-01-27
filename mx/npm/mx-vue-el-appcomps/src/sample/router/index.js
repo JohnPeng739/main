@@ -1,14 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LoginPage from '../pages/login.vue'
-import UserManage from '@/components/rbac/user-manage.vue'
-import AccountManage from '@/components/rbac/account-manage.vue'
-import RoleManage from '@/components/rbac/role-manage.vue'
-import DepartManage from '@/components/rbac/department-manage.vue'
-import PrivilegeManage from '@/components/rbac/privilege-manage.vue'
-import LoginHistory from '@/components/rbac/login-history-manage.vue'
-import AccreditManage from '@/components/rbac/accredit-manage.vue'
-import OperateLog from '@/components/rbac/operate-log-manage.vue'
+import {
+  MxAccountManage,
+  MxAccreditManage,
+  MxDepartmentManage,
+  MxLoginHistoryManage,
+  MxOperateLogManage,
+  MxPrivilegeManage,
+  MxRoleManage,
+  MxUserManage
+} from '../../../dist/mx-vue-el-appcomps.min'
 
 export const navData = [{
   path: '/',
@@ -66,36 +68,36 @@ const router = new Router({
     component: resolve => require(['../layout.vue'], resolve),
     children: [{
       path: '',
-      component: OperateLog
+      component: MxOperateLogManage
     }, {
       path: '/manage/user',
-      component: UserManage,
+      component: MxUserManage,
       meta: {needAuth: true}
     }, {
       path: '/manage/account',
-      component: AccountManage,
+      component: MxAccountManage,
       meta: {needAuth: true}
     }, {
       path: '/manage/role',
-      component: RoleManage,
+      component: MxRoleManage,
       meta: {needAuth: true}
     }, {
       path: '/manage/privilege',
-      component: PrivilegeManage,
+      component: MxPrivilegeManage,
       meta: {needAuth: true}
     }, {
       path: '/manage/department',
-      component: DepartManage,
+      component: MxDepartmentManage,
       meta: {needAuth: true}
     }, {
       path: '/manage/login',
-      component: LoginHistory
+      component: MxLoginHistoryManage
     }, {
       path: '/manage/logs',
-      component: OperateLog
+      component: MxOperateLogManage
     }, {
       path: '/manage/accredit',
-      component: AccreditManage,
+      component: MxAccreditManage,
       meta: {needAuth: true}
     }]
   }]

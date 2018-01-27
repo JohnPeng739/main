@@ -1,68 +1,70 @@
 <template>
   <div>
-    <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick">
+    <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick">
       <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row>
-        <el-table-column prop="code" :label="$t('rbac.common.fields.code')" :width="100"></el-table-column>
-        <el-table-column prop="name" :label="$t('rbac.common.fields.name')" :width="120"></el-table-column>
-        <el-table-column prop="createdTime" :label="$t('rbac.common.fields.createdTime')" :width="100">
+        <el-table-column prop="code" :label="t('rbac.common.fields.code')" :width="100"></el-table-column>
+        <el-table-column prop="name" :label="t('rbac.common.fields.name')" :width="120"></el-table-column>
+        <el-table-column prop="createdTime" :label="t('rbac.common.fields.createdTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.createdTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="updatedTime" :label="$t('rbac.common.fields.updatedTime')" :width="100">
+        <el-table-column prop="updatedTime" :label="t('rbac.common.fields.updatedTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.updatedTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="operator" :label="$t('rbac.common.fields.operator')" :width="130"></el-table-column>
-        <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
+        <el-table-column prop="operator" :label="t('rbac.common.fields.operator')" :width="130"></el-table-column>
+        <el-table-column prop="desc" :label="t('rbac.common.fields.desc')"></el-table-column>
       </el-table>
-      <dialog-pane ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit" class="layout-dialog">
+      <mx-dialog ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit"
+                 class="layout-dialog">
         <el-form ref="formCommon" slot="form" :model="formCommon" :rules="rulesCommon" label-width="80px"
                  class="dialog-form">
           <el-row type="flex">
             <el-col :span="8">
-              <el-form-item prop="code" :label="$t('rbac.common.fields.code')">
+              <el-form-item prop="code" :label="t('rbac.common.fields.code')">
                 <el-input v-model="formCommon.code" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item prop="name" :label="$t('rbac.common.fields.name')">
+              <el-form-item prop="name" :label="t('rbac.common.fields.name')">
                 <el-input v-model="formCommon.name" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row type="flex">
             <el-col :span="24">
-              <el-form-item prop="desc" :label="$t('rbac.common.fields.desc')">
+              <el-form-item prop="desc" :label="t('rbac.common.fields.desc')">
                 <el-input type="textarea" v-model="formCommon.desc" :rows="4" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
         </el-form>
-      </dialog-pane>
-    </paginate-pane>
+      </mx-dialog>
+    </mx-paginate-table>
   </div>
 </template>
 
 <script>
-  import {logger, formatter} from 'mx-app-utils'
-  import {ajax, notify, formValidateRules, PaginatePane, DialogPane} from 'mx-vue-el-utils'
+  import { logger, formatter } from 'mx-app-utils'
+  import { MxFormValidateRules } from 'mx-vue-el-utils'
+  import {t} from '@/locale'
 
   export default {
-    name: 'page-common-dict',
-    components: {PaginatePane, DialogPane},
+    name: 'mx-dict-manage',
     props: ['maxHeight', 'module'],
     data () {
       return {
+        t: t,
         tableData: [],
         operate: 'details',
         selected: null,
         formCommon: this.newDict(),
         rulesCommon: {
-          code: [formValidateRules.requiredRule({msg: this.$t('rbac.common.validate.requiredCode')})],
-          name: [formValidateRules.requiredRule({msg: this.$t('rbac.common.validate.requiredName')})]
+          code: [MxFormValidateRules.requiredRule({msg: t('rbac.common.validate.requiredCode')})],
+          name: [MxFormValidateRules.requiredRule({msg: t('rbac.common.validate.requiredName')})]
         }
       }
     },
@@ -71,7 +73,7 @@
         return this.operate === 'details'
       },
       moduleName () {
-        return this.$t('rbac.' + this.module + '.module')
+        return t('rbac.' + this.module + '.module')
       },
       tableMaxHeight () {
         return this.maxHeight
@@ -82,12 +84,12 @@
         let module = this.moduleName
         switch (this.operate) {
           case 'add':
-            return this.$t('rbac.common.title.add', {module})
+            return t('rbac.common.title.add', {module})
           case 'edit':
-            return this.$t('rbac.common.title.edit', {module})
+            return t('rbac.common.title.edit', {module})
           case 'detail':
           default:
-            return this.$t('rbac.common.title.details', {module})
+            return t('rbac.common.title.details', {module})
         }
       },
       newDict () {
@@ -97,16 +99,16 @@
         if (longDate) {
           return formatter.formatDatetime(longDate)
         } else {
-          return this.$t('NA')
+          return this.t('NA')
         }
       },
       refreshData (pagination) {
-        ajax.post('/rest/' + this.module + 's', pagination, (pagination, data) => {
+        this.$mxPost('/rest/' + this.module + 's', pagination, (pagination, data) => {
           // logger.debug('response, page: %j, data: %j.', pagination, data)
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            notify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.moduleName}))
+            this.$mxInfo(t('rbac.common.message.refreshSuccess', {module: this.moduleName}))
           }
         })
       },
@@ -128,26 +130,26 @@
             if (this.operate === 'add') {
               let url = '/rest/' + this.module + 's/new'
               logger.debug('send POST "%s".', url)
-              ajax.post(url, {id, code, name, desc}, data => {
+              this.$mxPost(url, {id, code, name, desc}, data => {
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  notify.info(this.$t('rbac.common.message.addSuccess', {module: this.moduleName}))
+                  this.$mxInfo(t('rbac.common.message.addSuccess', {module: this.moduleName}))
                 }
               })
             } else if (this.operate === 'edit') {
               let url = '/rest/' + this.module + 's/' + id
               logger.debug('send PUT "%s".', url)
-              ajax.put(url, {id, code, name, desc}, data => {
+              this.$mxPut(url, {id, code, name, desc}, data => {
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  notify.info(this.$t('rbac.common.message.editSuccess', {module: this.moduleName}))
+                  this.$mxInfo(t('rbac.common.message.editSuccess', {module: this.moduleName}))
                 }
               })
             }
           } else {
-            notify.formValidateWarn()
+            this.$mxFormValidateWarn()
           }
         })
       },
@@ -166,17 +168,17 @@
           case 'delete':
           case 'details':
             if (!this.selected) {
-              notify.info(this.$t('rbac.common.message.needChoose', {module: this.moduleName}))
+              this.$mxInfo(t('rbac.common.message.needChoose', {module: this.moduleName}))
               break
             }
             if (operate === 'delete') {
               let {id} = this.selected
               let url = '/rest/' + this.module + 's/' + id
               logger.debug('send DELETE "%s".', url)
-              ajax.del(url, data => {
+              this.$mxDel(url, data => {
                 if (data) {
                   this.refreshData(pagination)
-                  notify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.moduleName}))
+                  this.$mxInfo(t('rbac.common.message.deleteSuccess', {module: this.moduleName}))
                 }
               })
             } else {

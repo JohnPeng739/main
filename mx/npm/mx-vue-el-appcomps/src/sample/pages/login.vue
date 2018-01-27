@@ -21,7 +21,7 @@
 <script>
   import {mapActions} from 'vuex'
   import {formatter} from 'mx-app-utils'
-  import {notify, formValidateRules as formRules} from 'mx-vue-el-utils'
+  import {MxFormValidateRules} from 'mx-vue-el-utils'
 
   export default {
     name: 'page-login',
@@ -29,8 +29,8 @@
       return {
         formLogin: {code: '', password: '', forced: false},
         rulesLogin: {
-          code: [formRules.requiredRule()],
-          password: [formRules.requiredRule()]
+          code: [MxFormValidateRules.requiredRule()],
+          password: [MxFormValidateRules.requiredRule()]
         }
       }
     },
@@ -42,13 +42,13 @@
             let {code, password, forced} = this.formLogin
             let success = (data) => {
               if (data && data.account) {
-                notify.info(formatter.formatArgs('Account[%s] login successfully.', data.account.code))
+                this.$mxInfo(formatter.formatArgs('Account[%s] login successfully.', data.account.code))
                 this.$router.push('/')
               }
             }
             this.login({code, password, forced, success})
           } else {
-            notify.formValidateWarn()
+            this.$mxFormValidateWarn()
           }
         })
       },

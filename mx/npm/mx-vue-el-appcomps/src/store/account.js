@@ -1,5 +1,5 @@
 import {logger, formatter} from 'mx-app-utils'
-import {ajax} from 'mx-vue-el-utils'
+import {MxAjax} from 'mx-vue-el-utils'
 
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
@@ -43,7 +43,7 @@ const actions = {
   login ({commit, state}, {code, password, forced, success}) {
     let url = loginUrl
     logger.debug('send POST "%s", data: %j.', url, {code, password})
-    ajax.post(url, {accountCode: code, password, forcedReplace: forced}, data => {
+    MxAjax.post(url, {accountCode: code, password, forcedReplace: forced}, data => {
       if (data && data.account) {
         let {id, code, name, tools, role} = data.account
         commit(LOGIN, {id, code, name, tools, role})
@@ -63,7 +63,7 @@ const actions = {
     let {id, code, name} = state.loginUser
     url = formatter.formatObj(url, {id})
     logger.debug('send GET "%s".', url)
-    ajax.get(url, data => {
+    MxAjax.get(url, data => {
       if (data && data.account) {
         commit(LOGOUT)
         if (success && typeof success === 'function') {

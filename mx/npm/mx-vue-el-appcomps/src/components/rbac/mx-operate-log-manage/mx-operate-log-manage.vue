@@ -1,24 +1,23 @@
 <template>
-  <paginate-pane ref="paginatePane" v-on:buttonHandle="handleButtonClick" :buttons-layout="['refresh']">
+  <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick" :buttons-layout="['refresh']">
     <el-table :data="tableData" :max-height="tableMaxHeight" highlight-current-row>
-      <el-table-column prop="createdTime" :label="$t('rbac.logs.fields.time')" :width="170">
+      <el-table-column prop="createdTime" :label="t('rbac.logs.fields.time')" :width="170">
         <template slot-scope="scope">
           {{parseDatetime(scope.row.createdTime)}}
         </template>
       </el-table-column>
-      <el-table-column prop="content" :label="$t('rbac.logs.fields.content')"></el-table-column>
-      <el-table-column prop="operator" :label="$t('rbac.common.fields.operator')" :width="150"></el-table-column>
+      <el-table-column prop="content" :label="t('rbac.logs.fields.content')"></el-table-column>
+      <el-table-column prop="operator" :label="t('rbac.common.fields.operator')" :width="150"></el-table-column>
     </el-table>
-  </paginate-pane>
+  </mx-paginate-table>
 </template>
 
 <script>
   import { logger, formatter } from 'mx-app-utils'
-  import { ajax, notify, PaginatePane } from 'mx-vue-el-utils'
+  import {t} from '@/locale'
 
   export default {
-    name: 'page-operate-log-manage',
-    components: {PaginatePane},
+    name: 'mx-operate-log-manage',
     props: {
       tableMaxHeight: {
         type: Number,
@@ -27,6 +26,7 @@
     },
     data () {
       return {
+        t: t,
         tableData: []
       }
     },
@@ -35,16 +35,16 @@
         if (longDate) {
           return formatter.formatDatetime(longDate)
         } else {
-          return this.$t('rbac.common.fields.NA')
+          return t('rbac.common.fields.NA')
         }
       },
       refreshData (pagination) {
-        ajax.post('/rest/logs', pagination, (pagination, data) => {
+        this.$mxPost('/rest/logs', pagination, (pagination, data) => {
           logger.debug('response, page: %j, data: %j.', pagination, data)
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            notify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.logs.module')}))
+            this.$mxInfo(t('rbac.common.message.refreshSuccess', {module: t('rbac.logs.module')}))
           }
         })
       },
