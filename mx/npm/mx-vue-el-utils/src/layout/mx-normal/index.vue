@@ -1,16 +1,19 @@
 <template>
-  <div class="layout-main">
-    <div class="header-row">
+  <el-container>
+    <el-header height="10vh" class="layout-header">
       <layout-header :title="title" :login-user-name="loginUserName" :nav-data="navData"
                      v-on:navToggled="handleNavToggled" v-on:logout="handleLogout"
                      v-on:showUserInfo="handleShowUserInfo">
-        <layout-nav-favority-tools :role="role" :favority-tools="favorityTools" :notice-path="noticePath"
-                                   :notice-value="noticeValue" v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
+        <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only" :role="role"
+                                   :favority-tools="favorityTools" :notice-path="noticePath"
+                                   :notice-value="noticeValue" v-on:goto="handleGoto"
+                                   v-on:showNotice="handleShowNotice">
         </layout-nav-favority-tools>
       </layout-header>
-    </div>
-    <div type="flex" class="content-row">
-      <layout-nav-menu :toggled="toggled" :role="role" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav"></layout-nav-menu>
+    </el-header>
+    <el-main class="layout-main">
+      <layout-nav-menu :toggled="toggled" :role="role" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav">
+      </layout-nav-menu>
       <div class="layout-right">
         <el-breadcrumb>
           <el-breadcrumb-item>
@@ -24,8 +27,8 @@
           </transition>
         </div>
       </div>
-    </div>
-  </div>
+    </el-main>
+  </el-container>
 </template>
 
 <script>

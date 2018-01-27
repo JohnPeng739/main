@@ -1,16 +1,14 @@
 body {
   margin: 0;
+  padding: 0;
 }
 
 .border {
   border: 1px solid @content-color;
 }
 
-.layout-main {
-  overflow: hidden;
-}
-
-.header-row {
+.layout-header {
+  display: inline-block;
   background-color: @header-bg-color;
   color: @header-color;
   width: 100vw;
@@ -19,19 +17,87 @@ body {
   top: 0;
   left: 0;
   z-index: 999;
+  padding: 0;
+  .button {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    .toggle-icon {
+      padding-left: 10px;
+      font-size: @header-height - 4vh;
+      color: @header-color;
+    }
+  }
+  .title {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 5px;
+    font-size: x-large;
+    font-weight: 600;
+  }
+  .favority-tools {
+    display: inline-block;
+    float: right;
+    padding-top: 8px;
+    .tools {
+      text-align: center;
+      width: @button-width - 30px;
+      color: @header-color;
+      &:hover {
+        color: @header-hover-color;
+      }
+      .tool-icon {
+        font-size: 24px;
+      }
+      .tool-title {
+        font-size: 16px;
+        padding-top: 2px;
+      }
+      .badge-item {
+        margin: 15px 0 0 0;
+        .tool-icon {
+          margin-top: -15px;
+          margin-right: 2px;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+  .account {
+    float: right;
+    .account-icon {
+      float: right;
+      padding-left: 30px;
+      padding-right: 10px;
+      color: lightcyan;
+      font-size: 7vh;
+    }
+  }
 }
 
-.content-row {
+.layout-main {
   overflow: hidden;
   margin-top: @header-height;
   width: 100vw;
   height: 90vh;
   z-index: 100;
   background-color: lighten(@header-bg-color, 50%);
+  padding: 0;
   .layout-nav {
     float: left;
     vertical-align: top;
     min-height: 90vh;
+    .nav-menu:not(.el-menu--collapse) {
+      width: 200px;
+    }
+    .menu-item {
+      font-size: 18px;
+      color: @nav-color;
+    }
+    .submenu-item {
+      font-size: 14px;
+      color: @nav-color;
+    }
   }
   .layout-right {
     margin-top: 1vh;
@@ -48,89 +114,4 @@ body {
       border-radius: 4px;
     }
   }
-}
-
-.header-col1 {
-  display: flex;
-  align-items: center;
-  min-width: 300px;
-  .toggle-icon {
-    margin-left: 10px;
-    color: @header-color;
-    font-size: 36px;
-  }
-  .title {
-    overflow: hidden;
-    font-size: x-large;
-    font-weight: 600;
-    padding-left: 15px;
-  }
-}
-
-.header-col2 {
-  overflow: hidden;
-}
-
-.header-col3 {
-  min-width: 100px;
-  font-size: 8px;
-  margin: 0 auto;
-  .button {
-    display: block;
-    .account {
-      color: mix(@header-color, indianred);
-      font-size: 12px;
-      font-weight: lighter;
-    }
-    .logout-icon {
-      font-size: 24px;
-      margin: -15px auto;
-      padding-left: 10px;
-      color: @header-color;
-      &:hover {
-        color: @header-hover-color;
-      }
-    }
-  }
-}
-
-.toolbar {
-  float: right;
-  padding-right: 20px;
-  .tools {
-    text-align: center;
-    width: @button-width - 30px;
-    color: @header-color;
-    &:hover {
-      color: @header-hover-color;
-    }
-    .tool-icon {
-      margin-top: 10px;
-      font-size: 24px;
-    }
-    .tool-title {
-      font-size: 16px;
-      padding-top: 2px;
-    }
-    .badge-item {
-      margin-right: 10px;
-      .tool-icon {
-        margin-top: -20px;
-        margin-right: 5px;
-        font-size: 24px;
-      }
-    }
-  }
-}
-
-.nav-menu:not(.el-menu--collapse) {
-  width: 200px;
-}
-
-.menu-item {
-  font-size: 18px;
-}
-
-.submenu-item {
-  font-size: 14px;
 }

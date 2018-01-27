@@ -1,5 +1,7 @@
 <style rel="stylesheet/less" lang="less">
+  @import "element-ui/lib/theme-chalk/display.css";
   @import "./style/base.less";
+
   @import "../../dist/style/less/button.less";
   @import "../../dist/style/less/layout-normal.less";
   @import "../../dist/style/less/dialog.less";

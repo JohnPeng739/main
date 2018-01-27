@@ -12,7 +12,8 @@ export default {
     reset: 'Reset',
     submit: 'Submit',
     close: 'Close',
-    choose: 'Choose...'
+    choose: 'Choose...',
+    logout: 'Logout'
   },
   message: {
     title: {

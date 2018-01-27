@@ -1,6 +1,6 @@
 <template>
   <keep-alive>
-    <el-dialog :visible.sync="visible" :title="title" :modal-append-to-body="true" :close-on-click-modal="false"
+    <el-dialog :visible.sync="visible" :title="title" :modal-append-to-body="false" :close-on-click-modal="false"
                :width="width">
       <slot name="form"></slot>
       <div slot="footer">
@@ -24,14 +24,14 @@
     data () {
       return {
         visible: false,
-        operate: 'details',
+        operate: 'detail',
         width: '60%',
         t: t
       }
     },
     computed: {
       readonly () {
-        return this.operate === 'details'
+        return this.operate === 'detail'
       }
     },
     methods: {

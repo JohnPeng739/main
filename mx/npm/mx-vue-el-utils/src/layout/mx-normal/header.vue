@@ -1,23 +1,19 @@
 <template>
-  <el-row type="flex" justify="center">
-    <el-col :span="8" class="header-col1">
-      <el-button type="text" @click="handleNavToggled">
-        <mx-icon name="apps" class="toggle-icon"></mx-icon>
+  <div>
+    <el-button type="text" class="button" @click="handleNavToggled">
+      <mx-icon name="apps" class="toggle-icon"></mx-icon>
+    </el-button>
+    <span class="title hidden-xs-only">{{title}}</span>
+    <el-tooltip effect="dark" placement="bottom">
+      <div slot="content">
+        <span>{{loginUserName}}</span>
+      </div>
+      <el-button class="account" type="text" @click="handleLogout">
+        <mx-icon name="account_circle" class="account-icon" @click="handleLogout"></mx-icon>
       </el-button>
-      <div class="title">{{title}}</div>
-    </el-col>
-    <el-col class="header-col2">
-      <slot></slot>
-    </el-col>
-    <el-col :span="3" class="header-col3">
-      <el-button class="button" type="text" @click="handleShowUserInfo">
-        <span class="account">{{loginUserName}}</span>
-      </el-button>
-      <el-button class="button" type="text" @click="handleLogout">
-        <mx-icon name="exit_to_app" class="logout-icon"></mx-icon>
-      </el-button>
-    </el-col>
-  </el-row>
+    </el-tooltip>
+    <slot name="favority-tools"></slot>
+  </div>
 </template>
 
 <script>
@@ -28,7 +24,7 @@
     components: {MxIcon},
     props: {
       title: String,
-      loginUserName: String
+      loginUserName: {type: String, default: ''}
     },
     data () {
       return {}
@@ -36,9 +32,6 @@
     methods: {
       handleNavToggled () {
         this.$emit('navToggled')
-      },
-      handleShowUserInfo () {
-        this.$emit('showUserInfo')
       },
       handleLogout () {
         this.$emit('logout')

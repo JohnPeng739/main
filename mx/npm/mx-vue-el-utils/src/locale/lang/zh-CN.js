@@ -12,7 +12,8 @@ export default {
     reset: '重置',
     submit: '提交',
     close: '关闭',
-    choose: '选择...'
+    choose: '选择...',
+    logout: '登出'
   },
   message: {
     title: {

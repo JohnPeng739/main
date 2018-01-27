@@ -1,6 +1,7 @@
 <template>
-  <div class="toolbar">
-    <el-button v-for="item in favorityTools" v-if="isRole(item)" :key="item.path" @click="handleGoto(item.path)"
+  <div>
+    <el-button v-for="(item, index) in favorityTools" v-if="isRole(item) && index < 4" :key="item.path"
+               @click="handleGoto(item.path)"
                type="text" class="tools">
       <mx-icon :name="item.icon" class="tool-icon"></mx-icon>
       <div v-if="showTitle" class="tool-title">{{item.name}}</div>
@@ -8,16 +9,19 @@
     <el-button @click="handleShowNotice" type="text" class="tools">
       <el-badge v-if="showNotice" :value="noticeValue" class="badge-item">
         <mx-icon name="event_note" class="tool-icon"></mx-icon>
+        <div v-if="showTitle" class="tool-title">{{t('button.notice')}}</div>
       </el-badge>
-      <mx-icon v-else name="event_note" class="tool-icon"></mx-icon>
-      <div v-if="showTitle" class="tool-title">{{t('button.notice')}}</div>
+      <div v-else>
+        <mx-icon name="event_note" class="tool-icon"></mx-icon>
+        <div v-if="showTitle" class="tool-title">{{t('button.notice')}}</div>
+      </div>
     </el-button>
   </div>
 </template>
 
 <script>
   import MxIcon from '@/components/mx-icon'
-  import {t} from '@/locale'
+  import { t } from '@/locale'
 
   export default {
     name: 'mx-normal-favority-tools',
@@ -27,7 +31,8 @@
       favorityTools: Array,
       noticePath: String,
       noticeValue: Number,
-      showTitle: {type: Boolean, default: true}
+      showTitle: {type: Boolean, default: true},
+      loginUserName: {type: String, default: ''}
     },
     data () {
       return {
