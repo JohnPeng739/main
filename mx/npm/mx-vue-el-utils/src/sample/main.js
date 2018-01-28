@@ -10,7 +10,7 @@ import {MyLanguage, setLanguage} from './lang'
 
 Vue.config.productionTip = false
 
-setLanguage('zh-CN')
+setLanguage('en')
 Vue.use(ElementUI, {locale: MyLanguage.elLang})
 Vue.use(MxVueElUtils, {locale: MyLanguage.mxLang})
 

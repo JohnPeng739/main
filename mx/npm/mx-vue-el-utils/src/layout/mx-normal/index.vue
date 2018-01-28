@@ -12,7 +12,7 @@
       </layout-header>
     </el-header>
     <el-main class="layout-main">
-      <layout-nav-menu :toggled="toggled" :role="role" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav">
+      <layout-nav-menu :toggled="toggled()" :role="role" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav">
       </layout-nav-menu>
       <div class="layout-right">
         <el-breadcrumb>
@@ -52,7 +52,7 @@
     },
     data () {
       return {
-        toggled: false,
+        toggleState: false,
         t: t
       }
     },
@@ -83,6 +83,9 @@
       }
     },
     methods: {
+      toggled () {
+        return this.toggleState || document.documentElement.clientWidth < 640
+      },
       findMenuItem (path, items) {
         if (items && items.length > 0) {
           for (let index = 0; index < items.length; index++) {
@@ -107,8 +110,8 @@
         this.$emit('goto', path)
       },
       handleNavToggled () {
-        logger.debug('click the nav toggle, old: %s.', this.toggled)
-        this.toggled = !this.toggled
+        logger.debug('click the nav toggle, old: %s.', this.toggleState)
+        this.toggleState = !this.toggleState
       },
       handleLogout () {
         this.$emit('logout')

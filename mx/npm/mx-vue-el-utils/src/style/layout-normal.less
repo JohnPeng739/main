@@ -21,10 +21,11 @@ body {
   .button {
     display: inline-block;
     vertical-align: middle;
-    margin: 0;
+    margin: 2vh auto;
+    padding: 0;
     .toggle-icon {
       padding-left: 10px;
-      font-size: @header-height - 4vh;
+      font-size: @header-icon-size;
       color: @header-color;
     }
   }
@@ -32,45 +33,40 @@ body {
     display: inline-block;
     vertical-align: middle;
     padding-left: 5px;
-    font-size: x-large;
+    font-size: @header-font-size;
     font-weight: 600;
   }
   .favority-tools {
     display: inline-block;
     float: right;
-    padding-top: 8px;
     .tools {
       text-align: center;
-      width: @button-width - 30px;
+      width: @button-width;
       color: @header-color;
       &:hover {
         color: @header-hover-color;
       }
       .tool-icon {
-        font-size: 24px;
-      }
-      .tool-title {
-        font-size: 16px;
-        padding-top: 2px;
+        font-size: @header-icon-size;
       }
       .badge-item {
-        margin: 15px 0 0 0;
+        vertical-align: baseline;
         .tool-icon {
-          margin-top: -15px;
-          margin-right: 2px;
-          font-size: 24px;
+          font-size: @header-icon-size - 1.5vh;
         }
       }
     }
   }
   .account {
     float: right;
+    padding: 0;
+    margin: 2vh auto;
     .account-icon {
       float: right;
       padding-left: 30px;
       padding-right: 10px;
       color: lightcyan;
-      font-size: 7vh;
+      font-size: @header-icon-size;
     }
   }
 }

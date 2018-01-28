@@ -1,7 +1,9 @@
 @header-color: white;
-@header-hover-color: greenyellow;
+@header-hover-color: #67C23A;
 @header-bg-color: #657180;
 @header-height: 10vh;
+@header-icon-size: @header-height * 0.65;
+@header-font-size: @header-height * 0.48;
 
 @nav-color: rgb(50, 65, 87);
 
@@ -11,6 +13,6 @@
 @content-text-font-size: 14px;
 @content-text-weight: 300;
 
-@button-width: 100px;
+@button-width: @header-height * 0.75;
 @button-color: lighten(@header-bg-color, 20%);
 @button-hover-color: mix(red, darken(@button-color, 80%));
