@@ -1,6 +1,6 @@
 <template>
   <mx-choose-input ref="chooseDict" v-model="chooseDict" v-on:selected="handleSelected" displayFormat="{fullName}"
-                placeholder="请选择..." :popover-width="550" :readonly="true" :disabled="disabled">
+                   placeholder="t('button.choose')" :popover-width="550" :readonly="true" :disabled="disabled">
     <el-row type="flex">
       <el-col :span="24">
         <el-table :data="tableData" :max-height="400" highlight-current-row @current-change="handleCurrentChange">
@@ -20,12 +20,14 @@
 
 <script>
   import { logger } from 'mx-app-utils'
+  import { t } from '@/locale'
 
   export default {
     name: 'mx-choose-user-input',
     props: ['value', 'disabled'],
     data () {
       return {
+        t: t,
         tableData: [],
         selected: null,
         pagination: {

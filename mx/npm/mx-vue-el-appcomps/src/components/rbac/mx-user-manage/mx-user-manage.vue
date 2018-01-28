@@ -250,7 +250,7 @@
             break
           case 'edit':
           case 'delete':
-          case 'details':
+          case 'detail':
             if (!this.selected) {
               this.$mxInfo(t('rbac.common.message.needChoose', {module: t('rbac.user.module')}))
               break

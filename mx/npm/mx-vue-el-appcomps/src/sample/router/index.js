@@ -15,43 +15,43 @@ import {
 export const navData = [{
   path: '/',
   icon: 'apps',
-  name: '首页'
+  name: 'nav.home'
 }, {
   path: '/manage',
   icon: 'apps',
-  name: '管理',
+  name: 'nav.manage.value',
   children: [{
     path: '/manage/user',
     icon: 'apps',
-    name: '用户管理'
+    name: 'nav.manage.user'
   }, {
     path: '/manage/account',
     icon: 'apps',
-    name: '账户管理'
+    name: 'nav.manage.account'
   }, {
     path: '/manage/role',
     icon: 'apps',
-    name: '角色管理'
+    name: 'nav.manage.role'
   }, {
     path: '/manage/privilege',
     icon: 'apps',
-    name: '特权管理'
+    name: 'nav.manage.privilege'
   }, {
     path: '/manage/department',
     icon: 'apps',
-    name: '部门管理'
+    name: 'nav.manage.department'
   }, {
     path: '/manage/accredit',
     icon: 'apps',
-    name: '授权管理'
+    name: 'nav.manage.accredit'
   }, {
     path: '/manage/logs',
     icon: 'apps',
-    name: '日志管理'
+    name: 'nav.manage.logs'
   }, {
-    path: '/manage/login',
+    path: '/manage/loginHistory',
     icon: 'apps',
-    name: '登陆历史管理'
+    name: 'nav.manage.loginHistory'
   }]
 }]
 
@@ -90,7 +90,7 @@ const router = new Router({
       component: MxDepartmentManage,
       meta: {needAuth: true}
     }, {
-      path: '/manage/login',
+      path: '/manage/loginHistory',
       component: MxLoginHistoryManage
     }, {
       path: '/manage/logs',

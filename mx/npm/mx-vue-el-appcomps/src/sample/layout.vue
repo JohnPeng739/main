@@ -1,5 +1,5 @@
 <template>
-  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
+  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="transformedNavData"
                     v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto">
     <router-view slot="content-body"></router-view>
   </mx-normal-layout>
@@ -16,12 +16,18 @@
       return {
         title: 'The Demo System',
         loginUserName: 'NA',
-        role: 'admin',
-        navData: navData
+        role: 'admin'
       }
     },
     computed: {
       ...mapGetters(['authenticated', 'loginUser']),
+      transformedNavData: {
+        get () {
+          this.transformNavData(navData)
+          return navData
+        },
+        set (val) {}
+      },
       tools: {
         get () {
           return this.loginUser && this.loginUser.favorityTools ? this.loginUser.favorityTools : []
@@ -31,6 +37,18 @@
     },
     methods: {
       ...mapActions(['logout']),
+      transformNavData (list) {
+        if (list && list instanceof Array && list.length > 0) {
+          list.forEach(item => {
+            let name = item.name
+            let val = this.$t(name)
+            if (val && val.length > 0) {
+              item.name = val
+            }
+            this.transformNavData(item.children)
+          })
+        }
+      },
       handleGoto (path) {
         logger.debug('Router click: %s', path)
         this.$router.push(path)

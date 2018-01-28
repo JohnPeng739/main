@@ -6,13 +6,14 @@
 @header-font-size: @header-height * 0.48;
 
 @nav-color: rgb(50, 65, 87);
+@icon-hover-color: rgba(red(@header-hover-color), green(@header-hover-color), blue(@header-hover-color), 0.1);
 
-@content-color: mix(red, @header-bg-color);
+@content-color: @header-bg-color;
 @content-bg-color: @header-color;
 @content-min-height: 90vh;
 @content-text-font-size: 14px;
 @content-text-weight: 300;
 
-@button-width: @header-height * 0.75;
-@button-color: lighten(@header-bg-color, 20%);
-@button-hover-color: mix(red, darken(@button-color, 80%));
+@button-width: @header-height * 0.7;
+@button-color: lighten(@header-bg-color, 0.2);
+@button-hover-color: mix(red, darken(@button-color, 0.8));
