@@ -9,7 +9,9 @@ let info = (message, duration) => Notification({title: t('message.title.prompt')
 
 let confirm = (message, fnOk, fnCancel) => {
   MessageBox.confirm(message, t('message.title.confirm'), {
+    confirmButtonClass: 'button',
     confirmButtonText: t('button.ok'),
+    cancelButtonClass: 'button',
     cancelButtonText: t('button.cancel'),
     type: 'warning'
   }).then(() => {

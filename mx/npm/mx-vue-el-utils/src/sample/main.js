@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import MxVueElUtils from '../../dist/mx-vue-el-utils.min'
-// import MxVueElUtils from '@/index'
+// import MxVueElUtils from '../../dist/mx-vue-el-utils.min'
+import MxVueElUtils from '@/index'
 
 import App from './App'
 import router from './router'

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tag">
     <el-tag class="tag" v-for="item in tags" :key="item" :closable="!disabled" :close-transition="false" :type="type"
             @close="handleDeleteTag(item)" @dblclick.native="handelEditTag(item)">{{item}}
     </el-tag>

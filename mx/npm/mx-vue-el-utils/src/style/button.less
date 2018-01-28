@@ -1,11 +1,24 @@
-.button-border {
+.button {
   overflow: hidden;
-  width: @button-width;
-  padding: 10px 5px;
+  padding: 0;
+  width: @button-width * 1.6;
+  height: @button-width * 0.6;
   font-size: @content-text-font-size;
   color: @button-color;
   &:hover {
     color: @button-hover-color;
-    border: 1px solid @button-hover-color;
+    border: 1px solid @icon-hover-color;
+    background: @icon-hover-color;
+  }
+}
+
+.icon-button {
+  overflow: hidden;
+  padding: 0;
+  color: @button-color;
+  &:hover {
+    color: @button-hover-color;
+    border: 1px solid @icon-hover-color;
+    background: @icon-hover-color;
   }
 }

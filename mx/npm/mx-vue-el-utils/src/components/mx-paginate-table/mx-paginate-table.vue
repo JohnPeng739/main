@@ -3,11 +3,15 @@
     <el-row type="flex">
       <el-col :span="24">
         <span class="pg-layout-buttons">
-          <el-button v-for="item in buttons" :key="item.code" :plain="true" type="text"
-                     @click.native="handdleButtonClick(item.code)" class="button">
-            <mx-icon v-if="item.icon" :name="item.icon"></mx-icon>
-            {{item.name}}
-          </el-button>
+          <el-tooltip v-for="item in buttons" :key="item.code" effect="dark" placement="bottom">
+            <div slot="content">
+              <span>{{item.name}}</span>
+            </div>
+            <el-button :plain="true" type="text"
+                       @click.native="handdleButtonClick(item.code)" class="button">
+              <mx-icon v-if="item.icon" :name="item.icon"></mx-icon>
+            </el-button>
+          </el-tooltip>
         </span>
       </el-col>
     </el-row>
@@ -29,7 +33,7 @@
 <script>
   import { logger } from 'mx-app-utils'
   import MxIcon from '@/components/mx-icon'
-  import {t} from '@/locale'
+  import { t } from '@/locale'
 
   let defaultButtons = ['add', 'edit', 'delete', 'details', 'refresh']
 
