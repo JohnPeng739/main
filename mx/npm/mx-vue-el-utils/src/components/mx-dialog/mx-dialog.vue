@@ -24,14 +24,14 @@
     data () {
       return {
         visible: false,
-        operate: 'detail',
+        operate: 'details',
         width: '60%',
         t: t
       }
     },
     computed: {
       readonly () {
-        return this.operate === 'detail'
+        return this.operate === 'details'
       }
     },
     methods: {

@@ -3,7 +3,7 @@
     <el-select v-model="operate">
       <el-option value="add" label="新增"></el-option>
       <el-option value="edit" label="修改"></el-option>
-      <el-option value="detail" label="详情"></el-option>
+      <el-option value="details" label="详情"></el-option>
     </el-select>
     <button type="primary" @click="handleShowModalDialog">显示模态对话框</button>
     <mx-dialog ref="dialogPane" :title="title" v-on:reset="handleReset" v-on:submit="handleSubmit"
@@ -29,7 +29,7 @@
     name: 'test-dialog-page',
     data () {
       return {
-        operate: 'detail',
+        operate: 'details',
         formUser: {code: 'abcd', name: '123143434545674567'},
         rulesUser: {
           code: [MxFormValidateRules.requiredRule({msg: '必须输入代码'}), MxFormValidateRules.rangeRule({min: 3, max: 10})],
@@ -47,13 +47,13 @@
             return '新增用户'
           case 'edit':
             return '修改用户信息'
-          case 'detail':
+          case 'details':
           default:
             return '显示用户详情'
         }
       },
       readonly () {
-        return this.operate === 'detail'
+        return this.operate === 'details'
       }
     },
     methods: {
