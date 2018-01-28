@@ -41,7 +41,7 @@
     name: 'mx-paginate-table',
     components: {MxIcon},
     props: {
-      buttonLayout: Array
+      buttonsLayout: Array
     },
     data () {
       return {
