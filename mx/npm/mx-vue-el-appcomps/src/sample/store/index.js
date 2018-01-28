@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {MxStoreAccount} from '../../../dist/mx-vue-el-appcomps.min'
+// import MxStoreAccount from '@/store/account'
 
 Vue.use(Vuex)
 

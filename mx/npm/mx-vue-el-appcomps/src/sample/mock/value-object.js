@@ -39,6 +39,7 @@ let role = {
 let account = {
   ...dict,
   'owner': dict,
+  'favorityTools': ['/manage/user', '/manage/account', '/manage/accredit'],
   'roles|1-5': [dict]
 }
 
@@ -66,7 +67,7 @@ let accredit = {
 
 let loginHistory = {
   'id': '@id',
-  'account': dict,
+  'account': account,
   'loginTime': '@integer(1413763339001, 1513763339001)',
   'logoutTime|1': ['@integer(1413763339001, 1513763339001)', undefined],
   'online|1': true

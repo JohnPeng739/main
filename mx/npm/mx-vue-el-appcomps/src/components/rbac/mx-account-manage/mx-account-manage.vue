@@ -59,7 +59,7 @@
         </el-row>
       </el-form>
     </mx-dialog>
-    <dialog-pane ref="dialogPanePassword" :title="t('rbac.account.title.password')" v-on:reset="handleResetPassword"
+    <mx-dialog ref="dialogPanePassword" :title="t('rbac.account.title.password')" v-on:reset="handleResetPassword"
                  v-on:submit="handleSubmitPassword" class="layout-dialog">
       <el-form ref="formPassword" slot="form" :model="formPassword" :rules="rulesPassword" label-width="130px"
                class="dialog-form">
@@ -95,7 +95,7 @@
           </el-col>
         </el-row>
       </el-form>
-    </dialog-pane>
+    </mx-dialog>
   </div>
 </template>
 

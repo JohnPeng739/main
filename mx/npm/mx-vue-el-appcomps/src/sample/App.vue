@@ -1,4 +1,5 @@
 <style rel="stylesheet/less" lang="less">
+  @import "element-ui/lib/theme-chalk/display.css";
   @import "./style/base.less";
   @import "~mx-vue-el-utils/dist/style/less/button.less";
   @import "~mx-vue-el-utils/dist/style/less/dialog.less";

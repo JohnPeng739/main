@@ -3,6 +3,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import MxVueElUtils from 'mx-vue-el-utils'
 import MxAppComps from '../../dist/mx-vue-el-appcomps.min'
+// import MxAppComps from '@/index'
 
 import App from './App'
 import router from './router'

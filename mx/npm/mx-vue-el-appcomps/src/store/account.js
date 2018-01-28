@@ -45,8 +45,8 @@ const actions = {
     logger.debug('send POST "%s", data: %j.', url, {code, password})
     MxAjax.post(url, {accountCode: code, password, forcedReplace: forced}, data => {
       if (data && data.account) {
-        let {id, code, name, tools, role} = data.account
-        commit(LOGIN, {id, code, name, tools, role})
+        let {id, code, name, favorityTools, role} = data.account
+        commit(LOGIN, {id, code, name, favorityTools, role})
         if (success && typeof success === 'function') {
           success(data)
         }
@@ -77,8 +77,8 @@ const actions = {
 }
 
 const mutations = {
-  LOGIN (state, {id, code, name, role, tools}) {
-    let user = {id, code, name, role, tools}
+  LOGIN (state, {id, code, name, role, favorityTools}) {
+    let user = {id, code, name, role, favorityTools}
     state.loginUser = user
     if (window.sessionStorage) {
       let json = JSON.stringify(user)

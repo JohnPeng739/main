@@ -17,12 +17,17 @@
         title: 'The Demo System',
         loginUserName: 'NA',
         role: 'admin',
-        tools: [],
         navData: navData
       }
     },
     computed: {
-      ...mapGetters(['authenticated', 'loginUser'])
+      ...mapGetters(['authenticated', 'loginUser']),
+      tools: {
+        get () {
+          return this.loginUser && this.loginUser.favorityTools ? this.loginUser.favorityTools : []
+        },
+        set (val) {}
+      }
     },
     methods: {
       ...mapActions(['logout']),
