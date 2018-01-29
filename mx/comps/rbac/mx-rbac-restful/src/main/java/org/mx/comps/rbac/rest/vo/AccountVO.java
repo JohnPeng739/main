@@ -16,6 +16,7 @@ public class AccountVO extends BaseDictVO {
     private String password;
     private UserVO owner;
     private List<RoleVO> roles;
+    // TODO 添加token
 
     public static void transform(Account account, AccountVO accountVO) {
         if (account == null || accountVO == null) {
