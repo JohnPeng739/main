@@ -54,6 +54,7 @@ export default {
   locale: MxLocale.use,
   i18n: MxLocale.i18n,
   install,
+  MxLocale,
   MxNotify,
   MxAjax,
   MxEcharts,
