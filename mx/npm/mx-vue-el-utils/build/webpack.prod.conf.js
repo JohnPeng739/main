@@ -142,9 +142,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     new CopyWebpackPlugin([{
       from: path.resolve('src/style'),
       to: 'style/less'
-    }, {
-      from: path.resolve('src/locale'),
-      to: 'locale'
     }])
     // copy custom static assets
     //new CopyWebpackPlugin([

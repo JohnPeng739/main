@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button type="text" class="button" @click="handleNavToggled">
+    <el-button type="text" class="toggle-button" @click="handleNavToggled">
       <mx-icon name="apps" class="toggle-icon"></mx-icon>
     </el-button>
     <span class="title hidden-xs-only">{{title}}</span>

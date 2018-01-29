@@ -1,7 +1,7 @@
 <template>
   <div>
     <mx-paginate-table ref="paginatePane" :buttons-layout="buttonsLayout" v-on:buttonHandle="handleButtonClick">
-      <el-table :data="tableData" :max-height="560" class="table" header-row-class-name="table-header"
+      <el-table id="__table" :data="tableData" class="table" :maxHeight="maxHeight" header-row-class-name="table-header"
                 highlight-current-row @current-change="handleCurrentChange">
         <el-table-column prop="code" label="代码"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
@@ -18,6 +18,7 @@
     name: 'test-paginate-content',
     data () {
       return {
+        maxHeight: 500,
         tableData: [],
         buttonsLayout: ['delete', 'details', 'edit', 'refresh', 'add', {code: 'custom', name: '自定义', icon: 'apps'}]
       }
@@ -42,6 +43,7 @@
       }
     },
     mounted () {
+      this.maxHeight = document.getElementById('__table').clientHeight
       this.handleRefresh()
     }
   }
