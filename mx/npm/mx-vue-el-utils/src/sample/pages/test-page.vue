@@ -1,8 +1,8 @@
 <template>
   <div>
     <mx-paginate-table ref="paginatePane" :buttons-layout="buttonsLayout" v-on:buttonHandle="handleButtonClick">
-      <el-table :data="tableData" :max-height="560" class="layout-table" highlight-current-row
-                @current-change="handleCurrentChange">
+      <el-table :data="tableData" :max-height="560" class="table" header-row-class-name="table-header"
+                highlight-current-row @current-change="handleCurrentChange">
         <el-table-column prop="code" label="代码"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="desc" label="描述"></el-table-column>

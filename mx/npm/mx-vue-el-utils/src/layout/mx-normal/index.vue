@@ -4,7 +4,7 @@
       <layout-header :title="title" :login-user-name="loginUserName" :nav-data="navData"
                      v-on:navToggled="handleNavToggled" v-on:logout="handleLogout"
                      v-on:showUserInfo="handleShowUserInfo">
-        <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only" :role="role"
+        <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only hidden-sm-only" :role="role"
                                    :favority-tools="favorityTools" :notice-path="noticePath"
                                    :notice-value="noticeValue" v-on:goto="handleGoto"
                                    v-on:showNotice="handleShowNotice">
