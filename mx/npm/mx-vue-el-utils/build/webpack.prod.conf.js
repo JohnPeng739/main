@@ -35,6 +35,26 @@ const webpackConfig = merge(baseWebpackConfig, {
     filename: '[name].min.js',
     chunkFilename: '[id].min.js'
   },
+  externals: {
+    vue: {
+      root: 'Vue',
+      commonjs: 'vue',
+      commonjs2: 'vue',
+      amd: 'vue'
+    },
+    'element-ui': {
+      root: 'ElementUI',
+      commonjs: 'element-ui',
+      commonjs2: 'element-ui',
+      amd: 'element-ui'
+    },
+    'mx-app-utils': {
+      root: 'MxAppUtils',
+      commonjs: 'mx-app-utils',
+      commonjs2: 'mx-app-utils',
+      amd: 'mx-app-utils'
+    }
+  },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({

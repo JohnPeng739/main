@@ -1,6 +1,6 @@
 {
   "name": "mx-vue-el-utils",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "一个基于Vue、ElementUI的前端项目框架组件库。",
   "private": false,
   "license": "MIT",
@@ -33,7 +33,7 @@
     "element-ui": "^2.0.11",
     "material-design-icons": "^3.0.1",
     "mockjs": "^1.0.1-beta3",
-    "mx-app-utils": "^1.6.0",
+    "mx-app-utils": "^1.6.2",
     "vue": "^2.5.13",
     "vue-i18n": "^7.3.4",
     "vue-router": "^3.0.1",
