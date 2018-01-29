@@ -1,8 +1,7 @@
 // import formValidateRules from '../../../src/utils/form-validate-rules'
 import {MxLocale, MxFormValidateRules} from '../../../dist/mx-vue-el-utils.min'
-import mxZhCN from '../../../dist/locale/lang/zh-CN'
 
-MxLocale.use(mxZhCN)
+MxLocale.use(MxLocale.MxZhCN)
 
 describe('test form validate rules', () => {
   it('test required rule', () => {
