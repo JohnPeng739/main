@@ -4,7 +4,7 @@ const ManifestPlugin = require('webpack-manifest-plugin')
 
 module.exports = {
     entry: {
-        "index": path.resolve(__dirname, 'src/index.js'),
+        "mx-app-utils": path.resolve(__dirname, 'src/index.js'),
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
@@ -12,7 +12,8 @@ module.exports = {
     ],
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'mx-app-utils.min.js',
+        filename: '[name].min.js',
+        chunkFilename: '[id].min.js',
         libraryTarget: 'umd'
-    },
+    }
 }
