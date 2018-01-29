@@ -1,10 +1,11 @@
-import defaultLang from './lang/zh-CN'
+import AppEn from './lang/en'
+import AppZhCN from './lang/zh-CN'
 import Vue from 'vue'
 import deepmerge from 'deepmerge'
 import Format from './format'
 
 const format = Format(Vue)
-let lang = defaultLang
+let lang = AppEn
 let merged = false
 let i18nHandler = function () {
   const vuei18n = Object.getPrototypeOf(this || Vue).$t
@@ -46,4 +47,4 @@ export const i18n = function (fn) {
   i18nHandler = fn || i18nHandler
 }
 
-export default { use, t, i18n }
+export default { use, t, i18n, AppEn, AppZhCN }

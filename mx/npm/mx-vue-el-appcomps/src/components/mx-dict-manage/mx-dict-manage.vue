@@ -1,8 +1,8 @@
 <template>
   <div>
     <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick">
-      <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
-                highlight-current-row>
+      <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
+                highlight-current-row header-row-class-name="table-header">
         <el-table-column prop="code" :label="t('rbac.common.fields.code')" :width="100"></el-table-column>
         <el-table-column prop="name" :label="t('rbac.common.fields.name')" :width="120"></el-table-column>
         <el-table-column prop="createdTime" :label="t('rbac.common.fields.createdTime')" :width="100">

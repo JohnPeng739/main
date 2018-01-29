@@ -49,6 +49,7 @@ export default {
   locale: AppLocale.use,
   i18n: AppLocale.i18n,
   install,
+  AppLocale,
   MxChooseDictInput,
   MxChooseDictTag,
   MxDictManage,
@@ -65,6 +66,7 @@ export default {
 }
 
 export {
+  AppLocale,
   MxChooseDictInput,
   MxChooseDictTag,
   MxDictManage,
