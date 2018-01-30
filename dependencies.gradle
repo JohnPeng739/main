@@ -39,7 +39,7 @@ ext.versions = [
   'mx-rbac-restful'	: '3.1.4',
 
   'mx-file-service'	: '1.1.2',
-  'mx-notify-server'	: '1.0.5'
+  'mx-notify-server'	: '1.0.6'
 ]
 
 ext.libs = [

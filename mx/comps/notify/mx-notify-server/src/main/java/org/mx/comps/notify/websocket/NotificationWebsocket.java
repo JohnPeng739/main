@@ -21,7 +21,7 @@ import java.io.InputStream;
  */
 @Component("notifyWebsocket")
 @WebSocket
-public class NotificationWebsocket extends BaseWebsocket {
+public final class NotificationWebsocket extends BaseWebsocket {
     private static final Log logger = LogFactory.getLog(NotificationWebsocket.class);
 
     @Autowired
