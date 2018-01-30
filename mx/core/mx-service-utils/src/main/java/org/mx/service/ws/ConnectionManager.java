@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.TypeUtils;
+import org.mx.spring.SpringContextHolder;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,7 +28,6 @@ public final class ConnectionManager {
     private ConcurrentMap<String, ConnectionPerIp> connectionsPerIp = null;
     private ConcurrentSkipListSet<String> blockIps = null;
     private Timer cleanTimer = null;
-    private int cleanPeriodMs = 30 * 1000;
     private int testCycleSec = 10, maxNumber = 30, maxIdleSec = 10;
 
     /**
@@ -51,6 +51,10 @@ public final class ConnectionManager {
         this.testCycleSec = testCycleSec;
         this.maxNumber = maxNumber;
         this.maxIdleSec = maxIdleSec;
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Set DDOS parameters: testCycleSec: %d, maxNumber: %d, maxIdleSec: %d.",
+                    testCycleSec, maxNumber, maxIdleSec));
+        }
     }
 
     /**
@@ -70,6 +74,12 @@ public final class ConnectionManager {
      */
     public Session getSession(String connectKey) {
         return connections.get(connectKey);
+    }
+
+    private String getConnectKey(Session session) {
+        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
+        int port = session.getRemoteAddress().getPort();
+        return String.format("%s:%d", ip, port);
     }
 
     /**
@@ -93,6 +103,10 @@ public final class ConnectionManager {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Registry IP: %s, number: %d.", ip, connectionsPerIp.get(ip).connectNumber));
         }
+        ConnectionLifeCycleListener listener = SpringContextHolder.getBean(ConnectionLifeCycleListener.class);
+        if (listener != null) {
+            listener.afterRegistry(key);
+        }
     }
 
     /**
@@ -108,6 +122,10 @@ public final class ConnectionManager {
             if (connections.containsKey(key)) {
                 connections.remove(key);
             }
+        }
+        ConnectionLifeCycleListener listener = SpringContextHolder.getBean(ConnectionLifeCycleListener.class);
+        if (listener != null) {
+            listener.afterUnregistry(key);
         }
         // 对于connectionsPerIp，由守护线程来进行清理。
     }
@@ -125,6 +143,10 @@ public final class ConnectionManager {
             if (connections.containsKey(key) && connectionsPerIp.containsKey(ip)) {
                 connectionsPerIp.compute(ip, (k, v) -> v.confirm());
             }
+        }
+        ConnectionLifeCycleListener listener = SpringContextHolder.getBean(ConnectionLifeCycleListener.class);
+        if (listener != null) {
+            listener.afterConfirm(key);
         }
     }
 
@@ -208,7 +230,7 @@ public final class ConnectionManager {
      */
     public void init() {
         cleanTimer = new Timer();
-        cleanTimer.scheduleAtFixedRate(new CleanTask(), cleanPeriodMs, cleanPeriodMs);
+        cleanTimer.scheduleAtFixedRate(new CleanTask(), 7000, 7000);
     }
 
     /**

@@ -9,6 +9,7 @@ import org.eclipse.jetty.websocket.common.frames.PingFrame;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
 import org.mx.service.ws.ConnectRuleFactory;
+import org.mx.service.ws.ConnectionLifeCycleListener;
 import org.mx.service.ws.ConnectionManager;
 import org.mx.service.ws.rule.ConnectFilterRule;
 import org.mx.spring.SpringContextHolder;
@@ -26,7 +27,6 @@ public class BaseWebsocket {
 
     private String path = "/";
 
-    private ConnectionManager manager1 = null;
     private boolean autoConfirmConnection = true;
 
     /**
@@ -46,6 +46,12 @@ public class BaseWebsocket {
         this();
         this.path = path;
         this.autoConfirmConnection = autoConfirmConnection;
+    }
+
+    private String getConnectKey(Session session) {
+        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
+        int port = session.getRemoteAddress().getPort();
+        return String.format("%s:%d", ip, port);
     }
 
     /**
@@ -196,12 +202,20 @@ public class BaseWebsocket {
      */
     @OnWebSocketConnect
     public final void onConnection(Session session) {
+        ConnectionLifeCycleListener listener = SpringContextHolder.getBean(ConnectionLifeCycleListener.class);
+        String connectKey = getConnectKey(session);
+        if (listener != null) {
+            listener.beforeConnect(connectKey);
+        }
         ConnectionManager manager = SpringContextHolder.getBean(ConnectionManager.class);
         if (allow(session)) {
             manager.registryConnection(session);
             this.afterConnect(session);
         } else {
             manager.blockConnection(session);
+        }
+        if (listener != null) {
+            listener.afterConnect(connectKey);
         }
     }
 
@@ -214,9 +228,17 @@ public class BaseWebsocket {
      */
     @OnWebSocketClose
     public final void onClose(Session session, int statusCode, String reason) {
+        ConnectionLifeCycleListener listener = SpringContextHolder.getBean(ConnectionLifeCycleListener.class);
+        String connectKey = getConnectKey(session);
+        if (listener != null) {
+            listener.beforeClose(connectKey);
+        }
         this.beforeClose(session, statusCode, reason);
         ConnectionManager manager = SpringContextHolder.getBean(ConnectionManager.class);
         manager.unregistryConnection(session);
+        if (listener != null) {
+            listener.afterClose(connectKey);
+        }
     }
 
     /**
@@ -227,6 +249,10 @@ public class BaseWebsocket {
      */
     @OnWebSocketError
     public final void onError(Session session, Throwable throwable) {
+        ConnectionLifeCycleListener listener = SpringContextHolder.getBean(ConnectionLifeCycleListener.class);
+        if (listener != null) {
+            listener.hasError(getConnectKey(session), throwable);
+        }
         this.afterError(session, throwable);
     }
 

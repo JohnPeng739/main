@@ -136,7 +136,7 @@ public class WsClientInvoke {
     }
 
     private void reconnect() {
-        if (client == null || client.getReadyState() != WebSocket.READYSTATE.OPEN) {
+        if ((client == null || client.getReadyState() != WebSocket.READYSTATE.OPEN) && reconnect) {
             this.close();
             this.init();
             if (logger.isDebugEnabled()) {

@@ -44,7 +44,7 @@ public class TestDdosFilter {
             ExecutorService service = Executors.newFixedThreadPool(50);
             Set<TestWebsocketTask> tasks = new HashSet<>();
             for (int index = 0; index < 19; index++) {
-                tasks.add(new TestWebsocketTask(0, 21, false));
+                tasks.add(new TestWebsocketTask(0, 5, false));
             }
             List<Future<Boolean>> result = service.invokeAll(tasks);
             boolean finish, success = true;
@@ -53,7 +53,9 @@ public class TestDdosFilter {
                 for (Future<Boolean> future : result) {
                     if (future.isDone()) {
                         try {
-                            future.get();
+                            if (!future.get()) {
+                                success = false;
+                            }
                         } catch (ExecutionException ex) {
                             success = false;
                         }
@@ -106,6 +108,7 @@ public class TestDdosFilter {
             if (!success) {
                 fail("Some error");
             }
+            Thread.sleep(3000);
             service.shutdownNow();
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -124,19 +127,21 @@ public class TestDdosFilter {
             ExecutorService service = Executors.newFixedThreadPool(50);
             Set<TestWebsocketTask> tasks = new HashSet<>();
             for (int index = 0; index < 10; index++) {
-                tasks.add(new TestWebsocketTask(0, 20, true));
+                tasks.add(new TestWebsocketTask(0, 15, true));
             }
-            tasks.add(new TestWebsocketTask(12, 2, true));
+            tasks.add(new TestWebsocketTask(15, 1, false));
             List<Future<Boolean>> result = service.invokeAll(tasks);
+
             boolean finish, success = true;
             do {
                 finish = true;
                 for (Future<Boolean> future : result) {
                     if (future.isDone()) {
                         try {
-                            future.get();
+                            if (!future.get()) {
+                                success = false;
+                            }
                         } catch (ExecutionException ex) {
-                            ex.printStackTrace();
                             success = false;
                         }
                         break;
@@ -148,6 +153,8 @@ public class TestDdosFilter {
             if (!success) {
                 fail("Some error");
             }
+
+            Thread.sleep(20000);
             service.shutdownNow();
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -176,17 +183,18 @@ public class TestDdosFilter {
             }
             WsClientInvoke invoke1 = new WsClientInvoke();
             TestWebsocketListener listener = new TestWebsocketListener();
-            invoke1.init("ws://localhost:9997/echo", listener);
+            invoke1.init("ws://localhost:9997/echo", listener, false);
             Thread.sleep(1000 * connectDelaySec);
+            boolean result = true;
             if (needFail) {
                 try {
                     String msg = "hello, john";
                     invoke1.send(msg);
                     Thread.sleep(1000);
                     assertEquals(String.format("Server echo: %s.", msg), listener.textMsg);
-                    fail("here need a exception.");
+                    result = false;
                 } catch (Throwable ex) {
-                    ex.printStackTrace();
+                    // ex.printStackTrace();
                 }
             } else {
                 try {
@@ -201,11 +209,12 @@ public class TestDdosFilter {
                     assertEquals(WebSocket.READYSTATE.CLOSED, invoke1.getState());
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    fail(ex.getMessage());
+                    result = false;
                 }
             }
-            System.out.println("**********Test Successfully*************");
-            return true;
+            invoke1.close();
+            System.out.println("**********Test " + result + "*************");
+            return result;
         }
     }
 
