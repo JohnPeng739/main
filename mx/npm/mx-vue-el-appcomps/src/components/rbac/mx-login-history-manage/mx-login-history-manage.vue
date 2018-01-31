@@ -1,8 +1,8 @@
 <template>
   <div>
     <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick" :buttons-layout="['details', 'refresh']">
-      <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
-                highlight-current-row>
+      <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
+                highlight-current-row  header-row-class-name="table-header">
         <el-table-column :label="t('rbac.common.fields.name')" :width="150">
           <template slot-scope="scope">
             {{scope.row.account && scope.row.account.name ? scope.row.account.name : 'NA'}}
@@ -68,15 +68,10 @@
 
   export default {
     name: 'mx-login-history-manage',
-    props: {
-      tableMaxHeight: {
-        type: Number,
-        default: 540
-      }
-    },
     data () {
       return {
         t: t,
+        tableMaxHeight: 540,
         tableData: [],
         operate: 'details',
         selected: null,
@@ -154,6 +149,11 @@
       }
     },
     mounted () {
+      if (!this.$isServer) {
+        if (this.$el) {
+          this.tableMaxHeight = this.$el.clientHeight - 110
+        }
+      }
       this.refreshData(null)
     }
   }

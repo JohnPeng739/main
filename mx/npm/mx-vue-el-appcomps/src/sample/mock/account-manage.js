@@ -12,13 +12,33 @@ export default [{
   type: 'post',
   data: {
     errorCode: 0,
-    erroeMessage: '',
+    errorMessage: '',
     pagination: {
       'total': 100,
       'size': 20,
       'page': 1
     },
     'data|5-20': [log]
+  }
+}, {
+  path: /\/rest\/loginHistories(\?\w=\w(&\w=\w)*)?/,
+  type: 'get',
+  data: {
+    errorCode: 0,
+    'data|5-20': [loginHistory]
+  }
+}, {
+  path: /\/rest\/loginHistories(\?\w=\w(&\w=\w)*)?/,
+  type: 'post',
+  data: {
+    errorCode: 0,
+    errorMessage: '',
+    pagination: {
+      'total': 100,
+      'size': 20,
+      'page': 1
+    },
+    'data|5-20': [loginHistory]
   }
 }, {
   path: /\/rest\/login(\?\w=\w(&\w=\w)*)?/,
@@ -35,26 +55,6 @@ export default [{
     data: loginHistory
   }
 }, {
-  path: /\/rest\/loginHistories(\?\w=\w(&\w=\w)*)?/,
-  type: 'get',
-  data: {
-    errorCode: 0,
-    'data|5-20': [loginHistory]
-  }
-}, {
-  path: /\/rest\/loginHistories(\?\w=\w(&\w=\w)*)?/,
-  type: 'post',
-  data: {
-    errorCode: 0,
-    erroeMessage: '',
-    pagination: {
-      'total': 100,
-      'size': 20,
-      'page': 1
-    },
-    'data|5-20': [loginHistory]
-  }
-}, {
   path: /\/rest\/accounts(\?\w=\w(&\w=\w)*)?/,
   type: 'get',
   data: {
@@ -66,7 +66,7 @@ export default [{
   type: 'post',
   data: {
     errorCode: 0,
-    erroeMessage: '',
+    errorMessage: '',
     pagination: {
       'total': 100,
       'size': 20,

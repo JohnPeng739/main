@@ -1,5 +1,5 @@
 <template>
-  <mx-dict-manage :max-height="tableMaxHeight" module="department"></mx-dict-manage>
+  <mx-dict-manage module="department"></mx-dict-manage>
 </template>
 
 <script>
@@ -7,12 +7,6 @@
 
   export default {
     name: 'mx-department-manage',
-    components: {MxDictManage},
-    props: {
-      tableMaxHeight: {
-        type: Number,
-        default: 540
-      }
-    }
+    components: {MxDictManage}
   }
 </script>

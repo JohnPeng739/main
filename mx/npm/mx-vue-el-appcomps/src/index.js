@@ -34,7 +34,6 @@ const components = [
 const install = function (Vue, opts = {}) {
   AppLocale.use(opts.locale)
   AppLocale.i18n()
-
   components.map(component => {
     Vue.component(component.name, component)
   })
@@ -45,7 +44,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '',
+  version: '1.0.3',
   locale: AppLocale.use,
   i18n: AppLocale.i18n,
   install,

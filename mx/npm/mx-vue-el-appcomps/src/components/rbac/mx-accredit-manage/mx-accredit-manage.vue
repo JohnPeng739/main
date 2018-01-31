@@ -2,8 +2,8 @@
   <div>
     <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick"
                        :buttonsLayout="['add', 'delete', 'details', 'refresh']">
-      <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
-                highlight-current-row>
+      <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
+                highlight-current-row  header-row-class-name="table-header">
         <el-table-column prop="src" :label="t('rbac.accredit.fields.src')" :width="100">
           <template slot-scope="scope">
             {{getUserName(scope.row.src)}}
@@ -98,15 +98,10 @@
   export default {
     name: 'mx-accredit-manage',
     components: {MxChooseDictInput, MxChooseDictTag},
-    props: {
-      tableMaxHeight: {
-        type: Number,
-        default: 540
-      }
-    },
     data () {
       return {
         t: t,
+        tableMaxHeight: 540,
         tableData: [],
         operate: 'details',
         selected: null,
@@ -267,6 +262,11 @@
       }
     },
     mounted () {
+      if (!this.$isServer) {
+        if (this.$el) {
+          this.tableMaxHeight = this.$el.clientHeight - 110
+        }
+      }
       this.refreshData(null)
     }
   }

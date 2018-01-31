@@ -1,8 +1,8 @@
 <template>
   <div>
     <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick">
-      <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
-                highlight-current-row>
+      <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
+                highlight-current-row  header-row-class-name="table-header">
         <el-table-column prop="fullName" :label="t('rbac.user.fields.name')" :width="100"></el-table-column>
         <el-table-column prop="sex" :label="t('rbac.user.fields.sex')" :width="80">
           <template slot-scope="scope">
@@ -95,15 +95,10 @@
   export default {
     name: 'mx-user-manage',
     components: {MxChooseDictInput},
-    props: {
-      tableMaxHeight: {
-        type: Number,
-        default: 540
-      }
-    },
     data () {
       return {
         t: t,
+        tableMaxHeight: 540,
         tableData: [],
         operate: 'details',
         selected: null,
@@ -277,6 +272,11 @@
       }
     },
     mounted () {
+      if (!this.$isServer) {
+        if (this.$el) {
+          this.tableMaxHeight = this.$el.clientHeight - 110
+        }
+      }
       this.refreshData(null)
     }
   }

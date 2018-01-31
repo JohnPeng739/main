@@ -1,6 +1,6 @@
 <template>
   <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick" :buttons-layout="['refresh']">
-    <el-table :data="tableData" :max-height="tableMaxHeight" highlight-current-row>
+    <el-table :data="tableData" class="table" :max-height="tableMaxHeight" highlight-current-row  header-row-class-name="table-header">
       <el-table-column prop="createdTime" :label="t('rbac.logs.fields.time')" :width="170">
         <template slot-scope="scope">
           {{parseDatetime(scope.row.createdTime)}}
@@ -18,15 +18,10 @@
 
   export default {
     name: 'mx-operate-log-manage',
-    props: {
-      tableMaxHeight: {
-        type: Number,
-        default: 540
-      }
-    },
     data () {
       return {
         t: t,
+        tableMaxHeight: 540,
         tableData: []
       }
     },
@@ -57,6 +52,11 @@
       }
     },
     mounted () {
+      if (!this.$isServer) {
+        if (this.$el) {
+          this.tableMaxHeight = this.$el.clientHeight - 110
+        }
+      }
       this.refreshData(null)
     }
   }

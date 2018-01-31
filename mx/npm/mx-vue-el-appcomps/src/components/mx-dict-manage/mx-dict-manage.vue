@@ -54,10 +54,11 @@
 
   export default {
     name: 'mx-dict-manage',
-    props: ['maxHeight', 'module'],
+    props: ['module'],
     data () {
       return {
         t: t,
+        tableMaxHeight: 540,
         tableData: [],
         operate: 'details',
         selected: null,
@@ -74,9 +75,6 @@
       },
       moduleName () {
         return t('rbac.' + this.module + '.module')
-      },
-      tableMaxHeight () {
-        return this.maxHeight
       }
     },
     methods: {
@@ -193,6 +191,11 @@
       }
     },
     mounted () {
+      if (!this.$isServer) {
+        if (this.$el) {
+          this.tableMaxHeight = this.$el.clientHeight - 110
+        }
+      }
       this.refreshData(null)
     }
   }

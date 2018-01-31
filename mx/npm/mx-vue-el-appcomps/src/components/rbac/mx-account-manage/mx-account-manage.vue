@@ -1,8 +1,8 @@
 <template>
   <div>
     <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick" :buttons-layout="buttonsLayout">
-      <el-table :data="tableData" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
-                highlight-current-row>
+      <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
+                highlight-current-row header-row-class-name="table-header">
         <el-table-column prop="code" :label="t('rbac.common.fields.code')" :width="80"></el-table-column>
         <el-table-column prop="name" :label="t('rbac.common.fields.name')" :width="100">
           <template slot-scope="scope">
@@ -109,12 +109,6 @@
   export default {
     name: 'mx-account-manage',
     components: {MxChooseUserInput, MxChooseDictTag},
-    props: {
-      tableMaxHeight: {
-        type: Number,
-        default: 540
-      }
-    },
     data () {
       let passwordMatch = (rule, value, callback) => {
         let {password, confirm} = this.formPassword
@@ -135,6 +129,7 @@
           name: t('rbac.account.title.password'),
           icon: 'lock'
         }, 'refresh'],
+        tableMaxHeight: 540,
         tableData: [],
         operate: 'details',
         selected: null,
@@ -314,6 +309,11 @@
       }
     },
     mounted () {
+      if (!this.$isServer) {
+        if (this.$el) {
+          this.tableMaxHeight = this.$el.clientHeight - 110
+        }
+      }
       this.refreshData(null)
     }
   }
