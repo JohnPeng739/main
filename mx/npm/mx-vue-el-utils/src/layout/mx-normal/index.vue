@@ -4,7 +4,8 @@
       <layout-header :title="title" :login-user-name="loginUserName" :nav-data="navData"
                      v-on:navToggled="handleNavToggled" v-on:logout="handleLogout"
                      v-on:showUserInfo="handleShowUserInfo">
-        <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only hidden-sm-only" :role="role"
+        <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only hidden-sm-only"
+                                   :role="role"
                                    :favority-tools="favorityTools" :notice-path="noticePath"
                                    :notice-value="noticeValue" v-on:goto="handleGoto"
                                    v-on:showNotice="handleShowNotice">
@@ -36,7 +37,7 @@
   import LayoutHeader from './header.vue'
   import LayoutNavFavorityTools from './nav-favority-tools.vue'
   import LayoutNavMenu from './nav-menu.vue'
-  import {t} from '@/locale'
+  import { t } from '@/locale'
 
   export default {
     name: 'mx-normal-layout',
@@ -84,7 +85,11 @@
     },
     methods: {
       toggled () {
-        return this.toggleState || document.documentElement.clientWidth < 640
+        let clientWidth = 1024
+        if (this.$el) {
+          clientWidth = this.$el.clientWidth
+        }
+        return this.toggleState || clientWidth < 640
       },
       findMenuItem (path, items) {
         if (items && items.length > 0) {
