@@ -23,6 +23,7 @@
 
 <script>
   import {formatter} from 'mx-app-utils'
+  import {MxNotify} from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-notify-page',
@@ -37,38 +38,38 @@
     methods: {
       handleInfoClick () {
         let duration = this.duration
-        this.$mxInfo(formatter.format('This is a test information, duration: %d ms.', duration), duration)
+        MxNotify.info(formatter.format('This is a test information, duration: %d ms.', duration), duration)
       },
       handleWarnClick () {
-        this.$mxWarn('This is a test warning message.')
+        MxNotify.warn('This is a test warning message.')
       },
       handleErrorClick () {
-        this.$mxError('This is a test error message.')
+        MxNotify.error('This is a test error message.')
       },
       handleConfirmClick () {
         let type = this.confirmType
         switch (type) {
           case 'none':
-            this.$mxConfirm('This is a test confirm message.')
+            MxNotify.confirm('This is a test confirm message.')
             break
           case 'ok':
-            this.$mxConfirm('This is a test confirm message, with ok function.',
-              () => this.$mxInfo('You click the ok button.'))
+            MxNotify.confirm('This is a test confirm message, with ok function.',
+              () => MxNotify.info('You click the ok button.'))
             break
           case 'cancel':
-            this.$mxConfirm('This is a test confirm message, with ok function.', null,
-              () => this.$mxInfo('You click the cancel button.'))
+            MxNotify.confirm('This is a test confirm message, with ok function.', null,
+              () => MxNotify.info('You click the cancel button.'))
             break
           case 'both':
-            this.$mxConfirm('This is a test confirm message, with ok function.',
-              () => this.$mxInfo('You click the ok button.'),
-              () => this.$mxInfo('You click the cancel button.'))
+            MxNotify.confirm('This is a test confirm message, with ok function.',
+              () => MxNotify.info('You click the ok button.'),
+              () => MxNotify.info('You click the cancel button.'))
             break
         }
       },
       handleFormValidateWarnClick () {
         let msg = this.formValidateWarnMessage
-        this.$mxFormValidateWarn(msg)
+        MxNotify.formValidateWarn(msg)
       }
     }
   }

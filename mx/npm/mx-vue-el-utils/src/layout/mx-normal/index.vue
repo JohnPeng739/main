@@ -18,7 +18,7 @@
       <div class="layout-right">
         <el-breadcrumb>
           <el-breadcrumb-item>
-            {{t('message.title.current')}}
+            {{$t('message.title.current')}}
             <span class="breadcrumb-item">{{pathName}}</span>
           </el-breadcrumb-item>
         </el-breadcrumb>
@@ -37,7 +37,6 @@
   import LayoutHeader from './header.vue'
   import LayoutNavFavorityTools from './nav-favority-tools.vue'
   import LayoutNavMenu from './nav-menu.vue'
-  import { t } from '@/locale'
 
   export default {
     name: 'mx-normal-layout',
@@ -53,8 +52,7 @@
     },
     data () {
       return {
-        toggleState: false,
-        t: t
+        toggleState: false
       }
     },
     computed: {

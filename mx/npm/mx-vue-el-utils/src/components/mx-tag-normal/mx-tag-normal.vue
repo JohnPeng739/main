@@ -11,7 +11,6 @@
 
 <script>
   import MxNotify from '@/utils/mx-notify'
-  import {t} from '@/locale'
 
   export default {
     name: 'mx-tag-normal',
@@ -51,7 +50,7 @@
         if (tag) {
           let oldIndex = -1
           if (tags.indexOf(tag) >= 0) {
-            MxNotify.warn(t('message.tag.existed', {tag}))
+            MxNotify.warn(this.$t('message.tag.existed', {tag}))
             return
           } else {
             let old = this.oldValue

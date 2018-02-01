@@ -1,34 +1,28 @@
 import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-
-import elEn from 'element-ui/lib/locale/lang/en'
-import elZhCN from 'element-ui/lib/locale/lang/zh-CN'
-/*
-import mxEn from '@/locale/lang/en'
-import mxZhCN from '@/locale/lang/zh-CN'
-*/
-
+import MxVueElUtils from '@/index'
 import {MxLocale} from '../../../dist/mx-vue-el-utils.min'
+// import MxLocale from '@/utils/mx-locale'
 
-import myEn from './en'
-import myZhCN from './zh-CN'
+import myEn from './en.json'
+import myZhCN from './zh-CN.json'
 
-Vue.use(VueI18n)
+MxLocale.mergeMessages({
+  en: myEn,
+  'zh-CN': myZhCN
+})
 
-let MyLanguage = {
-  elLang: elEn,
-  mxLang: MxLocale.MxEn,
-  myI18n: new VueI18n({locale: 'en', messages: {en: myEn, 'zh-CN': myZhCN}})
-}
+MxLocale.setLanguage('en')
 
-const setLanguage = function (lang) {
-  if (lang === 'en') {
-    MyLanguage = {elLang: elEn, mxLang: MxLocale.MxEn, myI18n: new VueI18n({locale: 'en', messages: {en: myEn, 'zh-CN': myZhCN}})}
-  } else if (lang === 'zh-CN') {
-    MyLanguage = {elLang: elZhCN, mxLang: MxLocale.MxZhCN, myI18n: new VueI18n({locale: 'zh-CN', messages: {en: myEn, 'zh-CN': myZhCN}})}
+const changeLanguage = (lang) => {
+  if (lang) {
+    MxLocale.setLanguage(lang)
+    Vue.use(MxVueElUtils, {locale: lang})
   }
 }
 
-export default MyLanguage
+export default MxLocale
 
-export {MyLanguage, setLanguage}
+export {
+  MxLocale,
+  changeLanguage
+}

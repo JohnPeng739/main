@@ -42,6 +42,12 @@ const webpackConfig = merge(baseWebpackConfig, {
       commonjs2: 'vue',
       amd: 'vue'
     },
+    'vue-i18n': {
+      root: 'VueI18n',
+      commonjs: 'vue-i18n',
+      commonjs2: 'vue-i18n',
+      amd: 'vue-i18n'
+    },
     'element-ui': {
       root: 'ElementUI',
       commonjs: 'element-ui',

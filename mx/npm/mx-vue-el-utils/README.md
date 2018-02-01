@@ -1,6 +1,6 @@
 # mx-vue-el-utils
 ====
-<h5>版本： V1.3.11</h5>
+<h5>版本： V1.3.12</h5>
 一个非常简单使用的面向HTML5的WEB开发的框架模块，使用了VUE 2和Element-UI。目前封装了:
 
 1. 工具类：<br/>
@@ -16,7 +16,7 @@
 3. 布局：<br/>
   3.1 normal布局组件(LayoutNormal)：常规的顶栏+左边栏导航布局。<br/>
 4. 对话框（DialogPane）<br/>
-5. 国际化（locale）
+5. 国际化（MxLocale）
 
 ## 安装
     npm i mx-vue-el-utils --save
@@ -37,9 +37,10 @@
 
 
 ## 修改历史
-**1.3.11**<br>
+**1.3.12**<br>
 1. 添加了对SSR的支持，去除document相关代码。
 2. 调整了相关组件的基础样式。
+3. 重新调整了多语种架构。
 
 **1.3.9**<br>
 1. 修改了漏导出MxLocale的bug。

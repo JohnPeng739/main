@@ -11,8 +11,8 @@
       <el-row type="flex">
         <el-col :span="24">
           <div class="tag-popover">
-            <el-button class="button" @click="handleCancel">{{t('button.cancel')}}</el-button>
-            <el-button class="button" @click="handleOk">{{t('button.ok')}}</el-button>
+            <el-button class="button" @click="handleCancel">{{$t('button.cancel')}}</el-button>
+            <el-button class="button" @click="handleOk">{{$t('button.ok')}}</el-button>
           </div>
         </el-col>
       </el-row>
@@ -23,7 +23,7 @@
 
 <script>
   import {formatter} from 'mx-app-utils'
-  import {t} from '@/locale'
+  import MxNotify from '@/utils/mx-notify'
 
   export default {
     name: 'mx-choose-tag',
@@ -36,8 +36,7 @@
     },
     data () {
       return {
-        visible: false,
-        t: t
+        visible: false
       }
     },
     computed: {
@@ -62,13 +61,13 @@
           let tag = selected
           if (tag !== null && tag !== undefined) {
             if (this.tags.indexOf(tag) >= 0) {
-              this.$mxWarn(this.$t('message.tag.existed', {tag: this.getDisplayName(tag)}))
+              MxNotify.warn(this.$t('message.tag.existed', {tag: this.getDisplayName(tag)}))
             } else {
               this.tags.push(tag)
               this.visible = false
             }
           } else {
-            this.$mxInfo(this.$t('message.choose'))
+            MxNotify.info(this.$t('message.choose'))
           }
         })
       },

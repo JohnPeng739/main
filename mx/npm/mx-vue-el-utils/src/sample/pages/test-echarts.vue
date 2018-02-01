@@ -38,7 +38,7 @@
 <script>
   import echarts from 'echarts'
   import { round } from 'mx-app-utils'
-  // import MxEcharts from '@/utils/mx-echarts'
+  // import {MxEcharts} from '@/index'
   import { MxEcharts } from '../../../dist/mx-vue-el-utils.min'
 
   export default {

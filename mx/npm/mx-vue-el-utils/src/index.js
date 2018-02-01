@@ -1,5 +1,4 @@
-import MxLocale from './locale'
-
+import MxLocale from './utils/mx-locale'
 import MxNotify from './utils/mx-notify'
 import MxAjax from './utils/mx-ajax'
 import MxEcharts from './utils/mx-echarts'
@@ -28,21 +27,10 @@ const components = [
 ]
 
 const install = function (Vue, opts = {}) {
-  MxLocale.use(opts.locale)
-  MxLocale.i18n()
+  MxLocale.setLanguage(opts.locale)
   components.map(component => {
     Vue.component(component.name, component)
   })
-  Vue.prototype.$mxError = MxNotify.error
-  Vue.prototype.$mxWarn = MxNotify.warn
-  Vue.prototype.$mxInfo = MxNotify.info
-  Vue.prototype.$mxConfirm = MxNotify.confirm
-  Vue.prototype.$mxFormValidateWarn = MxNotify.formValidateWarn
-
-  Vue.prototype.$mxGet = MxAjax.get
-  Vue.prototype.$mxPost = MxAjax.post
-  Vue.prototype.$mxPut = MxAjax.put
-  Vue.prototype.$mxDel = MxAjax.del
 }
 
 if (typeof window !== 'undefined' && window.Vue) {
@@ -50,8 +38,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '1.2.4',
-  locale: MxLocale.use,
+  locale: MxLocale.i18n.locale,
   i18n: MxLocale.i18n,
   install,
   MxLocale,

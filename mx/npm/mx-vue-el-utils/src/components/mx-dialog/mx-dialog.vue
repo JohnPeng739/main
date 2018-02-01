@@ -4,9 +4,9 @@
                :width="width">
       <slot name="form"></slot>
       <div slot="footer">
-        <el-button class="button" @click.native="handleReset" :disabled="readonly">{{t('button.reset')}}</el-button>
-        <el-button class="button" @click.native="handleSubmit" :disabled="readonly">{{t('button.submit')}}</el-button>
-        <el-button class="button" @click.native="handleClose">{{t('button.close')}}</el-button>
+        <el-button class="button" @click.native="handleReset" :disabled="readonly">{{$t('button.reset')}}</el-button>
+        <el-button class="button" @click.native="handleSubmit" :disabled="readonly">{{$t('button.submit')}}</el-button>
+        <el-button class="button" @click.native="handleClose">{{$t('button.close')}}</el-button>
       </div>
     </el-dialog>
   </keep-alive>
@@ -14,7 +14,6 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  import {t} from '@/locale'
 
   export default {
     name: 'mx-dialog',
@@ -25,8 +24,7 @@
       return {
         visible: false,
         operate: 'details',
-        width: '60%',
-        t: t
+        width: '60%'
       }
     },
     computed: {

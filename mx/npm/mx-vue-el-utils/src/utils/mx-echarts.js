@@ -1,5 +1,7 @@
 import { round } from 'mx-app-utils'
-import { t } from '@/locale'
+import locale from '@/utils/mx-locale'
+
+const i18n = locale.i18n
 
 /**
  * 创建一个仪表盘配置信息对象
@@ -15,7 +17,7 @@ const createGaugeOption = function (gauge, title, min, max, value, valueTitle, u
   min = min || 0
   max = max || 100
   value = round(value || (Math.random() * 100), 0)
-  valueTitle = valueTitle || t('message.title.value')
+  valueTitle = valueTitle || i18n.t('message.title.value')
   unitTitle = unitTitle || ''
   return {
     title: {text: title, top: 'bottom', left: 'center'},
@@ -119,7 +121,7 @@ const freshPieValue = function (pie, option, dataItems, sumTotal) {
           data: [{
             symbol: 'circle',
             symbolSize: 65,
-            name: t('message.title.total'),
+            name: i18n.t('message.title.total'),
             x: width + index * 2 * width,
             y: height,
             value: round(total),

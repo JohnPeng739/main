@@ -22,8 +22,8 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  // import MxFormValidateRules from '@/utils/mx-form-validate-rules'
-  import { MxFormValidateRules } from '../../../dist/mx-vue-el-utils.min'
+  // import {MxFormValidateRules} from '@/index'
+  import { MxFormValidateRules, MxNotify } from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-dialog-page',
@@ -32,7 +32,7 @@
         operate: 'details',
         formUser: {code: 'abcd', name: '123143434545674567'},
         rulesUser: {
-          code: [MxFormValidateRules.requiredRule({msg: '必须输入代码'}), MxFormValidateRules.rangeRule({min: 3, max: 10})],
+          code: [MxFormValidateRules.requiredRule(), MxFormValidateRules.rangeRule({min: 3, max: 10})],
           name: [MxFormValidateRules.requiredRule({msg: '必须输入名称'}), MxFormValidateRules.rangeRule({
             type: 'string',
             min: 10
@@ -70,7 +70,7 @@
             done()
           } else {
             logger.debug('invalide form value.')
-            this.$mxFormValidateWarn()
+            MxNotify.formValidateWarn()
           }
         })
       },

@@ -1,5 +1,7 @@
 import { logger, parser } from 'mx-app-utils'
-import { t } from '@/locale'
+import locale from '@/utils/mx-locale'
+
+const i18n = locale.i18n
 
 const requiredRule = (param) => {
   let {type, msg, trigger} = param || {}
@@ -10,7 +12,7 @@ const requiredRule = (param) => {
   if (msg && typeof msg === 'string' && msg !== '') {
     rule.message = msg
   } else {
-    rule.message = t('message.validate.required')
+    rule.message = i18n.t('message.validate.required')
   }
   if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger
@@ -42,19 +44,19 @@ const _rangeStringRule = (min, max, msg, trigger) => {
     rule.min = minValue
     rule.max = maxValue
     if (!rule.message) {
-      rule.message = t('message.validate.stringRangeBetween', {min: minValue, max: maxValue})
+      rule.message = i18n.t('message.validate.stringRangeBetween', {min: minValue, max: maxValue})
     }
   } else if (minValue !== -1) {
     // min
     rule.min = minValue
     if (!rule.message) {
-      rule.message = t('message.validate.stringRangeLarge', {min: minValue})
+      rule.message = i18n.t('message.validate.stringRangeLarge', {min: minValue})
     }
   } else if (maxValue !== -1) {
     // max
     rule.max = maxValue
     if (!rule.message) {
-      rule.message = t('message.validate.stringRangeSmall', {max: maxValue})
+      rule.message = i18n.t('message.validate.stringRangeSmall', {max: maxValue})
     }
   }
   if (trigger !== null && trigger !== undefined && trigger !== '') {
@@ -71,7 +73,7 @@ const _rangeNumberRule = (min, max, msg, trigger) => {
   let numberValidator = (rule, value, callback) => {
     if (minValue !== -1 && maxValue !== -1) {
       if (value > maxValue || value < minValue) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.numberRangeBetween', {
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.numberRangeBetween', {
           min: minValue,
           max: maxValue
         })
@@ -79,12 +81,12 @@ const _rangeNumberRule = (min, max, msg, trigger) => {
       }
     } else if (minValue !== -1) {
       if (value < minValue) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.numberRangeLarge', {min: minValue})
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.numberRangeLarge', {min: minValue})
         callback(new Error(message))
       }
     } else if (maxValue !== -1) {
       if (value > maxValue) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.numberRangeSmall', {max: maxValue})
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.numberRangeSmall', {max: maxValue})
         callback(new Error(message))
       }
     }
@@ -119,17 +121,17 @@ const _rangeDateRule = (min, max, msg, trigger) => {
   let dateValidator = (rule, value, callback) => {
     if (minValue !== null && maxValue !== null) {
       if (value.getTime() > maxValue.getTime() || value.getTime() < minValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.dateRangeBetween', {min, max})
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.dateRangeBetween', {min, max})
         callback(new Error(message))
       }
     } else if (minValue !== null) {
       if (value.getTime() < minValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.dateRangeLarge', {min})
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.dateRangeLarge', {min})
         callback(new Error(message))
       }
     } else if (maxValue !== null) {
       if (value.getTime() > maxValue.getTime()) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.dateRangeSmall', {max})
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.dateRangeSmall', {max})
         callback(new Error(message))
       }
     }
@@ -150,7 +152,7 @@ const _rangeArrayRule = (min, max, msg, trigger) => {
   let arrayValidator = (rule, value, callback) => {
     if (minValue !== -1 && maxValue !== -1) {
       if (value.length > maxValue || value.length < minValue) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.arrayRangeBetween', {
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.arrayRangeBetween', {
           min: minValue,
           max: maxValue
         })
@@ -158,12 +160,12 @@ const _rangeArrayRule = (min, max, msg, trigger) => {
       }
     } else if (minValue !== -1) {
       if (value.length < minValue) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.arrayRangeLarge', {min: minValue})
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.arrayRangeLarge', {min: minValue})
         callback(new Error(message))
       }
     } else if (maxValue !== -1) {
       if (value.length > maxValue) {
-        let message = (!msg && msg !== '') ? msg : t('message.validate.arrayRangeSmall', {max: maxValue})
+        let message = (!msg && msg !== '') ? msg : i18n.t('message.validate.arrayRangeSmall', {max: maxValue})
         callback(new Error(message))
       }
     }
@@ -206,7 +208,7 @@ const emailRule = (param) => {
   if (msg && typeof msg === 'string' && msg !== '') {
     rule.message = msg
   } else {
-    rule.message = t('message.validate.email')
+    rule.message = i18n.t('message.validate.email')
   }
   if (trigger && typeof trigger === 'string' && trigger !== '') {
     rule.trigger = trigger

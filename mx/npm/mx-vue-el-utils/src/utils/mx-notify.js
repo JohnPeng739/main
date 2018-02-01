@@ -1,18 +1,20 @@
 import { Message, MessageBox, Notification } from 'element-ui'
-import { t } from '@/locale'
+import locale from '@/utils/mx-locale'
+
+const i18n = locale.i18n
 
 let error = (message) => Message({type: 'error', message})
 
 let warn = (message) => Message({type: 'warning', message})
 
-let info = (message, duration) => Notification({title: t('message.title.prompt'), message, duration: duration || 3000})
+let info = (message, duration) => Notification({title: i18n.t('message.title.prompt'), message, duration: duration || 3000})
 
 let confirm = (message, fnOk, fnCancel) => {
-  MessageBox.confirm(message, t('message.title.confirm'), {
+  MessageBox.confirm(message, i18n.t('message.title.confirm'), {
     confirmButtonClass: 'button',
-    confirmButtonText: t('button.ok'),
+    confirmButtonText: i18n.t('button.ok'),
     cancelButtonClass: 'button',
-    cancelButtonText: t('button.cancel'),
+    cancelButtonText: i18n.t('button.cancel'),
     type: 'warning'
   }).then(() => {
     if (fnOk && typeof fnOk === 'function') {
@@ -26,7 +28,7 @@ let confirm = (message, fnOk, fnCancel) => {
 }
 
 let formValidateWarn = (message) => {
-  warn(message || t('message.validate.default'))
+  warn(message || i18n.t('message.validate.default'))
 }
 
 let MxNotify = {

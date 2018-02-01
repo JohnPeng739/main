@@ -13,6 +13,7 @@
 
 <script>
   import { logger } from 'mx-app-utils'
+  import {MxNotify} from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-paginate-content',
@@ -33,7 +34,7 @@
           data.push({code: 'code ' + index, name: 'name ' + index, desc: 'description ' + index})
         }
         this.tableData = data
-        this.$mxInfo('重新获取并加载数据成功。')
+        MxNotify.info('重新获取并加载数据成功。')
       },
       handleButtonClick (operate, pagination) {
         logger.debug('Click a button, operate: %s, page: %j.', operate, pagination)

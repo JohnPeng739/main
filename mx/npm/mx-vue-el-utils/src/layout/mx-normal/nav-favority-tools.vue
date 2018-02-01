@@ -11,7 +11,7 @@
     </el-tooltip>
     <el-tooltip effect="dark" placement="bottom">
       <div slot="content">
-        <span>{{t('button.notice')}}</span>
+        <span>{{$t('button.notice')}}</span>
       </div>
       <el-button @click="handleShowNotice" type="text" class="tools">
         <el-badge v-if="showNotice" :value="noticeValue" class="badge-item">
@@ -27,7 +27,6 @@
 
 <script>
   import MxIcon from '@/components/mx-icon'
-  import { t } from '@/locale'
 
   export default {
     name: 'mx-normal-favority-tools',
@@ -40,9 +39,7 @@
       loginUserName: {type: String, default: ''}
     },
     data () {
-      return {
-        t: t
-      }
+      return {}
     },
     computed: {
       showNotice () {
