@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import MxNotify from '@/utils/mx-notify'
+  import MxNotify from '../../utils/mx-notify'
 
   export default {
     name: 'mx-tag-normal',

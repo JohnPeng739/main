@@ -1,5 +1,5 @@
 import Mock from 'mockjs'
-// import ajax from '../../../src/utils/ajax'
+// import {MxAjax} from '../../../src/index'
 import { MxAjax } from '../../../dist/mx-vue-el-utils.min'
 
 let pagination = {total: 100, size: 20, page: 3}

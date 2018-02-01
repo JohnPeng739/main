@@ -4,8 +4,8 @@ import VueI18n from 'vue-i18n'
 import ElEn from 'element-ui/lib/locale/lang/en'
 import ElZhCN from 'element-ui/lib/locale/lang/zh-CN'
 
-import MxEn from '@/assets/locale/en.json'
-import MxZhCN from '@/assets/locale/zh-CN.json'
+import MxEn from '../assets/locale/en.json'
+import MxZhCN from '../assets/locale/zh-CN.json'
 
 Vue.use(VueI18n)
 

@@ -1,5 +1,5 @@
 import { Message, MessageBox, Notification } from 'element-ui'
-import locale from '@/utils/mx-locale'
+import locale from './mx-locale'
 
 const i18n = locale.i18n
 

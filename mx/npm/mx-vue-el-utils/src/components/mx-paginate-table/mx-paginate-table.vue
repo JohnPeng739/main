@@ -32,7 +32,7 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  import MxIcon from '@/components/mx-icon'
+  import MxIcon from '../mx-icon'
 
   let defaultButtons = ['add', 'edit', 'delete', 'details', 'refresh']
 

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import MxIcon from '@/components/mx-icon'
+  import MxIcon from '../../components/mx-icon'
   import NavSubMenu from './nav-sub-menu.vue'
 
   export default {

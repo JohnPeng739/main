@@ -1,20 +1,22 @@
 // import formValidateRules from '../../../src/utils/form-validate-rules'
 import {MxLocale, MxFormValidateRules} from '../../../dist/mx-vue-el-utils.min'
 
-MxLocale.use(MxLocale.MxZhCN)
+MxLocale.setLanguage('zh-CN')
+
+let i18n = MxLocale.i18n
 
 describe('test form validate rules', () => {
   it('test required rule', () => {
     let rule = MxFormValidateRules.requiredRule()
     expect(rule).toBeDefined()
     expect(rule.required).toBe(true)
-    expect(rule.message).toBe(MxLocale.t('message.validate.required'))
+    expect(rule.message).toBe(i18n.t('message.validate.required'))
     expect(rule.trigger).toBe('blur')
     rule = MxFormValidateRules.requiredRule({type: 'string'})
     expect(rule).toBeDefined()
     expect(rule.required).toBe(true)
     expect(rule.type).toBe('string')
-    expect(rule.message).toBe(MxLocale.t('message.validate.required'))
+    expect(rule.message).toBe(i18n.t('message.validate.required'))
     expect(rule.trigger).toBe('blur')
     rule = MxFormValidateRules.requiredRule({type: 'string', msg: '名称字段必须输入数据'})
     expect(rule).toBeDefined()
@@ -36,20 +38,20 @@ describe('test form validate rules', () => {
     expect(rule).toBeDefined()
     expect(rule.type).toBe('string')
     expect(rule.min).toBe(3)
-    expect(rule.message).toBe(MxLocale.t('message.validate.stringRangeLarge', {min: 3}))
+    expect(rule.message).toBe(i18n.t('message.validate.stringRangeLarge', {min: 3}))
     expect(rule.trigger).toBe('blur')
     rule = MxFormValidateRules.rangeRule({type: 'string', max: 30})
     expect(rule).toBeDefined()
     expect(rule.type).toBe('string')
     expect(rule.max).toBe(30)
-    expect(rule.message).toBe(MxLocale.t('message.validate.stringRangeSmall', {max: 30}))
+    expect(rule.message).toBe(i18n.t('message.validate.stringRangeSmall', {max: 30}))
     expect(rule.trigger).toBe('blur')
     rule = MxFormValidateRules.rangeRule({type: 'string', min: 3, max: 30, trigger: 'change'})
     expect(rule).toBeDefined()
     expect(rule.type).toBe('string')
     expect(rule.min).toBe(3)
     expect(rule.max).toBe(30)
-    expect(rule.message).toBe(MxLocale.t('message.validate.stringRangeBetween', {min: 3, max: 30}))
+    expect(rule.message).toBe(i18n.t('message.validate.stringRangeBetween', {min: 3, max: 30}))
     expect(rule.trigger).toBe('change')
     rule = MxFormValidateRules.rangeRule({type: 'number', min: 3})
     expect(rule).toBeDefined()
@@ -110,7 +112,7 @@ describe('test form validate rules', () => {
     let rule = MxFormValidateRules.emailRule()
     expect(rule).toBeDefined()
     expect(rule.type).toBe('email')
-    expect(rule.message).toBe(MxLocale.t('message.validate.email'))
+    expect(rule.message).toBe(i18n.t('message.validate.email'))
     expect(rule.trigger).toBe('blur')
     rule = MxFormValidateRules.emailRule({msg: 'Invalidate email format.'})
     expect(rule).toBeDefined()

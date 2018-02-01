@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-button @click="handleAjaxDefaultError">Ajax Default error</el-button>
     <el-button @click="handleWarnClick">Click for Warn</el-button>
     <el-button @click="handleErrorClick">Click for Error</el-button>
     <br/><br/>
@@ -23,7 +24,7 @@
 
 <script>
   import {formatter} from 'mx-app-utils'
-  import {MxNotify} from '../../../dist/mx-vue-el-utils.min'
+  import {MxNotify, MxAjax} from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-notify-page',
@@ -36,6 +37,11 @@
       }
     },
     methods: {
+      handleAjaxDefaultError () {
+        MxAjax.get('/rest/abcd/none', data => {
+          console.log(data)
+        })
+      },
       handleInfoClick () {
         let duration = this.duration
         MxNotify.info(formatter.format('This is a test information, duration: %d ms.', duration), duration)

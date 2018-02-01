@@ -1,13 +1,14 @@
-import { ajax, logger } from 'mx-app-utils'
-import MxNotify from '@/utils/mx-notify'
-import locale from '@/utils/mx-locale'
+import { ajax } from 'mx-app-utils'
+import MxNotify from './mx-notify'
+import locale from './mx-locale'
 
 const i18n = locale.i18n
 
 let defaultError = (errorMessage) => {
-  if (errorMessage.response) {
-    logger.debug(errorMessage.response.status)
-    let msg = i18n.t('error.ajax.default', {stats: errorMessage.response.status, text: errorMessage.response.statusText})
+  let response = errorMessage.response
+  console.log(response)
+  if (response) {
+    let msg = i18n.t('message.ajax.default', {status: response.status, text: response.statusText})
     MxNotify.error(msg)
   } else {
     MxNotify.error(errorMessage)

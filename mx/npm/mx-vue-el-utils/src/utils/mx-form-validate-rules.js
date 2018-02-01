@@ -1,5 +1,5 @@
 import { logger, parser } from 'mx-app-utils'
-import locale from '@/utils/mx-locale'
+import locale from './mx-locale'
 
 const i18n = locale.i18n
 

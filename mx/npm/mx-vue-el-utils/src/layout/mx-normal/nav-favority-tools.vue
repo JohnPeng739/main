@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import MxIcon from '@/components/mx-icon'
+  import MxIcon from '../../components/mx-icon'
 
   export default {
     name: 'mx-normal-favority-tools',

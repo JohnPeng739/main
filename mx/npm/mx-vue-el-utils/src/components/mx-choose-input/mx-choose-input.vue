@@ -26,7 +26,7 @@
 
 <script>
   import {formatter} from 'mx-app-utils'
-  import MxNotify from '@/utils/mx-notify'
+  import MxNotify from '../../utils/mx-notify'
 
   export default {
     name: 'mx-choose-input',
