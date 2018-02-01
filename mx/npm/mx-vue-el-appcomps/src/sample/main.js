@@ -1,31 +1,28 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import MxVueElUtils from 'mx-vue-el-utils'
-import MxAppComps from '../../dist/mx-vue-el-appcomps.min'
-// import MxAppComps from '@/index'
+import {MxLocale, changeLanguage} from './lang'
 
 import App from './App'
 import router from './router'
 import store from './store'
-import { MyLanguage, setLanguage } from './lang'
 
 import mock from './mock'
 
 Vue.config.productionTip = false
 
-setLanguage('zh-CN')
-Vue.use(ElementUI, {locale: MyLanguage.elLang})
-Vue.use(MxVueElUtils, {locale: MyLanguage.mxLang})
-Vue.use(MxAppComps, {locale: MyLanguage.appLang})
+changeLanguage('en')
+Vue.use(ElementUI, {
+  i18n: (k, v) => MxLocale.i18n.t(k, v)
+})
 
 mock()
 
-console.log(MyLanguage.myI18n.t('test'))
+console.log(MxLocale.i18n.t('test'))
 
 /* eslint-disable no-new */
 new Vue({
-  i18n: MyLanguage.myI18n,
+  i18n: MxLocale.i18n,
   el: '#app',
   router,
   store,

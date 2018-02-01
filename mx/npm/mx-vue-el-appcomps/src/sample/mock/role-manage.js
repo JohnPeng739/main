@@ -42,4 +42,11 @@ export default [{
     errorCode: 0,
     data: role
   }
+}, {
+  path: /\/rest\/roles\/\w(\?\w=\w(&\w=\w)*)?/,
+  type: 'delete',
+  data: {
+    errorCode: 0,
+    data: role
+  }
 }]

@@ -1,4 +1,5 @@
-import AppLocale from './locale'
+import AppEn from './assets/locale/en.json'
+import AppZhCN from './assets/locale/zh-CN.json'
 
 import MxChooseDictInput from './components/mx-choose-dict-input'
 import MxChooseDictTag from './components/mx-choose-dict-tag'
@@ -16,6 +17,11 @@ import MxOperateLogManage from './components/rbac/mx-operate-log-manage'
 
 import MxStoreAccount from './store/account'
 
+const AppLocaleMessages = {
+  en: AppEn,
+  'zh-CN': AppZhCN
+}
+
 const components = [
   MxChooseDictInput,
   MxChooseDictTag,
@@ -32,8 +38,6 @@ const components = [
 ]
 
 const install = function (Vue, opts = {}) {
-  AppLocale.use(opts.locale)
-  AppLocale.i18n()
   components.map(component => {
     Vue.component(component.name, component)
   })
@@ -44,11 +48,8 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '1.0.3',
-  locale: AppLocale.use,
-  i18n: AppLocale.i18n,
   install,
-  AppLocale,
+  AppLocaleMessages,
   MxChooseDictInput,
   MxChooseDictTag,
   MxDictManage,
@@ -65,7 +66,7 @@ export default {
 }
 
 export {
-  AppLocale,
+  AppLocaleMessages,
   MxChooseDictInput,
   MxChooseDictTag,
   MxDictManage,

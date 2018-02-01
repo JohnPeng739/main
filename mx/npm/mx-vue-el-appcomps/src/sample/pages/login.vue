@@ -19,9 +19,9 @@
 </template>
 
 <script>
-  import {mapActions} from 'vuex'
-  import {formatter} from 'mx-app-utils'
-  import {MxFormValidateRules} from 'mx-vue-el-utils'
+  import { mapActions } from 'vuex'
+  import { formatter } from 'mx-app-utils'
+  import { MxFormValidateRules, MxNotify } from 'mx-vue-el-utils'
 
   export default {
     name: 'page-login',
@@ -42,13 +42,13 @@
             let {code, password, forced} = this.formLogin
             let success = (data) => {
               if (data && data.account) {
-                this.$mxInfo(formatter.formatArgs('Account[%s] login successfully.', data.account.code))
+                MxNotify.info(formatter.formatArgs('Account[%s] login successfully.', data.account.code))
                 this.$router.push('/')
               }
             }
             this.login({code, password, forced, success})
           } else {
-            this.$mxFormValidateWarn()
+            MxNotify.formValidateWarn()
           }
         })
       },

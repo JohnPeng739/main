@@ -1,6 +1,6 @@
 <template>
   <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="transformedNavData"
-                    v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto">
+                    v-on:logout="handleLogout" v-on:showNotice="handleShowNotice" v-on:goto="handleGoto">
     <router-view slot="content-body"></router-view>
   </mx-normal-layout>
 </template>
@@ -63,8 +63,8 @@
         }
         this.logout({success})
       },
-      handleShowUserInfo () {
-        logger.debug('show user info: ' + this.loginUserName + '.')
+      handleShowNotice () {
+        logger.debug('show notice page.')
       }
     },
     mounted () {

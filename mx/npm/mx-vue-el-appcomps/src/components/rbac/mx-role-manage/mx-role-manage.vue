@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import MxDictManage from '@/components/mx-dict-manage'
+  import MxDictManage from '../../mx-dict-manage'
 
   export default {
     name: 'mx-role-manage',

@@ -42,4 +42,11 @@ export default [{
     errorCode: 0,
     data: department
   }
+}, {
+  path: /\/rest\/departments\/\w(\?\w=\w(&\w=\w)*)?/,
+  type: 'delete',
+  data: {
+    errorCode: 0,
+    data: department
+  }
 }]

@@ -1,5 +1,5 @@
-import {logger, formatter} from 'mx-app-utils'
-import {MxAjax} from 'mx-vue-el-utils'
+import { formatter, logger } from 'mx-app-utils'
+import { MxAjax } from 'mx-vue-el-utils'
 
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'

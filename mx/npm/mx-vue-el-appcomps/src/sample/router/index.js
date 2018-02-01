@@ -13,7 +13,7 @@ import {
 } from '../../../dist/mx-vue-el-appcomps.min'
 
 export const navData = [{
-  path: '/',
+  path: '/home',
   icon: 'apps',
   name: 'nav.home'
 }, {
