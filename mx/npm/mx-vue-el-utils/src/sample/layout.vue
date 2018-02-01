@@ -1,7 +1,7 @@
 <template>
   <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
                  notice-path="notice" :notice-value="noticeValue" v-on:logout="handleLogout"
-                 v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
+                 v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
     <router-view slot="content-body"></router-view>
   </mx-normal-layout>
 </template>
@@ -37,9 +37,6 @@
       },
       handleLogout () {
         logger.debug('Logout.')
-      },
-      handleShowUserInfo () {
-        logger.debug('show user info: ' + this.loginUserName + '.')
       }
     }
   }

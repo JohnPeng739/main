@@ -2,8 +2,7 @@
   <el-container>
     <el-header height="10vh" class="layout-header">
       <layout-header :title="title" :login-user-name="loginUserName" :nav-data="navData"
-                     v-on:navToggled="handleNavToggled" v-on:logout="handleLogout"
-                     v-on:showUserInfo="handleShowUserInfo">
+                     v-on:navToggled="handleNavToggled" v-on:logout="handleLogout">
         <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only hidden-sm-only"
                                    :role="role"
                                    :favority-tools="favorityTools" :notice-path="noticePath"
@@ -118,9 +117,6 @@
       },
       handleLogout () {
         this.$emit('logout')
-      },
-      handleShowUserInfo () {
-        this.$emit('showUserInfo')
       }
     }
   }
