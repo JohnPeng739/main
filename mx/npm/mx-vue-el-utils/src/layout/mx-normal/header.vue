@@ -3,7 +3,7 @@
     <el-button type="text" class="toggle-button" @click="handleNavToggled">
       <mx-icon name="apps" class="toggle-icon"></mx-icon>
     </el-button>
-    <span class="title hidden-xs-only">{{title}}</span>
+    <span class="app-title hidden-xs-only">{{title}}</span>
     <el-tooltip effect="dark" placement="bottom">
       <div slot="content">
         <span>{{loginUserName}}</span>
