@@ -1,0 +1,42 @@
+export const navData = [{
+  path: '/',
+  icon: 'apps',
+  name: 'nav.home'
+}, {
+  path: '/manage',
+  icon: 'apps',
+  name: 'nav.manage.value',
+  children: [{
+    path: '/manage/user',
+    icon: 'apps',
+    name: 'nav.manage.user'
+  }, {
+    path: '/manage/account',
+    icon: 'apps',
+    name: 'nav.manage.account'
+  }, {
+    path: '/manage/role',
+    icon: 'apps',
+    name: 'nav.manage.role'
+  }, {
+    path: '/manage/privilege',
+    icon: 'apps',
+    name: 'nav.manage.privilege'
+  }, {
+    path: '/manage/department',
+    icon: 'apps',
+    name: 'nav.manage.department'
+  }, {
+    path: '/manage/accredit',
+    icon: 'apps',
+    name: 'nav.manage.accredit'
+  }, {
+    path: '/manage/logs',
+    icon: 'apps',
+    name: 'nav.manage.logs'
+  }, {
+    path: '/manage/loginHistory',
+    icon: 'apps',
+    name: 'nav.manage.loginHistory'
+  }]
+}]
