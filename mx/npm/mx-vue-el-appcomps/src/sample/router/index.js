@@ -106,7 +106,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.needAuth)) {
     // 需要认证
-    let user = JSON.parse(sessionStorage.getItem('auth.user'))
+    let user = JSON.parse(localStorage.getItem('auth.user'))
     if (!user && to.path !== '/login') {
       next({path: '/login'})
     } else {

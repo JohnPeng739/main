@@ -3,25 +3,13 @@ import { MxAjax } from 'mx-vue-el-utils'
 
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
+const SET_LOGIN_USER = 'SET_LOGIN_USER'
 
 const loginUrl = '/rest/login'
 const logoutUrl = '/rest/logout/{id}'
 
 const state = {
   loginUser: null
-}
-
-function checkState () {
-  if (state.loginUser !== null && state.loginUser !== undefined) {
-    return
-  }
-  if (window.sessionStorage) {
-    let json = window.sessionStorage.getItem('auth.user')
-    if (json && typeof json === 'string' && json.length > 0) {
-      state.loginUser = JSON.parse(json)
-      logger.debug('Load the login user successfully from session, user: %j.', state.loginUser)
-    }
-  }
 }
 
 function authenticated (user) {
@@ -34,7 +22,7 @@ const getters = {
     return authenticated(user)
   },
   loginUser: state => {
-    checkState()
+    // checkState()
     return state.loginUser
   }
 }
@@ -55,7 +43,7 @@ const actions = {
     })
   },
   logout ({commit, state}, {success}) {
-    checkState()
+    // checkState()
     if (!authenticated(state.loginUser)) {
       throw new Error('The user does not login the system.')
     }
@@ -71,8 +59,10 @@ const actions = {
         }
         logger.info('Account[%s] logout successfully, user: %j.', {code, name})
       }
-      console.log(data)
     })
+  },
+  setLoginUser ({commit, state}, loginUser) {
+    commit(SET_LOGIN_USER, loginUser)
   }
 }
 
@@ -80,16 +70,12 @@ const mutations = {
   LOGIN (state, {id, code, name, role, favorityTools}) {
     let user = {id, code, name, role, favorityTools}
     state.loginUser = user
-    if (window.sessionStorage) {
-      let json = JSON.stringify(user)
-      window.sessionStorage.setItem('auth.user', json)
-    }
   },
   LOGOUT (state) {
     state.loginUser = null
-    if (window.sessionStorage) {
-      window.sessionStorage.removeItem('auth.user')
-    }
+  },
+  SET_LOGIN_USER (state, loginUser) {
+    state.loginUser = loginUser
   }
 }
 
