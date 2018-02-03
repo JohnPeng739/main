@@ -20,7 +20,6 @@
 
 <script>
   import { mapActions } from 'vuex'
-  import { formatter } from 'mx-app-utils'
   import { MxFormValidateRules, MxNotify } from 'mx-vue-el-utils'
 
   export default {
@@ -35,14 +34,18 @@
       }
     },
     methods: {
-      ...mapActions(['login']),
+      ...mapActions({
+        login: 'login'
+      }),
       handleLogin () {
         this.$refs['formLogin'].validate(valid => {
           if (valid) {
             let {code, password, forced} = this.formLogin
             let success = (data) => {
               if (data && data.account) {
-                MxNotify.info(formatter.formatArgs('Account[%s] login successfully.', data.account.code))
+                let {id, code, name, favorityTools, role} = data.account
+                localStorage.setItem('auth.user', JSON.stringify({id, code, name, favorityTools, role}))
+                MxNotify.info(this.$t('rbac.account.message.loginSuccess', {code, name}))
                 this.$router.push('/')
               }
             }

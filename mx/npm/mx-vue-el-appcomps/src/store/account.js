@@ -22,7 +22,6 @@ const getters = {
     return authenticated(user)
   },
   loginUser: state => {
-    // checkState()
     return state.loginUser
   }
 }
@@ -43,7 +42,6 @@ const actions = {
     })
   },
   logout ({commit, state}, {success}) {
-    // checkState()
     if (!authenticated(state.loginUser)) {
       throw new Error('The user does not login the system.')
     }

@@ -10,7 +10,7 @@ import {
   MxPrivilegeManage,
   MxRoleManage,
   MxUserManage
-} from '../../../dist/mx-vue-el-appcomps.min'
+} from '../../index' // '../../../dist/mx-vue-el-appcomps.min'
 
 export const navData = [{
   path: '/home',
@@ -104,9 +104,12 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  let user = JSON.parse(localStorage.getItem('auth.user'))
+  if (user) {
+    router.app.$options.store.dispatch('setLoginUser', user)
+  }
   if (to.matched.some(record => record.meta.needAuth)) {
     // 需要认证
-    let user = JSON.parse(localStorage.getItem('auth.user'))
     if (!user && to.path !== '/login') {
       next({path: '/login'})
     } else {

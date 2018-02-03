@@ -114,6 +114,8 @@
         "passwordMatch": "The password does not match the confirm password."
       },
       "message": {
+        "loginSuccess": "The account[{code} - {name}] login successfully.",
+        "logoutSuccess": "The account[{code} - {name}] logout successfully.",
         "changePasswordSuccess": "Change the password successfully for the account[{code} - {name}]."
       }
     }

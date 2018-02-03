@@ -114,6 +114,8 @@
         "passwordMatch": "输入的密码和确认密码不一致。"
       },
       "message": {
+        "loginSuccess": "账户[{code} - {name}]成功登入系统。",
+        "logoutSuccess": "账户[{code} - {name}]成功登出系统。",
         "changePasswordSuccess": "修改账户[{code} - {name}]的密码成功。"
       }
     }

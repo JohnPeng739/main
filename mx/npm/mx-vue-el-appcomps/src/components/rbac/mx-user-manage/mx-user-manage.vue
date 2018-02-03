@@ -77,7 +77,9 @@
           </el-col>
           <el-col :span="12">
             <el-form-item prop="station" :label="$t('rbac.user.fields.station')">
-              <el-input v-model="formUser.station" :readonly="readonly"></el-input>
+              <el-select v-model="formUser.station" filterable allow-create :disabled="readonly">
+                <el-option v-for="item in stations" :key="item" :label="item" :value="item"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -94,6 +96,14 @@
   export default {
     name: 'mx-user-manage',
     components: {MxChooseDictInput},
+    props: {
+      stations: {
+        type: Array,
+        default: function () {
+          return []
+        }
+      }
+    },
     data () {
       return {
         tableMaxHeight: 540,

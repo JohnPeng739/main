@@ -1,5 +1,6 @@
 <template>
-  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="transformedNavData"
+  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools"
+                    :navData="transformedNavData"
                     v-on:logout="handleLogout" v-on:showNotice="handleShowNotice" v-on:goto="handleGoto">
     <router-view slot="content-body"></router-view>
   </mx-normal-layout>
@@ -8,6 +9,7 @@
 <script>
   import { mapGetters, mapActions } from 'vuex'
   import { logger } from 'mx-app-utils'
+  import { MxNotify } from 'mx-vue-el-utils'
   import { navData } from './router'
 
   export default {
@@ -20,7 +22,10 @@
       }
     },
     computed: {
-      ...mapGetters(['authenticated', 'loginUser']),
+      ...mapGetters({
+        authenticated: 'authenticated',
+        loginUser: 'loginUser'
+      }),
       transformedNavData: {
         get () {
           this.transformNavData(navData)
@@ -36,7 +41,9 @@
       }
     },
     methods: {
-      ...mapActions(['logout']),
+      ...mapActions({
+        logout: 'logout'
+      }),
       transformNavData (list) {
         if (list && list instanceof Array && list.length > 0) {
           list.forEach(item => {
@@ -54,14 +61,19 @@
         this.$router.push(path)
       },
       handleLogout () {
-        let success = (data) => {
-          if (data && data.account) {
-            let {code, name} = data.account
-            this.$mxInfo(this.$t('rbac.message.logoutSuccess', {code, name}))
-            this.$router.push('/login')
+        if (this.authenticated) {
+          let success = (data) => {
+            if (data && data.account) {
+              let {code, name} = data.account
+              localStorage.removeItem('auth.user')
+              console.log(this.$t('rbac.account.module'))
+              console.log(this.$t('rbac.account.message.logoutSuccess', {code, name}))
+              MxNotify.info(this.$t('rbac.account.message.logoutSuccess', {code, name}))
+              this.$router.push('/login')
+            }
           }
+          this.logout({success})
         }
-        this.logout({success})
       },
       handleShowNotice () {
         logger.debug('show notice page.')
