@@ -2,6 +2,7 @@
   "title": "认证管理系统",
   "nav": {
     "home": "首页",
+    "login": "登录页面",
     "manage": {
       "value": "管理",
       "user": "用户管理",
@@ -20,6 +21,14 @@
     "message": {
       "default": "在渲染页面时发生了错误，请联系开发人员。",
       "nonAuthority" : "你没有经过身份认证！"
+    }
+  },
+  "pages": {
+    "login": {
+      "name": "登录页面",
+      "code": "账户",
+      "password": "密码",
+      "forcedReplace": "强制踢出"
     }
   }
 }

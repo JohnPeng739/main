@@ -2,6 +2,7 @@
   "title": "Authority Manage System",
   "nav": {
     "home": "Home",
+    "login": "Login page",
     "manage": {
       "value": "Management",
       "user": "User management",
@@ -20,6 +21,14 @@
     "message": {
       "default": "An error occurred while rendering the page, please contact the developer for details.",
       "nonAuthority" : "You're not authenticated!"
+    }
+  },
+  "pages": {
+    "login": {
+      "name": "Login page",
+      "code": "Account code",
+      "password": "Password",
+      "forcedReplace": "Forced replace"
     }
   }
 }

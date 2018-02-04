@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mx-normal-layout v-if="authenticated" :title="title" :loginUserName="loginUserName" :role="role" :tools="tools"
+    <mx-normal-layout v-if="authenticated" :title="title" :loginUserName="loginUserName" :roles="roles" :tools="tools"
                       :navData="transformedNavData" v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo"
                       v-on:goto="handleGoto">
       <router-view slot="content-body"></router-view>
@@ -20,8 +20,7 @@
     data() {
       return {
         navData: navData,
-        title: this.$t('title'),
-        role: 'admin'
+        title: this.$t('title')
       }
     },
     computed: {
@@ -29,8 +28,12 @@
         authenticated: 'authenticated',
         loginUser: 'loginUser'
       }),
-      loginUserName () {
-        return this.authenticated ? this.loginUser.name : this.$t('NA')
+      loginUserName: {
+        get() {
+          return this.authenticated ? this.loginUser.name : this.$t('NA')
+        },
+        set(val) {
+        }
       },
       transformedNavData: {
         get() {
@@ -43,6 +46,13 @@
       tools: {
         get() {
           return this.loginUser && this.loginUser.favorityTools ? this.loginUser.favorityTools : []
+        },
+        set(val) {
+        }
+      },
+      roles: {
+        get() {
+          return this.authenticated ? this.loginUser.roles : []
         },
         set(val) {
         }
@@ -72,12 +82,7 @@
         let success = (data) => {
           if (data && data.account) {
             let {code, name} = data.account
-            /*
-            MxAjax.get('/api/logout', data => {
-              console.log('******************')
-              console.log(data)
-            })
-            */
+            sessionStorage.removeItem('authUser')
             MxNotify.info(this.$t('rbac.message.logoutSuccess', {code, name}))
             this.$router.push('/login')
           }
@@ -86,20 +91,6 @@
       },
       handleShowUserInfo() {
         logger.debug('show user info: ' + this.loginUserName + '.')
-      }
-    },
-    mounted() {
-      if (this.authenticated) {
-        let user = this.loginUser
-        if (user && user.name && typeof user.name === 'string' && user.name.length > 0) {
-          this.loginUserName = user.name
-          this.role = user.role
-          this.tools = user.tools
-        } else {
-          this.loginUserName = this.$t('rbac.common.fields.NA')
-          this.role = 'guest'
-          this.tools = []
-        }
       }
     }
   }

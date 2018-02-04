@@ -15,8 +15,8 @@
     "element-ui": "^2.1.0",
     "mockjs": "^1.0.1-beta3",
     "mx-app-utils": "^1.6.2",
-    "mx-vue-el-appcomps": "^1.0.11",
-    "mx-vue-el-utils": "^1.3.13",
+    "mx-vue-el-appcomps": "^1.0.14",
+    "mx-vue-el-utils": "^1.3.16",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
