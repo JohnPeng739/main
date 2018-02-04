@@ -14,6 +14,7 @@ import { createStore } from './store.js'
 /* Plugins */
 import nuxt_plugin_elementui_d905880e from 'nuxt_plugin_elementui_d905880e' // Source: ../plugins/element-ui
 import nuxt_plugin_i18n_926bd3dc from 'nuxt_plugin_i18n_926bd3dc' // Source: ../plugins/i18n
+import nuxt_plugin_mock_92665504 from 'nuxt_plugin_mock_92665504' // Source: ../plugins/mock
 
 
 // Component: <no-ssr>
@@ -154,6 +155,7 @@ async function createApp (ssrContext) {
   
   if (typeof nuxt_plugin_elementui_d905880e === 'function') await nuxt_plugin_elementui_d905880e(app.context, inject)
   if (typeof nuxt_plugin_i18n_926bd3dc === 'function') await nuxt_plugin_i18n_926bd3dc(app.context, inject)
+  if (typeof nuxt_plugin_mock_92665504 === 'function') await nuxt_plugin_mock_92665504(app.context, inject)
   
 
   // If server-side, wait for async component to be resolved first

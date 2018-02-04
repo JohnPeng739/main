@@ -12,6 +12,14 @@
       "accredit": "Accredit management",
       "logs": "Operate log",
       "loginHistory": "Login history"
+    },
+    "link": {
+      "home": "Go back the home page",
+      "login": "Go to the login page"
+    },
+    "message": {
+      "default": "An error occurred while rendering the page, please contact the developer for details.",
+      "nonAuthority" : "You're not authenticated!"
     }
   }
 }

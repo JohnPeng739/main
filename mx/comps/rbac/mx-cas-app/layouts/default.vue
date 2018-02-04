@@ -1,23 +1,32 @@
 <template>
-  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools"
-                    :navData="transformedNavData" v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo"
-                    v-on:goto="handleGoto">
-    <nuxt slot="content-body"/>
-  </mx-normal-layout>
+  <div>
+    <mx-normal-layout v-if="authenticated" :title="title" :loginUserName="loginUserName" :role="role" :tools="tools"
+                      :navData="transformedNavData" v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo"
+                      v-on:goto="handleGoto">
+      <nuxt slot="content-body"/>
+    </mx-normal-layout>
+    <nuxt v-else></nuxt>
+  </div>
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
   import {logger} from 'mx-app-utils'
-  import { navData } from '~/assets/AppData'
+  import {MxNotify} from 'mx-vue-el-utils'
+  import {navData} from '~/assets/AppData'
+  import Nuxt from "../.nuxt/components/nuxt";
 
   export default {
+    components: {Nuxt},
     name: 'layout',
+    fetch ({store}) {
+      console.log(sessionStorage)
+      console.log(sessionStorage.getItem('authUser'))
+    },
     data() {
       return {
         navData: navData,
         title: this.$t('title'),
-        loginUserName: 'NA',
         role: 'admin'
       }
     },
@@ -26,6 +35,9 @@
         authenticated: 'account/authenticated',
         loginUser: 'account/loginUser'
       }),
+      loginUserName () {
+        return this.authenticated ? this.loginUser.name : this.$t('NA')
+      },
       transformedNavData: {
         get() {
           this.transformNavData(this.navData)
@@ -66,7 +78,13 @@
         let success = (data) => {
           if (data && data.account) {
             let {code, name} = data.account
-            this.$mxInfo(this.$t('rbac.message.logoutSuccess', {code, name}))
+            /*
+            MxAjax.get('/api/logout', data => {
+              console.log('******************')
+              console.log(data)
+            })
+            */
+            MxNotify.info(this.$t('rbac.message.logoutSuccess', {code, name}))
             this.$router.push('/login')
           }
         }

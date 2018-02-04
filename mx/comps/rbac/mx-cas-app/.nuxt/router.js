@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+const _41b17d12 = () => import('../pages/login.vue' /* webpackChunkName: "pages/login" */).then(m => m.default || m)
 const _48d81c7a = () => import('../pages/manage/user.vue' /* webpackChunkName: "pages/manage/user" */).then(m => m.default || m)
 const _411943e9 = () => import('../pages/manage/privilege.vue' /* webpackChunkName: "pages/manage/privilege" */).then(m => m.default || m)
 const _c0f0aa3a = () => import('../pages/manage/loginHistory.vue' /* webpackChunkName: "pages/manage/loginHistory" */).then(m => m.default || m)
@@ -60,6 +61,11 @@ export function createRouter () {
     linkExactActiveClass: 'nuxt-link-exact-active',
     scrollBehavior,
     routes: [
+		{
+			path: "/login",
+			component: _41b17d12,
+			name: "login"
+		},
 		{
 			path: "/manage/user",
 			component: _48d81c7a,
