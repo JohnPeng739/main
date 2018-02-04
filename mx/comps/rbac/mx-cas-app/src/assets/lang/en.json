@@ -1,0 +1,25 @@
+{
+  "title": "Authority Manage System",
+  "nav": {
+    "home": "Home",
+    "manage": {
+      "value": "Management",
+      "user": "User management",
+      "department": "Department management",
+      "account": "Account management",
+      "role": "Role management",
+      "privilege": "Privilege management",
+      "accredit": "Accredit management",
+      "logs": "Operate log",
+      "loginHistory": "Login history"
+    },
+    "link": {
+      "home": "Go back the home page",
+      "login": "Go to the login page"
+    },
+    "message": {
+      "default": "An error occurred while rendering the page, please contact the developer for details.",
+      "nonAuthority" : "You're not authenticated!"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "title": "认证管理系统",
+  "nav": {
+    "home": "首页",
+    "manage": {
+      "value": "管理",
+      "user": "用户管理",
+      "department": "部门管理",
+      "account": "账户管理",
+      "role": "角色管理",
+      "privilege": "特权管理",
+      "accredit": "授权管理",
+      "logs": "操作日志",
+      "loginHistory": "登录历史"
+    },
+    "link": {
+      "home": "回到首页",
+      "login": "到登录页面"
+    },
+    "message": {
+      "default": "在渲染页面时发生了错误，请联系开发人员。",
+      "nonAuthority" : "你没有经过身份认证！"
+    }
+  }
+}
