@@ -1,8 +1,6 @@
 import { formatter, logger } from 'mx-app-utils'
 import { MxAjax } from 'mx-vue-el-utils'
 
-const LOGIN = 'LOGIN'
-const LOGOUT = 'LOGOUT'
 const SET_LOGIN_USER = 'SET_LOGIN_USER'
 
 const loginUrl = '/rest/login'
@@ -32,8 +30,11 @@ const actions = {
     logger.debug('send POST "%s", data: %j.', url, {code, password})
     MxAjax.post(url, {accountCode: code, password, forcedReplace: forced}, data => {
       if (data && data.account) {
+        let {token} = data
+        MxAjax.setToken(token)
         let {id, code, name, favorityTools, role} = data.account
-        commit(LOGIN, {id, code, name, favorityTools, role})
+        let authUser = {id, code, name, token, favorityTools, role}
+        commit(SET_LOGIN_USER, authUser)
         if (success && typeof success === 'function') {
           success(data)
         }
@@ -51,7 +52,7 @@ const actions = {
     logger.debug('send GET "%s".', url)
     MxAjax.get(url, data => {
       if (data && data.account) {
-        commit(LOGOUT)
+        commit(SET_LOGIN_USER, null)
         if (success && typeof success === 'function') {
           success(data)
         }
@@ -65,13 +66,6 @@ const actions = {
 }
 
 const mutations = {
-  LOGIN (state, {id, code, name, role, favorityTools}) {
-    let user = {id, code, name, role, favorityTools}
-    state.loginUser = user
-  },
-  LOGOUT (state) {
-    state.loginUser = null
-  },
   SET_LOGIN_USER (state, loginUser) {
     state.loginUser = loginUser
   }
