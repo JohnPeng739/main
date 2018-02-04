@@ -1,5 +1,5 @@
 <template>
-  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools"
+  <mx-normal-layout :title="title" :loginUserName="loginUserName" :roles="roles" :tools="tools"
                     :navData="transformedNavData"
                     v-on:logout="handleLogout" v-on:showNotice="handleShowNotice" v-on:goto="handleGoto">
     <router-view slot="content-body"></router-view>
@@ -16,9 +16,7 @@
     name: 'layout',
     data () {
       return {
-        title: 'The Demo System',
-        loginUserName: 'NA',
-        role: 'admin'
+        title: 'The Demo System'
       }
     },
     computed: {
@@ -33,11 +31,25 @@
         },
         set (val) {}
       },
+      loginUserName: {
+        get () {
+          return this.authenticated ? this.loginUser.name : $t('NA')
+        },
+        set (val) {
+        }
+      },
       tools: {
         get () {
           return this.loginUser && this.loginUser.favorityTools ? this.loginUser.favorityTools : []
         },
         set (val) {}
+      },
+      roles: {
+        get () {
+          return this.authenticated ? this.loginUser.roles : []
+        },
+        set (val) {
+        }
       }
     },
     methods: {
@@ -77,20 +89,6 @@
       },
       handleShowNotice () {
         logger.debug('show notice page.')
-      }
-    },
-    mounted () {
-      if (this.authenticated) {
-        let user = this.loginUser
-        if (user && user.name && typeof user.name === 'string' && user.name.length > 0) {
-          this.loginUserName = user.name
-          this.role = user.role
-          this.tools = user.tools
-        } else {
-          this.loginUserName = this.$t('rbac.common.fields.NA')
-          this.role = 'guest'
-          this.tools = []
-        }
       }
     }
   }

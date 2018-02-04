@@ -32,8 +32,8 @@ const actions = {
       if (data && data.account) {
         let {token} = data
         MxAjax.setToken(token)
-        let {id, code, name, favorityTools, role} = data.account
-        let authUser = {id, code, name, token, favorityTools, role}
+        let {id, code, name, favorityTools, roles} = data.account
+        let authUser = {id, code, name, token, favorityTools, roles}
         commit(SET_LOGIN_USER, authUser)
         if (success && typeof success === 'function') {
           success(data)
