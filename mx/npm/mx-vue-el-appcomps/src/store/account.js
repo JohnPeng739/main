@@ -33,7 +33,11 @@ const actions = {
         let {token} = data
         MxAjax.setToken(token)
         let {id, code, name, favorityTools, roles} = data.account
-        let authUser = {id, code, name, token, favorityTools, roles}
+        let roleCodes = []
+        if (roles && roles instanceof Array && roles.length > 0) {
+          roles.forEach(role => roleCodes.push(role.code))
+        }
+        let authUser = {id, code, name, token, favorityTools, roles: roleCodes}
         commit(SET_LOGIN_USER, authUser)
         if (success && typeof success === 'function') {
           success(data)
