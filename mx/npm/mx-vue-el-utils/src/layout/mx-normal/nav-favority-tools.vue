@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tooltip v-for="(item, index) in favorityTools" v-if="isRole(item) && index < 6" :key="item.path"
+    <el-tooltip v-for="(item, index) in tools" v-if="isRole(item) && index < 6" :key="item.path"
                 effect="dark" placement="bottom">
       <div slot="content">
         <span>{{item.name}}</span>
@@ -31,26 +31,20 @@
   export default {
     name: 'mx-normal-favority-tools',
     components: {MxIcon},
-    props: {
-      role: String,
-      favorityTools: Array,
-      noticePath: String,
-      noticeValue: Number,
-      loginUserName: {type: String, default: ''}
-    },
+    props: ['roles', 'tools', 'noticeValue'],
     data () {
       return {}
     },
     computed: {
       showNotice () {
-        let {noticePath, noticeValue} = this
-        return noticePath && typeof noticePath === 'string' && noticePath.length > 0 && noticeValue && noticeValue > 0
+        let {noticeValue} = this
+        return noticeValue && noticeValue > 0
       }
     },
     methods: {
       isRole (item) {
-        let role = this.role
-        return (role && role === item.role) || !item.role
+        let roles = this.roles
+        return (roles && roles instanceof Array && roles.indexOf(item.role) >= 0) || !item.role
       },
       handleGoto (path) {
         this.$emit('goto', path)

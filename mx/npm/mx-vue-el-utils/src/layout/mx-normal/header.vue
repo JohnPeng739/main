@@ -19,6 +19,8 @@
 <script>
   import MxIcon from '../../components/mx-icon'
 
+  // TODO 添加对登录账户本身操作功能，比如：账户详情、修改密码、修改个性化信息等
+
   export default {
     name: 'mx-normal-header',
     components: {MxIcon},

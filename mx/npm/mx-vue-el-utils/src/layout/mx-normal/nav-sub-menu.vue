@@ -18,14 +18,11 @@
   export default {
     name: 'mx-normal-nav-sub-menu',
     components: {MxIcon},
-    props: {
-      item: {},
-      role: String
-    },
+    props: ['item', 'roles'],
     methods: {
       isRole (item) {
-        let role = this.role
-        return (role && role === item.role) || !item.role
+        let roles = this.roles
+        return (roles && roles instanceof Array && roles.indexOf(item.role) >= 0) || !item.role
       }
     }
   }

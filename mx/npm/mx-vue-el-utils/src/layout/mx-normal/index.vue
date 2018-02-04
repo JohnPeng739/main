@@ -4,15 +4,15 @@
       <layout-header :title="title" :login-user-name="loginUserName" :nav-data="navData"
                      v-on:navToggled="handleNavToggled" v-on:logout="handleLogout">
         <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only hidden-sm-only"
-                                   :role="role"
-                                   :favority-tools="favorityTools" :notice-path="noticePath"
+                                   :roles="roles"
+                                   :tools="tools" :notice-path="noticePath"
                                    :notice-value="noticeValue" v-on:goto="handleGoto"
                                    v-on:showNotice="handleShowNotice">
         </layout-nav-favority-tools>
       </layout-header>
     </el-header>
     <el-main class="layout-main">
-      <layout-nav-menu :toggled="toggled()" :role="role" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav">
+      <layout-nav-menu :toggled="toggled()" :roles="roles" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav">
       </layout-nav-menu>
       <div class="layout-right">
         <el-breadcrumb>
@@ -41,13 +41,34 @@
     name: 'mx-normal-layout',
     components: {LayoutHeader, LayoutNavFavorityTools, LayoutNavMenu},
     props: {
-      title: String,
-      loginUserName: {type: String, default: ''},
-      role: String,
-      tools: Array,
-      navData: Array,
-      noticePath: String,
-      noticeValue: {type: Number, deault: 0}
+      title: {
+        type: String,
+        default: 'Application title'
+      },
+      loginUserName: {
+        type: String,
+        default: ''
+      },
+      roles: {
+        type: Array,
+        default: function () {
+          return []
+        }
+      },
+      tools: {
+        type: Array,
+        default: function () {
+          return []
+        }
+      },
+      navData: {
+        type: Array,
+        default: []
+      },
+      noticeValue: {
+        type: Number,
+        deault: 0
+      }
     },
     data () {
       return {
