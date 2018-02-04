@@ -4,7 +4,7 @@ import locale from './mx-locale'
 
 const i18n = locale.i18n
 
-let defaultError = (errorMessage) => {
+const defaultError = (errorMessage) => {
   let response = errorMessage.response
   console.log(response)
   if (response) {
@@ -15,7 +15,7 @@ let defaultError = (errorMessage) => {
   }
 }
 
-let preurl = (url) => {
+const preurl = (url) => {
   if (window.sessionStorage) {
     let user = JSON.parse(window.sessionStorage.getItem('auth.user'))
     if (user) {
@@ -30,15 +30,14 @@ let preurl = (url) => {
   return url
 }
 
-let get = (url, success, error) => ajax.get(preurl(url), success, error || defaultError)
+const get = (url, success, error) => ajax.get(preurl(url), success, error || defaultError)
+const post = (url, data, success, error) => ajax.post(preurl(url), data, success, error || defaultError)
+const put = (url, data, success, error) => ajax.put(preurl(url), data, success, error || defaultError)
+const del = (url, success, error) => ajax.del(preurl(url), success, error || defaultError)
+const setToken = (token) => ajax.setToken(token)
+const getToken = () => ajax.getToken()
 
-let post = (url, data, success, error) => ajax.post(preurl(url), data, success, error || defaultError)
-
-let put = (url, data, success, error) => ajax.put(preurl(url), data, success, error || defaultError)
-
-let del = (url, success, error) => ajax.del(preurl(url), success, error || defaultError)
-
-let MxAjax = {get, post, put, del}
+let MxAjax = {get, post, put, del, setToken, getToken}
 
 export default MxAjax
 export { MxAjax }
