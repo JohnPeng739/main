@@ -15,8 +15,8 @@ const _defaultError = (errorMessage) => {
 }
 
 const _preurl = (url) => {
-  if (sessionStorage) {
-    let user = JSON.parse(sessionStorage.getItem('auth.user'))
+  if (window.sessionStorage) {
+    let user = JSON.parse(window.sessionStorage.getItem('auth.user'))
     if (user) {
       let userCode = user.code
       if (url.indexOf('?') >= 0) {
