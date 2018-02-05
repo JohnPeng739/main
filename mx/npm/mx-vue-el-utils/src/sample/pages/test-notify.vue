@@ -38,9 +38,9 @@
     },
     methods: {
       handleAjaxDefaultError () {
-        MxAjax.get('/rest/abcd/none', data => {
+        MxAjax.get({url: '/rest/abcd/none', fnSuccess: data => {
           console.log(data)
-        })
+        }})
       },
       handleInfoClick () {
         let duration = this.duration

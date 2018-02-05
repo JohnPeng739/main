@@ -24,7 +24,7 @@ describe('test ajax', () => {
       expect(data.d).toBe(checked.d)
       done()
     })
-    MxAjax.get('/rest/get/success', fnSuccess)
+    MxAjax.get({url: '/rest/get/success', fnSuccess})
   })
   it('test get error method', (done) => {
     let fnSuccess = jest.fn(data => {
@@ -36,7 +36,7 @@ describe('test ajax', () => {
       expect(err).toBe(errorMsg)
       done()
     })
-    MxAjax.get('/rest/get/error', fnSuccess, fnError)
+    MxAjax.get({url: '/rest/get/error', fnSuccess, fnError})
   })
   it('test post method', (done) => {
     let fnSuccess = jest.fn((pagination, data) => {
@@ -51,7 +51,7 @@ describe('test ajax', () => {
       expect(data.d).toBe(checked.d)
       done()
     })
-    MxAjax.post('/rest/post', checked, fnSuccess)
+    MxAjax.post({url: '/rest/post', data: checked, fnSuccess})
   })
   it('test put method', (done) => {
     let fnSuccess = jest.fn(data => {
@@ -62,7 +62,7 @@ describe('test ajax', () => {
       expect(data.d).toBe(checked.d)
       done()
     })
-    MxAjax.put('/rest/put', checked, fnSuccess)
+    MxAjax.put({url: '/rest/put', data: checked, fnSuccess})
   })
   it('test del method', (done) => {
     let fnSuccess = jest.fn(data => {
@@ -73,6 +73,6 @@ describe('test ajax', () => {
       expect(data.d).toBe(checked.d)
       done()
     })
-    MxAjax.del('/rest/delete', fnSuccess)
+    MxAjax.del({url: '/rest/delete', fnSuccess})
   })
 })
