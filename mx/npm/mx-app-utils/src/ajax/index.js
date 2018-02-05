@@ -4,8 +4,6 @@
  */
 import axios from 'axios'
 
-axios.defaults.headers.common['Content-Type'] = 'application/json'
-
 let _token = undefined
 
 const _fnSuccess = (success, res, error) => {
