@@ -33,7 +33,7 @@
       },
       loginUserName: {
         get () {
-          return this.authenticated ? this.loginUser.name : $t('NA')
+          return this.authenticated ? this.loginUser.name : this.$t('NA')
         },
         set (val) {
         }

@@ -67,7 +67,7 @@ describe('test ajax', () => {
             expect(1).toBe(0)
             done()
         })
-        ajax.post({url: '/rest/post', checked, fnSuccess, fnError})
+        ajax.post({url: '/rest/post', data: checked, fnSuccess, fnError})
     })
     it('test put method', (done) => {
         let fnSuccess = jest.fn(data => {
@@ -82,7 +82,7 @@ describe('test ajax', () => {
             expect(1).toBe(0)
             done()
         })
-        ajax.put({url: '/rest/put', checked, fnSuccess, fnError})
+        ajax.put({url: '/rest/put', data: checked, fnSuccess, fnError})
     })
     it('test del method', (done) => {
         let fnSuccess = jest.fn(data => {

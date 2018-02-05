@@ -102,14 +102,15 @@
         }
       },
       refreshData (pagination) {
-        MxAjax.post('/rest/loginHistories', pagination, (pagination, data) => {
+        let fnSuccess = (pagination, data) => {
           logger.debug('response, page: %j, data: %j.', pagination, data)
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
             MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.loginHistory.module')}))
           }
-        })
+        }
+        MxAjax.post({url: '/rest/loginHistories', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {

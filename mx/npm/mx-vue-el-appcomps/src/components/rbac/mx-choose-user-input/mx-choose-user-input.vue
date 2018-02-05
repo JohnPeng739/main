@@ -53,10 +53,11 @@
       refresh () {
         let url = '/rest/users'
         logger.debug('send POST "%s".', url)
-        MxAjax.post(url, this.pagination, (pagination, data) => {
+        let fnSuccess = (pagination, data) => {
           this.pagination.total = pagination.total
           this.tableData = data
-        })
+        }
+        MxAjax.post({url, data: this.pagination, fnSuccess})
       },
       handleSelected (done) {
         done(this.selected)

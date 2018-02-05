@@ -186,14 +186,15 @@
         }
       },
       refreshData (pagination) {
-        MxAjax.post('/rest/accounts', pagination, (pagination, data) => {
+        let fnSuccess = (pagination, data) => {
           logger.debug('response, page: %j, data: %j.', pagination, data)
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
             MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.account.module')}))
           }
-        })
+        }
+        MxAjax.post({url: '/rest/accounts', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {
@@ -217,23 +218,25 @@
             if (this.operate === 'allocate') {
               let url = '/rest/users/' + owner.id + '/allocate'
               logger.debug('send POST "%s".', url)
-              MxAjax.post(url, {code, desc, ownerId: owner.id, roleIds}, data => {
+              let fnSuccess = (data) => {
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
                   MxNotify.info(this.$t('rbac.common.message.addSuccess', {module: this.$t('rbac.account.module')}))
                 }
-              })
+              }
+              MxAjax.post({url, data: {code, desc, ownerId: owner.id, roleIds}, fnSuccess})
             } else if (this.operate === 'edit') {
               let url = '/rest/accounts/' + id
               logger.debug('send PUT "%s".', url)
-              MxAjax.put(url, {accountId: id, code, name, desc, ownerId: owner.id, roleIds}, data => {
+              let fnSuccess = (data) => {
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
                   MxNotify.info(this.$t('rbac.common.message.editSuccess', {module: this.$t('rbac.account.module')}))
                 }
-              })
+              }
+              MxAjax.put({url, data: {accountId: id, code, name, desc, ownerId: owner.id, roleIds}, fnSuccess})
             }
           } else {
             MxNotify.formValidateWarn()
@@ -250,12 +253,13 @@
             let {oldPassword, password} = this.formPassword
             let url = '/rest/accounts/' + id + '/password/change'
             logger.debug('send POST "%s".', url)
-            MxAjax.post(url, {newPassword: password, oldPassword}, data => {
+            let fnSuccess = (data) => {
               if (data) {
                 MxNotify.info(this.$t('rbac.account.message.changePasswordSuccess', {code, name}))
                 done()
               }
-            })
+            }
+            MxAjax.post({url, data: {newPassword: password, oldPassword}, fnSuccess})
           } else {
             MxNotify.formValidateWarn()
           }
@@ -284,12 +288,13 @@
               let {id} = this.selected
               let url = '/rest/accounts/' + id
               logger.debug('send DELETE "%s".', url)
-              MxAjax.del(url, data => {
+              let fnSuccess = (data) => {
                 if (data) {
                   this.refreshData(pagination)
                   MxNotify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.$t('rbac.account.module')}))
                 }
-              })
+              }
+              MxAjax.del({url, fnSuccess})
             } else if (operate === 'password') {
               let {id, code, name, password, desc, owner, roles} = this.selected
               this.formAccount = {id, code, name, password, desc, owner, roles}

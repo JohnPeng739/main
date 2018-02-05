@@ -6,6 +6,8 @@ import axios from 'axios'
 
 axios.defaults.headers.common['Content-Type'] = 'application/json'
 
+let _token = undefined
+
 const _fnSuccess = (success, res, error) => {
     let data = res.data
     let pagination = null
@@ -38,24 +40,38 @@ const _fnPrepareParams = (params) => {
     if (!params || !params instanceof Object) {
         throw new Error('The ajax parameters object is invalid.')
     }
-    let {url} = params
+    let {url, config} = params
     if (!url || typeof url !== 'string' || url.length <= 0) {
         throw new Error('The ajax url is invalid.')
     }
+    if (!config) {
+        config = {}
+        if (!config.headers) {
+            config.headers = {}
+        }
+    }
+    if (!(config && config.headers && config.headers['Content-Type'])) {
+        // 没有设置ContentType，默认使用application/json
+        config.headers['Content-Type'] = 'application/json'
+    }
+    if (_token && typeof _token === 'string' && _token.length > 0) {
+        config.headers['Authorization'] = _token
+    }
+    params.config = config
     return params
 }
 
 export default {
     setToken: token => {
-        if (token && typeof token === 'string') {
+        if (token && typeof token === 'string' && token.length > 0) {
             let prefix = 'Bearer '
             if (token.search(prefix) !== 0) {
                 token = prefix + token
             }
-            axios.defaults.headers.common['Authorization'] = token
+            _token = token
         }
     },
-    getToken: () => axios.defaults.headers.common['Authorization'],
+    getToken: () => _token,
     get: (params) => {
         let {url, config, fnSuccess, fnError} = _fnPrepareParams(params)
         axios.get(url, config)

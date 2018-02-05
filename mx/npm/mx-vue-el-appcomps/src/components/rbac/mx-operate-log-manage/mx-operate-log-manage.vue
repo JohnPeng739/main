@@ -34,14 +34,15 @@
         }
       },
       refreshData (pagination) {
-        MxAjax.post('/rest/logs', pagination, (pagination, data) => {
+        let fnSuccess = (pagination, data) => {
           logger.debug('response, page: %j, data: %j.', pagination, data)
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
             MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.logs.module')}))
           }
-        })
+        }
+        MxAjax.post({url: '/rest/logs', data: pagination, fnSuccess})
       },
       handleButtonClick (operate, pagination) {
         switch (operate) {

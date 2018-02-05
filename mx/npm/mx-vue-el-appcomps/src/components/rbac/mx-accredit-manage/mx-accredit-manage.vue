@@ -165,14 +165,15 @@
         }
       },
       refreshData (pagination) {
-        MxAjax.post('/rest/accredits', pagination, (pagination, data) => {
+        let fnSuccess = (pagination, data) => {
           logger.debug('response, page: %j, data: %j.', pagination, data)
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
             MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.accredit.module')}))
           }
-        })
+        }
+        MxAjax.post({url: '/rest/accredits', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {
@@ -207,13 +208,14 @@
             if (this.operate === 'add') {
               let url = '/rest/accredits/new'
               logger.debug('send POST "%s".', url)
-              MxAjax.post(url, {id, src, tar, roles, startTime, endTime, desc}, data => {
+              let fnSuccess = (data) => {
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
                   MxNotify.info(this.$t('rbac.common.message.addSuccess', {module: this.$t('rbac.accredit.module')}))
                 }
-              })
+              }
+              MxAjax.post({url, data: {id, src, tar, roles, startTime, endTime, desc}, fnSuccess})
             }
             // 授权不支持修改，只支持删除
           } else {
@@ -242,12 +244,13 @@
               let {id} = this.selected
               let url = '/rest/accredits/' + id
               logger.debug('send DELETE "%s".', url)
-              MxAjax.del(url, data => {
+              let fnSuccess = (data) => {
                 if (data) {
                   this.refreshData(pagination)
                   MxNotify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.$t('rbac.accredit.module')}))
                 }
-              })
+              }
+              MxAjax.del({url, fnSuccess})
             } else {
               this.showData(this.selected, operate)
             }

@@ -28,7 +28,7 @@ const actions = {
   login ({commit, state}, {code, password, forced, success}) {
     let url = loginUrl
     logger.debug('send POST "%s", data: %j.', url, {code, password})
-    MxAjax.post(url, {accountCode: code, password, forcedReplace: forced}, data => {
+    let fnSuccess = (data) => {
       if (data && data.account) {
         let {token} = data
         MxAjax.setToken(token)
@@ -44,7 +44,8 @@ const actions = {
         }
         logger.info('Account[%s] login successfully, user: %j.', code, data)
       }
-    })
+    }
+    MxAjax.post({url, data: {accountCode: code, password, forcedReplace: forced}, fnSuccess})
   },
   logout ({commit, state}, {success}) {
     if (!authenticated(state.loginUser)) {
@@ -54,7 +55,7 @@ const actions = {
     let {id, code, name} = state.loginUser
     url = formatter.formatObj(url, {id})
     logger.debug('send GET "%s".', url)
-    MxAjax.get(url, data => {
+    let fnSuccess = (data) => {
       if (data && data.account) {
         commit(SET_LOGIN_USER, null)
         if (success && typeof success === 'function') {
@@ -62,7 +63,8 @@ const actions = {
         }
         logger.info('Account[%s] logout successfully, user: %j.', {code, name})
       }
-    })
+    }
+    MxAjax.get({url, fnSuccess})
   },
   setLoginUser ({commit, state}, loginUser) {
     commit(SET_LOGIN_USER, loginUser)

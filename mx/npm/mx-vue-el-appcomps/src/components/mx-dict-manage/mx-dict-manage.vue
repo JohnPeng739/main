@@ -99,14 +99,15 @@
         }
       },
       refreshData (pagination) {
-        MxAjax.post('/rest/' + this.module + 's', pagination, (pagination, data) => {
+        let fnSuccess = (pagination, data) => {
           // logger.debug('response, page: %j, data: %j.', pagination, data)
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
             MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.moduleName}))
           }
-        })
+        }
+        MxAjax.post({url: '/rest/' + this.module + 's', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {
@@ -126,26 +127,28 @@
             if (this.operate === 'add') {
               let url = '/rest/' + this.module + 's/new'
               logger.debug('send POST "%s".', url)
-              MxAjax.post(url, {id, code, name, desc}, data => {
+              let fnSuccess = (data) => {
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
                   MxNotify.info(this.$t('rbac.common.message.addSuccess', {module: this.moduleName}))
                 }
-              })
+              }
+              MxAjax.post({url, data: {id, code, name, desc}, fnSuccess})
             } else if (this.operate === 'edit') {
               let url = '/rest/' + this.module + 's/' + id
               logger.debug('send PUT "%s".', url)
-              MxAjax.put(url, {id, code, name, desc}, data => {
+              let fnSuccess = (data) => {
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
                   MxNotify.info(this.$t('rbac.common.message.editSuccess', {module: this.moduleName}))
                 }
-              })
+              }
+              MxAjax.put({url, data: {id, code, name, desc}, fnSuccess})
             }
           } else {
-            MxAjax.formValidateWarn()
+            MxNotify.formValidateWarn()
           }
         })
       },
@@ -171,12 +174,13 @@
               let {id} = this.selected
               let url = '/rest/' + this.module + 's/' + id
               logger.debug('send DELETE "%s".', url)
-              MxAjax.del(url, data => {
+              let fnSuccess = (data) => {
                 if (data) {
                   this.refreshData(pagination)
                   MxNotify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.moduleName}))
                 }
-              })
+              }
+              MxAjax.del({url, fnSuccess})
             } else {
               this.showData(this.selected, operate)
             }
