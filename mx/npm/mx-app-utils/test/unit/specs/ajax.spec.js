@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
 
-// import {ajax} from '../../../src/index'
-import {ajax} from '../../../dist/mx-app-utils.min'
+import {ajax} from '../../../src/index'
+// import {ajax} from '../../../dist/mx-app-utils.min'
 
 let pagination = {total: 100, size: 20, page: 3}
 let checked = {a: 'a', b: 'b', c: 123, d: false}
@@ -36,7 +36,7 @@ describe('test ajax', () => {
         token = 'Bearer ' + 'abcdefg'
         ajax.setToken(token)
         expect(ajax.getToken()).toBe(token)
-        ajax.get('/rest/get/success', fnSuccess, fnError)
+        ajax.get({url: '/rest/get/success', fnSuccess, fnError})
     })
     it('test get error method', (done) => {
         let fnSuccess = jest.fn(data => {
@@ -48,7 +48,7 @@ describe('test ajax', () => {
             expect(err).toBe(errorMsg)
             done()
         })
-        ajax.get('/rest/get/error', fnSuccess, fnError)
+        ajax.get({url: '/rest/get/error', fnSuccess, fnError})
     })
     it('test post method', (done) => {
         let fnSuccess = jest.fn((pagination, data) => {
@@ -67,7 +67,7 @@ describe('test ajax', () => {
             expect(1).toBe(0)
             done()
         })
-        ajax.post('/rest/post', checked, fnSuccess, fnError)
+        ajax.post({url: '/rest/post', checked, fnSuccess, fnError})
     })
     it('test put method', (done) => {
         let fnSuccess = jest.fn(data => {
@@ -82,7 +82,7 @@ describe('test ajax', () => {
             expect(1).toBe(0)
             done()
         })
-        ajax.put('/rest/put', checked, fnSuccess, fnError)
+        ajax.put({url: '/rest/put', checked, fnSuccess, fnError})
     })
     it('test del method', (done) => {
         let fnSuccess = jest.fn(data => {
@@ -98,6 +98,6 @@ describe('test ajax', () => {
             expect(1).toBe(0)
             done()
         })
-        ajax.del('/rest/delete', fnSuccess, fnError)
+        ajax.del({url: '/rest/delete', fnSuccess, fnError})
     })
 })

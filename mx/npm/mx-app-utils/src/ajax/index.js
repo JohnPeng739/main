@@ -4,11 +4,13 @@
  */
 import axios from 'axios'
 
-let fnSuccess = (success, res, error) => {
+axios.defaults.headers.common['Content-Type'] = 'application/json'
+
+const _fnSuccess = (success, res, error) => {
     let data = res.data
     let pagination = null
     if (data.errorCode && data.errorCode !== 0) {
-        fnError(error, data.errorMessage)
+        _fnError(error, data.errorMessage)
         return
     }
     if (data.pagination) {
@@ -26,10 +28,21 @@ let fnSuccess = (success, res, error) => {
     }
 }
 
-let fnError = (error, err) => {
+const _fnError = (error, err) => {
     if (error && typeof error === 'function') {
         error(err)
     }
+}
+
+const _fnPrepareParams = (params) => {
+    if (!params || !params instanceof Object) {
+        throw new Error('The ajax parameters object is invalid.')
+    }
+    let {url} = params
+    if (!url || typeof url !== 'string' || url.length <= 0) {
+        throw new Error('The ajax url is invalid.')
+    }
+    return params
 }
 
 export default {
@@ -43,26 +56,30 @@ export default {
         }
     },
     getToken: () => axios.defaults.headers.common['Authorization'],
-    get: (url, success, error) => {
-        axios.get(url)
-            .then(res => fnSuccess(success, res, error))
-            .catch(err => fnError(error, err))
+    get: (params) => {
+        let {url, config, fnSuccess, fnError} = _fnPrepareParams(params)
+        axios.get(url, config)
+            .then(res => _fnSuccess(fnSuccess, res, fnError))
+            .catch(err => _fnError(fnError, err))
     },
 
-    post: (url, data, success, error) => {
-        axios.post(url, data)
-            .then(res => fnSuccess(success, res, error))
-            .catch(err => fnError(error, err))
+    post: (params) => {
+        let {url, data, config, fnSuccess, fnError} = _fnPrepareParams(params)
+        axios.post(url, data, config)
+            .then(res => _fnSuccess(fnSuccess, res, fnError))
+            .catch(err => _fnError(fnError, err))
     },
 
-    put: (url, data, success, error) => {
-        axios.put(url, data)
-            .then(res => fnSuccess(success, res, error))
-            .catch(err => fnError(error, err))
+    put: (params) => {
+        let {url, data, config, fnSuccess, fnError} = _fnPrepareParams(params)
+        axios.put(url, data, config)
+            .then(res => _fnSuccess(fnSuccess, res, fnError))
+            .catch(err => _fnError(fnError, err))
     },
-    del: (url, success, error) => {
-        axios.delete(url)
-            .then(res => fnSuccess(success, res, error))
-            .catch(err => fnError(error, err))
+    del: (params) => {
+        let {url, config, fnSuccess, fnError} = _fnPrepareParams(params)
+        axios.delete(url, config)
+            .then(res => _fnSuccess(fnSuccess, res, fnError))
+            .catch(err => _fnError(fnError, err))
     }
 }
