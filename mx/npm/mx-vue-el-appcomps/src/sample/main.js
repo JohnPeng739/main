@@ -7,7 +7,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import mock from './mock'
+// import mock from './mock'
 
 Vue.config.productionTip = false
 
@@ -16,7 +16,7 @@ Vue.use(ElementUI, {
   i18n: (k, v) => MxLocale.i18n.t(k, v)
 })
 
-mock()
+// mock()
 
 console.log(MxLocale.i18n.t('test'))
 

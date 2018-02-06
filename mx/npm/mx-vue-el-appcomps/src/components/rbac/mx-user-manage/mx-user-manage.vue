@@ -195,6 +195,10 @@
             if (birthday && birthday instanceof Date) {
               birthday = birthday.getTime()
             }
+            let departId
+            if (department && department.id) {
+              departId = department.id
+            }
             if (this.operate === 'add') {
               let url = '/rest/users/new'
               logger.debug('send POST "%s".', url)
@@ -216,7 +220,7 @@
                   station,
                   sex,
                   birthday,
-                  department
+                  departId
                 },
                 fnSuccess
               })
@@ -241,7 +245,7 @@
                   station,
                   sex,
                   birthday,
-                  department
+                  departId
                 },
                 fnSuccess
               })

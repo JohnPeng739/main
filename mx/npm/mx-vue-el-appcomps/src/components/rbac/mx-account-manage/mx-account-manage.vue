@@ -7,7 +7,7 @@
         <el-table-column prop="name" :label="$t('rbac.common.fields.name')" :width="100">
           <template slot-scope="scope">
             {{scope.row.name}}<br/>
-            <span class="reference">{{$t('rbac.common.fields.from')}} {{scope.row.owner.name}}</span>
+            <span class="reference">{{$t('rbac.common.fields.from')}} {{getOwnerName(scope.row.owner)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="roles" :label="$t('rbac.common.fields.roles')" :width="120">
@@ -174,6 +174,13 @@
           roles.forEach(role => list.push(role.name))
         }
         return formatter.formatArgs('[%s]', list.join(', '))
+      },
+      getOwnerName (user) {
+        if (user && user.name) {
+          return user.name
+        } else {
+          return this.$t('NA')
+        }
       },
       newAccount () {
         return {id: undefined, code: '', name: '', owner: undefined, roles: [], desc: ''}

@@ -43,8 +43,8 @@
             let {code, password, forced} = this.formLogin
             let success = (data) => {
               if (data && data.account) {
-                let {id, code, name, favorityTools, role} = data.account
-                localStorage.setItem('auth.user', JSON.stringify({id, code, name, favorityTools, role}))
+                let {id, code, name, favorityTools, roles} = data.account
+                sessionStorage.setItem('auth.user', JSON.stringify({id, code, name, favorityTools, roles}))
                 MxNotify.info(this.$t('rbac.account.message.loginSuccess', {code, name}))
                 this.$router.push('/')
               }

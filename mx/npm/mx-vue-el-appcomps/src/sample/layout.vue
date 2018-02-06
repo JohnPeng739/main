@@ -77,9 +77,7 @@
           let success = (data) => {
             if (data && data.account) {
               let {code, name} = data.account
-              localStorage.removeItem('auth.user')
-              console.log(this.$t('rbac.account.module'))
-              console.log(this.$t('rbac.account.message.logoutSuccess', {code, name}))
+              sessionStorage.removeItem('auth.user')
               MxNotify.info(this.$t('rbac.account.message.logoutSuccess', {code, name}))
               this.$router.push('/login')
             }
