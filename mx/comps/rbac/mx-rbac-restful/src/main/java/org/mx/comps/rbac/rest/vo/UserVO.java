@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.dal.entity.User;
 import org.mx.dal.EntityFactory;
+import org.mx.service.rest.vo.BaseDictVO;
 import org.mx.service.rest.vo.BaseVO;
 
 import java.util.*;
@@ -37,7 +38,7 @@ public class UserVO extends BaseVO {
         userVO.birthday = user.getBirthday() != null ? user.getBirthday().getTime() : 0;
         if (user.getDepartment() != null) {
             DepartmentVO departmentVO = new DepartmentVO();
-            DepartmentVO.transform(user.getDepartment(), departmentVO);
+            BaseDictVO.transform(user.getDepartment(), departmentVO);
             userVO.department = departmentVO;
         }
     }
@@ -56,7 +57,7 @@ public class UserVO extends BaseVO {
         user.setBirthday(new Date(userVO.getBirthday()));
         if (userVO.getDepartment() != null) {
             Department department = EntityFactory.createEntity(Department.class);
-            DepartmentVO.transform(userVO.getDepartment(), department);
+            BaseDictVO.transform(userVO.getDepartment(), department);
             user.setDepartment(department);
         }
     }

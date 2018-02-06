@@ -105,7 +105,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  let user = JSON.parse(sessionStorage.getItem('authUser'))
+  let user = JSON.parse(sessionStorage.getItem('auth.user'))
   if (user) {
     router.app.$options.store.dispatch('setLoginUser', user)
   }

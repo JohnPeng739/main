@@ -25,7 +25,7 @@
 
 <script>
   import {mapActions} from 'vuex'
-  import {MxFormValidateRules, MxNotify, MxAjax} from 'mx-vue-el-utils'
+  import {MxFormValidateRules, MxNotify} from 'mx-vue-el-utils'
 
   export default {
     name: 'page-login',
@@ -55,7 +55,7 @@
                   roles.forEach(role => roleCodes.push(role.code))
                 }
                 let authUser = {id, code, name, token, favorityTools, roles: roleCodes}
-                sessionStorage.setItem('authUser', JSON.stringify(authUser))
+                sessionStorage.setItem('auth.user', JSON.stringify(authUser))
                 MxNotify.info(this.$t('rbac.account.message.loginSuccess', {code, name}))
                 this.$router.push('/')
               }

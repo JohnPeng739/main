@@ -109,7 +109,7 @@ public class RoleManageResource {
     public DataVO<RoleVO> saveRole(@QueryParam("userCode") String userCode, RoleInfoVO roleInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            roleInfoVO.setRoleId(null);
+            roleInfoVO.setId(null);
             Role role = roleManageService.saveRole(roleInfoVO.getRoleInfo());
             RoleVO vo = new RoleVO();
             RoleVO.transform(role, vo);
@@ -133,7 +133,7 @@ public class RoleManageResource {
     public DataVO<RoleVO> saveRole(@QueryParam("userCode") String userCode, @PathParam("id") String id, RoleInfoVO roleInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            roleInfoVO.setRoleId(id);
+            roleInfoVO.setId(id);
             Role role = roleManageService.saveRole(roleInfoVO.getRoleInfo());
             RoleVO vo = new RoleVO();
             RoleVO.transform(role, vo);

@@ -177,7 +177,7 @@ public class AccountManageResource {
                                          AccountInfoVO accountInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            accountInfoVO.setAccountId(id);
+            accountInfoVO.setId(id);
             Account account = accountManageService.saveAccount(accountInfoVO.getAccountInfo());
             AccountVO accountVO = new AccountVO();
             AccountVO.transform(account, accountVO);
@@ -247,7 +247,7 @@ public class AccountManageResource {
         }
     }
 
-    @Path("accounts/login")
+    @Path("login")
     @POST
     public DataVO<LoginHistoryVO> login(@Context Request request, @Context Response response,
                                         AuthenticateAccountPasswordVO vo) {
@@ -272,7 +272,7 @@ public class AccountManageResource {
         }
     }
 
-    @Path("accounts/{id}/logout")
+    @Path("logout/{id}")
     @GET
     @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<LoginHistoryVO> logout(@PathParam("id") String id, @QueryParam("userCode") String userCode,

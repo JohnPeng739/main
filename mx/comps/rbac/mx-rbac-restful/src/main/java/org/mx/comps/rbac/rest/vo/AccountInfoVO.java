@@ -10,12 +10,12 @@ import java.util.List;
  * @author : john.peng created on date : 2017/12/03
  */
 public class AccountInfoVO {
-    private String code, password, desc, accountId, ownerId;
+    private String code, password, desc, id, ownerId;
     private boolean valid = true;
     private List<String> roleIds;
 
     public AccountManageService.AccountInfo getAccountInfo() {
-        return AccountManageService.AccountInfo.valueOf(code, password, desc, accountId, ownerId, roleIds, valid);
+        return AccountManageService.AccountInfo.valueOf(code, password, desc, id, ownerId, roleIds, valid);
     }
 
     public String getCode() {
@@ -42,12 +42,12 @@ public class AccountInfoVO {
         this.desc = desc;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getId() {
+        return id;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getOwnerId() {

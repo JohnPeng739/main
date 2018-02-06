@@ -128,7 +128,7 @@ public class DepartmentManageResource {
     @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<DepartmentVO> saveDepartment(@QueryParam("userCode") String userCode, DepartmentInfoVO departmentInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
-        departmentInfoVO.setDepartId(null);
+        departmentInfoVO.setId(null);
         return saveDepartment(departmentInfoVO);
     }
 
@@ -138,7 +138,7 @@ public class DepartmentManageResource {
     public DataVO<DepartmentVO> saveDepartment(@QueryParam("userCode") String userCode, @PathParam("id") String id,
                                                DepartmentInfoVO departmentInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
-        departmentInfoVO.setDepartId(id);
+        departmentInfoVO.setId(id);
         return saveDepartment(departmentInfoVO);
     }
 

@@ -10,12 +10,20 @@ import java.util.List;
  * @author : john.peng created on date : 2017/12/03
  */
 public class DepartmentInfoVO {
-    private String code, name, desc, departId, managerId;
+    private String id, code, name, desc, managerId;
     private boolean valid = true;
     private List<String> employeeIds;
 
     public DepartmentManageService.DepartInfo getDepartInfo() {
-        return DepartmentManageService.DepartInfo.valueOf(code, name, desc, departId, managerId, employeeIds, valid);
+        return DepartmentManageService.DepartInfo.valueOf(id, code, name, desc, managerId, employeeIds, valid);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCode() {
@@ -40,14 +48,6 @@ public class DepartmentInfoVO {
 
     public void setDesc(String desc) {
         this.desc = desc;
-    }
-
-    public String getDepartId() {
-        return departId;
-    }
-
-    public void setDepartId(String departId) {
-        this.departId = departId;
     }
 
     public String getManagerId() {

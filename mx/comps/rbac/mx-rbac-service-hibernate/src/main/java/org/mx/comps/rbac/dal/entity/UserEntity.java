@@ -102,8 +102,8 @@ public class UserEntity extends BaseEntity implements User {
      */
     @Override
     public String getFullName() {
-        return String.format("%s%s%s", lastName == null ? "" : lastName + " ", middleName == null ? "" : middleName,
-                firstName == null ? "" : firstName);
+        return String.format("%s%s%s", firstName == null ? "" : firstName + " ", middleName == null ? "" : middleName,
+                lastName == null ? "" : lastName + "");
     }
 
     /**

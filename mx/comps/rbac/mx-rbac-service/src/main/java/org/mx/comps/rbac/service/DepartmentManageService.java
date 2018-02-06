@@ -20,7 +20,7 @@ public interface DepartmentManageService {
     Department saveDepartment(DepartInfo departInfo);
 
     class DepartInfo {
-        private String code, name, desc, departId, managerId;
+        private String code, name, desc, id, managerId;
         private boolean valid = true;
         private List<String> employeeIds;
 
@@ -36,10 +36,10 @@ public interface DepartmentManageService {
             this.desc = desc;
         }
 
-        private DepartInfo(String code, String name, String desc, String departId, String managerId,
+        private DepartInfo(String id, String code, String name, String desc, String managerId,
                            List<String> employeeIds, boolean valid) {
             this(code, name, desc);
-            this.departId = departId;
+            this.id = id;
             this.managerId = managerId;
             this.employeeIds = employeeIds;
             this.valid = valid;
@@ -49,9 +49,13 @@ public interface DepartmentManageService {
             return new DepartInfo(code, name, desc);
         }
 
-        public static final DepartInfo valueOf(String code, String name, String desc, String departId, String managerId,
+        public static final DepartInfo valueOf(String id, String code, String name, String desc, String managerId,
                                                List<String> employeeIds, boolean valid) {
-            return new DepartInfo(code, name, desc, departId, managerId, employeeIds, valid);
+            return new DepartInfo(id, code, name, desc, managerId, employeeIds, valid);
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getCode() {
@@ -64,10 +68,6 @@ public interface DepartmentManageService {
 
         public String getDesc() {
             return desc;
-        }
-
-        public String getDepartId() {
-            return departId;
         }
 
         public String getManagerId() {

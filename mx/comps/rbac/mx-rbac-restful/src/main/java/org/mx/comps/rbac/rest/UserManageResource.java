@@ -113,7 +113,7 @@ public class UserManageResource {
     public DataVO<UserVO> newUser(@QueryParam("userCode") String userCode, UserInfoVO userInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            userInfoVO.setUserId(null);
+            userInfoVO.setId(null);
             User user = userManageService.saveUser(userInfoVO.getUserInfo());
             UserVO userVO = new UserVO();
             UserVO.transform(user, userVO);
@@ -138,7 +138,7 @@ public class UserManageResource {
                                    UserInfoVO userInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
-            userInfoVO.setUserId(userId);
+            userInfoVO.setId(userId);
             User user = userManageService.saveUser(userInfoVO.getUserInfo());
             UserVO userVO = new UserVO();
             UserVO.transform(user, userVO);

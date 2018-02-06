@@ -44,7 +44,7 @@ public abstract class DepartmentManageServiceCommonImpl implements DepartmentMan
         if (departInfo == null) {
             throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
         }
-        String id = departInfo.getDepartId();
+        String id = departInfo.getId();
         Department department;
         if (!StringUtils.isBlank(id)) {
             department = accessor.getById(id, Department.class);
@@ -69,12 +69,14 @@ public abstract class DepartmentManageServiceCommonImpl implements DepartmentMan
         if (department.getEmployees() != null && !department.getEmployees().isEmpty()) {
             department.getEmployees().clear();
         }
-        for (String employeeId : departInfo.getEmployeeIds()) {
-            User employee = accessor.getById(employeeId, User.class);
-            if (employee == null) {
-                throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.USER_NOT_FOUND);
+        if (departInfo.getEmployeeIds() != null) {
+            for (String employeeId : departInfo.getEmployeeIds()) {
+                User employee = accessor.getById(employeeId, User.class);
+                if (employee == null) {
+                    throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.USER_NOT_FOUND);
+                }
+                department.getEmployees().add(employee);
             }
-            department.getEmployees().add(employee);
         }
         department.setValid(departInfo.isValid());
         department = this.save(department);

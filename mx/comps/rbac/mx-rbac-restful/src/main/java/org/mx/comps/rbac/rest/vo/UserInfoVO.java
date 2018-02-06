@@ -9,22 +9,22 @@ import org.mx.comps.rbac.service.UserManageService;
  * @author : john.peng created on date : 2017/12/03
  */
 public class UserInfoVO {
-    private String userId, firstName, middleName, lastName, station, desc, departId;
+    private String id, firstName, middleName, lastName, station, desc, departId;
     private boolean valid = true;
     private User.Sex sex = User.Sex.FEMALE;
     private long birthday = -1;
 
     public UserManageService.UserInfo getUserInfo() {
-        return UserManageService.UserInfo.valueOf(firstName, middleName, lastName, sex, userId, birthday,
+        return UserManageService.UserInfo.valueOf(firstName, middleName, lastName, sex, id, birthday,
                 departId, station, valid, desc);
     }
 
-    public String getUserId() {
-        return userId;
+    public String getId() {
+        return id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFirstName() {

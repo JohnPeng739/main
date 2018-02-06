@@ -10,16 +10,16 @@ import java.util.List;
  * @author : john.peng created on date : 2017/12/03
  */
 public class RoleInfoVO {
-    private String roleId, code, name, desc;
+    private String is, code, name, desc;
     private boolean valid = true;
     private List<String> accountIds, privilegeIds;
 
     public RoleManageService.RoleInfo getRoleInfo() {
-        return RoleManageService.RoleInfo.valueOf(code, name, desc, roleId, accountIds, privilegeIds, valid);
+        return RoleManageService.RoleInfo.valueOf(code, name, desc, is, accountIds, privilegeIds, valid);
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setId(String is) {
+        this.is = is;
     }
 
     public void setCode(String code) {
@@ -46,8 +46,8 @@ public class RoleInfoVO {
         this.privilegeIds = privilegeIds;
     }
 
-    public String getRoleId() {
-        return roleId;
+    public String getId() {
+        return is;
     }
 
     public String getCode() {
