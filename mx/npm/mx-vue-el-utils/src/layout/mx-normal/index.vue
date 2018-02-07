@@ -5,7 +5,7 @@
                      v-on:navToggled="handleNavToggled" v-on:logout="handleLogout">
         <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only hidden-sm-only"
                                    :roles="roles"
-                                   :tools="favorityTools" :notice-path="noticePath"
+                                   :tools="favorityTools"
                                    :notice-value="noticeValue" v-on:goto="handleGoto"
                                    v-on:showNotice="handleShowNotice">
         </layout-nav-favority-tools>

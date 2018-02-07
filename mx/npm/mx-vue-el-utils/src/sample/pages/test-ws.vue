@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import { logger, MyWebSocket } from 'mx-app-utils'
+  import { logger, createWsClient } from 'mx-app-utils'
 
   export default {
     name: 'test-websocket-page',
@@ -59,20 +59,26 @@
       },
       handleConnect () {
         let receiveMessage = message => {
-          logger.debug('Receive a message: %s.', message)
-          this.items.unshift(message)
+          if (typeof message === 'string') {
+            logger.debug('Receive a text message: %s.', message)
+            this.items.unshift(message)
+          } else {
+            let reader = new FileReader()
+            logger.debug('Receive a blob message: %s.', reader.readAsBinaryString(message))
+            reader.close()
+          }
         }
         let device = {deviceId: this.deviceId, state: this.deviceState, longitude: 123.22, latitude: 33.123}
         let afterConnect = () => {
           this.send({command: 'registry', type: 'system', data: device})
+          logger.debug('Send registry command.')
         }
-        let myWebSocket = MyWebSocket.createNew(this.wsUri, receiveMessage, afterConnect)
-        this.myWebSocket = myWebSocket
+        this.myWebSocket = createWsClient(this.wsUri, true, {receiveMessage, afterConnect})
         this.interval = setInterval(() => {
           device.longitude = Math.random() * 180
           device.latitude = Math.random() * 90
           this.send({command: 'pong', type: 'system', data: device})
-        }, 10000)
+        }, 30000)
       },
       handleClose () {
         if (this.interval) {
@@ -82,6 +88,7 @@
           logger.info('client close the session.')
           this.send({command: 'unregistry', type: 'system', data: {deviceId: this.deviceId}})
           this.myWebSocket.close()
+          this.myWebSocket = null
         }
       },
       handleSendMessage () {
