@@ -7,22 +7,26 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.mx.service.error.UserInterfaceServiceErrorException;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
- * Websocket客户端Java调用类
+ * Websocket客户端Java调用类，支持重连机制。
  *
  * @author : john.peng created on date : 2017/12/31
  */
 public class WsClientInvoke {
     private static final Log logger = LogFactory.getLog(WsClientInvoke.class);
-
+    private final Serializable reconnectMutex = "RECONNECT_TASK";
     private WebSocketClient client = null;
     private String uri = null;
     private boolean reconnect = true;
     private BaseWebsocketClientListener listener = null;
+    private Timer reconnectTimer = null;
 
     /**
      * 初始化Websocket客户端调用器
@@ -109,7 +113,10 @@ public class WsClientInvoke {
                 }
             };
             client.connect();
-            Thread.sleep(50);
+            reconnectTimer = new Timer();
+            // 延迟5s后间隔15s调用
+            reconnectTimer.scheduleAtFixedRate(new ReconnectTask(), 5000, 15000);
+            Thread.sleep(100);
         } catch (URISyntaxException | InterruptedException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Initialize the weboscket client fail, uri: %s.", uri), ex);
@@ -136,11 +143,13 @@ public class WsClientInvoke {
     }
 
     private void reconnect() {
-        if ((client == null || client.getReadyState() != WebSocket.READYSTATE.OPEN) && reconnect) {
-            this.close();
-            this.init();
-            if (logger.isDebugEnabled()) {
-                logger.debug("Websocket client reconnect successfully.");
+        synchronized (WsClientInvoke.this.reconnectMutex) {
+            if ((client == null || client.getReadyState() != WebSocket.READYSTATE.OPEN) && reconnect) {
+                this.close();
+                this.init();
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Websocket client reconnect successfully.");
+                }
             }
         }
     }
@@ -148,7 +157,18 @@ public class WsClientInvoke {
     /**
      * 关闭Websocket客户端
      */
+
     public void close() {
+        // 如果手动调用过close，那么强制关闭重连机制
+        reconnect = false;
+        if (reconnectTimer != null) {
+            reconnectTimer.cancel();
+            reconnectTimer.purge();
+            reconnectTimer = null;
+            if (logger.isDebugEnabled()) {
+                logger.debug("The reconnect task is closed.");
+            }
+        }
         if (client != null) {
             client.close(0);
             if (logger.isDebugEnabled()) {
@@ -186,6 +206,19 @@ public class WsClientInvoke {
             if (logger.isWarnEnabled()) {
                 logger.warn("The binary message is null.");
             }
+        }
+    }
+
+    // 重连任务
+    private class ReconnectTask extends TimerTask {
+        /**
+         * {@inheritDoc}
+         *
+         * @see TimerTask#run()
+         */
+        @Override
+        public void run() {
+            reconnect();
         }
     }
 }

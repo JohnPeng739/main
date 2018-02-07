@@ -104,11 +104,11 @@ public class TestServer {
         Server server = factory.getServer();
         assertNotNull(server);
 
+        // test websocket client
+        WsClientInvoke invoke = new WsClientInvoke();
+        TestWebsocketListener listener = new TestWebsocketListener();
         try {
-            // test websocket client
-            WsClientInvoke invoke = new WsClientInvoke();
-            TestWebsocketListener listener = new TestWebsocketListener();
-            invoke.init("ws://localhost:9997/echo", listener);
+            invoke.init("ws://localhost:9997/echo", listener, false);
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.OPEN, invoke.getState());
             assertEquals("Server is ok.", listener.textMsg);
@@ -122,8 +122,38 @@ public class TestServer {
             invoke.close();
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.CLOSED, invoke.getState());
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+        // 测试手动关闭后无法重连
+        try {
+            invoke.send("test message");
+            fail("Here need a exception.");
+        } catch (Exception ex) {
+            // do nothing
+        }
+    }
 
-            msg = "hello, john,********";
+    @Test
+    public void testWebsocketServerReconnect() {
+        AbstractServerFactory factory = context.getBean(WebsocketServerFactory.class);
+        assertNotNull(factory);
+        Server server = factory.getServer();
+        assertNotNull(server);
+
+        // test websocket client
+        WsClientInvoke invoke = new WsClientInvoke();
+        TestWebsocketListener listener = new TestWebsocketListener();
+        try {
+            invoke.init("ws://localhost:9997/echo", listener, true);
+            Thread.sleep(1000);
+            assertEquals(WebSocket.READYSTATE.OPEN, invoke.getState());
+            assertEquals("Server is ok.", listener.textMsg);
+            // 等待直到服务器关闭连接
+            Thread.sleep(30000);
+
+            // 测试重连
+            String msg = "hello, john";
             invoke.send(msg);
             Thread.sleep(1000);
             assertEquals(String.format("Server echo: %s.", msg), listener.textMsg);
