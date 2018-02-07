@@ -40,6 +40,12 @@ public class NotifyServerResource {
     @Autowired
     private OnlineManager onlineManager = null;
 
+    /**
+     * 推送通知
+     *
+     * @param notifyCommand JSON格式的通知命令字符串
+     * @return 返回true表示处理成功
+     */
     @Path("notify/send")
     @POST
     public DataVO<Boolean> sendNotify(String notifyCommand) {
@@ -48,6 +54,14 @@ public class NotifyServerResource {
         return new DataVO<>(true);
     }
 
+    /**
+     * 获取符合条件的在线设备列表
+     *
+     * @param state 指定的状态
+     * @param later 注册时间晚于指定时间
+     * @param early 注册时间早于指定时间
+     * @return 在线设备列表
+     */
     @Path("onlines")
     @GET
     public DataVO<List<OnlineDeviceVO>> getOnlineDevices(@QueryParam("state") String state,
@@ -71,6 +85,15 @@ public class NotifyServerResource {
         return new DataVO<>(OnlineDeviceVO.transform(list));
     }
 
+    /**
+     * 获取符合条件的在线设备列表
+     *
+     * @param state      指定的状态
+     * @param later      注册时间晚于指定时间
+     * @param early      注册时间早于指定时间
+     * @param pagination 分页对象
+     * @return 在线设备列表
+     */
     @Path("onlines")
     @POST
     public PaginationDataVO<List<OnlineDeviceVO>> getOnlineDevices(@QueryParam("state") String state,

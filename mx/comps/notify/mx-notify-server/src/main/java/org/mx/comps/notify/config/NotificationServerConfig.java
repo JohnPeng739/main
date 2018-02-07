@@ -25,11 +25,21 @@ import java.util.List;
         "org.mx.comps.notify.rest"
 })
 public class NotificationServerConfig {
+    /**
+     * 通知推送服务器提供的Restful服务列表
+     *
+     * @return Restful服务列表
+     */
     @Bean(name = "restfulClassesNotify")
     public List<Class<?>> restfulClassesNotify() {
         return Arrays.asList(NotifyServerResource.class);
     }
 
+    /**
+     * 通知推送服务器提供的Websocket服务列表
+     *
+     * @return Websocket服务列表
+     */
     @Bean(name = "websocketClassesNotify")
     public List<Class<?>> websocketClassesNotify() {
         return Arrays.asList(NotificationWebsocket.class);
