@@ -147,12 +147,21 @@ public class WsClientInvoke {
      */
     private void reconnect() {
         synchronized (WsClientInvoke.this.reconnectMutex) {
-            if ((client == null || client.getReadyState() != WebSocket.READYSTATE.OPEN) && reconnect) {
-                this.closeClient();
-                this.initClient();
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Websocket client reconnect successfully.");
+            if (!reconnect) {
+                // 不需要重连
+                return;
+            }
+            if (client != null) {
+                WebSocket.READYSTATE state = client.getReadyState();
+                if (state == WebSocket.READYSTATE.CONNECTING || state == WebSocket.READYSTATE.OPEN) {
+                    // 正常连接状态，不需要重连
+                    return;
                 }
+            }
+            // 进行重连操作
+            this.initClient();
+            if (logger.isDebugEnabled()) {
+                logger.debug("Websocket client reconnect successfully.");
             }
         }
     }
