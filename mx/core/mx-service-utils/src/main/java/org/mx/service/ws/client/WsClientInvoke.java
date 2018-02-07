@@ -51,10 +51,10 @@ public class WsClientInvoke {
         this.uri = uri;
         this.listener = listener;
         this.reconnect = reconnect;
-        this.init();
+        this.initClient();
     }
 
-    private void init() throws UserInterfaceServiceErrorException {
+    private void initClient() throws UserInterfaceServiceErrorException {
         try {
             client = new WebSocketClient(new URI(uri)) {
                 /**
@@ -142,11 +142,14 @@ public class WsClientInvoke {
         }
     }
 
+    /**
+     * 重连
+     */
     private void reconnect() {
         synchronized (WsClientInvoke.this.reconnectMutex) {
             if ((client == null || client.getReadyState() != WebSocket.READYSTATE.OPEN) && reconnect) {
-                this.close();
-                this.init();
+                this.closeClient();
+                this.initClient();
                 if (logger.isDebugEnabled()) {
                     logger.debug("Websocket client reconnect successfully.");
                 }
@@ -155,9 +158,20 @@ public class WsClientInvoke {
     }
 
     /**
+     * 关闭Client
+     */
+    private void closeClient() {
+        if (client != null) {
+            client.close(0);
+            if (logger.isDebugEnabled()) {
+                logger.debug("The Websocket client is closed.");
+            }
+        }
+    }
+
+    /**
      * 关闭Websocket客户端
      */
-
     public void close() {
         // 如果手动调用过close，那么强制关闭重连机制
         reconnect = false;
@@ -169,12 +183,7 @@ public class WsClientInvoke {
                 logger.debug("The reconnect task is closed.");
             }
         }
-        if (client != null) {
-            client.close(0);
-            if (logger.isDebugEnabled()) {
-                logger.debug("The Websocket client is closed.");
-            }
-        }
+        closeClient();
     }
 
     /**
@@ -209,7 +218,7 @@ public class WsClientInvoke {
         }
     }
 
-    // 重连任务
+    // 重连任务类定义
     private class ReconnectTask extends TimerTask {
         /**
          * {@inheritDoc}
