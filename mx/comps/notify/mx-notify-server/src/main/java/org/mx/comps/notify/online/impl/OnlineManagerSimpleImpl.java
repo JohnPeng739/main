@@ -8,6 +8,10 @@ import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.service.ws.ConnectionManager;
 import org.mx.spring.SpringContextHolder;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -24,11 +28,16 @@ import java.util.stream.Stream;
  * @author : john.peng created on date : 2018/1/5
  */
 @Component("onlineManagerSimple")
-public class OnlineManagerSimpleImpl implements OnlineManager {
+public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(OnlineManagerSimpleImpl.class);
 
     private final Serializable onlineDeviceMutex = "ONLINE_DEVICE";
     private ConcurrentMap<String, OnlineDevice> onlineDevices = null;
+    private Timer cleanTimer = null;
+    private long pongIdleTimeoutSecs = 60l;
+
+    @Autowired
+    private Environment env = null;
 
     /**
      * 默认的构造函数
@@ -61,6 +70,34 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
     /**
      * {@inheritDoc}
      *
+     * @see InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (env != null) {
+            pongIdleTimeoutSecs = env.getProperty("websocket.pong.idleTimeoutSecs", Long.class, 60l);
+        }
+        cleanTimer = new Timer();
+        cleanTimer.scheduleAtFixedRate(new CleanTask(), 5000, pongIdleTimeoutSecs * 1000 / 3);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DisposableBean#destroy()
+     */
+    @Override
+    public void destroy() throws Exception {
+        if (cleanTimer != null) {
+            cleanTimer.cancel();
+            cleanTimer.purge();
+            cleanTimer = null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see OnlineManager#registryDevice(OnlineDevice)
      */
     @Override
@@ -71,7 +108,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
             if (onlineDevices.containsKey(key)) {
                 OnlineDevice device = onlineDevices.get(key);
                 device.setRegistryTime(System.currentTimeMillis());
-                device.update(onlineDevice.getState(), onlineDevice.getLastTime(), onlineDevice.getLastLongitude(),
+                device.update(onlineDevice.getState(), System.currentTimeMillis(), onlineDevice.getLastLongitude(),
                         onlineDevice.getLastLatitude());
                 onlineDevices.put(key, device);
             } else {
@@ -118,7 +155,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
             String key = String.format("%s@%s", onlineDevice.getDeviceId(), onlineDevice.getConnectKey());
             if (onlineDevices.containsKey(key)) {
                 OnlineDevice device = onlineDevices.get(key);
-                device.update(onlineDevice.getState(), onlineDevice.getLastTime(), onlineDevice.getLastLongitude(),
+                device.update(onlineDevice.getState(), System.currentTimeMillis(), onlineDevice.getLastLongitude(),
                         onlineDevice.getLastLatitude());
                 onlineDevices.put(key, device);
                 if (logger.isDebugEnabled()) {
@@ -155,6 +192,42 @@ public class OnlineManagerSimpleImpl implements OnlineManager {
             return connectionManager.getSession(connectKey);
         } else {
             return null;
+        }
+    }
+
+    /**
+     * 根据心跳时间来清除无效的连接设备
+     */
+    private void cleanInvalidDevices() {
+        ConnectionManager connectionManager = SpringContextHolder.getBean(ConnectionManager.class);
+        synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
+            onlineDevices.forEach((k, v) -> {
+                long delay = (System.currentTimeMillis() - v.getLastTime()) / 1000;
+                if (delay > pongIdleTimeoutSecs) {
+                    // 超过约定时间没有心跳，判定为无效在线设备
+                    onlineDevices.remove(k);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("The device[%s, %s] has been cleared for %d seconds without a heartbeat.",
+                                v.getDeviceId(), v.getConnectKey(), delay));
+                    }
+                    if (connectionManager != null) {
+                        // 同时对设备的会话进行反注册
+                        connectionManager.unregistryConnection(connectionManager.getSession(v.getConnectKey()));
+                    }
+                }
+            });
+        }
+    }
+
+    private class CleanTask extends TimerTask {
+        /**
+         * {@inheritDoc}
+         *
+         * @see TimerTask#run()
+         */
+        @Override
+        public void run() {
+            cleanInvalidDevices();
         }
     }
 }
