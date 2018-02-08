@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mx.service.rest.client.RestClientInvoke;
 import org.mx.service.rest.client.RestInvokeException;
+import org.mx.service.rest.vo.DataVO;
 import org.mx.service.server.config.TestConfig;
 import org.mx.service.server.config.TestConfigSsl;
 import org.mx.service.ws.client.BaseWebsocketClientListener;
@@ -48,19 +49,19 @@ public class TestServer {
         // test service client
         try {
             RestClientInvoke invoke = new RestClientInvoke();
-            String str = invoke.get("http://localhost:9999/service/get", String.class);
+            DataVO<String> str = invoke.get("http://localhost:9999/service/get", DataVO.class);
             assertNotNull(str);
-            assertEquals("match the response data.", "get data.", str);
+            assertEquals("match the response data.", "get data.", str.getData());
 
             String data = "hello world";
-            str = invoke.post("http://localhost:9999/service/post", data, String.class);
+            str = invoke.post("http://localhost:9999/service/post", data, DataVO.class);
             assertNotNull(str);
-            assertEquals("match the response data.", String.format("post data: %s.", data), str);
+            assertEquals("match the response data.", String.format("post data: %s.", data), str.getData());
 
             data = "hello world";
-            str = invoke.put("http://localhost:9999/service/put", data, String.class);
+            str = invoke.put("http://localhost:9999/service/put", data, DataVO.class);
             assertNotNull(str);
-            assertEquals("match the response data.", String.format("put data: %s.", data), str);
+            assertEquals("match the response data.", String.format("put data: %s.", data), str.getData());
 
             invoke.close();
         } catch (RestInvokeException ex) {

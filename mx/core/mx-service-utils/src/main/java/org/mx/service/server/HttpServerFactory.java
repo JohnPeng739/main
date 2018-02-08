@@ -66,7 +66,10 @@ public class HttpServerFactory extends AbstractServerFactory {
                     }
                 }
             }
-            config.property(ServerProperties.METAINF_SERVICES_LOOKUP_DISABLE, true);
+            /**
+             * 消除了MessageBodyWriter not found for media type=application/json错误。
+             */
+            // config.property(ServerProperties.METAINF_SERVICES_LOOKUP_DISABLE, true);
             boolean security = this.env.getProperty("restful.security", Boolean.class, false);
             int port = this.env.getProperty("restful.port", Integer.class, 9999);
             Server server;

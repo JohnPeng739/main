@@ -1,5 +1,6 @@
 package org.mx.service.server.rest;
 
+import org.mx.service.rest.vo.DataVO;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -15,19 +16,19 @@ import javax.ws.rs.core.MediaType;
 public class DemoRestResource {
     @Path("get")
     @GET
-    public String get() {
-        return "get data.";
+    public DataVO<String> get() {
+        return new DataVO<>("get data.");
     }
 
     @Path("post")
     @POST
-    public String post(String data) {
-        return String.format("post data: %s.", data);
+    public DataVO<String> post(String data) {
+        return new DataVO<>(String.format("post data: %s.", data));
     }
 
     @Path("put")
     @PUT
-    public String put(String data) {
-        return String.format("put data: %s.", data);
+    public DataVO<String> put(String data) {
+        return new DataVO<>(String.format("put data: %s.", data));
     }
 }
