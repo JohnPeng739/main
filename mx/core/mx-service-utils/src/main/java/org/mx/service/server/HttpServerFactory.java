@@ -5,10 +5,12 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.jetty.JettyHttpContainerProvider;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.mx.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -46,17 +48,25 @@ public class HttpServerFactory extends AbstractServerFactory {
             }
         } else {
             ResourceConfig config = new ResourceConfig();
+            config.register(UriConnegFilter.class);
+            config.register(JettyHttpContainerProvider.class);
             String[] classesDefs = restfulServiceClasses.split(",");
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {
                     List<Class<?>> restfulClasses = (List) this.context.getBean(classesDef, List.class);
                     if (restfulClasses != null && !restfulClasses.isEmpty()) {
                         restfulClasses.forEach((clazz) -> {
-                            config.register(this.context.getBean(clazz));
+                            /**
+                             * 如果引入对象实例，将导致Provider接口警告，修改为注册类；
+                             * 在后续的Resource类中要引用IoC的Bean，需要使用SpringContextHolder
+                             */
+                            // config.register(this.context.getBean(clazz));
+                            config.register(clazz);
                         });
                     }
                 }
             }
+            config.property(ServerProperties.METAINF_SERVICES_LOOKUP_DISABLE, true);
             boolean security = this.env.getProperty("restful.security", Boolean.class, false);
             int port = this.env.getProperty("restful.port", Integer.class, 9999);
             Server server;
