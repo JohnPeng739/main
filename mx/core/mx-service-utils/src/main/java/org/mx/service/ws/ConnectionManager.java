@@ -8,10 +8,7 @@ import org.mx.spring.SpringContextHolder;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -76,18 +73,15 @@ public final class ConnectionManager {
         return connections.get(connectKey);
     }
 
-    private String getConnectKey(Session session) {
-        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
-        int port = session.getRemoteAddress().getPort();
-        return String.format("%s:%d", ip, port);
-    }
-
     /**
      * 注册连接
      *
      * @param session 会话
      */
     public void registryConnection(Session session) {
+        if (session == null) {
+            return;
+        }
         String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
@@ -115,12 +109,25 @@ public final class ConnectionManager {
      * @param session 会话
      */
     public void unregistryConnection(Session session) {
+        if (session == null) {
+            return;
+        }
         String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
         synchronized (ConnectionManager.this.cleanMutex) {
             if (connections.containsKey(key)) {
                 connections.remove(key);
+            }
+        }
+        try {
+            session.disconnect();
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Disconnect the session[%s] successfully.", key));
+            }
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Disconnect the session[%s] fail.", key), ex);
             }
         }
         ConnectionLifeCycleListener listener = SpringContextHolder.getBean(ConnectionLifeCycleListener.class);
@@ -136,6 +143,9 @@ public final class ConnectionManager {
      * @param session 会话
      */
     public void confirmConnection(Session session) {
+        if (session == null) {
+            return;
+        }
         String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
         int port = session.getRemoteAddress().getPort();
         String key = String.format("%s:%d", ip, port);
@@ -156,6 +166,9 @@ public final class ConnectionManager {
      * @param session 会话
      */
     public void blockConnection(Session session) {
+        if (session == null) {
+            return;
+        }
         try {
             String blockIp = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
             int port = session.getRemoteAddress().getPort();
@@ -291,6 +304,7 @@ public final class ConnectionManager {
                 });
             }
             // 清除无效的连接
+            Set<String> validIps = new HashSet<>();
             if (connections != null && !connections.isEmpty()) {
                 connections.forEach((key, session) -> {
                     int index = key.lastIndexOf(":");
@@ -311,6 +325,16 @@ public final class ConnectionManager {
                             }
                         }
                         connections.remove(key);
+                    } else {
+                        validIps.add(tarKey);
+                    }
+                });
+            }
+            // 清除已经没有session的IP
+            if (connectionsPerIp != null && !connectionsPerIp.isEmpty()) {
+                connectionsPerIp.keySet().forEach(ip -> {
+                    if (!validIps.contains(ip)) {
+                        connectionsPerIp.remove(ip);
                     }
                 });
             }
