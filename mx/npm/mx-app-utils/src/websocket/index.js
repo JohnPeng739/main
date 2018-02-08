@@ -47,10 +47,10 @@ const initClient = function (uri, cbConfig) {
     return ws
 }
 
-const createWsClient = function (uri, reconnect, cbConfig) {
+const createWsClient = function (uri, reconnected, cbConfig) {
     let myWebSocket = {}
     myWebSocket.uri = uri
-    myWebSocket.reconnect = reconnect
+    myWebSocket.reconnected = reconnected
     myWebSocket.cbConfig = cbConfig
     myWebSocket.ws = initClient(uri, cbConfig)
     myWebSocket.state = function () {
@@ -62,7 +62,7 @@ const createWsClient = function (uri, reconnect, cbConfig) {
         }
     }
     myWebSocket.close = function () {
-        myWebSocket.reconnect = false
+        myWebSocket.reconnected = false
         if (myWebSocket.interval) {
             clearInterval(myWebSocket.interval)
         }
@@ -88,10 +88,10 @@ const createWsClient = function (uri, reconnect, cbConfig) {
         }
     }
     myWebSocket.reconnect = function () {
-        let {uri, ws, reconnect, cbConfig} = myWebSocket
+        let {uri, ws, reconnected, cbConfig} = myWebSocket
         if (ws && (ws.readyState === CONNECTING || ws.readyState === OPEN)) {
             return
-        } else if (reconnect) {
+        } else if (reconnected) {
             myWebSocket.ws = initClient(uri, cbConfig)
             logger.debug('reconnect websocket server successfully.')
         }
