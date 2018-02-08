@@ -37,14 +37,14 @@ public class SpringContextHolder implements ApplicationContextAware {
     /**
      * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
      *
-     * @param name Bean的名称
-     * @param <T>  泛型类型
+     * @param name  Bean的名称
+     * @param clazz 类
+     * @param <T>   泛型类型
      * @return Bean
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T getBean(String name) {
+    public static <T> T getBean(String name, Class<T> clazz) {
         checkApplicationContext();
-        return (T) applicationContext.getBean(name);
+        return applicationContext.getBean(name, clazz);
     }
 
     /**

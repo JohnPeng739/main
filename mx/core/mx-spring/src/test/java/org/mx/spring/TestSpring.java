@@ -32,7 +32,7 @@ public class TestSpring {
         TestBean bean = SpringContextHolder.getBean(TestBean.class);
         assertNotNull(bean);
         assertEquals("Hello, world.", bean.hello());
-        bean = SpringContextHolder.getBean("testBean");
+        bean = SpringContextHolder.getBean("testBean", TestBean.class);
         assertNotNull(bean);
         assertEquals("Hello, world.", bean.hello());
     }
