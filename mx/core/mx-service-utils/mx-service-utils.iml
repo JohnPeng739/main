@@ -62,6 +62,17 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.ext/jersey-spring4/2.26/e5f2654b343c31078d9b5c8a4f43b838b320099f/jersey-spring4-2.26.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.ext/jersey-spring4/2.26/bcddfaf2be9d75ef02be22c104b7cd2307b6e61c/jersey-spring4-2.26-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.inject/jersey-hk2/2.26/df27f7d7577acf4b532684448021632098924dab/jersey-hk2-2.26.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -199,17 +210,6 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/e312d6c766f8b2a95dee5d9335e5dbe40a304621/commons-dbcp2-2.1.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -359,6 +359,50 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/66a0d51facf1e49e2353ff0d2a2d4a9e2fa3f836/jersey-container-servlet-core-2.26.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/2510acc9d83f30b957b57aff0e151d759d640c0c/jersey-container-servlet-core-2.26-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2/2.5.0-b42/adc396d57e9cada50f57d32cdabaf31a20a758d/hk2-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2/2.5.0-b42/3020e6f414a3635c454ee519ecdab840daeea2c6/hk2-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/spring-bridge/2.5.0-b42/7cedc63a9079e87b5a2685c054e61cfce8c44837/spring-bridge-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/spring-bridge/2.5.0-b42/44823330e0af105fde57de5aad635b1f7ab57339/spring-bridge-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/4.3.4.RELEASE/719f05404ba8a9de1516398d31d9622042584f0d/spring-web-4.3.4.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/4.3.4.RELEASE/ad08cd52a54c665d820e58f75a7147af13c407f/spring-web-4.3.4.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-locator/2.5.0-b42/9d6edc0cb226401a8316e67d81bfc37cb626ef91/hk2-locator-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -469,50 +513,6 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/cce6c251249e48f0a86aa578c2a0e262efa5a1e0/spring-core-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/b278822fc694d9b5a943fef1d4c9fd28ad2b92a6/spring-core-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/osgi-resource-locator/1.0.1/4ed2b2d4738aed5786cfa64cba5a332779c4c708/osgi-resource-locator-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -535,22 +535,11 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/66a0d51facf1e49e2353ff0d2a2d4a9e2fa3f836/jersey-container-servlet-core-2.26.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/102a344e1728825e865a8986d7605602aba3c3b6/hk2-utils-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/2510acc9d83f30b957b57aff0e151d759d640c0c/jersey-container-servlet-core-2.26-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e74beab6ca12e9e745eb47ca61729d9452b96f0c/aopalliance-repackaged-2.5.0-b42.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e0f0a501fde0865268465a06ab3eca85ba1bf0d4/aopalliance-repackaged-2.5.0-b42-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/54950700b33c8235c136be6f95f983589211bd69/hk2-utils-2.5.0-b42-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -568,11 +557,66 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/102a344e1728825e865a8986d7605602aba3c3b6/hk2-utils-2.5.0-b42.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/config-types/2.5.0-b42/3e927a0624955d10bec3eb5424a1e6ca3d5f92ae/config-types-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/54950700b33c8235c136be6f95f983589211bd69/hk2-utils-2.5.0-b42-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/config-types/2.5.0-b42/44b2708ae80430d0c4dc2ff06a7f1e0ca31d1bee/config-types-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-core/2.5.0-b42/7a4954663f1b65b1938fd275b34bbf1e23965381/hk2-core-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-core/2.5.0-b42/1d25f590ce454bb4075be85411e7bc4841ddb5c8/hk2-core-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-config/2.5.0-b42/de522871d987e2bf502753c807461f9ee805f6bd/hk2-config-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-config/2.5.0-b42/6c88f51cc2c5c091e712655906fbae4599563049/hk2-config-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-runlevel/2.5.0-b42/6502d8997ac961f0d2d16d90e838d25626c1a37b/hk2-runlevel-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-runlevel/2.5.0-b42/f381141cf3e0090b90468fed82f7d949c6d10719/hk2-runlevel-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/class-model/2.5.0-b42/a9824e8ed9748f3622394d6d32098cc1bb2a0ea1/class-model-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/class-model/2.5.0-b42/d75b670165fb8d1bb2ece2565c75e3e03885e58a/class-model-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e74beab6ca12e9e745eb47ca61729d9452b96f0c/aopalliance-repackaged-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e0f0a501fde0865268465a06ab3eca85ba1bf0d4/aopalliance-repackaged-2.5.0-b42-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -689,6 +733,39 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jvnet/tiger-types/1.4/9f75db7dea926f497e76eae2cea36eca74ea508/tiger-types-1.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jvnet/tiger-types/1.4/3ee0fb831e883a546d7e678aa4fa8ffbce8e7d53/tiger-types-1.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.2.4.Final/fb18766b576aa6632bcfe9a20a023cbd52bf9769/hibernate-validator-5.2.4.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.2.4.Final/b02d7b80cdadbfc51106252238fc1a667c8287eb/hibernate-validator-5.2.4.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/asm-all-repackaged/2.5.0-b42/3afd5d4f63116e8c00b430f32092282e5e475ce8/asm-all-repackaged-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/asm-all-repackaged/2.5.0-b42/2f3ccfef17c0723f6785a5780c2060b5f83bc911/asm-all-repackaged-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-jndi/9.4.8.v20171121/c16dc5c2e2a0541c09e117646712da20b5d5bad3/jetty-jndi-9.4.8.v20171121.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -755,6 +832,39 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.2.1.Final/fedf11b3d4665a434b554a5891fe7f208f029f45/jboss-logging-3.2.1.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.2.1.Final/107183008a58bce4d729e4442203320fefc34e75/jboss-logging-3.2.1.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.1.0/dbbd699a1486ad0f2ed6f5af6cfed66acacb9056/classmate-1.1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.1.0/53b184da3b8780beff23ba6bf1aaece92ee45e6f/classmate-1.1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.9.RELEASE/a186823724f03b98becd5f93b1fa107fe6f7a7ff/spring-context-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.9.RELEASE/c22b7284000897b976c9ee6c12f74f6bc3a35ccc/spring-context-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-webapp/9.4.8.v20171121/695278449233cee9bae9eed930a5264b574774f0/jetty-webapp-9.4.8.v20171121.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -782,6 +892,50 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.8.v20171121/a74ecb43f96b2e21852f6908604316d7348a16ad/jetty-util-9.4.8.v20171121-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.9.RELEASE/95f5f5cf3cae64266a89dc1bc9e0484425cd8358/spring-aop-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.9.RELEASE/599a12710a191a634800b848a8858dc033ea44b0/spring-aop-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.9.RELEASE/daa5abf3779c8cad1a2910e1ea08e4272489d8ae/spring-beans-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.9.RELEASE/d9b39cf6b40a184770bbba169cc34474aa2d034f/spring-beans-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.9.RELEASE/430b7298bfb85d66fb61e19ca8f06231b911e9f5/spring-core-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.9.RELEASE/f85656c1404f6e4fddbc1ca2180748856880913f/spring-core-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.9.RELEASE/4edca6913da9e62a6586714e053e01a61952a153/spring-expression-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.9.RELEASE/7da08664ab1c1d70808ce6eb9b082c7ee9579aad/spring-expression-4.3.9.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -835,6 +989,17 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.ext/jersey-spring4/2.26/e5f2654b343c31078d9b5c8a4f43b838b320099f/jersey-spring4-2.26.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.ext/jersey-spring4/2.26/bcddfaf2be9d75ef02be22c104b7cd2307b6e61c/jersey-spring4-2.26-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.inject/jersey-hk2/2.26/df27f7d7577acf4b532684448021632098924dab/jersey-hk2-2.26.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -972,17 +1137,6 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/e312d6c766f8b2a95dee5d9335e5dbe40a304621/commons-dbcp2-2.1.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1132,6 +1286,50 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/66a0d51facf1e49e2353ff0d2a2d4a9e2fa3f836/jersey-container-servlet-core-2.26.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/2510acc9d83f30b957b57aff0e151d759d640c0c/jersey-container-servlet-core-2.26-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2/2.5.0-b42/adc396d57e9cada50f57d32cdabaf31a20a758d/hk2-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2/2.5.0-b42/3020e6f414a3635c454ee519ecdab840daeea2c6/hk2-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/spring-bridge/2.5.0-b42/7cedc63a9079e87b5a2685c054e61cfce8c44837/spring-bridge-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/spring-bridge/2.5.0-b42/44823330e0af105fde57de5aad635b1f7ab57339/spring-bridge-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/4.3.4.RELEASE/719f05404ba8a9de1516398d31d9622042584f0d/spring-web-4.3.4.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/4.3.4.RELEASE/ad08cd52a54c665d820e58f75a7147af13c407f/spring-web-4.3.4.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-locator/2.5.0-b42/9d6edc0cb226401a8316e67d81bfc37cb626ef91/hk2-locator-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1242,50 +1440,6 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/cce6c251249e48f0a86aa578c2a0e262efa5a1e0/spring-core-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/b278822fc694d9b5a943fef1d4c9fd28ad2b92a6/spring-core-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/osgi-resource-locator/1.0.1/4ed2b2d4738aed5786cfa64cba5a332779c4c708/osgi-resource-locator-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1308,22 +1462,11 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/66a0d51facf1e49e2353ff0d2a2d4a9e2fa3f836/jersey-container-servlet-core-2.26.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/102a344e1728825e865a8986d7605602aba3c3b6/hk2-utils-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/2510acc9d83f30b957b57aff0e151d759d640c0c/jersey-container-servlet-core-2.26-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e74beab6ca12e9e745eb47ca61729d9452b96f0c/aopalliance-repackaged-2.5.0-b42.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e0f0a501fde0865268465a06ab3eca85ba1bf0d4/aopalliance-repackaged-2.5.0-b42-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/54950700b33c8235c136be6f95f983589211bd69/hk2-utils-2.5.0-b42-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1341,11 +1484,66 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/102a344e1728825e865a8986d7605602aba3c3b6/hk2-utils-2.5.0-b42.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/config-types/2.5.0-b42/3e927a0624955d10bec3eb5424a1e6ca3d5f92ae/config-types-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/54950700b33c8235c136be6f95f983589211bd69/hk2-utils-2.5.0-b42-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/config-types/2.5.0-b42/44b2708ae80430d0c4dc2ff06a7f1e0ca31d1bee/config-types-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-core/2.5.0-b42/7a4954663f1b65b1938fd275b34bbf1e23965381/hk2-core-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-core/2.5.0-b42/1d25f590ce454bb4075be85411e7bc4841ddb5c8/hk2-core-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-config/2.5.0-b42/de522871d987e2bf502753c807461f9ee805f6bd/hk2-config-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-config/2.5.0-b42/6c88f51cc2c5c091e712655906fbae4599563049/hk2-config-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-runlevel/2.5.0-b42/6502d8997ac961f0d2d16d90e838d25626c1a37b/hk2-runlevel-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-runlevel/2.5.0-b42/f381141cf3e0090b90468fed82f7d949c6d10719/hk2-runlevel-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/class-model/2.5.0-b42/a9824e8ed9748f3622394d6d32098cc1bb2a0ea1/class-model-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/class-model/2.5.0-b42/d75b670165fb8d1bb2ece2565c75e3e03885e58a/class-model-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e74beab6ca12e9e745eb47ca61729d9452b96f0c/aopalliance-repackaged-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e0f0a501fde0865268465a06ab3eca85ba1bf0d4/aopalliance-repackaged-2.5.0-b42-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1462,6 +1660,39 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jvnet/tiger-types/1.4/9f75db7dea926f497e76eae2cea36eca74ea508/tiger-types-1.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jvnet/tiger-types/1.4/3ee0fb831e883a546d7e678aa4fa8ffbce8e7d53/tiger-types-1.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.2.4.Final/fb18766b576aa6632bcfe9a20a023cbd52bf9769/hibernate-validator-5.2.4.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.2.4.Final/b02d7b80cdadbfc51106252238fc1a667c8287eb/hibernate-validator-5.2.4.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/asm-all-repackaged/2.5.0-b42/3afd5d4f63116e8c00b430f32092282e5e475ce8/asm-all-repackaged-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/asm-all-repackaged/2.5.0-b42/2f3ccfef17c0723f6785a5780c2060b5f83bc911/asm-all-repackaged-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-jndi/9.4.8.v20171121/c16dc5c2e2a0541c09e117646712da20b5d5bad3/jetty-jndi-9.4.8.v20171121.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1528,6 +1759,39 @@
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.2.1.Final/fedf11b3d4665a434b554a5891fe7f208f029f45/jboss-logging-3.2.1.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.2.1.Final/107183008a58bce4d729e4442203320fefc34e75/jboss-logging-3.2.1.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.1.0/dbbd699a1486ad0f2ed6f5af6cfed66acacb9056/classmate-1.1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.1.0/53b184da3b8780beff23ba6bf1aaece92ee45e6f/classmate-1.1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.9.RELEASE/a186823724f03b98becd5f93b1fa107fe6f7a7ff/spring-context-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.9.RELEASE/c22b7284000897b976c9ee6c12f74f6bc3a35ccc/spring-context-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-webapp/9.4.8.v20171121/695278449233cee9bae9eed930a5264b574774f0/jetty-webapp-9.4.8.v20171121.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1555,6 +1819,50 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.8.v20171121/a74ecb43f96b2e21852f6908604316d7348a16ad/jetty-util-9.4.8.v20171121-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.9.RELEASE/95f5f5cf3cae64266a89dc1bc9e0484425cd8358/spring-aop-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.9.RELEASE/599a12710a191a634800b848a8858dc033ea44b0/spring-aop-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.9.RELEASE/daa5abf3779c8cad1a2910e1ea08e4272489d8ae/spring-beans-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.9.RELEASE/d9b39cf6b40a184770bbba169cc34474aa2d034f/spring-beans-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.9.RELEASE/430b7298bfb85d66fb61e19ca8f06231b911e9f5/spring-core-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.9.RELEASE/f85656c1404f6e4fddbc1ca2180748856880913f/spring-core-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="RUNTIME">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.9.RELEASE/4edca6913da9e62a6586714e053e01a61952a153/spring-expression-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.9.RELEASE/7da08664ab1c1d70808ce6eb9b082c7ee9579aad/spring-expression-4.3.9.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1602,6 +1910,17 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-jetty-servlet/2.26/bf4ad24062d26e1a3b5fe386f33b9020739a9470/jersey-container-jetty-servlet-2.26-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.ext/jersey-spring4/2.26/e5f2654b343c31078d9b5c8a4f43b838b320099f/jersey-spring4-2.26.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.ext/jersey-spring4/2.26/bcddfaf2be9d75ef02be22c104b7cd2307b6e61c/jersey-spring4-2.26-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1762,17 +2081,6 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/944073ac58ab78b78a7694d2c53d4ae9f634c815/spring-context-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.8.RELEASE/717681088e22206f927dc8cec10a3ed1954da527/spring-context-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-common/2.26/d96475745c5e72cafcbc4dc9e2e725f4d9683f21/jersey-common-2.26.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -1916,6 +2224,50 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/66a0d51facf1e49e2353ff0d2a2d4a9e2fa3f836/jersey-container-servlet-core-2.26.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/2510acc9d83f30b957b57aff0e151d759d640c0c/jersey-container-servlet-core-2.26-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2/2.5.0-b42/adc396d57e9cada50f57d32cdabaf31a20a758d/hk2-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2/2.5.0-b42/3020e6f414a3635c454ee519ecdab840daeea2c6/hk2-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/spring-bridge/2.5.0-b42/7cedc63a9079e87b5a2685c054e61cfce8c44837/spring-bridge-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/spring-bridge/2.5.0-b42/44823330e0af105fde57de5aad635b1f7ab57339/spring-bridge-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/4.3.4.RELEASE/719f05404ba8a9de1516398d31d9622042584f0d/spring-web-4.3.4.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/4.3.4.RELEASE/ad08cd52a54c665d820e58f75a7147af13c407f/spring-web-4.3.4.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-locator/2.5.0-b42/9d6edc0cb226401a8316e67d81bfc37cb626ef91/hk2-locator-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -2037,50 +2389,6 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/2ee7e60f8838bff13c5def48fab571ab10553e5d/spring-aop-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.8.RELEASE/e212e8c56340dfef2c5721c13132e6adcd0f8422/spring-aop-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/9d39133bb80e13d643bfefd731fe86cab3aa2bd7/spring-beans-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/cce6c251249e48f0a86aa578c2a0e262efa5a1e0/spring-core-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.8.RELEASE/b278822fc694d9b5a943fef1d4c9fd28ad2b92a6/spring-core-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/204f7e241f42f46b16baa3d190752703efd7797/spring-expression-4.3.8.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.8.RELEASE/b3526572be6e3bdb88f616963184c1688cacc080/spring-expression-4.3.8.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/osgi-resource-locator/1.0.1/4ed2b2d4738aed5786cfa64cba5a332779c4c708/osgi-resource-locator-1.0.1.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -2103,22 +2411,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/66a0d51facf1e49e2353ff0d2a2d4a9e2fa3f836/jersey-container-servlet-core-2.26.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/102a344e1728825e865a8986d7605602aba3c3b6/hk2-utils-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-servlet-core/2.26/2510acc9d83f30b957b57aff0e151d759d640c0c/jersey-container-servlet-core-2.26-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e74beab6ca12e9e745eb47ca61729d9452b96f0c/aopalliance-repackaged-2.5.0-b42.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e0f0a501fde0865268465a06ab3eca85ba1bf0d4/aopalliance-repackaged-2.5.0-b42-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/54950700b33c8235c136be6f95f983589211bd69/hk2-utils-2.5.0-b42-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2136,11 +2433,66 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/102a344e1728825e865a8986d7605602aba3c3b6/hk2-utils-2.5.0-b42.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/config-types/2.5.0-b42/3e927a0624955d10bec3eb5424a1e6ca3d5f92ae/config-types-2.5.0-b42.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-utils/2.5.0-b42/54950700b33c8235c136be6f95f983589211bd69/hk2-utils-2.5.0-b42-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/config-types/2.5.0-b42/44b2708ae80430d0c4dc2ff06a7f1e0ca31d1bee/config-types-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-core/2.5.0-b42/7a4954663f1b65b1938fd275b34bbf1e23965381/hk2-core-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-core/2.5.0-b42/1d25f590ce454bb4075be85411e7bc4841ddb5c8/hk2-core-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-config/2.5.0-b42/de522871d987e2bf502753c807461f9ee805f6bd/hk2-config-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-config/2.5.0-b42/6c88f51cc2c5c091e712655906fbae4599563049/hk2-config-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-runlevel/2.5.0-b42/6502d8997ac961f0d2d16d90e838d25626c1a37b/hk2-runlevel-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/hk2-runlevel/2.5.0-b42/f381141cf3e0090b90468fed82f7d949c6d10719/hk2-runlevel-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/class-model/2.5.0-b42/a9824e8ed9748f3622394d6d32098cc1bb2a0ea1/class-model-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2/class-model/2.5.0-b42/d75b670165fb8d1bb2ece2565c75e3e03885e58a/class-model-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e74beab6ca12e9e745eb47ca61729d9452b96f0c/aopalliance-repackaged-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/aopalliance-repackaged/2.5.0-b42/e0f0a501fde0865268465a06ab3eca85ba1bf0d4/aopalliance-repackaged-2.5.0-b42-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -2257,6 +2609,39 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jvnet/tiger-types/1.4/9f75db7dea926f497e76eae2cea36eca74ea508/tiger-types-1.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jvnet/tiger-types/1.4/3ee0fb831e883a546d7e678aa4fa8ffbce8e7d53/tiger-types-1.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.2.4.Final/fb18766b576aa6632bcfe9a20a023cbd52bf9769/hibernate-validator-5.2.4.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-validator/5.2.4.Final/b02d7b80cdadbfc51106252238fc1a667c8287eb/hibernate-validator-5.2.4.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/asm-all-repackaged/2.5.0-b42/3afd5d4f63116e8c00b430f32092282e5e475ce8/asm-all-repackaged-2.5.0-b42.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.glassfish.hk2.external/asm-all-repackaged/2.5.0-b42/2f3ccfef17c0723f6785a5780c2060b5f83bc911/asm-all-repackaged-2.5.0-b42-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-jndi/9.4.8.v20171121/c16dc5c2e2a0541c09e117646712da20b5d5bad3/jetty-jndi-9.4.8.v20171121.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -2323,6 +2708,39 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.2.1.Final/fedf11b3d4665a434b554a5891fe7f208f029f45/jboss-logging-3.2.1.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.2.1.Final/107183008a58bce4d729e4442203320fefc34e75/jboss-logging-3.2.1.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.1.0/dbbd699a1486ad0f2ed6f5af6cfed66acacb9056/classmate-1.1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.1.0/53b184da3b8780beff23ba6bf1aaece92ee45e6f/classmate-1.1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.9.RELEASE/a186823724f03b98becd5f93b1fa107fe6f7a7ff/spring-context-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/4.3.9.RELEASE/c22b7284000897b976c9ee6c12f74f6bc3a35ccc/spring-context-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-webapp/9.4.8.v20171121/695278449233cee9bae9eed930a5264b574774f0/jetty-webapp-9.4.8.v20171121.jar!/"/>
         </CLASSES>
         <JAVADOC/>
@@ -2350,6 +2768,50 @@
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.8.v20171121/a74ecb43f96b2e21852f6908604316d7348a16ad/jetty-util-9.4.8.v20171121-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.9.RELEASE/95f5f5cf3cae64266a89dc1bc9e0484425cd8358/spring-aop-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/4.3.9.RELEASE/599a12710a191a634800b848a8858dc033ea44b0/spring-aop-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.9.RELEASE/daa5abf3779c8cad1a2910e1ea08e4272489d8ae/spring-beans-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.9.RELEASE/d9b39cf6b40a184770bbba169cc34474aa2d034f/spring-beans-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.9.RELEASE/430b7298bfb85d66fb61e19ca8f06231b911e9f5/spring-core-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/4.3.9.RELEASE/f85656c1404f6e4fddbc1ca2180748856880913f/spring-core-4.3.9.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.9.RELEASE/4edca6913da9e62a6586714e053e01a61952a153/spring-expression-4.3.9.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/4.3.9.RELEASE/7da08664ab1c1d70808ce6eb9b082c7ee9579aad/spring-expression-4.3.9.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

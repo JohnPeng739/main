@@ -7,8 +7,8 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.jetty.JettyHttpContainerProvider;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.filter.UriConnegFilter;
+import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.mx.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -50,6 +50,7 @@ public class HttpServerFactory extends AbstractServerFactory {
             ResourceConfig config = new ResourceConfig();
             config.register(UriConnegFilter.class);
             config.register(JettyHttpContainerProvider.class);
+            config.register(RequestContextFilter.class);
             String[] classesDefs = restfulServiceClasses.split(",");
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {
@@ -58,14 +59,17 @@ public class HttpServerFactory extends AbstractServerFactory {
                         restfulClasses.forEach((clazz) -> {
                             /**
                              * 如果引入对象实例，将导致Provider接口警告，修改为注册类；
-                             * 在后续的Resource类中要引用IoC的Bean，需要使用SpringContextHolder
+                             * 然后将ApplicationContext手工注入
                              */
-                            // config.register(this.context.getBean(clazz));
                             config.register(clazz);
                         });
                     }
                 }
             }
+            /**
+             * 为了使用Spring IoC注入，需要将ApplicationContext事先注入
+             */
+            config.property("contextConfig", context);
             /**
              * 消除了MessageBodyWriter not found for media type=application/json错误。
              */

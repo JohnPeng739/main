@@ -80,7 +80,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-service-utils') {
-  version = '1.5.4'
+  version = '1.5.5'
   description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
   dependencies {
@@ -92,6 +92,7 @@ project(':mx-service-utils') {
       libs.'jersey-media-jackson',
       libs.'jersey-jetty-http',
       libs.'jersey-jetty-servlet',
+      libs.'jersey-spring4',
       libs.'jersey-hk2',
       libs.'jetty-server',
       libs.'jetty-servlet',
