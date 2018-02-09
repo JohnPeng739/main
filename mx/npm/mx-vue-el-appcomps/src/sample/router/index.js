@@ -20,6 +20,7 @@ export const navData = [{
   path: '/manage',
   icon: 'apps',
   name: 'nav.manage.value',
+  role: 'admin',
   children: [{
     path: '/manage/user',
     icon: 'apps',

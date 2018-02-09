@@ -30,7 +30,7 @@
         <el-row type="flex">
           <el-col :span="8">
             <el-form-item prop="code" :label="$t('rbac.common.fields.code')">
-              <el-input v-model="formAccount.code" :readonly="readonly"></el-input>
+              <el-input v-model="formAccount.code" :readonly="readonly || operate !== 'allocate'"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="16">
@@ -38,7 +38,7 @@
               <mx-choose-user-input v-model="formAccount.owner" :disabled="readonly"></mx-choose-user-input>
             </el-form-item>
             <el-form-item v-else prop="name" :label="$t('rbac.common.fields.name')">
-              <el-input v-model="formAccount.name" :readonly="readonly"></el-input>
+              <el-input v-model="formAccount.name" :readonly="readonly || operate !== 'allocate'"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -176,8 +176,8 @@
         return formatter.formatArgs('[%s]', list.join(', '))
       },
       getOwnerName (user) {
-        if (user && user.name) {
-          return user.name
+        if (user && user.fullName) {
+          return user.fullName
         } else {
           return this.$t('NA')
         }
@@ -209,6 +209,12 @@
           return
         }
         let {id, code, name, desc, owner, roles} = data
+        if (!owner) {
+          owner = {}
+        }
+        if (!roles) {
+          roles = []
+        }
         this.formAccount = {id, code, name, owner, roles, desc}
         this.operate = operate
         this.$refs['dialogPane'].show(operate, '90%')
@@ -217,7 +223,7 @@
       handleSubmit () {
         this.$refs['formAccount'].validate(valid => {
           if (valid) {
-            let {id, code, name, desc, owner, roles} = this.formAccount
+            let {id, code, desc, owner, roles} = this.formAccount
             let roleIds = []
             if (roles && roles.length > 0) {
               roles.forEach(role => roleIds.push(role.id))
@@ -243,7 +249,7 @@
                   MxNotify.info(this.$t('rbac.common.message.editSuccess', {module: this.$t('rbac.account.module')}))
                 }
               }
-              MxAjax.put({url, data: {accountId: id, code, name, desc, ownerId: owner.id, roleIds}, fnSuccess})
+              MxAjax.put({url, data: {id, code, desc, ownerId: owner.id, roleIds}, fnSuccess})
             }
           } else {
             MxNotify.formValidateWarn()

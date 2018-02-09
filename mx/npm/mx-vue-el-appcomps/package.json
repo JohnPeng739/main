@@ -1,6 +1,6 @@
 {
   "name": "mx-vue-el-appcomps",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "基于VUE、Element-UI的系列App组件，如：RBAC、文件管理等。",
   "private": false,
   "license": "MIT",

@@ -44,6 +44,15 @@
             let success = (data) => {
               if (data && data.account) {
                 let {id, code, name, favorityTools, roles} = data.account
+                let roleCodes = []
+                if (roles && roles instanceof Array && roles.length > 0) {
+                  roles.forEach(role => {
+                    if (role && role.id && role.code) {
+                      roleCodes.push(role.code)
+                    }
+                  })
+                }
+                roles = roleCodes
                 sessionStorage.setItem('auth.user', JSON.stringify({id, code, name, favorityTools, roles}))
                 MxNotify.info(this.$t('rbac.account.message.loginSuccess', {code, name}))
                 this.$router.push('/')

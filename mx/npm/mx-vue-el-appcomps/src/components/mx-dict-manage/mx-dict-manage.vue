@@ -28,7 +28,7 @@
                 <el-input v-model="formCommon.code" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="16">
               <el-form-item prop="name" :label="$t('rbac.common.fields.name')">
                 <el-input v-model="formCommon.name" :readonly="readonly"></el-input>
               </el-form-item>

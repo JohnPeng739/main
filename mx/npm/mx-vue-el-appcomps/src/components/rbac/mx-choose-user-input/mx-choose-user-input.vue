@@ -42,7 +42,12 @@
     computed: {
       chooseDict: {
         get () {
-          return this.value
+          let {value} = this
+          if (value && value.id && value.fullName) {
+            return value
+          } else {
+            return undefined
+          }
         },
         set (newValue) {
           this.$emit('input', newValue)
