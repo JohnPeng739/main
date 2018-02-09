@@ -467,7 +467,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
         if (logicRemove) {
             // 逻辑删除
             removeEntity.setValid(false);
-            t = save(removeEntity);
+            t = save(removeEntity, false);
             writeOperateLog(t, String.format("逻辑删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
             return t;
         } else {
