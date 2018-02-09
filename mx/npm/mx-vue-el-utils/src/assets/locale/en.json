@@ -1,5 +1,7 @@
 {
   "NA": "NA",
+  "welcome": "Welcome ",
+  "notLogin": "Not login",
   "button": {
     "add": "Add",
     "edit": "Edit",
@@ -13,7 +15,9 @@
     "submit": "Submit",
     "close": "Close",
     "choose": "Choose...",
-    "logout": "Logout"
+    "logout": "Logout",
+    "changePassword": "Change password",
+    "mySetting": "My settings"
   },
   "message": {
     "title": {

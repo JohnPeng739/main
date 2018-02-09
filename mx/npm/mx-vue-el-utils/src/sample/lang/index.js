@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import MxVueElUtils from '@/index'
-import {MxLocale} from '../../../dist/mx-vue-el-utils.min'
-// import MxLocale from '@/utils/mx-locale'
+// import {MxLocale} from '../../../dist/mx-vue-el-utils.min'
+import MxLocale from '@/utils/mx-locale'
 
 import myEn from './en.json'
 import myZhCN from './zh-CN.json'
@@ -10,8 +10,6 @@ MxLocale.mergeMessages({
   en: myEn,
   'zh-CN': myZhCN
 })
-
-MxLocale.setLanguage('en')
 
 const changeLanguage = (lang) => {
   if (lang) {

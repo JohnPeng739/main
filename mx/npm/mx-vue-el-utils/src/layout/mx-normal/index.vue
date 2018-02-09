@@ -1,8 +1,9 @@
 <template>
   <el-container>
     <el-header height="10vh" class="layout-header">
-      <layout-header :title="title" :login-user-name="loginUserName" :nav-data="navData"
-                     v-on:navToggled="handleNavToggled" v-on:logout="handleLogout">
+      <layout-header :title="title" :login-user="loginUser" :nav-data="navData"
+                     v-on:navToggled="handleNavToggled" v-on:clickMenu="handleClickMenu">
+        <div slot="account-info"><slot name="account-info"></slot></div>
         <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only hidden-sm-only"
                                    :roles="roles"
                                    :tools="favorityTools"
@@ -45,21 +46,9 @@
         type: String,
         default: 'Application title'
       },
-      loginUserName: {
-        type: String,
-        default: ''
-      },
-      roles: {
-        type: Array,
-        default: function () {
-          return []
-        }
-      },
-      tools: {
-        type: Array,
-        default: function () {
-          return []
-        }
+      loginUser: {
+        type: Object,
+        default: undefined
       },
       navData: {
         type: Array,
@@ -86,11 +75,19 @@
         }
         return 'NA'
       },
+      roles () {
+        let user = this.loginUser
+        if (user && user.roles && user.roles instanceof Array && user.roles.length > 0) {
+          return user.roles
+        } else {
+          return []
+        }
+      },
       favorityTools () {
-        let tools = this.tools
-        let navData = this.navData
+        let user = this.loginUser
         let favority = []
-        if (tools && navData) {
+        if (user && user.favorityTools && user.favorityTools instanceof Array && user.favorityTools.length > 0) {
+          let tools = user.favorityTools
           tools.forEach(tool => {
             let item = this.getMenuItem(tool)
             if (item) {
@@ -136,8 +133,8 @@
         logger.debug('click the nav toggle, old: %s.', this.toggleState)
         this.toggleState = !this.toggleState
       },
-      handleLogout () {
-        this.$emit('logout')
+      handleClickMenu (menu) {
+        this.$emit('clickMenu', menu)
       }
     }
   }

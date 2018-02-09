@@ -60,15 +60,44 @@ body {
   .account {
     float: right;
     padding: 0;
-    margin: 2vh auto;
+    margin: 0.5vh auto;
     .account-icon {
       float: right;
       padding-left: 30px;
       padding-right: 10px;
       color: lightcyan;
-      font-size: @header-icon-size;
+      font-size: @header-icon-size * 1.3;
     }
   }
+}
+
+.popover-account {
+  margin: 2px 0;
+  .title {
+    text-align: center;
+    margin-bottom: 10px;
+    color: @content-color;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .popover-menu {
+    padding: 10px 4px;
+    color: @content-color;
+    text-align: center;
+    .icon {
+      vertical-align: bottom;
+      margin: 0 5px;
+      font-size: 24px;
+    }
+    .item {
+      // float: right;
+      font-size: 18px;
+    }
+    &:hover {
+      background: rgba(64,158,255,.1);
+    }
+  }
+
 }
 
 .layout-main {

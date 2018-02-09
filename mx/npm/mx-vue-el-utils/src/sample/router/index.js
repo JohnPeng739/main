@@ -17,17 +17,14 @@ export const navData = [{
   path: '/tests',
   icon: 'apps',
   name: '测试',
-  role: 'admin',
   children: [{
     path: '/tests/notify',
     icon: 'apps',
-    name: '提示信息',
-    role: 'admin'
+    name: '提示信息'
   }, {
     path: '/tests/tag',
     icon: 'apps',
-    name: '标签信息',
-    role: 'admin'
+    name: '标签信息'
   }, {
     path: '/tests/page',
     icon: 'apps',

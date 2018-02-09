@@ -1,7 +1,8 @@
 <template>
-  <mx-normal-layout :title="title" :loginUserName="loginUserName" :roles="roles" :tools="tools" :navData="navData"
-                 :notice-value="noticeValue" v-on:logout="handleLogout"
-                 v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
+  <mx-normal-layout :title="title" :login-user="loginUser" :navData="navData"
+                    :notice-value="noticeValue" v-on:clickMenu="handleClickMenu"
+                    v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
+    <div slot="account-info" style="color: red;">登入时间：453453</div>
     <router-view slot="content-body"></router-view>
   </mx-normal-layout>
 </template>
@@ -15,17 +16,17 @@
     data () {
       return {
         title: 'The Demo System',
-        roles: ['user'],
-        tools: ['/tests/notify', '/tests/tag', '/tests/page'],
+        loginUser: {
+          code: 'pengmx',
+          name: '彭明喜',
+          roles: ['admin'],
+          favorityTools: ['/tests/notify', '/tests/tag', '/tests/page']
+        },
         navData: navData,
         noticeValue: 123
       }
     },
-    computed: {
-      loginUserName () {
-        return 'John Peng'
-      }
-    },
+    computed: {},
     methods: {
       handleShowNotice () {
         this.noticeValue = 0
@@ -35,8 +36,8 @@
         logger.debug('Router click: %s', path)
         this.$router.push(path)
       },
-      handleLogout () {
-        logger.debug('Logout.')
+      handleClickMenu (menu) {
+        logger.debug('click menu: %s.', menu)
       }
     }
   }

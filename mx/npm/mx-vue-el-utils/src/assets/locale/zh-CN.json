@@ -1,5 +1,7 @@
 {
   "NA": "未知",
+  "welcome": "欢迎 ",
+  "notLogin": "尚未登录",
   "button": {
     "add": "新增",
     "edit": "修改",
@@ -13,7 +15,9 @@
     "submit": "提交",
     "close": "关闭",
     "choose": "选择...",
-    "logout": "登出"
+    "logout": "登出系统",
+    "changePassword": "修改密码",
+    "mySetting": "我的设置"
   },
   "message": {
     "title": {
