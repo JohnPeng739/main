@@ -63,6 +63,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralAccessor#count(Class, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(Class<T> entityClass, boolean isValid) throws UserInterfaceDalErrorException {
         return count2(entityClass, true, isValid);
@@ -73,6 +74,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralEntityAccessor#count2(Class, boolean, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count2(Class<T> entityClass, boolean isInterfaceClass, boolean isValid)
             throws UserInterfaceDalErrorException {
@@ -98,6 +100,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralEntityAccessor#list2(Class, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list2(Class<T> entityClass, boolean isInterfaceClass)
             throws UserInterfaceDalErrorException {
@@ -109,6 +112,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralAccessor#list(Pagination, Class, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass, boolean isValid)
             throws UserInterfaceDalErrorException {
@@ -120,6 +124,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralEntityAccessor#list2(Class, boolean, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list2(Class<T> entityClass, boolean isInterfaceClass, boolean isValid)
             throws UserInterfaceDalErrorException {
@@ -145,6 +150,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralEntityAccessor#list2(Pagination, Class, boolean, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list2(Pagination pagination, Class<T> entityClass, boolean isInterfaceClass, boolean isValid)
             throws UserInterfaceDalErrorException {
@@ -371,7 +377,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralAccessor#save(Base)
      */
-    @Transactional()
+    @Transactional
     @Override
     public <T extends Base> T save(T t) throws UserInterfaceDalErrorException {
         return save(t, true);
@@ -424,6 +430,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralAccessor#remove(String, Class)
      */
+    @Transactional
     @Override
     public <T extends Base> T remove(String id, Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException {
         return remove(id, entityInterfaceClass, true);
@@ -434,6 +441,7 @@ public class GeneralEntityAccessorImpl implements GeneralEntityAccessor {
      *
      * @see GeneralAccessor#remove(String, Class, boolean)
      */
+    @Transactional
     @Override
     public <T extends Base> T remove(String id, Class<T> entityInterfaceClass, boolean logicRemove)
             throws UserInterfaceDalErrorException {

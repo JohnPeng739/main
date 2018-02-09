@@ -11,7 +11,6 @@ import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -36,7 +35,6 @@ public class OperateLogServiceImpl implements OperateLogService {
      *
      * @see OperateLogService#writeLog(String)
      */
-    @Transactional
     @Override
     public void writeLog(String conent) throws UserInterfaceDalErrorException {
         OperateLog log = EntityFactory.createEntity(OperateLog.class);
