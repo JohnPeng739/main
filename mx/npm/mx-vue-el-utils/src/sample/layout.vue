@@ -1,5 +1,5 @@
 <template>
-  <mx-normal-layout :title="title" :loginUserName="loginUserName" :role="role" :tools="tools" :navData="navData"
+  <mx-normal-layout :title="title" :loginUserName="loginUserName" :roles="roles" :tools="tools" :navData="navData"
                  :notice-value="noticeValue" v-on:logout="handleLogout"
                  v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
     <router-view slot="content-body"></router-view>
@@ -15,7 +15,7 @@
     data () {
       return {
         title: 'The Demo System',
-        role: 'admin',
+        roles: ['user'],
         tools: ['/tests/notify', '/tests/tag', '/tests/page'],
         navData: navData,
         noticeValue: 123
