@@ -4,7 +4,7 @@
       <mx-icon name="apps" class="toggle-icon"></mx-icon>
     </el-button>
     <span class="app-title hidden-xs-only">{{title}}</span>
-    <el-popover ref="popoverAccount" placement="bottom" width="200" trigger="click">
+    <el-popover ref="popoverAccount" v-model="popoverVisible" placement="bottom" width="200" trigger="click">
       <el-row type="flex" justify="center" class="popover-account">
         <el-col :span="24"><div class="title">{{loginUserName}}</div></el-col>
       </el-row>
@@ -49,7 +49,9 @@
     components: {MxIcon},
     props: ['title', 'loginUser'],
     data () {
-      return {}
+      return {
+        popoverVisible: false
+      }
     },
     computed: {
       authenticated () {
@@ -70,6 +72,7 @@
         this.$emit('navToggled')
       },
       handleClickMenu (menu) {
+        this.popoverVisible = false
         this.$emit('clickMenu', menu)
       }
     }
