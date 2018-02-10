@@ -21,7 +21,7 @@
       <el-row v-if="authenticated" type="flex" justify="center" class="popover-account">
         <el-col :span="24">
           <div class="popover-menu" @click="handleClickMenu('mySetting')">
-            <mx-icon name="favorite" class="icon"></mx-icon><span class="item">{{$t('button.mySetting')}}</span>
+            <mx-icon name="settings" class="icon"></mx-icon><span class="item">{{$t('button.mySetting')}}</span>
           </div>
         </el-col>
       </el-row>
