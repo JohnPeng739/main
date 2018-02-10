@@ -59,43 +59,6 @@
         </el-row>
       </el-form>
     </mx-dialog>
-    <mx-dialog ref="dialogPanePassword" :title="$t('rbac.account.title.password')" v-on:reset="handleResetPassword"
-                 v-on:submit="handleSubmitPassword" class="layout-dialog">
-      <el-form ref="formPassword" slot="form" :model="formPassword" :rules="rulesPassword" label-width="130px"
-               class="dialog-form">
-        <el-row type="flex">
-          <el-col :span="8">
-            <el-form-item prop="code" :label="$t('rbac.common.fields.code')">
-              <el-input v-model="formAccount.code" :readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item prop="name" :label="$t('rbac.common.fields.name')">
-              <el-input v-model="formAccount.name" :readonly="true"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row type="flex">
-          <el-col :span="12">
-            <el-form-item prop="oldPassword" :label="$t('rbac.account.fields.oldPassword')">
-              <el-input type="password" v-model="formPassword.oldPassword"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row type="flex">
-          <el-col :span="12">
-            <el-form-item prop="password" :label="$t('rbac.account.fields.password')">
-              <el-input type="password" v-model="formPassword.password"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item prop="confirm" :label="$t('rbac.account.fields.confirm')">
-              <el-input type="password" v-model="formPassword.confirm"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-    </mx-dialog>
   </div>
 </template>
 
@@ -109,24 +72,12 @@
     name: 'mx-account-manage',
     components: {MxChooseUserInput, MxChooseDictTag},
     data () {
-      let passwordMatch = (rule, value, callback) => {
-        let {password, confirm} = this.formPassword
-        if (password === confirm) {
-          callback()
-        } else {
-          callback(new Error(this.$t('rbac.account.validate.passwordMatch')))
-        }
-      }
       return {
         buttonsLayout: [{
           code: 'allocate',
           name: this.$t('rbac.account.title.allocate'),
           icon: 'assignment_ind'
-        }, 'edit', 'delete', 'details', {
-          code: 'password',
-          name: this.$t('rbac.account.title.password'),
-          icon: 'lock'
-        }, 'refresh'],
+        }, 'edit', 'delete', 'details', 'refresh'],
         tableMaxHeight: 540,
         tableData: [],
         operate: 'details',
@@ -140,13 +91,6 @@
             trigger: 'change'
           })],
           roles: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.account.validate.requiredRoles')})]
-        },
-        formPassword: {oldPassword: '', password: '', confirm: ''},
-        rulesPassword: {
-          oldPassword: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.account.validate.requiredPassword')})],
-          password: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.account.validate.requiredPassword')})],
-          confirm: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.account.validate.requiredConfirm')}),
-            MxFormValidateRules.customRule({validator: passwordMatch})]
         }
       }
     },
@@ -259,28 +203,6 @@
       handleReset () {
         this.$refs['formAccount'].resetFields()
       },
-      handleSubmitPassword (done) {
-        this.$refs['formPassword'].validate(valid => {
-          if (valid) {
-            let {id, code, name} = this.formAccount
-            let {oldPassword, password} = this.formPassword
-            let url = '/rest/accounts/' + id + '/password/change'
-            logger.debug('send POST "%s".', url)
-            let fnSuccess = (data) => {
-              if (data) {
-                MxNotify.info(this.$t('rbac.account.message.changePasswordSuccess', {code, name}))
-                done()
-              }
-            }
-            MxAjax.post({url, data: {newPassword: password, oldPassword}, fnSuccess})
-          } else {
-            MxNotify.formValidateWarn()
-          }
-        })
-      },
-      handleResetPassword () {
-        this.$refs['formPassword'].resetFields()
-      },
       handleButtonClick (operate, pagination) {
         switch (operate) {
           case 'refresh':
@@ -292,7 +214,6 @@
           case 'edit':
           case 'delete':
           case 'details':
-          case 'password':
             if (!this.selected) {
               MxNotify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.account.module')}))
               break
@@ -308,11 +229,6 @@
                 }
               }
               MxAjax.del({url, fnSuccess})
-            } else if (operate === 'password') {
-              let {id, code, name, password, desc, owner, roles} = this.selected
-              this.formAccount = {id, code, name, password, desc, owner, roles}
-              this.formPassword = {oldPassword: '', password: '', confirm: ''}
-              this.$refs['dialogPanePassword'].show('edit', '90%')
             } else {
               this.showData(this.selected, operate)
             }

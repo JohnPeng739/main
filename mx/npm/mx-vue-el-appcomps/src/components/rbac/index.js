@@ -7,6 +7,8 @@ import MxLoginHistoryManage from './mx-login-history-manage'
 import MxOperateLogManage from './mx-operate-log-manage'
 import MxPrivilegeManage from './mx-privilege-manage'
 import MxRoleManage from './mx-role-manage'
+import MxChangePassword from './mx-change-password'
+import MxAccountSetting from './mx-account-setting'
 
 export {
   MxAccountManage,
@@ -17,5 +19,7 @@ export {
   MxOperateLogManage,
   MxPrivilegeManage,
   MxRoleManage,
-  MxUserManage
+  MxUserManage,
+  MxChangePassword,
+  MxAccountSetting
 }

@@ -6,6 +6,8 @@ import MxChooseDictTag from './components/mx-choose-dict-tag'
 import MxDictManage from './components/mx-dict-manage'
 
 import MxChooseUserInput from './components/rbac/mx-choose-user-input'
+import MxAccountSetting from './components/rbac/mx-account-setting'
+import MxChangePassword from './components/rbac/mx-change-password'
 import MxUserManage from './components/rbac/mx-user-manage'
 import MxDepartmentManage from './components/rbac/mx-department-manage'
 import MxRoleManage from './components/rbac/mx-role-manage'
@@ -27,6 +29,8 @@ const components = [
   MxChooseDictTag,
   MxDictManage,
   MxChooseUserInput,
+  MxAccountSetting,
+  MxChangePassword,
   MxUserManage,
   MxDepartmentManage,
   MxRoleManage,
@@ -54,6 +58,8 @@ export default {
   MxChooseDictTag,
   MxDictManage,
   MxChooseUserInput,
+  MxAccountSetting,
+  MxChangePassword,
   MxUserManage,
   MxDepartmentManage,
   MxRoleManage,
@@ -71,6 +77,8 @@ export {
   MxChooseDictTag,
   MxDictManage,
   MxChooseUserInput,
+  MxAccountSetting,
+  MxChangePassword,
   MxUserManage,
   MxDepartmentManage,
   MxRoleManage,

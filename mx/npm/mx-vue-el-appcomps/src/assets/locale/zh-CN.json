@@ -100,7 +100,9 @@
         "owner": "所属人",
         "oldPassword": "旧密码",
         "password": "新密码",
-        "confirm": "确认密码"
+        "confirm": "确认密码",
+        "favorityTools": "常用功能",
+        "menuItem": "菜单项"
       },
       "title": {
         "allocate": "分配",
@@ -111,12 +113,14 @@
         "requiredRoles": "你至少需要选择一个角色。",
         "requiredPassword": "你必须要输入密码。",
         "requiredConfirm": "你必须输入确认密码。",
-        "passwordMatch": "输入的密码和确认密码不一致。"
+        "passwordMatch": "输入的密码和确认密码不一致。",
+        "requireSelected": "你至少需要选择一个 {0} 。"
       },
       "message": {
         "loginSuccess": "账户[{code} - {name}]成功登入系统。",
         "logoutSuccess": "账户[{code} - {name}]成功登出系统。",
-        "changePasswordSuccess": "修改账户[{code} - {name}]的密码成功。"
+        "changePasswordSuccess": "修改账户[{code} - {name}]的密码成功。",
+        "changePersonalSuccess": "修改账户[{code} - {name}]的个性化信息成功。"
       }
     }
   }

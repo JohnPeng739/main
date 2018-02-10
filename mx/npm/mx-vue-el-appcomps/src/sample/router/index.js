@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LoginPage from '../pages/login.vue'
+import ChangePasswordPage from '../pages/change-password.vue'
+import ChangeMySetting from '../pages/change-my-setting.vue'
 import {
   MxAccountManage,
   MxAccreditManage,
@@ -54,6 +56,20 @@ export const navData = [{
     icon: 'apps',
     name: 'nav.manage.loginHistory'
   }]
+}, {
+  path: '/personal',
+  icon: 'apps',
+  name: 'nav.manage.value',
+  role: 'user',
+  children: [{
+    path: '/personal/changePassword',
+    icon: 'apps',
+    name: 'button.changePassword'
+  }, {
+    path: '/personal/mySetting',
+    icon: 'apps',
+    name: 'button.mySetting'
+  }]
 }]
 
 Vue.use(Router)
@@ -99,6 +115,14 @@ const router = new Router({
     }, {
       path: '/manage/accredit',
       component: MxAccreditManage,
+      meta: {needAuth: true}
+    }, {
+      path: '/personal/changePassword',
+      component: ChangePasswordPage,
+      meta: {needAuth: true}
+    }, {
+      path: '/personal/mySetting',
+      component: ChangeMySetting,
       meta: {needAuth: true}
     }]
   }]

@@ -1,7 +1,7 @@
 <template>
-  <mx-normal-layout :title="title" :loginUserName="loginUserName" :roles="roles" :tools="tools"
+  <mx-normal-layout :title="title" :login-user="loginUser"
                     :navData="transformedNavData"
-                    v-on:logout="handleLogout" v-on:showNotice="handleShowNotice" v-on:goto="handleGoto">
+                    v-on:clickMenu="handleClickMenu" v-on:showNotice="handleShowNotice" v-on:goto="handleGoto">
     <router-view slot="content-body"></router-view>
   </mx-normal-layout>
 </template>
@@ -30,26 +30,6 @@
           return navData
         },
         set (val) {}
-      },
-      loginUserName: {
-        get () {
-          return this.authenticated ? this.loginUser.name : this.$t('NA')
-        },
-        set (val) {
-        }
-      },
-      tools: {
-        get () {
-          return this.loginUser && this.loginUser.favorityTools ? this.loginUser.favorityTools : []
-        },
-        set (val) {}
-      },
-      roles: {
-        get () {
-          return this.authenticated ? this.loginUser.roles : []
-        },
-        set (val) {
-        }
       }
     },
     methods: {
@@ -83,6 +63,22 @@
             }
           }
           this.logout({success})
+        }
+      },
+      handleClickMenu (menu) {
+        switch (menu) {
+          case 'logout':
+            this.handleLogout()
+            break
+          case 'changePassword':
+            this.$router.push('/personal/changePassword')
+            break
+          case 'mySetting':
+            this.$router.push('/personal/mySetting')
+            break
+          default:
+            logger.debug('Click the menu: %s.', menu)
+            break
         }
       },
       handleShowNotice () {

@@ -39,8 +39,16 @@ let role = {
 let account = {
   ...dict,
   'owner': dict,
-  'favorityTools': ['/manage/user', '/manage/account', '/manage/accredit'],
-  'roles|1-5': [dict]
+  'favorityTools': ['/manage/user', '/manage/account', '/personal/mySetting'],
+  'roles|1-5': [{
+    'id': '@id',
+    'code|1': ['admin', 'user', 'guest'],
+    'name': '@cname',
+    'desc': '@cparagraph',
+    'createdTime': '@integer(1413763339001, 1513763339001)',
+    'updatedTime': '@integer(1413763339001, 1513763339001)',
+    'operator': '@word'
+  }]
 }
 
 let privilege = {

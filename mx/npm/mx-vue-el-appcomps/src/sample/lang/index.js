@@ -1,8 +1,8 @@
 import Vue from 'vue'
 
 import MxVueElUtils from 'mx-vue-el-utils'
-// import {AppLocaleMessages} from '../../index'
-import {AppLocaleMessages} from '../../../dist/mx-vue-el-appcomps.min'
+import {AppLocaleMessages} from '../../index'
+// import {AppLocaleMessages} from '../../../dist/mx-vue-el-appcomps.min'
 
 import myEn from './en'
 import myZhCN from './zh-CN'

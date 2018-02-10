@@ -100,7 +100,9 @@
         "owner": "Owner",
         "oldPassword": "Old password",
         "password": "New password",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "favorityTools": "Favorites",
+        "menuItem": "menu item"
       },
       "title": {
         "allocate": "Assign",
@@ -111,12 +113,14 @@
         "requiredRoles": "You need choose a role at least.",
         "requiredPassword": "You need enter the password.",
         "requiredConfirm": "You need enter the confirm password.",
-        "passwordMatch": "The password does not match the confirm password."
+        "passwordMatch": "The password does not match the confirm password.",
+        "requireSelected": "You need choose a {0} at least."
       },
       "message": {
         "loginSuccess": "The account[{code} - {name}] login successfully.",
         "logoutSuccess": "The account[{code} - {name}] logout successfully.",
-        "changePasswordSuccess": "Change the password successfully for the account[{code} - {name}]."
+        "changePasswordSuccess": "Change the password successfully for the account [{code} - {name}] .",
+        "changePersonalSuccess": "Change the personal favorite successfully for the account [{code} - {name}] ."
       }
     }
   }
