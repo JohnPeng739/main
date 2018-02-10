@@ -58,14 +58,18 @@
       },
       handleOk () {
         this.$emit('selected', (selected) => {
-          let tag = selected
-          if (tag !== null && tag !== undefined) {
-            if (this.tags.indexOf(tag) >= 0) {
-              MxNotify.warn(this.$t('message.tag.existed', {tag: this.getDisplayName(tag)}))
-            } else {
-              this.tags.push(tag)
-              this.visible = false
+          let tags = selected && selected instanceof Array ? selected : [selected]
+          if (tags.length > 0) {
+            for (let index in tags) {
+              let tag = tags[index]
+              if (this.tags.indexOf(tag) >= 0) {
+                MxNotify.warn(this.$t('message.tag.existed', {tag: this.getDisplayName(tag)}))
+                return
+              } else {
+                this.tags.push(tag)
+              }
             }
+            this.visible = false
           } else {
             MxNotify.info(this.$t('message.choose'))
           }

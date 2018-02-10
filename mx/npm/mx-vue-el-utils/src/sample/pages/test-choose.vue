@@ -12,10 +12,11 @@
     <h1>测试 可选择输入框</h1>
     <br/>
     <div class="content">
-      <mx-choose-input ref="input1" v-model="chooseInput" v-on:selected="handleSelectedInput" displayFormat="{code} - {name}"
-                    placeholder="请选择..."
-                    :popover-width="400" :readonly="true">
-        <el-table :data="tableData" highlight-current-row @current-change="handleCurrentChange">
+      <mx-choose-input ref="input1" v-model="chooseInput" v-on:selected="handleSelectedInput"
+                       displayFormat="{code} - {name}"
+                       placeholder="请选择..."
+                       :popover-width="400" :readonly="true">
+        <el-table :data="tableData" highlight-current-row @current-change="handleCurrentChange1">
           <el-table-column prop="code" label="Code"></el-table-column>
           <el-table-column prop="name" label="Name"></el-table-column>
         </el-table>
@@ -23,15 +24,31 @@
       <p>{{JSON.stringify(chooseInput)}}</p>
     </div>
     <br/><br/>
-    <mx-choose-tag ref="tag1" v-model="chooseTag" displayFormat="{code} - {name}" v-on:selected="handleSelectedTag" :disabled="false"
-                type="gray" :popover-width="400">
-      <el-table :data="tableData" highlight-current-row @current-change="handleCurrentChange">
-        <el-table-column prop="code" label="Code"></el-table-column>
-        <el-table-column prop="name" label="Name"></el-table-column>
-      </el-table>
-    </mx-choose-tag>
-    <br/>
-    <p>{{JSON.stringify(chooseTag)}}</p>
+    <div class="content">
+      <mx-choose-tag ref="tag1" v-model="chooseTag" displayFormat="{code} - {name}" v-on:selected="handleSelectedTag1"
+                     :disabled="false"
+                     type="gray" :popover-width="400">
+        <el-table :data="tableData" highlight-current-row @current-change="handleCurrentChange2">
+          <el-table-column prop="code" label="Code"></el-table-column>
+          <el-table-column prop="name" label="Name"></el-table-column>
+        </el-table>
+      </mx-choose-tag>
+      <p>{{JSON.stringify(chooseTag)}}</p>
+    </div>
+    <br/><br/>
+    <div class="content">
+      <mx-choose-tag ref="tag1" v-model="chooseTag" displayFormat="{code} - {name}" v-on:selected="handleSelectedTag2"
+                     :disabled="false"
+                     type="gray" :popover-width="400">
+        <el-table :data="tableData" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="code" label="Code"></el-table-column>
+          <el-table-column prop="name" label="Name"></el-table-column>
+        </el-table>
+      </mx-choose-tag>
+      <br/>
+      <p>{{JSON.stringify(chooseTag)}}</p>
+    </div>
   </div>
 </template>
 
@@ -43,18 +60,29 @@
         chooseInput: {id: 'id', code: 'code', name: 'name'},
         chooseTag: [{id: 'id', code: 'code', name: 'name'}],
         tableData: [],
-        selected: null
+        selected1: null,
+        selected2: null,
+        selected3: []
       }
     },
     methods: {
       handleSelectedInput (done) {
-        done(this.selected)
+        done(this.selected1)
       },
-      handleSelectedTag (done) {
-        done(this.selected)
+      handleSelectedTag1 (done) {
+        done(this.selected2)
       },
-      handleCurrentChange (currentRow, oldCurrentRow) {
-        this.selected = currentRow
+      handleSelectedTag2 (done) {
+        done(this.selected3)
+      },
+      handleCurrentChange1 (current) {
+        this.selected1 = current
+      },
+      handleCurrentChange2 (current) {
+        this.selected2 = current
+      },
+      handleSelectionChange (val) {
+        this.selected3 = val
       }
     },
     mounted () {
