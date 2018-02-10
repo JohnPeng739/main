@@ -45,7 +45,7 @@ public class DepartmentManageResource {
     public DataVO<List<DepartmentVO>> departments() {
         try {
             List<Department> departments = accessor.list(Department.class);
-            List<DepartmentVO> vos = DepartmentVO.transformDepartmentVOs(departments);
+            List<DepartmentVO> vos = DepartmentVO.transform(departments);
             return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -68,7 +68,7 @@ public class DepartmentManageResource {
         }
         try {
             List<Department> departments = accessor.list(pagination, Department.class);
-            List<DepartmentVO> vos = DepartmentVO.transformDepartmentVOs(departments);
+            List<DepartmentVO> vos = DepartmentVO.transform(departments);
             return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
@@ -88,8 +88,7 @@ public class DepartmentManageResource {
     public DataVO<DepartmentVO> getDepartment(@PathParam("id") String id) {
         try {
             Department department = accessor.getById(id, Department.class);
-            DepartmentVO vo = new DepartmentVO();
-            DepartmentVO.transform(department, vo);
+            DepartmentVO vo = DepartmentVO.transform(department, true);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -107,8 +106,7 @@ public class DepartmentManageResource {
         try {
 
             Department department = departmentManageService.saveDepartment(departmentInfoVO.getDepartInfo());
-            DepartmentVO vo = new DepartmentVO();
-            DepartmentVO.transform(department, vo);
+            DepartmentVO vo = DepartmentVO.transform(department, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
@@ -149,8 +147,7 @@ public class DepartmentManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             Department department = accessor.remove(id, Department.class);
-            DepartmentVO vo = new DepartmentVO();
-            DepartmentVO.transform(department, vo);
+            DepartmentVO vo = DepartmentVO.transform(department, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {

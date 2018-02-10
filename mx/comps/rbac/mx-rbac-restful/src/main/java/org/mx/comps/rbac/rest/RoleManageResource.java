@@ -45,7 +45,7 @@ public class RoleManageResource {
     public DataVO<List<RoleVO>> roles() {
         try {
             List<Role> roles = accessor.list(Role.class);
-            List<RoleVO> vos = RoleVO.transformRoleVOs(roles);
+            List<RoleVO> vos = RoleVO.transform(roles);
             return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -68,7 +68,7 @@ public class RoleManageResource {
         }
         try {
             List<Role> roles = accessor.list(pagination, Role.class);
-            List<RoleVO> vos = RoleVO.transformRoleVOs(roles);
+            List<RoleVO> vos = RoleVO.transform(roles);
             return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
@@ -88,8 +88,7 @@ public class RoleManageResource {
     public DataVO<RoleVO> getRole(@PathParam("id") String id) {
         try {
             Role role = accessor.getById(id, Role.class);
-            RoleVO vo = new RoleVO();
-            RoleVO.transform(role, vo);
+            RoleVO vo = RoleVO.transform(role, true);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -111,8 +110,7 @@ public class RoleManageResource {
         try {
             roleInfoVO.setId(null);
             Role role = roleManageService.saveRole(roleInfoVO.getRoleInfo());
-            RoleVO vo = new RoleVO();
-            RoleVO.transform(role, vo);
+            RoleVO vo = RoleVO.transform(role, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
@@ -135,8 +133,7 @@ public class RoleManageResource {
         try {
             roleInfoVO.setId(id);
             Role role = roleManageService.saveRole(roleInfoVO.getRoleInfo());
-            RoleVO vo = new RoleVO();
-            RoleVO.transform(role, vo);
+            RoleVO vo = RoleVO.transform(role, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
@@ -158,8 +155,7 @@ public class RoleManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             Role role = accessor.remove(id, Role.class);
-            RoleVO vo = new RoleVO();
-            RoleVO.transform(role, vo);
+            RoleVO vo = RoleVO.transform(role, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {

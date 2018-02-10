@@ -1,8 +1,8 @@
 <template>
   <div>
-    <mx-normal-layout v-if="authenticated" :title="title" :loginUserName="loginUserName" :roles="roles" :tools="tools"
-                      :navData="transformedNavData" v-on:logout="handleLogout" v-on:showUserInfo="handleShowUserInfo"
-                      v-on:goto="handleGoto">
+    <mx-normal-layout v-if="authenticated" :title="title" :login-user="loginUser" :navData="transformedNavData"
+                      v-on:clickMenu="handleClickMenu" v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto">
+      <div slot="account-info" style="color:red;">登录时间： Now()</div>
       <router-view slot="content-body"></router-view>
     </mx-normal-layout>
     <router-view v-else></router-view>
@@ -28,31 +28,10 @@
         authenticated: 'authenticated',
         loginUser: 'loginUser'
       }),
-      loginUserName: {
-        get() {
-          return this.authenticated ? this.loginUser.name : this.$t('NA')
-        },
-        set(val) {
-        }
-      },
       transformedNavData: {
         get() {
           this.transformNavData(this.navData)
           return this.navData
-        },
-        set(val) {
-        }
-      },
-      tools: {
-        get() {
-          return this.loginUser && this.loginUser.favorityTools ? this.loginUser.favorityTools : []
-        },
-        set(val) {
-        }
-      },
-      roles: {
-        get() {
-          return this.authenticated ? this.loginUser.roles : []
         },
         set(val) {
         }
@@ -83,11 +62,23 @@
           if (data && data.account) {
             let {code, name} = data.account
             sessionStorage.removeItem('auth.user')
-            MxNotify.info(this.$t('rbac.message.logoutSuccess', {code, name}))
+            MxNotify.info(this.$t('rbac.account.message.logoutSuccess', {code, name}))
             this.$router.push('/login')
           }
         }
         this.logout({success})
+      },
+      handleClickMenu (menu) {
+        switch (menu) {
+          case 'logout':
+            this.handleLogout()
+          case 'changePassword':
+            this.handleGoto('/personal/changePassword')
+          case 'mySetting':
+            this.handleGoto('/personal/mySetting')
+          default:
+            logger.debug('Click a unsupported menu: %s.', menu)
+        }
       },
       handleShowUserInfo() {
         logger.debug('show user info: ' + this.loginUserName + '.')

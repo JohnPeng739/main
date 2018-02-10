@@ -46,7 +46,7 @@ public class AccreditManageResource {
     public DataVO<List<AccreditVO>> accredits() {
         try {
             List<Accredit> accredits = accessor.list(Accredit.class);
-            List<AccreditVO> list = AccreditVO.transformAccreditVOs(accredits);
+            List<AccreditVO> list = AccreditVO.transform(accredits);
             return new DataVO<>(list);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -69,7 +69,7 @@ public class AccreditManageResource {
         }
         try {
             List<Accredit> accredits = accessor.list(pagination, Accredit.class);
-            List<AccreditVO> list = AccreditVO.transformAccreditVOs(accredits);
+            List<AccreditVO> list = AccreditVO.transform(accredits);
             return new PaginationDataVO<>(pagination, list);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
@@ -92,8 +92,7 @@ public class AccreditManageResource {
         }
         try {
             Accredit accredit = accessor.getById(id, Accredit.class);
-            AccreditVO vo = new AccreditVO();
-            AccreditVO.transform(accredit, vo);
+            AccreditVO vo = AccreditVO.transform(accredit, true);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -114,8 +113,7 @@ public class AccreditManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             Accredit accredit = accreditManageService.accredit(accreditInfoVO.getAccreditInfo());
-            AccreditVO vo = new AccreditVO();
-            AccreditVO.transform(accredit, vo);
+            AccreditVO vo = AccreditVO.transform(accredit, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
@@ -140,8 +138,7 @@ public class AccreditManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             Accredit accredit = accreditManageService.closeAccredit(id);
-            AccreditVO vo = new AccreditVO();
-            AccreditVO.transform(accredit, vo);
+            AccreditVO vo = AccreditVO.transform(accredit, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {

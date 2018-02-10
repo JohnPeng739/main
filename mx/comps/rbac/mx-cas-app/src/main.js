@@ -17,7 +17,7 @@ Vue.use(ElementUI, {
 })
 
 if (process.env.NODE_ENV !== 'production') {
-  // mock()
+  mock()
 }
 
 /* eslint-disable no-new */

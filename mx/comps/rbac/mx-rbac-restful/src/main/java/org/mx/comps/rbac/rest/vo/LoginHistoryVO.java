@@ -3,8 +3,7 @@ package org.mx.comps.rbac.rest.vo;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
 import org.mx.service.rest.vo.BaseVO;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class LoginHistoryVO extends BaseVO {
     private AccountVO account;
@@ -12,33 +11,34 @@ public class LoginHistoryVO extends BaseVO {
     private long loginTime, logoutTime;
     private boolean online;
 
-    public static void transform(LoginHistory loginHistory, LoginHistoryVO loginHistoryVO) {
-        if (loginHistory == null || loginHistoryVO == null) {
-            return;
+    public static LoginHistoryVO transform(LoginHistory loginHistory) {
+        if (loginHistory == null) {
+            return null;
         }
+        LoginHistoryVO loginHistoryVO = new LoginHistoryVO();
         BaseVO.transform(loginHistory, loginHistoryVO);
         loginHistoryVO.loginTime = loginHistory.getLoginTime();
         loginHistoryVO.logoutTime = loginHistory.getLogoutTime();
         loginHistoryVO.online = loginHistory.isOnline();
         loginHistoryVO.token = loginHistory.getToken();
         if (loginHistory.getAccount() != null) {
-            AccountVO accountVO = new AccountVO();
-            AccountVO.transform(loginHistory.getAccount(), accountVO);
-            loginHistoryVO.account = accountVO;
+            loginHistoryVO.account = AccountVO.transform(loginHistory.getAccount(), true);
         }
+        return loginHistoryVO;
     }
 
-    public static List<LoginHistoryVO> transformLoginHistories(List<LoginHistory> loginHistories) {
+    public static List<LoginHistoryVO> transform(Collection<LoginHistory> loginHistories) {
+        List<LoginHistoryVO> loginHistoryVOS = new ArrayList<>();
         if (loginHistories == null || loginHistories.isEmpty()) {
-            return null;
+            return loginHistoryVOS;
         }
-        List<LoginHistoryVO> loginHistoryVOs = new ArrayList<>(loginHistories.size());
-        for (LoginHistory loginHistory : loginHistories) {
-            LoginHistoryVO loginHistoryVO = new LoginHistoryVO();
-            LoginHistoryVO.transform(loginHistory, loginHistoryVO);
-            loginHistoryVOs.add(loginHistoryVO);
-        }
-        return loginHistoryVOs;
+        loginHistories.forEach(loginHistory -> {
+            LoginHistoryVO loginHistoryVO = LoginHistoryVO.transform(loginHistory);
+            if (loginHistoryVO != null) {
+                loginHistoryVOS.add(loginHistoryVO);
+            }
+        });
+        return loginHistoryVOS;
     }
 
     public String getToken() {

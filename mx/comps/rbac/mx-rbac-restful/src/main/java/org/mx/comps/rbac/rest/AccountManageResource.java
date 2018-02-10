@@ -17,7 +17,6 @@ import org.mx.service.rest.vo.DataVO;
 import org.mx.service.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -26,7 +25,6 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Component
 @Path("/rest")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -49,7 +47,7 @@ public class AccountManageResource {
     public DataVO<List<OperateLogVO>> logs(@Context Request request) {
         try {
             List<OperateLog> logs = accessor.list(OperateLog.class);
-            List<OperateLogVO> vos = OperateLogVO.transformLogVOs(logs);
+            List<OperateLogVO> vos = OperateLogVO.transform(logs);
             return new DataVO(vos);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -72,7 +70,7 @@ public class AccountManageResource {
         }
         try {
             List<OperateLog> logs = accessor.list(pagination, OperateLog.class);
-            List<OperateLogVO> vos = OperateLogVO.transformLogVOs(logs);
+            List<OperateLogVO> vos = OperateLogVO.transform(logs);
             return new PaginationDataVO(pagination, vos);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
@@ -92,7 +90,7 @@ public class AccountManageResource {
     public DataVO<List<LoginHistoryVO>> loginHistories() {
         try {
             List<LoginHistory> histories = accessor.list(LoginHistory.class);
-            List<LoginHistoryVO> vos = LoginHistoryVO.transformLoginHistories(histories);
+            List<LoginHistoryVO> vos = LoginHistoryVO.transform(histories);
             return new DataVO(vos);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -115,7 +113,7 @@ public class AccountManageResource {
         }
         try {
             List<LoginHistory> histories = accessor.list(pagination, LoginHistory.class);
-            List<LoginHistoryVO> vos = LoginHistoryVO.transformLoginHistories(histories);
+            List<LoginHistoryVO> vos = LoginHistoryVO.transform(histories);
             return new PaginationDataVO(pagination, vos);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
@@ -135,7 +133,7 @@ public class AccountManageResource {
     public DataVO<List<AccountVO>> listAccounts() {
         try {
             List<Account> accounts = accessor.list(Account.class);
-            return new DataVO<>(AccountVO.transformAccountVOs(accounts));
+            return new DataVO<>(AccountVO.transform(accounts));
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
         } catch (Exception ex) {
@@ -157,7 +155,7 @@ public class AccountManageResource {
         }
         try {
             List<Account> accounts = accessor.list(pagination, Account.class);
-            return new PaginationDataVO<>(pagination, AccountVO.transformAccountVOs(accounts));
+            return new PaginationDataVO<>(pagination, AccountVO.transform(accounts));
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {
@@ -179,8 +177,7 @@ public class AccountManageResource {
         try {
             accountInfoVO.setId(id);
             Account account = accountManageService.saveAccount(accountInfoVO.getAccountInfo());
-            AccountVO accountVO = new AccountVO();
-            AccountVO.transform(account, accountVO);
+            AccountVO accountVO = AccountVO.transform(account, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(accountVO);
         } catch (UserInterfaceException ex) {
@@ -202,8 +199,7 @@ public class AccountManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             Account account = accessor.remove(id, Account.class);
-            AccountVO accountVO = new AccountVO();
-            AccountVO.transform(account, accountVO);
+            AccountVO accountVO = AccountVO.transform(account, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(accountVO);
         } catch (UserInterfaceException ex) {
@@ -231,8 +227,7 @@ public class AccountManageResource {
         String newPassword = vo.getNewPassword();
         try {
             Account account = accountManageService.changePassword(id, oldPassword, newPassword);
-            AccountVO accountVO = new AccountVO();
-            AccountVO.transform(account, accountVO);
+            AccountVO accountVO = AccountVO.transform(account, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(accountVO);
         } catch (UserInterfaceException ex) {
@@ -256,8 +251,7 @@ public class AccountManageResource {
         boolean forced = vo.isForcedReplace();
         try {
             LoginHistory loginHistory = accountManageService.login(accountCode, password, forced);
-            LoginHistoryVO loginHistoryVO = new LoginHistoryVO();
-            LoginHistoryVO.transform(loginHistory, loginHistoryVO);
+            LoginHistoryVO loginHistoryVO = LoginHistoryVO.transform(loginHistory);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(loginHistoryVO);
         } catch (UserInterfaceException ex) {
@@ -280,8 +274,7 @@ public class AccountManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             LoginHistory loginHistory = accountManageService.logout(id);
-            LoginHistoryVO loginHistoryVO = new LoginHistoryVO();
-            LoginHistoryVO.transform(loginHistory, loginHistoryVO);
+            LoginHistoryVO loginHistoryVO = LoginHistoryVO.transform(loginHistory);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(loginHistoryVO);
         } catch (UserInterfaceException ex) {

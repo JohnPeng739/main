@@ -2,10 +2,7 @@ package org.mx.comps.rbac.rest.vo;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.dal.entity.User;
-import org.mx.dal.EntityFactory;
-import org.mx.service.rest.vo.BaseDictVO;
 import org.mx.service.rest.vo.BaseVO;
 
 import java.util.*;
@@ -23,10 +20,11 @@ public class UserVO extends BaseVO {
     private long birthday;
     private DepartmentVO department;
 
-    public static void transform(User user, UserVO userVO) {
-        if (user == null || userVO == null) {
-            return;
+    public static UserVO transform(User user) {
+        if (user == null) {
+            return null;
         }
+        UserVO userVO = new UserVO();
         BaseVO.transform(user, userVO);
         userVO.firstName = user.getFirstName();
         userVO.middleName = user.getMiddleName();
@@ -37,53 +35,21 @@ public class UserVO extends BaseVO {
         userVO.sex = user.getSex();
         userVO.birthday = user.getBirthday() != null ? user.getBirthday().getTime() : 0;
         if (user.getDepartment() != null) {
-            DepartmentVO departmentVO = new DepartmentVO();
-            BaseDictVO.transform(user.getDepartment(), departmentVO);
-            userVO.department = departmentVO;
+            userVO.department = DepartmentVO.transform(user.getDepartment(), false);
         }
+        return userVO;
     }
 
-    public static void transform(UserVO userVO, User user) {
-        if (user == null || userVO == null) {
-            return;
-        }
-        BaseVO.transform(userVO, user);
-        user.setFirstName(userVO.getFirstName());
-        user.setMiddleName(userVO.getMiddleName());
-        user.setLastName(userVO.getLastName());
-        user.setDesc(userVO.getDesc());
-        user.setStation(userVO.getStation());
-        user.setSex(userVO.getSex());
-        user.setBirthday(new Date(userVO.getBirthday()));
-        if (userVO.getDepartment() != null) {
-            Department department = EntityFactory.createEntity(Department.class);
-            BaseDictVO.transform(userVO.getDepartment(), department);
-            user.setDepartment(department);
-        }
-    }
-
-    public static Set<User> transformUsers(List<UserVO> userVOS) {
-        if (userVOS == null) {
-            return null;
-        }
-        Set<User> users = new HashSet<>();
-        userVOS.forEach(subordinateVO -> {
-            User user = EntityFactory.createEntity(User.class);
-            UserVO.transform(subordinateVO, user);
-            users.add(user);
-        });
-        return users;
-    }
-
-    public static List<UserVO> transformUserVOs(Collection<User> users) {
+    public static List<UserVO> transform(Collection<User> users) {
+        List<UserVO> userVOS = new ArrayList<>();
         if (users == null) {
             return null;
         }
-        List<UserVO> userVOS = new ArrayList<>();
         users.forEach(user -> {
-            UserVO userVO = new UserVO();
-            UserVO.transform(user, userVO);
-            userVOS.add(userVO);
+            UserVO userVO = UserVO.transform(user);
+            if (userVO != null) {
+                userVOS.add(userVO);
+            }
         });
         return userVOS;
     }

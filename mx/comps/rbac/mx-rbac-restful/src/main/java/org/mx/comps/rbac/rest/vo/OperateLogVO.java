@@ -3,9 +3,7 @@ package org.mx.comps.rbac.rest.vo;
 import org.mx.dal.entity.OperateLog;
 import org.mx.service.rest.vo.BaseVO;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * 操作日志值对象定义
@@ -15,25 +13,28 @@ import java.util.List;
 public class OperateLogVO extends BaseVO {
     private String content;
 
-    public static void transform(OperateLog log, OperateLogVO vo) {
-        if (log == null || vo == null) {
-            return;
-        }
-        BaseVO.transform(log, vo);
-        vo.content = log.getContent();
-    }
-
-    public static List<OperateLogVO> transformLogVOs(Collection<OperateLog> logs) {
-        if (logs == null) {
+    public static OperateLogVO transform(OperateLog operateLog) {
+        if (operateLog == null) {
             return null;
         }
-        List<OperateLogVO> vos = new ArrayList<>();
-        logs.forEach(log -> {
-            OperateLogVO vo = new OperateLogVO();
-            OperateLogVO.transform(log, vo);
-            vos.add(vo);
+        OperateLogVO operateLogVO = new OperateLogVO();
+        BaseVO.transform(operateLog, operateLogVO);
+        operateLogVO.content = operateLog.getContent();
+        return operateLogVO;
+    }
+
+    public static List<OperateLogVO> transform(Collection<OperateLog> operateLogs) {
+        List<OperateLogVO> operateLogVOS = new ArrayList<>();
+        if (operateLogs == null || operateLogs.isEmpty()) {
+            return operateLogVOS;
+        }
+        operateLogs.forEach(operateLog -> {
+            OperateLogVO operateLogVO = OperateLogVO.transform(operateLog);
+            if (operateLogVO != null) {
+                operateLogVOS.add(operateLogVO);
+            }
         });
-        return vos;
+        return operateLogVOS;
     }
 
     public String getContent() {

@@ -4,66 +4,46 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.dal.entity.User;
-import org.mx.dal.EntityFactory;
-import org.mx.service.rest.vo.BaseDictTreeVO;
+import org.mx.service.rest.vo.BaseDictVO;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 部门值对象定义
  *
  * @author : john.peng created on date : 2017/11/8
  */
-public class DepartmentVO extends BaseDictTreeVO {
+public class DepartmentVO extends BaseDictVO {
     private static final Log logger = LogFactory.getLog(DepartmentVO.class);
 
     private UserVO manager;
     private List<UserVO> employees;
 
-    public static void transform(Department department, DepartmentVO departmentVO) {
-        if (department == null || departmentVO == null) {
-            return;
+    public static DepartmentVO transform(Department department, boolean iterate) {
+        if (department == null) {
+            return null;
         }
-        BaseDictTreeVO.transform(department, departmentVO);
+        DepartmentVO departmentVO = new DepartmentVO();
+        BaseDictVO.transform(department, departmentVO);
         if (department.getManager() != null) {
-            departmentVO.manager = new UserVO();
-            UserVO.transform(department.getManager(), departmentVO.manager);
+            departmentVO.manager = UserVO.transform(department.getManager());
         }
         Set<User> employees = department.getEmployees();
-        if (employees != null && !employees.isEmpty()) {
-            departmentVO.employees = UserVO.transformUserVOs(employees);
+        if (employees != null && !employees.isEmpty() && iterate) {
+            departmentVO.employees = UserVO.transform(employees);
         }
+        return departmentVO;
     }
 
-    public static void transform(DepartmentVO departmentVO, Department department) {
-        if (department == null || departmentVO == null) {
-            return;
-        }
-        BaseDictTreeVO.transform(departmentVO, department);
-        if (departmentVO.getManager() != null) {
-            User manager = EntityFactory.createEntity(User.class);
-            UserVO.transform(departmentVO.getManager(), manager);
-            department.setManager(manager);
-        }
-        List<UserVO> employeeVOs = departmentVO.getEmployees();
-        if (employeeVOs != null || employeeVOs.isEmpty()) {
-            department.setEmployees(UserVO.transformUsers(employeeVOs));
-        }
-    }
-
-    public static List<DepartmentVO> transformDepartmentVOs(Collection<Department> departments) {
-        List<DepartmentVO> list = new ArrayList<>();
+    public static List<DepartmentVO> transform(Collection<Department> departments) {
+        List<DepartmentVO> departmentVOS = new ArrayList<>();
         if (departments != null && !departments.isEmpty()) {
             for (Department department : departments) {
-                DepartmentVO vo = new DepartmentVO();
-                DepartmentVO.transform(department, vo);
-                list.add(vo);
+                DepartmentVO departmentVO = DepartmentVO.transform(department, false);
+                departmentVOS.add(departmentVO);
             }
         }
-        return list;
+        return departmentVOS;
     }
 
     public UserVO getManager() {

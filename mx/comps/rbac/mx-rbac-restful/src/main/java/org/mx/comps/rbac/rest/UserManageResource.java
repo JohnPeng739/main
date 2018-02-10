@@ -49,7 +49,7 @@ public class UserManageResource {
     public DataVO<List<UserVO>> listUsers() {
         try {
             List<User> users = accessor.list(User.class);
-            List<UserVO> userVOS = UserVO.transformUserVOs(users);
+            List<UserVO> userVOS = UserVO.transform(users);
             return new DataVO<>(userVOS);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -72,7 +72,7 @@ public class UserManageResource {
         }
         try {
             List<User> users = accessor.list(pagination, User.class);
-            List<UserVO> userVOs = UserVO.transformUserVOs(users);
+            List<UserVO> userVOs = UserVO.transform(users);
             return new PaginationDataVO<>(pagination, userVOs);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
@@ -92,8 +92,7 @@ public class UserManageResource {
     public DataVO<UserVO> getUser(@PathParam("id") String id) {
         try {
             User user = accessor.getById(id, User.class);
-            UserVO userVO = new UserVO();
-            UserVO.transform(user, userVO);
+            UserVO userVO = UserVO.transform(user);
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -115,8 +114,7 @@ public class UserManageResource {
         try {
             userInfoVO.setId(null);
             User user = userManageService.saveUser(userInfoVO.getUserInfo());
-            UserVO userVO = new UserVO();
-            UserVO.transform(user, userVO);
+            UserVO userVO = UserVO.transform(user);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
@@ -140,8 +138,7 @@ public class UserManageResource {
         try {
             userInfoVO.setId(userId);
             User user = userManageService.saveUser(userInfoVO.getUserInfo());
-            UserVO userVO = new UserVO();
-            UserVO.transform(user, userVO);
+            UserVO userVO = UserVO.transform(user);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
@@ -163,8 +160,7 @@ public class UserManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             User user = accessor.remove(userId, User.class);
-            UserVO userVO = new UserVO();
-            UserVO.transform(user, userVO);
+            UserVO userVO = UserVO.transform(user);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(userVO);
         } catch (UserInterfaceException ex) {
@@ -188,8 +184,7 @@ public class UserManageResource {
         try {
             accountInfoVO.setOwnerId(userId);
             Account account = userManageService.allocateAccount(accountInfoVO.getAccountInfo());
-            AccountVO accountVO = new AccountVO();
-            AccountVO.transform(account, accountVO);
+            AccountVO accountVO = AccountVO.transform(account, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(accountVO);
         } catch (UserInterfaceException ex) {

@@ -20,6 +20,7 @@ export const navData = [{
   path: '/manage',
   icon: 'view_module',
   name: 'nav.manage.value',
+  role: 'admin',
   children: [{
     path: '/manage/user',
     icon: 'person',
@@ -53,6 +54,20 @@ export const navData = [{
     icon: 'access_time',
     name: 'nav.manage.loginHistory'
   }]
+}, {
+  path: '/personal',
+  icon: 'favorite',
+  name: 'nav.personal',
+  role: 'user',
+  children: [{
+    path: '/personal/changePassword',
+    icon: 'lock',
+    name: 'changePassword'
+  }, {
+    path: '/personal/mySetting',
+    icon: 'settings',
+    name: 'mySetting'
+  }]
 }]
 
 Vue.use(Router)
@@ -66,6 +81,7 @@ const router = new Router({
   }, {
     path: '/home',
     component: resolve => require(['../layout.vue'], resolve),
+    meta: {needAuth: true},
     children: [{
       path: '',
       component: MxOperateLogManage,
@@ -98,6 +114,15 @@ const router = new Router({
       component: MxOperateLogManage
     }, {
       path: '/manage/accredit',
+      component: MxAccreditManage,
+      meta: {needAuth: true}
+    }, {
+      path: '/personal/changePassword',
+      // TODO
+      component: MxAccreditManage,
+      meta: {needAuth: true}
+    }, {
+      path: '/personal/mySetting',
       component: MxAccreditManage,
       meta: {needAuth: true}
     }]

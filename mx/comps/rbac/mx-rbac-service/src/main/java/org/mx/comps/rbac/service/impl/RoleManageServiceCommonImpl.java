@@ -61,22 +61,24 @@ public abstract class RoleManageServiceCommonImpl implements RoleManageService {
         if (role.getAccounts() != null && !role.getAccounts().isEmpty()) {
             role.getAccounts().clear();
         }
-        for (String accountId : roleInfo.getAccountIds()) {
-            Account account = accessor.getById(accountId, Account.class);
-            if (account == null) {
-                throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND);
+        if (roleInfo.getAccountIds() != null && !roleInfo.getAccountIds().isEmpty()) {
+            for (String accountId : roleInfo.getAccountIds()) {
+                Account account = accessor.getById(accountId, Account.class);
+                if (account == null) {
+                    throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND);
+                }
+                role.getAccounts().add(account);
             }
-            role.getAccounts().add(account);
         }
         if (role.getPrivileges() != null && !role.getPrivileges().isEmpty()) {
             role.getPrivileges().clear();
-        }
-        for (String privilegeId : roleInfo.getPrivilegeIds()) {
-            Privilege privilege = accessor.getById(privilegeId, Privilege.class);
-            if (privilege == null) {
-                throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.PRIVILEGE_NOT_FOUND);
+            for (String privilegeId : roleInfo.getPrivilegeIds()) {
+                Privilege privilege = accessor.getById(privilegeId, Privilege.class);
+                if (privilege == null) {
+                    throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.PRIVILEGE_NOT_FOUND);
+                }
+                role.getPrivileges().add(privilege);
             }
-            role.getPrivileges().add(privilege);
         }
         role.setValid(roleInfo.isValid());
         role = this.save(role);

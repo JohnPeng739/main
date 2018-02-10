@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.comps.rbac.dal.entity.Privilege;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.dal.EntityFactory;
+import org.mx.service.rest.vo.BaseDictTreeVO;
 import org.mx.service.rest.vo.BaseDictVO;
 
 import java.util.*;
@@ -14,52 +15,30 @@ public class PrivilegeVO extends BaseDictVO {
 
     private List<RoleVO> roles;
 
-    public static void transform(Privilege privilege, PrivilegeVO privilegeVO) {
-        if (privilege == null || privilegeVO == null) {
-            return;
+    public static PrivilegeVO transform(Privilege privilege, boolean iterate) {
+        if (privilege == null) {
+            return null;
         }
+        PrivilegeVO privilegeVO = new PrivilegeVO();
         BaseDictVO.transform(privilege, privilegeVO);
-        Set<Role> roles = privilege.getRoles();
-        if (roles != null && !roles.isEmpty()) {
-            privilegeVO.roles = RoleVO.transformRoleVOs(roles);
+        if (iterate) {
+            privilegeVO.roles = RoleVO.transform(privilege.getRoles());
         }
+        return privilegeVO;
     }
 
-    public static void transform(PrivilegeVO privilegeVO, Privilege privilege) {
-        if (privilege == null || privilegeVO == null) {
-            return;
-        }
-        BaseDictVO.transform(privilegeVO, privilege);
-        List<RoleVO> roles = privilegeVO.getRoles();
-        if (roles != null && !roles.isEmpty()) {
-            privilege.setRoles(RoleVO.transformRoles(roles));
-        }
-    }
-
-    public static Set<Privilege> transformPrivileges(List<PrivilegeVO> privilegeVOs) {
-        if (privilegeVOs == null || privilegeVOs.isEmpty()) {
-            return null;
-        }
-        Set<Privilege> privileges = new HashSet<>(privilegeVOs.size());
-        for (PrivilegeVO vo : privilegeVOs) {
-            Privilege privilege = EntityFactory.createEntity(Privilege.class);
-            PrivilegeVO.transform(vo, privilege);
-            privileges.add(privilege);
-        }
-        return privileges;
-    }
-
-    public static List<PrivilegeVO> transformPrivilegeVOs(Collection<Privilege> privileges) {
+    public static List<PrivilegeVO> transform(Collection<Privilege> privileges) {
+        List<PrivilegeVO> privilegeVOS = new ArrayList<>();
         if (privileges == null || privileges.isEmpty()) {
-            return null;
+            return privilegeVOS;
         }
-        List<PrivilegeVO> privilegeVOs = new ArrayList<>(privileges.size());
-        for (Privilege privilege : privileges) {
-            PrivilegeVO vo = new PrivilegeVO();
-            PrivilegeVO.transform(privilege, vo);
-            privilegeVOs.add(vo);
-        }
-        return privilegeVOs;
+        privileges.forEach(privilege -> {
+            PrivilegeVO privilegeVO = PrivilegeVO.transform(privilege, false);
+            if (privilegeVO != null) {
+                privilegeVOS.add(privilegeVO);
+            }
+        });
+        return privilegeVOS;
     }
 
     public List<RoleVO> getRoles() {

@@ -41,7 +41,7 @@ public class PrivilegeManageResource {
     public DataVO<List<PrivilegeVO>> privileges() {
         try {
             List<Privilege> privileges = accessor.list(Privilege.class);
-            List<PrivilegeVO> vos = PrivilegeVO.transformPrivilegeVOs(privileges);
+            List<PrivilegeVO> vos = PrivilegeVO.transform(privileges);
             return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -64,7 +64,7 @@ public class PrivilegeManageResource {
         }
         try {
             List<Privilege> privileges = accessor.list(pagination, Privilege.class);
-            List<PrivilegeVO> vos = PrivilegeVO.transformPrivilegeVOs(privileges);
+            List<PrivilegeVO> vos = PrivilegeVO.transform(privileges);
             return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
@@ -84,8 +84,7 @@ public class PrivilegeManageResource {
     public DataVO<PrivilegeVO> getPrivilege(@PathParam("id") String id) {
         try {
             Privilege privilege = accessor.getById(id, Privilege.class);
-            PrivilegeVO vo = new PrivilegeVO();
-            PrivilegeVO.transform(privilege, vo);
+            PrivilegeVO vo = PrivilegeVO.transform(privilege, true);
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
@@ -104,8 +103,7 @@ public class PrivilegeManageResource {
             Privilege privilege = EntityFactory.createEntity(Privilege.class);
             PrivilegeVO.transform(privilegeVO, privilege);
             privilege = accessor.save(privilege);
-            PrivilegeVO vo = new PrivilegeVO();
-            PrivilegeVO.transform(privilege, vo);
+            PrivilegeVO vo = PrivilegeVO.transform(privilege, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {
@@ -143,8 +141,7 @@ public class PrivilegeManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
             Privilege privilege = accessor.remove(id, Privilege.class);
-            PrivilegeVO vo = new PrivilegeVO();
-            PrivilegeVO.transform(privilege, vo);
+            PrivilegeVO vo = PrivilegeVO.transform(privilege, true);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(vo);
         } catch (UserInterfaceException ex) {

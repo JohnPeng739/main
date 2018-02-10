@@ -81,7 +81,9 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
             }
             account.setCode(accountInfo.getCode());
             if (StringUtils.isBlank(accountInfo.getOwnerId())) {
-                throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOALLOCATE_USER);
+                if (!"admin".equals(accountInfo.getCode())) {
+                    throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOALLOCATE_USER);
+                }
             } else {
                 User owner = accessor.getById(accountInfo.getOwnerId(), User.class);
                 if (owner == null) {

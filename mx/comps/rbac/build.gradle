@@ -29,6 +29,7 @@ project(':mx-rbac-service-hibernate') {
   dependencies {
     compile(
       project(':mx-rbac-service'),
+      libs.'javax-el-api',
       libs.'mx-dal-hibernate',
       libs.'spring-tx'
     )
@@ -57,7 +58,15 @@ project(':mx-rbac-restful') {
   dependencies {
     compile(
       project(':mx-rbac-service'),
-      project(':mx-rbac-service-hibernate')
+      project(':mx-rbac-service-hibernate'),
+      libs.'jersey-server',
+      libs.'jersey-media-jackson',
+      libs.'jersey-jetty-http',
+      libs.'jersey-jetty-servlet',
+      libs.'jersey-hk2',
+      libs.'jetty-server',
+      libs.'jetty-servlet',
+      libs.'jetty-websocket'
       // project(':mx-rbac-service-mongodb')
     )
   }

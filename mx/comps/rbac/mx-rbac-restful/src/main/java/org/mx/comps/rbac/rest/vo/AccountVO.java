@@ -13,76 +13,37 @@ import java.util.*;
 public class AccountVO extends BaseDictVO {
     private static final Log logger = LogFactory.getLog(AccountVO.class);
 
-    private String password;
     private UserVO owner;
     private List<RoleVO> roles;
 
-    public static void transform(Account account, AccountVO accountVO) {
-        if (account == null || accountVO == null) {
-            return;
+    public static AccountVO transform(Account account, boolean iterate) {
+        if (account == null) {
+            return null;
         }
+        AccountVO accountVO = new AccountVO();
         BaseDictVO.transform(account, accountVO);
-        accountVO.password = account.getPassword();
         if (account.getOwner() != null) {
-            UserVO vo = new UserVO();
-            UserVO.transform(account.getOwner(), vo);
-            accountVO.owner = vo;
+            accountVO.owner = UserVO.transform(account.getOwner());
         }
         Set<Role> roles = account.getRoles();
-        if (roles != null && !roles.isEmpty()) {
-            accountVO.roles = RoleVO.transformRoleVOs(roles);
+        if (roles != null && !roles.isEmpty() && iterate) {
+            accountVO.roles = RoleVO.transform(roles);
         }
+        return accountVO;
     }
 
-    public static void transform(AccountVO accountVO, Account account) {
-        if (account == null || accountVO == null) {
-            return;
-        }
-        BaseDictVO.transform(accountVO, account);
-        account.setPassword(accountVO.getPassword());
-        if (accountVO.getOwner() != null) {
-            User user = EntityFactory.createEntity(User.class);
-            UserVO.transform(accountVO.getOwner(), user);
-            account.setOwner(user);
-        }
-        List<RoleVO> roleVOs = accountVO.getRoles();
-        if (roleVOs != null && !roleVOs.isEmpty()) {
-            account.setRoles(RoleVO.transformRoles(roleVOs));
-        }
-    }
-
-    public static Set<Account> transformAccounts(List<AccountVO> accountVOs) {
-        if (accountVOs == null || accountVOs.isEmpty()) {
-            return null;
-        }
-        Set<Account> accounts = new HashSet<>(accountVOs.size());
-        for (AccountVO vo : accountVOs) {
-            Account account = EntityFactory.createEntity(Account.class);
-            AccountVO.transform(vo, account);
-            accounts.add(account);
-        }
-        return accounts;
-    }
-
-    public static List<AccountVO> transformAccountVOs(Collection<Account> accounts) {
+    public static List<AccountVO> transform(Collection<Account> accounts) {
+        List<AccountVO> accountVOS = new ArrayList<>();
         if (accounts == null || accounts.isEmpty()) {
-            return null;
+            return accountVOS;
         }
-        List<AccountVO> accountVOs = new ArrayList<>(accounts.size());
-        for (Account account : accounts) {
-            AccountVO vo = new AccountVO();
-            AccountVO.transform(account, vo);
-            accountVOs.add(vo);
-        }
-        return accountVOs;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        accounts.forEach(account -> {
+            AccountVO accountVO = AccountVO.transform(account, true);
+            if (accountVO != null) {
+                accountVOS.add(accountVO);
+            }
+        });
+        return accountVOS;
     }
 
     public UserVO getOwner() {

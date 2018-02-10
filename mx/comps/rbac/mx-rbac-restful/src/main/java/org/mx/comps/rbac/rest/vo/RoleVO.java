@@ -16,60 +16,30 @@ public class RoleVO extends BaseDictVO {
     private List<AccountVO> accounts;
     private List<PrivilegeVO> priviledges;
 
-    public static void transform(Role role, RoleVO roleVO) {
-        if (role == null || roleVO == null) {
-            return;
+    public static RoleVO transform(Role role, boolean iterate) {
+        if (role == null) {
+            return null;
         }
+        RoleVO roleVO = new RoleVO();
         BaseDictVO.transform(role, roleVO);
-        Set<Account> accounts = role.getAccounts();
-        if (accounts != null && !accounts.isEmpty()) {
-            roleVO.setAccounts(AccountVO.transformAccountVOs(accounts));
+        if (iterate) {
+            roleVO.accounts = AccountVO.transform(role.getAccounts());
+            roleVO.priviledges = PrivilegeVO.transform(role.getPrivileges());
         }
-        Set<Privilege> privileges = role.getPrivileges();
-        if (privileges != null && !privileges.isEmpty()) {
-            roleVO.setPriviledges(PrivilegeVO.transformPrivilegeVOs(privileges));
-        }
+        return roleVO;
     }
 
-    public static void transform(RoleVO roleVO, Role role) {
-        if (role == null || roleVO == null) {
-            return;
-        }
-        BaseDictVO.transform(roleVO, role);
-        List<AccountVO> accountVOs = roleVO.getAccounts();
-        if (accountVOs != null && !accountVOs.isEmpty()) {
-            role.setAccounts(AccountVO.transformAccounts(accountVOs));
-        }
-
-        List<PrivilegeVO> privilegeVOs = roleVO.getPriviledges();
-        if (privilegeVOs != null && !privilegeVOs.isEmpty()) {
-            role.setPrivileges(PrivilegeVO.transformPrivileges(privilegeVOs));
-        }
-    }
-
-    public static Set<Role> transformRoles(List<RoleVO> rolesVOs) {
-        if (rolesVOs == null || rolesVOs.isEmpty()) {
-            return null;
-        }
-        Set<Role> roles = new HashSet<>(rolesVOs.size());
-        for (RoleVO vo : rolesVOs) {
-            Role role = EntityFactory.createEntity(Role.class);
-            RoleVO.transform(vo, role);
-            roles.add(role);
-        }
-        return roles;
-    }
-
-    public static List<RoleVO> transformRoleVOs(Collection<Role> roles) {
+    public static List<RoleVO> transform(Collection<Role> roles) {
+        List<RoleVO> roleVOs = new ArrayList<>();
         if (roles == null || roles.isEmpty()) {
-            return null;
+            return roleVOs;
         }
-        List<RoleVO> roleVOs = new ArrayList<>(roles.size());
-        for (Role role : roles) {
-            RoleVO vo = new RoleVO();
-            RoleVO.transform(role, vo);
-            roleVOs.add(vo);
-        }
+        roles.forEach(role -> {
+            RoleVO roleVO = RoleVO.transform(role, false);
+            if (roleVO != null) {
+                roleVOs.add(roleVO);
+            }
+        });
         return roleVOs;
     }
 
