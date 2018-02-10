@@ -12,6 +12,9 @@ import {
   MxUserManage
 } from 'mx-vue-el-appcomps'
 
+import ChangePassword from '../pages/personal/change-password.vue'
+import ChangeMySetting from '../pages/personal/change-my-setting.vue'
+
 export const navData = [{
   path: '/home',
   icon: 'home',
@@ -62,12 +65,12 @@ export const navData = [{
   children: [{
     path: '/personal/changePassword',
     icon: 'lock',
-    name: 'changePassword'
+    name: 'button.changePassword'
   }, {
     path: '/personal/mySetting',
     icon: 'settings',
-    name: 'mySetting'
-  }]
+    name: 'button.mySetting'
+  } ]
 }]
 
 Vue.use(Router)
@@ -118,12 +121,11 @@ const router = new Router({
       meta: {needAuth: true}
     }, {
       path: '/personal/changePassword',
-      // TODO
-      component: MxAccreditManage,
+      component: ChangePassword,
       meta: {needAuth: true}
     }, {
       path: '/personal/mySetting',
-      component: MxAccreditManage,
+      component: ChangeMySetting,
       meta: {needAuth: true}
     }]
   }]

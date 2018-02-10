@@ -11,6 +11,7 @@
 <style rel="stylesheet/less" lang="less">
   @import "element-ui/lib/theme-chalk/display.css";
   @import "./assets/style/base.less";
+  @import "~mx-vue-el-appcomps/dist/style/less/rbac.less";
   @import "~mx-vue-el-utils/dist/style/less/button.less";
   @import "~mx-vue-el-utils/dist/style/less/dialog.less";
   @import "~mx-vue-el-utils/dist/style/less/tag.less";
