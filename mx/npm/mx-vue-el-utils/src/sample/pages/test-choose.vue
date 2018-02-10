@@ -25,8 +25,8 @@
     </div>
     <br/><br/>
     <div class="content">
-      <mx-choose-tag ref="tag1" v-model="chooseTag" displayFormat="{code} - {name}" v-on:selected="handleSelectedTag1"
-                     :disabled="false"
+      <mx-choose-tag ref="tag1" v-model="chooseTag" displayFormat="{code} - {name}" @selected="handleSelectedTag1"
+                     @change="handleTagChange" :disabled="false"
                      type="gray" :popover-width="400">
         <el-table :data="tableData" highlight-current-row @current-change="handleCurrentChange2">
           <el-table-column prop="code" label="Code"></el-table-column>
@@ -37,8 +37,8 @@
     </div>
     <br/><br/>
     <div class="content">
-      <mx-choose-tag ref="tag1" v-model="chooseTag" displayFormat="{code} - {name}" v-on:selected="handleSelectedTag2"
-                     :disabled="false"
+      <mx-choose-tag ref="tag1" v-model="chooseTag" displayFormat="{code} - {name}" @selected="handleSelectedTag2"
+                     @change="handleTagChange" :disabled="false"
                      type="gray" :popover-width="400">
         <el-table :data="tableData" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" show-overflow-tooltip></el-table-column>
@@ -83,6 +83,9 @@
       },
       handleSelectionChange (val) {
         this.selected3 = val
+      },
+      handleTagChange (tags) {
+        console.log(tags)
       }
     },
     mounted () {

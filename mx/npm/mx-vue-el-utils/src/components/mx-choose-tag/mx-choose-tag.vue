@@ -55,6 +55,7 @@
       handleDeleteTag (tag) {
         this.tags.splice(this.tags.indexOf(tag), 1)
         this.$emit('input', this.tags)
+        this.$emit('change', this.tags)
       },
       handleOk () {
         this.$emit('selected', (selected) => {
@@ -70,6 +71,7 @@
               }
             }
             this.visible = false
+            this.$emit('change', this.tags)
           } else {
             MxNotify.info(this.$t('message.choose'))
           }
