@@ -70,7 +70,7 @@
         if (path) {
           let item = this.getMenuItem(path)
           if (item) {
-            return item.name
+            return this.$t(item.name)
           }
         }
         return 'NA'
