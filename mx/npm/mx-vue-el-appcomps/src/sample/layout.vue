@@ -26,7 +26,6 @@
       }),
       transformedNavData: {
         get () {
-          this.transformNavData(navData)
           return navData
         },
         set (val) {}
@@ -36,18 +35,6 @@
       ...mapActions({
         logout: 'logout'
       }),
-      transformNavData (list) {
-        if (list && list instanceof Array && list.length > 0) {
-          list.forEach(item => {
-            let name = item.name
-            let val = this.$t(name)
-            if (val && val.length > 0) {
-              item.name = val
-            }
-            this.transformNavData(item.children)
-          })
-        }
-      },
       handleGoto (path) {
         logger.debug('Router click: %s', path)
         this.$router.push(path)

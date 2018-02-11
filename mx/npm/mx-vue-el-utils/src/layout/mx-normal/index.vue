@@ -107,18 +107,22 @@
         return this.toggleState || clientWidth < 640
       },
       findMenuItem (path, items) {
+        let found
         if (items && items.length > 0) {
           for (let index = 0; index < items.length; index++) {
             let item = items[index]
             if (path === item.path) {
-              return item
+              found = item
+            }
+            if (found) {
+              break
             }
             if (item.children && item.children.length > 0) {
-              return this.findMenuItem(path, item.children)
+              found = this.findMenuItem(path, item.children)
             }
           }
         }
-        return undefined
+        return found
       },
       getMenuItem (path) {
         return this.findMenuItem(path, this.navData)

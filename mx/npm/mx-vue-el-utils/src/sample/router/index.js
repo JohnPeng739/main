@@ -10,39 +10,44 @@ import TestChoose from '../pages/test-choose.vue'
 import TestWebsocket from '../pages/test-ws.vue'
 
 export const navData = [{
-  path: '/',
+  path: '/home',
   icon: 'apps',
   name: '首页'
 }, {
-  path: '/tests',
+  path: '/tests1',
   icon: 'apps',
-  name: '测试',
+  name: '组件测试',
   children: [{
-    path: '/tests/notify',
-    icon: 'apps',
-    name: '提示信息'
-  }, {
-    path: '/tests/tag',
+    path: '/tests1/tag',
     icon: 'apps',
     name: '标签信息'
   }, {
-    path: '/tests/page',
+    path: '/tests1/page',
     icon: 'apps',
     name: '分页'
   }, {
-    path: '/tests/echarts',
+    path: '/tests1/echarts',
     icon: 'apps',
     name: 'Echarts'
   }, {
-    path: '/tests/dialog',
+    path: '/tests1/dialog',
     icon: 'apps',
     name: '对话框'
   }, {
-    path: '/tests/chooseInput',
+    path: '/tests1/chooseInput',
     icon: 'apps',
     name: '可选择输入框'
+  }]
+}, {
+  path: '/tests2',
+  icon: 'apps',
+  name: 'API测试',
+  children: [{
+    path: '/tests2/notify',
+    icon: 'apps',
+    name: '提示信息'
   }, {
-    path: '/tests/websocket',
+    path: '/tests2/websocket',
     icon: 'apps',
     name: 'WebSocket'
   }]
@@ -60,25 +65,25 @@ const router = new Router({
       path: '/home',
       component: TestHome
     }, {
-      path: '/tests/notify',
+      path: '/tests2/notify',
       component: TestNotify
     }, {
-      path: '/tests/tag',
+      path: '/tests1/tag',
       component: TestTag
     }, {
-      path: '/tests/page',
+      path: '/tests1/page',
       component: TestPage
     }, {
-      path: '/tests/echarts',
+      path: '/tests1/echarts',
       component: TestEcharts
     }, {
-      path: '/tests/dialog',
+      path: '/tests1/dialog',
       component: TestDialog
     }, {
-      path: '/tests/chooseInput',
+      path: '/tests1/chooseInput',
       component: TestChoose
     }, {
-      path: '/tests/websocket',
+      path: '/tests2/websocket',
       component: TestWebsocket
     }, {
       path: '',

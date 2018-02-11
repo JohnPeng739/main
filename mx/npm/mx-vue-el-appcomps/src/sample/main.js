@@ -11,7 +11,7 @@ import mock from './mock'
 
 Vue.config.productionTip = false
 
-changeLanguage('zh-CN')
+changeLanguage('en')
 Vue.use(ElementUI, {
   i18n: (k, v) => MxLocale.i18n.t(k, v)
 })
