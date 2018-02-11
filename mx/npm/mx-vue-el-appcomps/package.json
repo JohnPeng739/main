@@ -1,6 +1,6 @@
 {
   "name": "mx-vue-el-appcomps",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "基于VUE、Element-UI的系列App组件，如：RBAC、文件管理等。",
   "private": false,
   "license": "MIT",
@@ -34,7 +34,7 @@
     "element-ui": "^2.1.0",
     "mockjs": "^1.0.1-beta3",
     "mx-app-utils": "^1.6.16",
-    "mx-vue-el-utils": "^1.4.2",
+    "mx-vue-el-utils": "^1.4.4",
     "vue": "^2.5.13",
     "vue-i18n": "^7.4.2",
     "vue-router": "^3.0.1"

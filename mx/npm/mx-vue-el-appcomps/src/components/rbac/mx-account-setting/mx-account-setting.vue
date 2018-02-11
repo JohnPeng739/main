@@ -15,10 +15,10 @@
     <el-row type="flex">
       <el-col :span="24">
         <el-form-item prop="tools" :label="$t('rbac.account.fields.favorityTools')">
-          <mx-choose-tag ref="tag" v-model="formSetting.tools" displayFormat="{name}" @change="handleTagChange"
+          <mx-choose-tag ref="tag" v-model="formSetting.tools" displayFormat="{label}" @change="handleTagChange"
                          @selected="handleSelected" type="gray" :popover-width="300">
             <div class="dict-tree">
-              <el-tree ref="tree" :data="treeData" :props="treeProps" node-key="path" show-checkbox highlight-current></el-tree>
+              <el-tree ref="tree" :data="treeData" node-key="path" show-checkbox highlight-current></el-tree>
             </div>
           </mx-choose-tag>
         </el-form-item>
@@ -58,9 +58,6 @@
         rulesSetting: {
           tools: [MxFormValidateRules.requiredRule({msg: 'require favority tools.'})]
         },
-        treeProps: {
-          label: 'name'
-        },
         treeData: []
       }
     },
@@ -99,7 +96,8 @@
       prepareNavData (list, roles, favorityTools, parent) {
         if (list && list instanceof Array && list.length > 0) {
           list.forEach(item => {
-            let {path, role} = item
+            let {path, name, role} = item
+            item.label = this.$t(name)
             item.disabled = (parent && parent.disabled === true) || favorityTools.indexOf(path) >= 0 ||
               (role && roles.indexOf(role) < 0)
             if (item.children && item.children.length > 0) {
