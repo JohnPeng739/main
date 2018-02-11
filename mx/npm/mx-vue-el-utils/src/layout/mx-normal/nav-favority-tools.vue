@@ -3,7 +3,7 @@
     <el-tooltip v-for="(item, index) in tools" v-if="isRole(item) && index < 6" :key="item.path"
                 effect="dark" placement="bottom">
       <div slot="content">
-        <span>{{item.name}}</span>
+        <span>{{$t(item.name)}}</span>
       </div>
       <el-button @click="handleGoto(item.path)" type="text" class="tools">
         <mx-icon :name="item.icon" class="tool-icon"></mx-icon>

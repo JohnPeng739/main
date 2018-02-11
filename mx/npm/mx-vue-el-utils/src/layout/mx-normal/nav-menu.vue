@@ -4,7 +4,7 @@
       <nav-sub-menu v-if="item.children && isRole(item)" :roles="roles" :item="item"></nav-sub-menu>
       <el-menu-item v-else-if="isRole(item)" :index="item.path" class="menu-item">
         <mx-icon :name="item.icon" class="menu-item"></mx-icon>
-        <span slot="title" class="menu-item">{{item.name}}</span>
+        <span slot="title" class="menu-item">{{$t(item.name)}}</span>
       </el-menu-item>
     </template>
   </el-menu>
