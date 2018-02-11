@@ -1,7 +1,7 @@
 <template>
   <div>
-    <mx-normal-layout v-if="authenticated" :title="title" :login-user="loginUser" :navData="transformedNavData"
-                      v-on:clickMenu="handleClickMenu" v-on:showUserInfo="handleShowUserInfo" v-on:goto="handleGoto">
+    <mx-normal-layout v-if="authenticated" :title="title" :login-user="loginUser" :navData="navData"
+                      v-on:clickMenu="handleClickMenu" v-on:showNotice="handleShowNotice" v-on:goto="handleGoto">
       <div slot="account-info" style="color:red;">登录时间： Now()</div>
       <router-view slot="content-body"></router-view>
     </mx-normal-layout>
@@ -27,32 +27,12 @@
       ...mapGetters({
         authenticated: 'authenticated',
         loginUser: 'loginUser'
-      }),
-      transformedNavData: {
-        get() {
-          this.transformNavData(this.navData)
-          return this.navData
-        },
-        set(val) {
-        }
-      }
+      })
     },
     methods: {
       ...mapActions({
         logout: 'logout'
       }),
-      transformNavData(list) {
-        if (list && list instanceof Array && list.length > 0) {
-          list.forEach(item => {
-            let name = item.name
-            let val = this.$t(name)
-            if (val && val.length > 0) {
-              item.name = val
-            }
-            this.transformNavData(item.children)
-          })
-        }
-      },
       handleGoto(path) {
         logger.debug('Router click: %s', path)
         this.$router.push(path)
@@ -68,20 +48,24 @@
         }
         this.logout({success})
       },
-      handleClickMenu (menu) {
+      handleClickMenu(menu) {
         switch (menu) {
           case 'logout':
             this.handleLogout()
+            break
           case 'changePassword':
             this.handleGoto('/personal/changePassword')
+            break
           case 'mySetting':
             this.handleGoto('/personal/mySetting')
+            break
           default:
             logger.debug('Click a unsupported menu: %s.', menu)
+            break
         }
       },
-      handleShowUserInfo() {
-        logger.debug('show user info: ' + this.loginUserName + '.')
+      handleShowNotice() {
+        logger.debug('show notify.')
       }
     }
   }

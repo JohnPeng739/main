@@ -15,8 +15,8 @@
     "element-ui": "^2.1.0",
     "mockjs": "^1.0.1-beta3",
     "mx-app-utils": "^1.6.16",
-    "mx-vue-el-appcomps": "^1.1.0",
-    "mx-vue-el-utils": "^1.4.1",
+    "mx-vue-el-appcomps": "^1.1.1",
+    "mx-vue-el-utils": "^1.4.4",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
@@ -43,7 +43,7 @@
     "optimize-css-assets-webpack-plugin": "^3.2.0",
     "ora": "^1.2.0",
     "portfinder": "^1.0.13",
-    "postcss-import": "^11.0.0",
+    "postcss-import": "^11.1.0",
     "postcss-loader": "^2.0.8",
     "postcss-url": "^7.2.1",
     "rimraf": "^2.6.0",
@@ -54,7 +54,7 @@
     "vue-loader": "^13.3.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
-    "webpack": "^3.6.0",
+    "webpack": "^3.11.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
     "webpack-merge": "^4.1.0"
