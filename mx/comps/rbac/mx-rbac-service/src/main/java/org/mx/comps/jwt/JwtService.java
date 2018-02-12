@@ -4,8 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.mx.StringUtils;
 import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
@@ -14,11 +17,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Jwt服务类
@@ -27,6 +28,8 @@ import java.util.function.Predicate;
  */
 @Component
 public class JwtService {
+    private static final Log logger = LogFactory.getLog(JwtService.class);
+
     @Autowired
     private Environment env = null;
 
@@ -47,7 +50,7 @@ public class JwtService {
         String algorithmName = env.getProperty("auth.algorithm", "HS256");
         issue = env.getProperty("auth.issue", "mx institute");
         subject = env.getProperty("auth.subject", "everyone");
-        String expired = env.getProperty("auth.expired", "1 DAY");
+        String expired = env.getProperty("auth.expired", "2 Sec");
         expiredClock = env.getProperty("auth.expiredClock", Integer.class, -1);
         timePeriod = StringUtils.stirng2TimePeriod(expired, StringUtils.DAY);
         try {
@@ -69,10 +72,17 @@ public class JwtService {
                     .withIssuer(issue)
                     .withSubject(subject)
                     .acceptLeeway(1)
-                    .acceptExpiresAt(5)
+                    .acceptExpiresAt(1)
                     .build();
             hasInitialized = true;
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Initialize a JWT instance, algorithm: %s, issue: %s, subject: %s.",
+                        algorithmName, issue, subject));
+            }
         } catch (UnsupportedEncodingException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Initialize JWT fail.", ex);
+            }
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.UNSUPPORTED_ALGORITHM);
         }
     }
@@ -103,19 +113,47 @@ public class JwtService {
                 token = token.substring("Bearer ".length());
             }
         }
+        return verify(token, fnVerify);
+    }
+
+    /**
+     * 直接的令牌验证
+     *
+     * @param token 令牌数据
+     * @return 如果验证通过，返回true；否则返回false
+     */
+    public boolean verify(String token) {
+        return verify(token, null);
+    }
+
+    /**
+     * 直接的令牌验证
+     *
+     * @param token    令牌数据
+     * @param fnVerify 自定义的校验方法，接收数据结集合，校验成功返回true，否则返回false。
+     * @return 如果验证通过，返回true；否则返回false
+     */
+    public boolean verify(String token, Predicate<Map<String, Claim>> fnVerify) {
         if (StringUtils.isBlank(token)) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.NOT_AUTHENTICATED);
         }
-        DecodedJWT jwt = verifier.verify(token);
-        if (jwt == null) {
-            // 签名校验失败
+        try {
+            DecodedJWT jwt = verifier.verify(token);
+            if (jwt == null) {
+                // 签名校验失败
+                return false;
+            } else if (fnVerify != null) {
+                // 有自定义校验方法
+                return fnVerify.test(jwt.getClaims());
+            } else {
+                // 签名校验成功，无自定义校验方法
+                return true;
+            }
+        } catch (JWTVerificationException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Verify the JWT fail.", ex);
+            }
             return false;
-        } else if (fnVerify != null) {
-            // 有自定义校验方法
-            return fnVerify.test(jwt.getClaims());
-        } else {
-            // 签名校验成功，无自定义校验方法
-            return true;
         }
     }
 
@@ -128,7 +166,7 @@ public class JwtService {
     public String sign(Map<String, Object> claims) {
         init();
         Date expiredDate = new Date(System.currentTimeMillis() + timePeriod);
-        if (expiredClock >= 0 && expiredClock <= 24) {
+        if (timePeriod > StringUtils.DAY && expiredClock >= 0 && expiredClock <= 24) {
             // 如果配置了一般过期时间检查点，强制设置过期时间点的小时数。
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(expiredDate);
@@ -150,13 +188,20 @@ public class JwtService {
                     builder.withClaim(k, (String) v);
                 } else if (v instanceof Double) {
                     builder.withClaim(k, (Double) v);
+                } else if (v instanceof List) {
+                    String[] value = ((List<String>)v).toArray(new String[0]);
+                    builder.withArrayClaim(k, value);
                 } else {
                     // unsupported type, transform to string
                     builder.withClaim(k, v.toString());
                 }
             });
         }
-        return builder.sign(algorithm);
+        String token = builder.sign(algorithm);
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Create a token: %s.", token));
+        }
+        return token;
     }
 
     /**
