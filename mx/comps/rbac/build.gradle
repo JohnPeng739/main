@@ -7,7 +7,7 @@ apply from: '../../../dependencies.gradle'
 apply from: '../../../allprojects.gradle'
 
 project(':mx-rbac-service') {
-  version = '3.1.6'
+  version = '3.1.7'
   description = 'RBAC components based mx-dal-hibernate &amp; mx-rest-utils.'
 
   dependencies {

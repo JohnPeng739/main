@@ -41,24 +41,17 @@ public class TestJwtNormal {
 
         assertTrue(service.verify(token));
 
-        assertTrue(service.verify(token, claims -> claims != null && claims.containsKey("user") &&
-                "John.Peng".equals(claims.get("user").asString())));
-        assertTrue(service.verify(token, claims -> {
-            if (claims != null && claims.containsKey("roles")) {
-                List<String> roles = claims.get("roles").asList(String.class);
-                return roles.containsAll(Arrays.asList("admin", "user"));
-            }
-            return false;
-        }));
+        JwtVerifyFuncBuilder instance = new JwtVerifyFuncBuilder();
+        assertTrue(service.verify(token, instance.fieldEquals("user", "John.Peng")));
 
-        assertFalse(service.verify(token, claims -> claims != null && claims.containsKey("user") &&
-                "John.Peng1".equals(claims.get("user").asString())));
-        assertFalse(service.verify(token, claims -> {
-            if (claims != null && claims.containsKey("roles")) {
-                List<String> roles = claims.get("roles").asList(String.class);
-                return roles.containsAll(Arrays.asList("admin1", "user1"));
-            }
-            return false;
-        }));
+        instance = new JwtVerifyFuncBuilder();
+        assertTrue(service.verify(token, instance.fieldEquals("user", "John.Peng")
+                .and(instance.fieldArrayContains("roles", Arrays.asList("admin", "user")))));
+
+        instance = new JwtVerifyFuncBuilder();
+        assertFalse(service.verify(token, instance.fieldEquals("user", "John.Peng1")));
+        instance = new JwtVerifyFuncBuilder();
+        assertFalse(service.verify(token, instance.fieldEquals("user", "John.Peng")
+                .and(instance.fieldArrayContains("roles", Arrays.asList("admin1", "user")))));
     }
 }
