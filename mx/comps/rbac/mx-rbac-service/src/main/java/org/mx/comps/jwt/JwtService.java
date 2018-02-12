@@ -88,35 +88,6 @@ public class JwtService {
     }
 
     /**
-     * Http请求的令牌身份认证，令牌一般在HTTP的token或Authorization头中。
-     *
-     * @param request HTTP请求
-     * @return 如果验证通过，返回true；否则返回false
-     */
-    public boolean verify(ContainerRequest request) {
-        return verify(request, null);
-    }
-
-    /**
-     * Http请求的令牌身份认证，令牌一般在HTTP的token或Authorization头中。
-     *
-     * @param request  HTTP请求
-     * @param fnVerify 自定义的校验方法，接收数据结集合，校验成功返回true，否则返回false。
-     * @return 如果验证通过，返回true；否则返回false
-     */
-    public boolean verify(ContainerRequest request, Predicate<Map<String, Claim>> fnVerify) {
-        init();
-        String token = request.getHeaderString("token");
-        if (StringUtils.isBlank(token)) {
-            token = request.getHeaderString("Authorization");
-            if (!StringUtils.isBlank(token) && token.startsWith("Bearer ")) {
-                token = token.substring("Bearer ".length());
-            }
-        }
-        return verify(token, fnVerify);
-    }
-
-    /**
      * 直接的令牌验证
      *
      * @param token 令牌数据

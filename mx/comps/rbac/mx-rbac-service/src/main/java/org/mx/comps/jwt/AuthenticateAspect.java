@@ -6,6 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.glassfish.jersey.server.ContainerRequest;
+import org.mx.StringUtils;
 import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.service.rest.vo.PaginationDataVO;
@@ -83,7 +84,14 @@ public class AuthenticateAspect {
             logger.debug("Starting authenticate ....");
         }
         try {
-            if (jwtService.verify((ContainerRequest) request)) {
+            String token = ((ContainerRequest)request).getHeaderString("token");
+            if (StringUtils.isBlank(token)) {
+                token = ((ContainerRequest)request).getHeaderString("Authorization");
+                if (!StringUtils.isBlank(token) && token.startsWith("Bearer ")) {
+                    token = token.substring("Bearer ".length());
+                }
+            }
+            if (jwtService.verify(token)) {
                 return null;
             }
         } catch (Exception ex) {

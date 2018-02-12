@@ -73,9 +73,8 @@ public class InitializeAdminAccountTask extends InitializeTask {
             for (int index = 0; index < roleCode.length; index++) {
                 Role role = accessor.getByCode(roleCode[index], Role.class);
                 if (role == null) {
-                    if (logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled())
                         logger.error(String.format("The role for %s is not existed.", roleCode));
-                    }
                     return;
                 }
                 roles.add(role);
