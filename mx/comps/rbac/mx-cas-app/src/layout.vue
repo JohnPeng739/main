@@ -1,8 +1,27 @@
+<style rel="stylesheet/less" lang="less" scoped>
+  @import "./assets/style/base.less";
+
+  .account-info {
+    color: @nav-color;
+    .title {
+      padding: 0 0 0 5px;
+      font-weight: 600;
+    }
+    .loginTime {
+      float: right;
+      padding: 10px 0 0 0;
+    }
+  }
+</style>
+
 <template>
   <div>
     <mx-normal-layout v-if="authenticated" :title="title" :login-user="loginUser" :navData="navData"
                       v-on:clickMenu="handleClickMenu" v-on:showNotice="handleShowNotice" v-on:goto="handleGoto">
-      <div slot="account-info" style="color:red;">登录时间： Now()</div>
+      <div v-if="loginTime > 0" slot="account-info" class="account-info">
+        <div class="title">{{$t('pages.layout.loginTime')}}</div>
+        <div class="loginTime">{{formatter.formatDatetime(loginTime)}}</div>
+      </div>
       <router-view slot="content-body"></router-view>
     </mx-normal-layout>
     <router-view v-else></router-view>
@@ -11,7 +30,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex'
-  import {logger} from 'mx-app-utils'
+  import {logger, formatter} from 'mx-app-utils'
   import {MxNotify} from 'mx-vue-el-utils'
   import {navData} from './router'
 
@@ -19,6 +38,7 @@
     name: 'layout',
     data() {
       return {
+        formatter: formatter,
         navData: navData,
         title: this.$t('title')
       }
@@ -27,7 +47,15 @@
       ...mapGetters({
         authenticated: 'authenticated',
         loginUser: 'loginUser'
-      })
+      }),
+      loginTime() {
+        let time = sessionStorage.getItem('auth.time')
+        if (time > 0) {
+          return time * 1
+        } else {
+          return 0
+        }
+      }
     },
     methods: {
       ...mapActions({
@@ -42,6 +70,7 @@
           if (data && data.account) {
             let {code, name} = data.account
             sessionStorage.removeItem('auth.user')
+            sessionStorage.removeItem('auth.time')
             MxNotify.info(this.$t('rbac.account.message.logoutSuccess', {code, name}))
             this.$router.push('/login')
           }
@@ -54,10 +83,13 @@
             this.handleLogout()
             break
           case 'changePassword':
-            this.handleGoto('/personal/changePassword')
-            break
           case 'mySetting':
-            this.handleGoto('/personal/mySetting')
+            let user = this.loginUser
+            if (user && user.code === 'admin') {
+              MxNotify.warn(this.$t('pages.layout.message.adminEditPermissionDenied'))
+              return
+            }
+            this.handleGoto(menu === 'mySetting' ? '/personal/mySetting' : '/personal/changePassword')
             break
           default:
             logger.debug('Click a unsupported menu: %s.', menu)

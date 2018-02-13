@@ -56,6 +56,7 @@
                 }
                 let authUser = {id, code, name, token, favorityTools, roles: roleCodes}
                 sessionStorage.setItem('auth.user', JSON.stringify(authUser))
+                sessionStorage.setItem('auth.time', new Date().getTime())
                 MxNotify.info(this.$t('rbac.account.message.loginSuccess', {code, name}))
                 this.$router.push('/')
               }

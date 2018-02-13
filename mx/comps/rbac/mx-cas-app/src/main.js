@@ -16,7 +16,9 @@ Vue.use(ElementUI, {
   i18n: (k, v) => MxLocale.i18n.t(k, v)
 })
 
-if (process.env.NODE_ENV !== 'production') {
+let mocked = false
+
+if (process.env.NODE_ENV !== 'production' && mocked) {
   mock()
 }
 

@@ -30,6 +30,12 @@
       "code": "账户",
       "password": "密码",
       "forcedReplace": "强制踢出"
+    },
+    "layout": {
+      "loginTime": "登录时间",
+      "message": {
+        "adminEditPermissionDenied": "系统管理员的相关信息不允许被修改。"
+      }
     }
   }
 }

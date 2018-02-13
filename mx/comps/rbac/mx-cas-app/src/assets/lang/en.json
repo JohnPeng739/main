@@ -30,6 +30,12 @@
       "code": "Account code",
       "password": "Password",
       "forcedReplace": "Forced replace"
+    },
+    "layout": {
+      "loginTime": "Login time",
+      "message": {
+        "adminEditPermissionDenied": "The administrator's information can not be modified."
+      }
     }
   }
 }
