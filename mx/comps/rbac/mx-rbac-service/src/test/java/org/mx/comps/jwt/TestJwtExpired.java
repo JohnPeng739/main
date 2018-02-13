@@ -44,9 +44,9 @@ public class TestJwtExpired {
             // 判断会延迟1秒
             Thread.sleep(3000);
             assertTrue(service.verify(token));
-            Thread.sleep(1000);
+            Thread.sleep(900);
             assertTrue(service.verify(token));
-            Thread.sleep(1000);
+            Thread.sleep(1200);
             assertFalse(service.verify(token));
         } catch (InterruptedException ex) {
             ex.printStackTrace();

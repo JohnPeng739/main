@@ -51,4 +51,18 @@ public interface Account extends BaseDict {
      * @param roles 角色列表
      */
     void setRoles(Set<Role> roles);
+
+    /**
+     * 获取账户的快捷工具栏
+     *
+     * @return 快捷工具栏对应菜单的path集合
+     */
+    String getFavoriteTools();
+
+    /**
+     * 设置账户快捷工具栏
+     *
+     * @param favoriteTools 快捷工具栏对应菜单的path集合
+     */
+    void setFavoriteTools(String favoriteTools);
 }

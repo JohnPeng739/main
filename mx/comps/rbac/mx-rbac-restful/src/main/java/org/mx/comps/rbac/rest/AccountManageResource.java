@@ -217,7 +217,8 @@ public class AccountManageResource {
     @Path("accounts/{id}/password/change")
     @POST
     @AuthenticateAround(returnValueClass = DataVO.class)
-    public DataVO<AccountVO> changePassword(@PathParam("id") String id, @QueryParam("userCode") String userCode, ChangePasswordVO vo) {
+    public DataVO<AccountVO> changePassword(@PathParam("id") String id, @QueryParam("userCode") String userCode,
+                                            ChangePasswordVO vo) {
         sessionDataStore.setCurrentUserCode(userCode);
         if (vo == null) {
             return new DataVO<>(new UserInterfaceSystemErrorException(
@@ -239,6 +240,25 @@ public class AccountManageResource {
             return new DataVO<>(
                     new UserInterfaceSystemErrorException(
                             UserInterfaceSystemErrorException.SystemErrors.SYSTEM_OTHER_FAIL));
+        }
+    }
+
+    @Path("accounts/{id}/personal/change")
+    @POST
+    @AuthenticateAround(returnValueClass = DataVO.class)
+    public DataVO<AccountVO> changePersonal(@PathParam("id") String id, @QueryParam("userCode") String userCode,
+                                            ChangePersonalVO vo) {
+        sessionDataStore.setCurrentUserCode(userCode);
+        if (vo == null) {
+            return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
+        }
+        try {
+            Account account = accountManageService.changePersonal(vo.getAccountPersonalInfo());
+            AccountVO accountVO = AccountVO.transform(account, true);
+            sessionDataStore.removeCurrentUserCode();
+            return new DataVO<>(accountVO);
+        } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
         }
     }
 

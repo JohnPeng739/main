@@ -2,6 +2,7 @@ package org.mx.comps.rbac.rest.vo;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.dal.entity.User;
@@ -15,6 +16,7 @@ public class AccountVO extends BaseDictVO {
 
     private UserVO owner;
     private List<RoleVO> roles;
+    private List<String> favoriteTools;
 
     public static AccountVO transform(Account account, boolean iterate) {
         if (account == null) {
@@ -28,6 +30,10 @@ public class AccountVO extends BaseDictVO {
         Set<Role> roles = account.getRoles();
         if (roles != null && !roles.isEmpty() && iterate) {
             accountVO.roles = RoleVO.transform(roles);
+        }
+        String tools = account.getFavoriteTools();
+        if (!StringUtils.isBlank(tools)) {
+            accountVO.favoriteTools = Arrays.asList(StringUtils.split(tools, ",", true, true));
         }
         return accountVO;
     }
@@ -60,5 +66,13 @@ public class AccountVO extends BaseDictVO {
 
     public void setRoles(List<RoleVO> roles) {
         this.roles = roles;
+    }
+
+    public List<String> getFavoriteTools() {
+        return favoriteTools;
+    }
+
+    public void setFavoriteTools(List<String> favoriteTools) {
+        this.favoriteTools = favoriteTools;
     }
 }

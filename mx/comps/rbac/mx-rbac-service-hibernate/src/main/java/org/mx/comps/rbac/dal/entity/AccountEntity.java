@@ -4,7 +4,6 @@ import org.mx.dal.entity.BaseDictEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,6 +23,8 @@ public class AccountEntity extends BaseDictEntity implements Account {
             joinColumns = @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))
     private Set<Role> roles;
+    @Column(name = "FAVORITE_TOOLS", length = 1024)
+    private String favoriteTools;
 
     /**
      * 默认的构造函数
@@ -91,5 +92,25 @@ public class AccountEntity extends BaseDictEntity implements Account {
     @Override
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Account#getFavoriteTools()
+     */
+    @Override
+    public String getFavoriteTools() {
+        return favoriteTools;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Account#setFavoriteTools(String)
+     */
+    @Override
+    public void setFavoriteTools(String favoriteTools) {
+        this.favoriteTools = favoriteTools;
     }
 }

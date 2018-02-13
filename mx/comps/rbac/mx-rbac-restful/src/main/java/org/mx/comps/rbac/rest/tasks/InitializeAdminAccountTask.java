@@ -7,6 +7,7 @@ import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
+import org.mx.dal.session.SessionDataStore;
 import org.mx.spring.InitializeTask;
 import org.mx.spring.SpringContextHolder;
 
@@ -31,12 +32,16 @@ public class InitializeAdminAccountTask extends InitializeTask {
 
     /**
      * {@inheritDoc}
+     * <p>
+     * 初始化系统数据的任务，包括：admin、user、guest角色，以及admin、guest账户。
      *
      * @see InitializeTask#invokeTask()
      */
     @Override
     public void invokeTask() {
         GeneralDictAccessor accessor = SpringContextHolder.getBean("generalDictAccessor", GeneralDictAccessor.class);
+        SessionDataStore sessionDataStore = SpringContextHolder.getBean(SessionDataStore.class);
+        sessionDataStore.setCurrentUserCode("system");
 
         // 创建相关的角色
         createRole(accessor, "admin", "系统管理员", "系统管理员角色");
@@ -46,8 +51,17 @@ public class InitializeAdminAccountTask extends InitializeTask {
         // 创建相关的账户
         createAccount(accessor, "admin", "系统管理员", "ds110119", "系统管理员账户", "admin");
         createAccount(accessor, "guest", "客人", "guest", "客人账户", "guest");
+        sessionDataStore.removeCurrentUserCode();
     }
 
+    /**
+     * 初始化指定的角色
+     *
+     * @param accessor 实体访问器
+     * @param code     代码
+     * @param name     名称
+     * @param desc     描述
+     */
     private void createRole(GeneralDictAccessor accessor, String code, String name, String desc) {
         Role role = accessor.getByCode(code, Role.class);
         if (role == null) {
@@ -66,6 +80,16 @@ public class InitializeAdminAccountTask extends InitializeTask {
         }
     }
 
+    /**
+     * 初始化指定的账户
+     *
+     * @param accessor 实体访问器
+     * @param code     代码
+     * @param name     名称
+     * @param password 密码
+     * @param desc     描述
+     * @param roleCode 角色代码
+     */
     private void createAccount(GeneralDictAccessor accessor, String code, String name, String password, String desc,
                                String... roleCode) {
         Set<Role> roles = new HashSet<>();

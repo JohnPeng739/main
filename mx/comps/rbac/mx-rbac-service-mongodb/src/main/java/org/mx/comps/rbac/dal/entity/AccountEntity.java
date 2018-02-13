@@ -1,9 +1,11 @@
 package org.mx.comps.rbac.dal.entity;
 
+import org.mx.StringUtils;
 import org.mx.dal.entity.BaseDictEntity;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +21,7 @@ public class AccountEntity extends BaseDictEntity implements Account {
     private User owner;
     @DBRef
     private Set<Role> roles;
+    private String favoriteTools;
 
     /**
      * 默认的构造函数
@@ -86,5 +89,25 @@ public class AccountEntity extends BaseDictEntity implements Account {
     @Override
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Account#getFavoriteTools()
+     */
+    @Override
+    public String getFavoriteTools() {
+        return favoriteTools;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Account#setFavoriteTools(String)
+     */
+    @Override
+    public void setFavoriteTools(String favoriteTools) {
+        this.favoriteTools = favoriteTools;
     }
 }

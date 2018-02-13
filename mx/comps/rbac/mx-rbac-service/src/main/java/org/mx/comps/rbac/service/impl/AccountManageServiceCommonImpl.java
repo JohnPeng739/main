@@ -158,6 +158,26 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
     /**
      * {@inheritDoc}
      *
+     * @see AccountManageService#changePersonal(AccountPersonalInfo)
+     */
+    @Override
+    public Account changePersonal(AccountPersonalInfo accountPersonalInfo) {
+        Account account = accessor.getById(accountPersonalInfo.getId(), Account.class);
+        if (account == null) {
+            throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND);
+        }
+        account.setFavoriteTools(accountPersonalInfo.getFavoriteTools());
+        account = this.save(account);
+        if (operateLogService != null) {
+            operateLogService.writeLog(String.format("修改账户[code=%s, name=%s]的个性化信息成功。",
+                    account.getCode(), account.getName()));
+        }
+        return account;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see AccountManageService#login(String, String, boolean)
      */
     @Override

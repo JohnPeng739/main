@@ -1,10 +1,12 @@
 package org.mx.comps.rbac.service;
 
+import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 账户管理相关接口定义
@@ -30,6 +32,14 @@ public interface AccountManageService {
      * @return 账户对象
      */
     Account changePassword(String accountId, String oldPassword, String newPassword);
+
+    /**
+     * 修改账户个性化信息
+     *
+     * @param accountPersonalInfo 账户个性化信息对象
+     * @return 账户对象
+     */
+    Account changePersonal(AccountPersonalInfo accountPersonalInfo);
 
     /**
      * 登录系统
@@ -110,6 +120,34 @@ public interface AccountManageService {
 
         public List<String> getRoleIds() {
             return roleIds;
+        }
+    }
+
+    class AccountPersonalInfo {
+        private String id;
+        private String favoriteTools;
+
+        public static final AccountPersonalInfo valueOf(String id, Set<String> favoriteTools) {
+            AccountPersonalInfo info = new AccountPersonalInfo();
+            info.id = id;
+            info.favoriteTools = StringUtils.merge(favoriteTools, ",");
+            return info;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getFavoriteTools() {
+            return favoriteTools;
+        }
+
+        public void setFavoriteTools(String favoriteTools) {
+            this.favoriteTools = favoriteTools;
         }
     }
 }
