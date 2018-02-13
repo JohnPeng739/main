@@ -14,7 +14,7 @@
     </el-row>
     <el-row type="flex">
       <el-col :span="24">
-        <el-form-item prop="tools" :label="$t('rbac.account.fields.favorityTools')">
+        <el-form-item prop="tools" :label="$t('rbac.account.fields.favoriteTools')">
           <mx-choose-tag ref="tag" v-model="formSetting.tools" displayFormat="{label}" @change="handleTagChange"
                          @selected="handleSelected" type="gray" :popover-width="300">
             <div class="dict-tree">
@@ -56,7 +56,7 @@
           tools: []
         },
         rulesSetting: {
-          tools: [MxFormValidateRules.requiredRule({msg: 'require favority tools.'})]
+          tools: [MxFormValidateRules.requiredRule({msg: 'require favorite tools.'})]
         },
         treeData: []
       }
@@ -71,9 +71,9 @@
         let user = this.loginUser
         return user && user.name ? user.name : ''
       },
-      favorityTools () {
+      favoriteTools () {
         let user = this.loginUser
-        return user && user.favorityTools && user.favorityTools.length > 0 ? user.favorityTools : []
+        return user && user.favoriteTools && user.favoriteTools.length > 0 ? user.favoriteTools : []
       },
       roles () {
         let user = this.loginUser
@@ -81,27 +81,27 @@
       }
     },
     methods: {
-      prepareFavorityTools (tools, list, favorityTools) {
+      prepareFavorityTools (tools, list, favoriteTools) {
         if (list && list instanceof Array && list.length > 0) {
           list.forEach(item => {
-            if (favorityTools.indexOf(item.path) >= 0) {
+            if (favoriteTools.indexOf(item.path) >= 0) {
               tools.push(item)
             }
             if (item.children && item.children.length > 0) {
-              this.prepareFavorityTools(tools, item.children, favorityTools)
+              this.prepareFavorityTools(tools, item.children, favoriteTools)
             }
           })
         }
       },
-      prepareNavData (list, roles, favorityTools, parent) {
+      prepareNavData (list, roles, favoriteTools, parent) {
         if (list && list instanceof Array && list.length > 0) {
           list.forEach(item => {
             let {path, name, role} = item
             item.label = this.$t(name)
-            item.disabled = (parent && parent.disabled === true) || favorityTools.indexOf(path) >= 0 ||
+            item.disabled = (parent && parent.disabled === true) || favoriteTools.indexOf(path) >= 0 ||
               (role && roles.indexOf(role) < 0)
             if (item.children && item.children.length > 0) {
-              this.prepareNavData(item.children, roles, favorityTools, item)
+              this.prepareNavData(item.children, roles, favoriteTools, item)
             }
           })
         }
@@ -109,12 +109,12 @@
       handleTagChange (tags) {
         this.treeData = []
         this.$nextTick(() => {
-          let favorityTools = []
+          let favoriteTools = []
           let {tools} = this.formSetting
           if (tools && tools.length > 0) {
-            tools.forEach(tool => favorityTools.push(tool.path))
+            tools.forEach(tool => favoriteTools.push(tool.path))
           }
-          this.prepareNavData(this.navData, this.roles, favorityTools)
+          this.prepareNavData(this.navData, this.roles, favoriteTools)
           this.treeData = this.navData
         })
       },
@@ -130,9 +130,9 @@
           if (valid) {
             let {id, code, name} = this.loginUser
             let {tools} = this.formSetting
-            let favorityTools = []
+            let favoriteTools = []
             tools.forEach(tool => {
-              favorityTools.push(tool.path)
+              favoriteTools.push(tool.path)
             })
             let url = '/rest/accounts/' + id + '/personal/change'
             logger.debug('send POST "%s".', url)
@@ -142,7 +142,7 @@
                 this.$router.push('/')
               }
             }
-            MxAjax.post({url, data: {favorityTools}, fnSuccess})
+            MxAjax.post({url, data: {id, favoriteTools}, fnSuccess})
           } else {
             MxNotify.formValidateWarn()
           }
@@ -152,8 +152,8 @@
     mounted () {
       let tools = []
       let user = this.loginUser
-      if (user && user.favorityTools && user.favorityTools instanceof Array && user.favorityTools.length > 0) {
-        this.prepareFavorityTools(tools, this.navData, user.favorityTools)
+      if (user && user.favoriteTools && user.favoriteTools instanceof Array && user.favoriteTools.length > 0) {
+        this.prepareFavorityTools(tools, this.navData, user.favoriteTools)
       }
       this.formSetting.tools = tools
       this.handleTagChange()

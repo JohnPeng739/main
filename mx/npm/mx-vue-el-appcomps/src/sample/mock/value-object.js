@@ -39,7 +39,7 @@ let role = {
 let account = {
   ...dict,
   'owner': dict,
-  'favorityTools': ['/manage/user', '/manage/account', '/personal/mySetting'],
+  'favoriteTools': ['/manage/user', '/manage/account', '/personal/mySetting'],
   'roles|1-5': [{
     'id': '@id',
     'code|1': ['admin', 'user', 'guest'],
