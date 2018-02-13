@@ -16,7 +16,7 @@
       <el-col :span="24">
         <el-form-item prop="tools" :label="$t('rbac.account.fields.favoriteTools')">
           <mx-choose-tag ref="tag" v-model="formSetting.tools" displayFormat="{label}" @change="handleTagChange"
-                         @selected="handleSelected" type="gray" :popover-width="300">
+                         @selected="handleSelected" keyField="path" type="gray" :popover-width="300">
             <div class="dict-tree">
               <el-tree ref="tree" :data="treeData" node-key="path" show-checkbox highlight-current></el-tree>
             </div>
