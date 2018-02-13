@@ -49,12 +49,12 @@
             let success = (data) => {
               if (data && data.account) {
                 let {token} = data
-                let {id, code, name, favorityTools, roles} = data.account
+                let {id, code, name, favoriteTools, roles} = data.account
                 let roleCodes = []
                 if (roles && roles instanceof Array && roles.length > 0) {
                   roles.forEach(role => roleCodes.push(role.code))
                 }
-                let authUser = {id, code, name, token, favorityTools, roles: roleCodes}
+                let authUser = {id, code, name, token, favoriteTools, roles: roleCodes}
                 sessionStorage.setItem('auth.user', JSON.stringify(authUser))
                 sessionStorage.setItem('auth.time', new Date().getTime())
                 MxNotify.info(this.$t('rbac.account.message.loginSuccess', {code, name}))

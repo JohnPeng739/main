@@ -7,7 +7,7 @@
     middleware: 'authority',
     data () {
       return {
-        stations: ['a', 'b', 'c']
+        stations: []
       }
     }
   }
