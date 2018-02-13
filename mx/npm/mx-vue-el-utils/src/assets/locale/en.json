@@ -31,7 +31,8 @@
       "default": "Access server error, error number: {status}, error message: {text}."
     },
     "tag": {
-      "existed": "You entered tag[{tag}] already exists, please check the data."
+      "existed": "You entered tag[{tag}] already exists, please check the data.",
+      "fieldNotExist": "The field [{0}] not existed in the tag."
     },
     "choose": "Please choose data.",
     "validate": {

@@ -31,7 +31,8 @@
       "default": "访问服务器失败，错误号：{status}，错误信息：{text}。"
     },
     "tag": {
-      "existed": "你输入的标签[{tag}]已经存在，请检查数据。"
+      "existed": "你输入的标签[{tag}]已经存在，请检查数据。",
+      "fieldNotExist": "标签中不存在字段 [{0}] 。"
     },
     "choose": "请选择数据。",
     "validate": {
