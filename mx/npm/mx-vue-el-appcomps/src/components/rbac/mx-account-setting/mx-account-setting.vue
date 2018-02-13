@@ -142,7 +142,8 @@
                 this.$router.push('/')
               }
             }
-            MxAjax.post({url, data: {id, favoriteTools}, fnSuccess})
+            let data = {id, favoriteTools}
+            MxAjax.post({url, data, fnSuccess})
           } else {
             MxNotify.formValidateWarn()
           }

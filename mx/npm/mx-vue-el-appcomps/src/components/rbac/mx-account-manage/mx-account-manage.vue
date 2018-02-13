@@ -45,7 +45,7 @@
         <el-row type="flex">
           <el-col :span="24">
             <el-form-item prop="roles" :label="$t('rbac.common.fields.roles')">
-              <mx-choose-dict-tag v-model="formAccount.roles" restUrl="/rest/roles" displayFormat="{code} - {name}"
+              <mx-choose-dict-tag v-model="formAccount.roles" :multiple="true" restUrl="/rest/roles" displayFormat="{code} - {name}"
                                   :disabled="readonly"></mx-choose-dict-tag>
             </el-form-item>
           </el-col>
