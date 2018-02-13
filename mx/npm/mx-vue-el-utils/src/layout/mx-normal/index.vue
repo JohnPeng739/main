@@ -4,12 +4,12 @@
       <layout-header :title="title" :login-user="loginUser" :nav-data="navData"
                      v-on:navToggled="handleNavToggled" v-on:clickMenu="handleClickMenu">
         <div slot="account-info"><slot name="account-info"></slot></div>
-        <layout-nav-favority-tools slot="favority-tools" class="favority-tools hidden-xs-only hidden-sm-only"
+        <layout-nav-favorite-tools slot="favorite-tools" class="favorite-tools hidden-xs-only hidden-sm-only"
                                    :roles="roles"
-                                   :tools="favorityTools"
+                                   :tools="favoriteTools"
                                    :notice-value="noticeValue" v-on:goto="handleGoto"
                                    v-on:showNotice="handleShowNotice">
-        </layout-nav-favority-tools>
+        </layout-nav-favorite-tools>
       </layout-header>
     </el-header>
     <el-main class="layout-main">
@@ -35,12 +35,12 @@
 <script>
   import { logger } from 'mx-app-utils'
   import LayoutHeader from './header.vue'
-  import LayoutNavFavorityTools from './nav-favority-tools.vue'
+  import LayoutNavFavoriteTools from './nav-favorite-tools.vue'
   import LayoutNavMenu from './nav-menu.vue'
 
   export default {
     name: 'mx-normal-layout',
-    components: {LayoutHeader, LayoutNavFavorityTools, LayoutNavMenu},
+    components: {LayoutHeader, LayoutNavFavoriteTools, LayoutNavMenu},
     props: {
       title: {
         type: String,
@@ -83,19 +83,19 @@
           return []
         }
       },
-      favorityTools () {
+      favoriteTools () {
         let user = this.loginUser
-        let favority = []
-        if (user && user.favorityTools && user.favorityTools instanceof Array && user.favorityTools.length > 0) {
-          let tools = user.favorityTools
+        let favorite = []
+        if (user && user.favoriteTools && user.favoriteTools instanceof Array && user.favoriteTools.length > 0) {
+          let tools = user.favoriteTools
           tools.forEach(tool => {
             let item = this.getMenuItem(tool)
             if (item) {
-              favority.push(item)
+              favorite.push(item)
             }
           })
         }
-        return favority
+        return favorite
       }
     },
     methods: {

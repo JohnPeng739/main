@@ -20,7 +20,7 @@
           code: 'pengmx',
           name: '彭明喜',
           roles: ['admin'],
-          favorityTools: ['/tests/notify', '/tests/tag', '/tests/page']
+          favoriteTools: ['/tests/notify', '/tests/tag', '/tests/page']
         },
         navData: navData,
         noticeValue: 123

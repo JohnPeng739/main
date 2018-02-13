@@ -1,6 +1,6 @@
 {
   "name": "mx-vue-el-utils",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "一个基于Vue、ElementUI的前端项目框架组件库。",
   "private": false,
   "license": "MIT",
