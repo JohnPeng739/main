@@ -1,97 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AnalysisUIOptions">
-    <option name="SCOPE_TYPE" value="4" />
+    <option name="SCOPE_TYPE" value="4"/>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3f974cc8-7707-42d5-8058-215a3aaeaf23" name="Default" comment="" />
-    <ignored path="$PROJECT_DIR$/.gradle/" />
-    <ignored path="$PROJECT_DIR$/build/" />
-    <ignored path="$PROJECT_DIR$/out/" />
-    <ignored path="$PROJECT_DIR$/mx-dal/.gradle/" />
-    <ignored path="$PROJECT_DIR$/mx-dal/build/" />
-    <ignored path="$PROJECT_DIR$/mx-utils/.gradle/" />
-    <ignored path="$PROJECT_DIR$/mx-utils/build/" />
-    <ignored path="$PROJECT_DIR$/mx-dal-jdbc/.gradle/" />
-    <ignored path="$PROJECT_DIR$/mx-dal-jdbc/build/" />
-    <ignored path="$PROJECT_DIR$/mx-rest-utils/.gradle/" />
-    <ignored path="$PROJECT_DIR$/mx-rest-utils/build/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
-    <option name="SHOW_DIALOG" value="false" />
-    <option name="HIGHLIGHT_CONFLICTS" value="true" />
-    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
-    <option name="LAST_RESOLUTION" value="IGNORE" />
+    <list default="true" id="3f974cc8-7707-42d5-8058-215a3aaeaf23" name="Default" comment=""/>
+    <ignored path="$PROJECT_DIR$/.gradle/"/>
+    <ignored path="$PROJECT_DIR$/build/"/>
+    <ignored path="$PROJECT_DIR$/out/"/>
+    <ignored path="$PROJECT_DIR$/mx-dal/.gradle/"/>
+    <ignored path="$PROJECT_DIR$/mx-dal/build/"/>
+    <ignored path="$PROJECT_DIR$/mx-utils/.gradle/"/>
+    <ignored path="$PROJECT_DIR$/mx-utils/build/"/>
+    <ignored path="$PROJECT_DIR$/mx-dal-jdbc/.gradle/"/>
+    <ignored path="$PROJECT_DIR$/mx-dal-jdbc/build/"/>
+    <ignored path="$PROJECT_DIR$/mx-rest-utils/.gradle/"/>
+    <ignored path="$PROJECT_DIR$/mx-rest-utils/build/"/>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true"/>
+    <option name="TRACKING_ENABLED" value="true"/>
+    <option name="SHOW_DIALOG" value="false"/>
+    <option name="HIGHLIGHT_CONFLICTS" value="true"/>
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false"/>
+    <option name="LAST_RESOLUTION" value="IGNORE"/>
   </component>
   <component name="CreatePatchCommitExecutor">
-    <option name="PATCH_PATH" value="" />
-    <option name="REVERSE_PATCH" value="false" />
+    <option name="PATCH_PATH" value=""/>
+    <option name="REVERSE_PATCH" value="false"/>
   </component>
   <component name="DatabaseView">
-    <option name="SHOW_INTERMEDIATE" value="true" />
-    <option name="GROUP_SCHEMA" value="true" />
-    <option name="GROUP_CONTENTS" value="false" />
-    <option name="SORT_POSITIONED" value="false" />
-    <option name="SHOW_TABLE_DETAILS" value="true" />
-    <option name="SHOW_EMPTY_GROUPS" value="false" />
-    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="SHOW_INTERMEDIATE" value="true"/>
+    <option name="GROUP_SCHEMA" value="true"/>
+    <option name="GROUP_CONTENTS" value="false"/>
+    <option name="SORT_POSITIONED" value="false"/>
+    <option name="SHOW_TABLE_DETAILS" value="true"/>
+    <option name="SHOW_EMPTY_GROUPS" value="false"/>
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false"/>
   </component>
   <component name="DebuggerManager">
     <breakpoint_any converted="true">
       <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="NOTIFY_CAUGHT" value="true"/>
+        <option name="NOTIFY_UNCAUGHT" value="true"/>
+        <option name="ENABLED" value="false"/>
+        <option name="LOG_ENABLED" value="false"/>
+        <option name="LOG_EXPRESSION_ENABLED" value="false"/>
+        <option name="SUSPEND_POLICY" value="SuspendAll"/>
+        <option name="COUNT_FILTER_ENABLED" value="false"/>
+        <option name="COUNT_FILTER" value="0"/>
+        <option name="CONDITION_ENABLED" value="false"/>
+        <option name="CLASS_FILTERS_ENABLED" value="false"/>
+        <option name="INSTANCE_FILTERS_ENABLED" value="false"/>
+        <option name="CONDITION" value=""/>
+        <option name="LOG_MESSAGE" value=""/>
       </breakpoint>
       <breakpoint>
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="NOTIFY_CAUGHT" value="true"/>
+        <option name="NOTIFY_UNCAUGHT" value="true"/>
+        <option name="ENABLED" value="false"/>
+        <option name="LOG_ENABLED" value="false"/>
+        <option name="LOG_EXPRESSION_ENABLED" value="false"/>
+        <option name="SUSPEND_POLICY" value="SuspendAll"/>
+        <option name="COUNT_FILTER_ENABLED" value="false"/>
+        <option name="COUNT_FILTER" value="0"/>
+        <option name="CONDITION_ENABLED" value="false"/>
+        <option name="CLASS_FILTERS_ENABLED" value="false"/>
+        <option name="INSTANCE_FILTERS_ENABLED" value="false"/>
+        <option name="CONDITION" value=""/>
+        <option name="LOG_MESSAGE" value=""/>
       </breakpoint>
     </breakpoint_any>
-    <breakpoint_rules converted="true" />
-    <ui_properties converted="true" />
+    <breakpoint_rules converted="true"/>
+    <ui_properties converted="true"/>
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target"/>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="67" column="18" lean-forward="false" selection-start-line="67" selection-start-column="18" selection-end-line="67" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300"/>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
-        <option value="Class" />
+        <option value="Interface"/>
+        <option value="Class"/>
       </list>
     </option>
   </component>
@@ -107,88 +96,88 @@
   </component>
   <component name="GradleLocalSettings">
     <option name="externalProjectsViewState">
-      <projects_view />
+      <projects_view/>
     </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestBean.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/rule/DdosFilterRule.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/rule/ConnectFilterRule.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectRuleFactory.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/WebsocketServerFactory.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/config/ServerConfig.java" />
-        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestFileUtils.java" />
-        <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/FileUtils.java" />
-        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestClassUtils.java" />
-        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/rate/TestIntegerTopNRate.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/rule/ListFilterRule.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/connect-filter-rules-allow.properties" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/connect-filter-rules-block.properties" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/connect-filter-rules-ddos.properties" />
-        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestTypeUtils.java" />
-        <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/TypeUtils.java" />
-        <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/StringUtils.java" />
-        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestStringUtils.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/config/SpringConfig.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/config/TestTaskConfig.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/config/TestTask1.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestTask1.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestInitializeTask.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/InitializeTask.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/InitializeTask1.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/server.properties" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/config/TestConfigSsl.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/StartServer.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/StartServerSsl.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/server-ssl.properties" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/ServletServerFactory.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionListener.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionLifeCycleListener.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/websocket/MyConnectionLifeCycleMonitor.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/BaseConnectionLifeCycleMonitor.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/TestDdosFilter.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/websocket/BaseWebsocket.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/InitializeTaskFactory.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/client/WsClientInvoke.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/config/TestApplication.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/SpringContextHolder.java" />
-        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestSpring.java" />
-        <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/ClassUtils.java" />
-        <option value="$PROJECT_DIR$/mx-dal-hibernate/src/test/java/org/mx/test/CleanH2DatabaseFile.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/TestServer.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/HttpServerFactory.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/rest/DemoRestResource.java" />
-        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionManager.java" />
-        <option value="$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx/dal/service/impl/GeneralEntityAccessorImpl.java" />
-        <option value="$PROJECT_DIR$/mx-dal-mongodb/src/main/java/org/mx/dal/service/impl/OperateLogServiceImpl.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestBean.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/rule/DdosFilterRule.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/rule/ConnectFilterRule.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectRuleFactory.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/WebsocketServerFactory.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/config/ServerConfig.java"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestFileUtils.java"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/FileUtils.java"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestClassUtils.java"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/rate/TestIntegerTopNRate.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/rule/ListFilterRule.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/connect-filter-rules-allow.properties"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/connect-filter-rules-block.properties"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/connect-filter-rules-ddos.properties"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestTypeUtils.java"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/TypeUtils.java"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/StringUtils.java"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/test/java/org/mx/TestStringUtils.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/config/SpringConfig.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/config/TestTaskConfig.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/config/TestTask1.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestTask1.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestInitializeTask.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/InitializeTask.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/InitializeTask1.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/server.properties"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/config/TestConfigSsl.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/StartServer.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/StartServerSsl.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/resources/server-ssl.properties"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/ServletServerFactory.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionListener.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionLifeCycleListener.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/websocket/MyConnectionLifeCycleMonitor.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/BaseConnectionLifeCycleMonitor.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/TestDdosFilter.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/websocket/BaseWebsocket.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/InitializeTaskFactory.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/client/WsClientInvoke.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/config/TestApplication.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/SpringContextHolder.java"/>
+        <option value="$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestSpring.java"/>
+        <option value="$PROJECT_DIR$/mx-utils/src/main/java/org/mx/ClassUtils.java"/>
+        <option value="$PROJECT_DIR$/mx-dal-hibernate/src/test/java/org/mx/test/CleanH2DatabaseFile.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/TestServer.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/HttpServerFactory.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/rest/DemoRestResource.java"/>
+        <option value="$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionManager.java"/>
+        <option value="$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx/dal/service/impl/GeneralEntityAccessorImpl.java"/>
+        <option value="$PROJECT_DIR$/mx-dal-mongodb/src/main/java/org/mx/dal/service/impl/OperateLogServiceImpl.java"/>
+        <option value="$PROJECT_DIR$/build.gradle"/>
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER"/>
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER"/>
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ModuleEditorState">
-    <option name="LAST_EDITED_MODULE_NAME" />
-    <option name="LAST_EDITED_TAB_NAME" />
+    <option name="LAST_EDITED_MODULE_NAME"/>
+    <option name="LAST_EDITED_TAB_NAME"/>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="187" />
-    <option name="y" value="23" />
-    <option name="width" value="1253" />
-    <option name="height" value="846" />
+    <option name="x" value="187"/>
+    <option name="y" value="23"/>
+    <option name="width" value="1253"/>
+    <option name="height" value="846"/>
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
       <profile-state>
         <expanded-state>
           <State>
-            <id />
+            <id/>
           </State>
           <State>
             <id>Java</id>
@@ -206,173 +195,173 @@
     </entry>
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="0" />
+    <option name="STATE" value="0"/>
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
-      <flattenPackages />
-      <showMembers />
-      <showModules />
-      <showLibraryContents />
-      <hideEmptyPackages />
-      <abbreviatePackageNames />
-      <autoscrollToSource />
-      <autoscrollFromSource />
-      <sortByType />
-      <manualOrder />
-      <foldersAlwaysOnTop value="true" />
+      <flattenPackages/>
+      <showMembers/>
+      <showModules/>
+      <showLibraryContents/>
+      <hideEmptyPackages/>
+      <abbreviatePackageNames/>
+      <autoscrollToSource/>
+      <autoscrollFromSource/>
+      <sortByType/>
+      <manualOrder/>
+      <foldersAlwaysOnTop value="true"/>
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scope"/>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+              <option name="myItemId" value="core"/>
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode"/>
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemId" value="core"/>
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode"/>
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
+      <pane id="Scratches"/>
+      <pane id="PackagesPane"/>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
-    <property name="MemberChooser.sorted" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
-    <property name="GoToClass.includeLibraries" value="false" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.28965518" />
-    <property name="last_directory_selection" value="$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+    <property name="GoToFile.includeJavaFiles" value="false"/>
+    <property name="GoToClass.toSaveIncludeLibraries" value="false"/>
+    <property name="MemberChooser.sorted" value="false"/>
+    <property name="MemberChooser.showClasses" value="true"/>
+    <property name="GoToClass.includeLibraries" value="false"/>
+    <property name="MemberChooser.copyJavadoc" value="false"/>
+    <property name="WebServerToolWindowFactoryState" value="false"/>
+    <property name="aspect.path.notification.shown" value="true"/>
+    <property name="last_opened_file_path" value="$PROJECT_DIR$"/>
+    <property name="project.structure.last.edited" value="Modules"/>
+    <property name="project.structure.proportion" value="0.0"/>
+    <property name="project.structure.side.proportion" value="0.28965518"/>
+    <property name="last_directory_selection" value="$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx"/>
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle"/>
   </component>
   <component name="RecentsManager">
     <key name="ExtractSuperBase.RECENT_KEYS">
-      <recent name="org.mx.test.entity" />
+      <recent name="org.mx.test.entity"/>
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="org.mx.spring" />
-      <recent name="org.mx.test.config" />
-      <recent name="org.mx.rest.server.config" />
-      <recent name="org.mx.rest.server" />
-      <recent name="org.mx.dal.entity" />
+      <recent name="org.mx.spring"/>
+      <recent name="org.mx.test.config"/>
+      <recent name="org.mx.rest.server.config"/>
+      <recent name="org.mx.rest.server"/>
+      <recent name="org.mx.dal.entity"/>
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/mx-service-utils/src/test/resources" />
-      <recent name="$PROJECT_DIR$/mx-dal-hibernate/src/test/resources" />
+      <recent name="$PROJECT_DIR$/mx-service-utils/src/test/resources"/>
+      <recent name="$PROJECT_DIR$/mx-dal-hibernate/src/test/resources"/>
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.mx.service.server" />
-      <recent name="org.mx.service.server.config" />
-      <recent name="org.mx.spring" />
-      <recent name="org.mx.test" />
-      <recent name="org.mx.error" />
+      <recent name="org.mx.service.server"/>
+      <recent name="org.mx.service.server.config"/>
+      <recent name="org.mx.spring"/>
+      <recent name="org.mx.test"/>
+      <recent name="org.mx.error"/>
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/mx-service-utils/src/test/resources/keystore" />
-      <recent name="$PROJECT_DIR$/mx-service-utils/src/test/resources" />
-      <recent name="$PROJECT_DIR$/mx-utils/src/test/resources" />
-      <recent name="$PROJECT_DIR$/mx-utils/src/test/java/org/mx" />
-      <recent name="$PROJECT_DIR$/mx-utils/src/main/java/org/mx" />
+      <recent name="$PROJECT_DIR$/mx-service-utils/src/test/resources/keystore"/>
+      <recent name="$PROJECT_DIR$/mx-service-utils/src/test/resources"/>
+      <recent name="$PROJECT_DIR$/mx-utils/src/test/resources"/>
+      <recent name="$PROJECT_DIR$/mx-utils/src/test/java/org/mx"/>
+      <recent name="$PROJECT_DIR$/mx-utils/src/main/java/org/mx"/>
     </key>
   </component>
   <component name="RestClientSettings">
     <option name="REQUEST_HISTORY">
       <list>
         <RestClientRequest>
-          <option name="httpMethod" value="PUT" />
-          <option name="urlBase" value="https://localhost:9999" />
-          <option name="urlPath" value="/service/put" />
+          <option name="httpMethod" value="PUT"/>
+          <option name="urlBase" value="https://localhost:9999"/>
+          <option name="urlPath" value="/service/put"/>
           <option name="headers">
             <list>
               <KeyValuePair>
-                <option name="key" value="Accept" />
-                <option name="value" value="*/*" />
+                <option name="key" value="Accept"/>
+                <option name="value" value="*/*"/>
               </KeyValuePair>
               <KeyValuePair>
-                <option name="key" value="Cache-Control" />
-                <option name="value" value="no-cache" />
+                <option name="key" value="Cache-Control"/>
+                <option name="value" value="no-cache"/>
               </KeyValuePair>
             </list>
           </option>
-          <option name="parametersEnabled" value="true" />
-          <option name="haveTextToSend" value="true" />
-          <option name="textToSend" value="hello world" />
-          <option name="filesToSend" value="" />
+          <option name="parametersEnabled" value="true"/>
+          <option name="haveTextToSend" value="true"/>
+          <option name="textToSend" value="hello world"/>
+          <option name="filesToSend" value=""/>
         </RestClientRequest>
         <RestClientRequest>
-          <option name="httpMethod" value="PUT" />
-          <option name="urlBase" value="https://localhost:9999" />
-          <option name="urlPath" value="/service/post" />
+          <option name="httpMethod" value="PUT"/>
+          <option name="urlBase" value="https://localhost:9999"/>
+          <option name="urlPath" value="/service/post"/>
           <option name="headers">
             <list>
               <KeyValuePair>
-                <option name="key" value="Accept" />
-                <option name="value" value="*/*" />
+                <option name="key" value="Accept"/>
+                <option name="value" value="*/*"/>
               </KeyValuePair>
               <KeyValuePair>
-                <option name="key" value="Cache-Control" />
-                <option name="value" value="no-cache" />
+                <option name="key" value="Cache-Control"/>
+                <option name="value" value="no-cache"/>
               </KeyValuePair>
             </list>
           </option>
-          <option name="parametersEnabled" value="true" />
-          <option name="haveTextToSend" value="true" />
-          <option name="textToSend" value="hello world" />
-          <option name="filesToSend" value="" />
+          <option name="parametersEnabled" value="true"/>
+          <option name="haveTextToSend" value="true"/>
+          <option name="textToSend" value="hello world"/>
+          <option name="filesToSend" value=""/>
         </RestClientRequest>
         <RestClientRequest>
-          <option name="httpMethod" value="POST" />
-          <option name="urlBase" value="https://localhost:9999" />
-          <option name="urlPath" value="/service/post" />
+          <option name="httpMethod" value="POST"/>
+          <option name="urlBase" value="https://localhost:9999"/>
+          <option name="urlPath" value="/service/post"/>
           <option name="headers">
             <list>
               <KeyValuePair>
-                <option name="key" value="Accept" />
-                <option name="value" value="*/*" />
+                <option name="key" value="Accept"/>
+                <option name="value" value="*/*"/>
               </KeyValuePair>
               <KeyValuePair>
-                <option name="key" value="Cache-Control" />
-                <option name="value" value="no-cache" />
+                <option name="key" value="Cache-Control"/>
+                <option name="value" value="no-cache"/>
               </KeyValuePair>
             </list>
           </option>
-          <option name="parametersEnabled" value="true" />
-          <option name="haveTextToSend" value="true" />
-          <option name="textToSend" value="hello world" />
-          <option name="filesToSend" value="" />
+          <option name="parametersEnabled" value="true"/>
+          <option name="haveTextToSend" value="true"/>
+          <option name="textToSend" value="hello world"/>
+          <option name="filesToSend" value=""/>
         </RestClientRequest>
         <RestClientRequest>
-          <option name="httpMethod" value="GET" />
-          <option name="urlBase" value="https://localhost:9999" />
-          <option name="urlPath" value="/service/get" />
+          <option name="httpMethod" value="GET"/>
+          <option name="urlBase" value="https://localhost:9999"/>
+          <option name="urlPath" value="/service/get"/>
           <option name="headers">
             <list>
               <KeyValuePair>
-                <option name="key" value="Accept" />
-                <option name="value" value="*/*" />
+                <option name="key" value="Accept"/>
+                <option name="value" value="*/*"/>
               </KeyValuePair>
               <KeyValuePair>
-                <option name="key" value="Cache-Control" />
-                <option name="value" value="no-cache" />
+                <option name="key" value="Cache-Control"/>
+                <option name="value" value="no-cache"/>
               </KeyValuePair>
             </list>
           </option>
-          <option name="parametersEnabled" value="true" />
-          <option name="textToSend" value="" />
-          <option name="filesToSend" value="" />
+          <option name="parametersEnabled" value="true"/>
+          <option name="textToSend" value=""/>
+          <option name="filesToSend" value=""/>
         </RestClientRequest>
       </list>
     </option>
@@ -381,471 +370,471 @@
     <option name="ruleStates">
       <list>
         <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule"/>
         </RuleState>
         <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
+          <option name="name" value="StatusDashboardGroupingRule"/>
         </RuleState>
       </list>
     </option>
   </component>
   <component name="RunManager" selected="JUnit.TestDatabase">
     <configuration default="false" name="server in mx-service-utils" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <extension name="coverage" enabled="false" merge="false" runner="idea" />
-      <module name="mx-service-utils" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="directory" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
+      <extension name="coverage" enabled="false" merge="false" runner="idea"/>
+      <module name="mx-service-utils"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="PACKAGE_NAME"/>
+      <option name="MAIN_CLASS_NAME"/>
+      <option name="METHOD_NAME"/>
+      <option name="TEST_OBJECT" value="directory"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PARAMETERS"/>
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
+        <value defaultName="moduleWithDependencies"/>
       </option>
-      <envs />
-      <dir value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server" />
-      <patterns />
-      <method />
+      <envs/>
+      <dir value="$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server"/>
+      <patterns/>
+      <method/>
     </configuration>
     <configuration default="false" name="TestServer.testHttpServer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea">
         <pattern>
-          <option name="PATTERN" value="org.mx.service.server.*" />
-          <option name="ENABLED" value="true" />
+          <option name="PATTERN" value="org.mx.service.server.*"/>
+          <option name="ENABLED" value="true"/>
         </pattern>
       </extension>
-      <module name="mx-service-utils" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.mx.service.server" />
-      <option name="MAIN_CLASS_NAME" value="org.mx.service.server.TestServer" />
-      <option name="METHOD_NAME" value="testHttpServer" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="mx-service-utils"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="PACKAGE_NAME" value="org.mx.service.server"/>
+      <option name="MAIN_CLASS_NAME" value="org.mx.service.server.TestServer"/>
+      <option name="METHOD_NAME" value="testHttpServer"/>
+      <option name="TEST_OBJECT" value="method"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PARAMETERS"/>
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
+        <value defaultName="moduleWithDependencies"/>
       </option>
-      <envs />
-      <patterns />
-      <method />
+      <envs/>
+      <patterns/>
+      <method/>
     </configuration>
     <configuration default="false" name="TestIntegerTopNRate" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea">
         <pattern>
-          <option name="PATTERN" value="org.mx.rate.*" />
-          <option name="ENABLED" value="true" />
+          <option name="PATTERN" value="org.mx.rate.*"/>
+          <option name="ENABLED" value="true"/>
         </pattern>
       </extension>
-      <module name="mx-utils" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.mx.rate" />
-      <option name="MAIN_CLASS_NAME" value="org.mx.rate.TestIntegerTopNRate" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="mx-utils"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="PACKAGE_NAME" value="org.mx.rate"/>
+      <option name="MAIN_CLASS_NAME" value="org.mx.rate.TestIntegerTopNRate"/>
+      <option name="METHOD_NAME"/>
+      <option name="TEST_OBJECT" value="class"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PARAMETERS"/>
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
+        <value defaultName="moduleWithDependencies"/>
       </option>
-      <envs />
-      <patterns />
-      <method />
+      <envs/>
+      <patterns/>
+      <method/>
     </configuration>
     <configuration default="false" name="TestServer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea">
         <pattern>
-          <option name="PATTERN" value="org.mx.service.server.*" />
-          <option name="ENABLED" value="true" />
+          <option name="PATTERN" value="org.mx.service.server.*"/>
+          <option name="ENABLED" value="true"/>
         </pattern>
       </extension>
-      <module name="mx-service-utils" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.mx.service.server" />
-      <option name="MAIN_CLASS_NAME" value="org.mx.service.server.TestServer" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="mx-service-utils"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="PACKAGE_NAME" value="org.mx.service.server"/>
+      <option name="MAIN_CLASS_NAME" value="org.mx.service.server.TestServer"/>
+      <option name="METHOD_NAME"/>
+      <option name="TEST_OBJECT" value="class"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PARAMETERS"/>
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
+        <value defaultName="moduleWithDependencies"/>
       </option>
-      <envs />
-      <patterns />
-      <method />
+      <envs/>
+      <patterns/>
+      <method/>
     </configuration>
     <configuration default="false" name="TestDatabase" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" runner="idea">
         <pattern>
-          <option name="PATTERN" value="org.mx.test.*" />
-          <option name="ENABLED" value="true" />
+          <option name="PATTERN" value="org.mx.test.*"/>
+          <option name="ENABLED" value="true"/>
         </pattern>
       </extension>
-      <module name="mx-dal-hibernate" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.mx.test" />
-      <option name="MAIN_CLASS_NAME" value="org.mx.test.TestDatabase" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="mx-dal-hibernate"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="PACKAGE_NAME" value="org.mx.test"/>
+      <option name="MAIN_CLASS_NAME" value="org.mx.test.TestDatabase"/>
+      <option name="METHOD_NAME"/>
+      <option name="TEST_OBJECT" value="class"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PARAMETERS"/>
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
+        <value defaultName="moduleWithDependencies"/>
       </option>
-      <envs />
-      <patterns />
-      <method />
+      <envs/>
+      <patterns/>
+      <method/>
     </configuration>
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
-      <module name="" />
-      <option name="DEPLOY" value="true" />
-      <option name="ARTIFACT_NAME" value="" />
-      <option name="PM_INSTALL_OPTIONS" value="" />
-      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
-      <option name="MODE" value="default_activity" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <Java />
+      <module name=""/>
+      <option name="DEPLOY" value="true"/>
+      <option name="ARTIFACT_NAME" value=""/>
+      <option name="PM_INSTALL_OPTIONS" value=""/>
+      <option name="ACTIVITY_EXTRA_FLAGS" value=""/>
+      <option name="MODE" value="default_activity"/>
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG"/>
+      <option name="PREFERRED_AVD" value=""/>
+      <option name="CLEAR_LOGCAT" value="false"/>
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false"/>
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true"/>
+      <option name="FORCE_STOP_RUNNING_APP" value="true"/>
+      <option name="DEBUGGER_TYPE" value="Java"/>
+      <option name="USE_LAST_SELECTED_DEVICE" value="false"/>
+      <option name="PREFERRED_AVD" value=""/>
+      <Java/>
       <Profilers>
-        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
-        <option name="GAPID_ENABLED" value="false" />
-        <option name="GAPID_DISABLE_PCS" value="false" />
-        <option name="SUPPORT_LIB_ENABLED" value="true" />
-        <option name="INSTRUMENTATION_ENABLED" value="true" />
+        <option name="ENABLE_ADVANCED_PROFILING" value="true"/>
+        <option name="GAPID_ENABLED" value="false"/>
+        <option name="GAPID_DISABLE_PCS" value="false"/>
+        <option name="SUPPORT_LIB_ENABLED" value="true"/>
+        <option name="INSTRUMENTATION_ENABLED" value="true"/>
       </Profilers>
-      <option name="DEEP_LINK" value="" />
-      <option name="ACTIVITY_CLASS" value="" />
-      <method />
+      <option name="DEEP_LINK" value=""/>
+      <option name="ACTIVITY_CLASS" value=""/>
+      <method/>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
-      <module name="" />
-      <option name="TESTING_TYPE" value="0" />
-      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="EXTRA_OPTIONS" value="" />
-      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="PREFERRED_AVD" value="" />
-      <option name="CLEAR_LOGCAT" value="false" />
-      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
-      <option name="DEBUGGER_TYPE" value="Java" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
-      <option name="PREFERRED_AVD" value="" />
-      <Java />
+      <module name=""/>
+      <option name="TESTING_TYPE" value="0"/>
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value=""/>
+      <option name="METHOD_NAME" value=""/>
+      <option name="CLASS_NAME" value=""/>
+      <option name="PACKAGE_NAME" value=""/>
+      <option name="EXTRA_OPTIONS" value=""/>
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG"/>
+      <option name="PREFERRED_AVD" value=""/>
+      <option name="CLEAR_LOGCAT" value="false"/>
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false"/>
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true"/>
+      <option name="FORCE_STOP_RUNNING_APP" value="true"/>
+      <option name="DEBUGGER_TYPE" value="Java"/>
+      <option name="USE_LAST_SELECTED_DEVICE" value="false"/>
+      <option name="PREFERRED_AVD" value=""/>
+      <Java/>
       <Profilers>
-        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
-        <option name="GAPID_ENABLED" value="false" />
-        <option name="GAPID_DISABLE_PCS" value="false" />
-        <option name="SUPPORT_LIB_ENABLED" value="true" />
-        <option name="INSTRUMENTATION_ENABLED" value="true" />
+        <option name="ENABLE_ADVANCED_PROFILING" value="true"/>
+        <option name="GAPID_ENABLED" value="false"/>
+        <option name="GAPID_DISABLE_PCS" value="false"/>
+        <option name="SUPPORT_LIB_ENABLED" value="true"/>
+        <option name="INSTRUMENTATION_ENABLED" value="true"/>
       </Profilers>
-      <method />
+      <method/>
     </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
-      <module />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <method />
+      <module/>
+      <option name="HTML_USED" value="false"/>
+      <option name="WIDTH" value="400"/>
+      <option name="HEIGHT" value="300"/>
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <method/>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
-      <extension name="coverage" enabled="false" merge="false" runner="idea" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
+      <extension name="coverage" enabled="false" merge="false" runner="idea"/>
+      <option name="MAIN_CLASS_NAME"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PROGRAM_PARAMETERS"/>
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="ENABLE_SWING_INSPECTOR" value="false"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
+      <module name=""/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="Cold Fusion runner description" factoryName="Cold Fusion" custom_browser="" web_path="">
-      <method />
+      <method/>
     </configuration>
     <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="myFilePath" />
-      <option name="GLUE" />
-      <option name="myNameFilter" />
-      <option name="myGeneratedName" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea"/>
+      <option name="myFilePath"/>
+      <option name="GLUE"/>
+      <option name="myNameFilter"/>
+      <option name="myGeneratedName"/>
+      <option name="MAIN_CLASS_NAME"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PROGRAM_PARAMETERS"/>
+      <option name="WORKING_DIRECTORY"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="ENABLE_SWING_INSPECTOR" value="false"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
+      <module name=""/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
-      <option name="BCName" value="" />
-      <option name="IOSSimulatorSdkPath" value="" />
-      <option name="adlOptions" value="" />
-      <option name="airProgramParameters" value="" />
-      <option name="appDescriptorForEmulator" value="Android" />
-      <option name="debugTransport" value="USB" />
-      <option name="debuggerSdkRaw" value="BC SDK" />
-      <option name="emulator" value="NexusOne" />
-      <option name="emulatorAdlOptions" value="" />
-      <option name="fastPackaging" value="true" />
-      <option name="fullScreenHeight" value="0" />
-      <option name="fullScreenWidth" value="0" />
-      <option name="launchUrl" value="false" />
+      <option name="BCName" value=""/>
+      <option name="IOSSimulatorSdkPath" value=""/>
+      <option name="adlOptions" value=""/>
+      <option name="airProgramParameters" value=""/>
+      <option name="appDescriptorForEmulator" value="Android"/>
+      <option name="debugTransport" value="USB"/>
+      <option name="debuggerSdkRaw" value="BC SDK"/>
+      <option name="emulator" value="NexusOne"/>
+      <option name="emulatorAdlOptions" value=""/>
+      <option name="fastPackaging" value="true"/>
+      <option name="fullScreenHeight" value="0"/>
+      <option name="fullScreenWidth" value="0"/>
+      <option name="launchUrl" value="false"/>
       <option name="launcherParameters">
         <LauncherParameters>
-          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
-          <option name="launcherType" value="OSDefault" />
-          <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8"/>
+          <option name="launcherType" value="OSDefault"/>
+          <option name="newPlayerInstance" value="false"/>
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app"/>
         </LauncherParameters>
       </option>
-      <option name="mobileRunTarget" value="Emulator" />
-      <option name="moduleName" value="" />
-      <option name="overriddenMainClass" value="" />
-      <option name="overriddenOutputFileName" value="" />
-      <option name="overrideMainClass" value="false" />
-      <option name="runTrusted" value="true" />
-      <option name="screenDpi" value="0" />
-      <option name="screenHeight" value="0" />
-      <option name="screenWidth" value="0" />
-      <option name="url" value="http://" />
-      <option name="usbDebugPort" value="7936" />
-      <method />
+      <option name="mobileRunTarget" value="Emulator"/>
+      <option name="moduleName" value=""/>
+      <option name="overriddenMainClass" value=""/>
+      <option name="overriddenOutputFileName" value=""/>
+      <option name="overrideMainClass" value="false"/>
+      <option name="runTrusted" value="true"/>
+      <option name="screenDpi" value="0"/>
+      <option name="screenHeight" value="0"/>
+      <option name="screenWidth" value="0"/>
+      <option name="url" value="http://"/>
+      <option name="usbDebugPort" value="7936"/>
+      <method/>
     </configuration>
     <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
-      <option name="BCName" value="" />
+      <option name="BCName" value=""/>
       <option name="launcherParameters">
         <LauncherParameters>
-          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
-          <option name="launcherType" value="OSDefault" />
-          <option name="newPlayerInstance" value="false" />
-          <option name="playerPath" value="/Applications/Flash Player Debugger.app" />
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8"/>
+          <option name="launcherType" value="OSDefault"/>
+          <option name="newPlayerInstance" value="false"/>
+          <option name="playerPath" value="/Applications/Flash Player Debugger.app"/>
         </LauncherParameters>
       </option>
-      <option name="moduleName" value="" />
-      <option name="trusted" value="true" />
-      <method />
+      <option name="moduleName" value=""/>
+      <option name="trusted" value="true"/>
+      <method/>
     </configuration>
     <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="executionName"/>
+        <option name="externalProjectPath"/>
+        <option name="externalSystemIdString" value="GRADLE"/>
+        <option name="scriptParameters"/>
         <option name="taskDescriptions">
-          <list />
+          <list/>
         </option>
         <option name="taskNames">
-          <list />
+          <list/>
         </option>
-        <option name="vmOptions" />
+        <option name="vmOptions"/>
       </ExternalSystemSettings>
-      <method />
+      <method/>
     </configuration>
     <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
-      <module name="" />
-      <setting name="path" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workDir" value="file://$PROJECT_DIR$" />
-      <setting name="debug" value="false" />
-      <method />
+      <module name=""/>
+      <setting name="path" value=""/>
+      <setting name="vmparams" value=""/>
+      <setting name="params" value=""/>
+      <setting name="workDir" value="file://$PROJECT_DIR$"/>
+      <setting name="debug" value="false"/>
+      <method/>
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
-      <extension name="coverage" enabled="false" merge="false" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
+      <extension name="coverage" enabled="false" merge="false" runner="idea"/>
+      <module name=""/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="PACKAGE_NAME"/>
+      <option name="MAIN_CLASS_NAME"/>
+      <option name="METHOD_NAME"/>
+      <option name="TEST_OBJECT" value="class"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PARAMETERS"/>
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
+        <value defaultName="moduleWithDependencies"/>
       </option>
-      <envs />
-      <patterns />
-      <method />
+      <envs/>
+      <patterns/>
+      <method/>
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <envs />
-      <method />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea"/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="Java Scratch" factoryName="Java Scratch">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="SCRATCH_FILE_ID" value="0" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea"/>
+      <option name="SCRATCH_FILE_ID" value="0"/>
+      <option name="MAIN_CLASS_NAME"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PROGRAM_PARAMETERS"/>
+      <option name="WORKING_DIRECTORY"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="ENABLE_SWING_INSPECTOR" value="false"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
+      <module name=""/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="JavaScriptTestRunnerJest" factoryName="Jest">
-      <node-interpreter value="project" />
-      <working-dir value="" />
-      <envs />
-      <scope-kind value="ALL" />
-      <method />
+      <node-interpreter value="project"/>
+      <working-dir value=""/>
+      <envs/>
+      <scope-kind value="ALL"/>
+      <method/>
     </configuration>
     <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
-      <config-file value="" />
-      <node-interpreter value="project" />
-      <envs />
-      <method />
+      <config-file value=""/>
+      <node-interpreter value="project"/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
-      <method />
+      <method/>
     </configuration>
     <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="core" />
-      <envs />
-      <method />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea"/>
+      <option name="MAIN_CLASS_NAME"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PROGRAM_PARAMETERS"/>
+      <option name="WORKING_DIRECTORY"/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
+      <module name="core"/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="filePath" />
-      <option name="vmParameters" />
-      <option name="alternativeJrePath" />
-      <option name="programParameters" />
-      <option name="passParentEnvs" value="true" />
-      <option name="workingDirectory" />
-      <option name="isAlternativeJrePathEnabled" value="false" />
-      <envs />
-      <method />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea"/>
+      <option name="filePath"/>
+      <option name="vmParameters"/>
+      <option name="alternativeJrePath"/>
+      <option name="programParameters"/>
+      <option name="passParentEnvs" value="true"/>
+      <option name="workingDirectory"/>
+      <option name="isAlternativeJrePathEnabled" value="false"/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-      <method />
+      <option name="USE_SOCKET_TRANSPORT" value="true"/>
+      <option name="SERVER_MODE" value="false"/>
+      <option name="SHMEM_ADDRESS" value="javadebug"/>
+      <option name="HOST" value="localhost"/>
+      <option name="PORT" value="5005"/>
+      <method/>
     </configuration>
     <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <envs />
-      <method />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea"/>
+      <module name=""/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea"/>
+      <module name=""/>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false"/>
+      <option name="ALTERNATIVE_JRE_PATH"/>
+      <option name="SUITE_NAME"/>
+      <option name="PACKAGE_NAME"/>
+      <option name="MAIN_CLASS_NAME"/>
+      <option name="METHOD_NAME"/>
+      <option name="GROUP_NAME"/>
+      <option name="TEST_OBJECT" value="CLASS"/>
+      <option name="VM_PARAMETERS"/>
+      <option name="PARAMETERS"/>
+      <option name="WORKING_DIRECTORY"/>
+      <option name="OUTPUT_DIRECTORY"/>
+      <option name="ANNOTATION_TYPE"/>
+      <option name="ENV_VARIABLES"/>
+      <option name="PASS_PARENT_ENVS" value="true"/>
       <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
+        <value defaultName="singleModule"/>
       </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method />
+      <option name="USE_DEFAULT_REPORTERS" value="false"/>
+      <option name="PROPERTIES_FILE"/>
+      <envs/>
+      <properties/>
+      <listeners/>
+      <method/>
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
       <node-interpreter>project</node-interpreter>
-      <node-options />
-      <gulpfile />
-      <tasks />
-      <arguments />
-      <envs />
-      <method />
+      <node-options/>
+      <gulpfile/>
+      <tasks/>
+      <arguments/>
+      <envs/>
+      <method/>
     </configuration>
     <configuration default="true" type="js.build_tools.npm" factoryName="npm">
-      <command value="run" />
-      <scripts />
-      <node-interpreter value="project" />
-      <envs />
-      <method />
+      <command value="run"/>
+      <scripts/>
+      <node-interpreter value="project"/>
+      <envs/>
+      <method/>
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="JUnit.server in mx-service-utils" />
-      <item index="1" class="java.lang.String" itemvalue="JUnit.TestServer.testHttpServer" />
-      <item index="2" class="java.lang.String" itemvalue="JUnit.TestIntegerTopNRate" />
-      <item index="3" class="java.lang.String" itemvalue="JUnit.TestServer" />
-      <item index="4" class="java.lang.String" itemvalue="JUnit.TestDatabase" />
+      <item index="0" class="java.lang.String" itemvalue="JUnit.server in mx-service-utils"/>
+      <item index="1" class="java.lang.String" itemvalue="JUnit.TestServer.testHttpServer"/>
+      <item index="2" class="java.lang.String" itemvalue="JUnit.TestIntegerTopNRate"/>
+      <item index="3" class="java.lang.String" itemvalue="JUnit.TestServer"/>
+      <item index="4" class="java.lang.String" itemvalue="JUnit.TestDatabase"/>
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="JUnit.TestDatabase" />
-        <item index="1" class="java.lang.String" itemvalue="JUnit.TestServer" />
-        <item index="2" class="java.lang.String" itemvalue="JUnit.TestServer.testHttpServer" />
-        <item index="3" class="java.lang.String" itemvalue="JUnit.TestIntegerTopNRate" />
-        <item index="4" class="java.lang.String" itemvalue="JUnit.server in mx-service-utils" />
+        <item index="0" class="java.lang.String" itemvalue="JUnit.TestDatabase"/>
+        <item index="1" class="java.lang.String" itemvalue="JUnit.TestServer"/>
+        <item index="2" class="java.lang.String" itemvalue="JUnit.TestServer.testHttpServer"/>
+        <item index="3" class="java.lang.String" itemvalue="JUnit.TestIntegerTopNRate"/>
+        <item index="4" class="java.lang.String" itemvalue="JUnit.server in mx-service-utils"/>
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -854,579 +843,579 @@
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
-    <option name="remove_strategy" value="false" />
+    <option name="remove_strategy" value="false"/>
   </component>
   <component name="SvnConfiguration" maxAnnotateRevisions="500">
-    <option name="USER" value="" />
-    <option name="PASSWORD" value="" />
-    <option name="LAST_MERGED_REVISION" />
-    <option name="UPDATE_RUN_STATUS" value="false" />
-    <option name="MERGE_DRY_RUN" value="false" />
-    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
-    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
-    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
-    <option name="DETECT_NESTED_COPIES" value="true" />
-    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
-    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="USER" value=""/>
+    <option name="PASSWORD" value=""/>
+    <option name="LAST_MERGED_REVISION"/>
+    <option name="UPDATE_RUN_STATUS" value="false"/>
+    <option name="MERGE_DRY_RUN" value="false"/>
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true"/>
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false"/>
+    <option name="IGNORE_SPACES_IN_MERGE" value="false"/>
+    <option name="DETECT_NESTED_COPIES" value="true"/>
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true"/>
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true"/>
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="3f974cc8-7707-42d5-8058-215a3aaeaf23" name="Default" comment="" />
+      <changelist id="3f974cc8-7707-42d5-8058-215a3aaeaf23" name="Default" comment=""/>
       <created>1507289271907</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
+      <option name="number" value="Default"/>
+      <option name="presentableId" value="Default"/>
       <updated>1507289271907</updated>
-      <workItem from="1507289273060" duration="8125000" />
-      <workItem from="1507341419366" duration="6553000" />
-      <workItem from="1507350409211" duration="6245000" />
-      <workItem from="1507383770188" duration="2979000" />
-      <workItem from="1507424736149" duration="19438000" />
-      <workItem from="1507621751827" duration="776000" />
-      <workItem from="1508057555919" duration="16196000" />
-      <workItem from="1508202741996" duration="722000" />
-      <workItem from="1508211356936" duration="434000" />
-      <workItem from="1508222057571" duration="140000" />
-      <workItem from="1508996674601" duration="694000" />
-      <workItem from="1508997883499" duration="1165000" />
-      <workItem from="1509429490125" duration="4762000" />
-      <workItem from="1509709007649" duration="5553000" />
-      <workItem from="1509754251540" duration="10000" />
-      <workItem from="1509754784285" duration="372000" />
-      <workItem from="1509790242041" duration="12864000" />
-      <workItem from="1509847515220" duration="2521000" />
-      <workItem from="1509851613435" duration="6000" />
-      <workItem from="1509851730064" duration="8000" />
-      <workItem from="1509879014583" duration="1653000" />
-      <workItem from="1509963539410" duration="2004000" />
-      <workItem from="1510485034214" duration="888000" />
-      <workItem from="1510486032437" duration="1396000" />
-      <workItem from="1510488341856" duration="20000" />
-      <workItem from="1510493246429" duration="586000" />
-      <workItem from="1510624958568" duration="223000" />
-      <workItem from="1510628698798" duration="743000" />
-      <workItem from="1510664245450" duration="457000" />
-      <workItem from="1510701313136" duration="518000" />
-      <workItem from="1511080595512" duration="230000" />
-      <workItem from="1511081435473" duration="58000" />
-      <workItem from="1511084692054" duration="1965000" />
-      <workItem from="1511091721697" duration="2051000" />
-      <workItem from="1511152287954" duration="10000" />
-      <workItem from="1511327257004" duration="853000" />
-      <workItem from="1511426407024" duration="840000" />
-      <workItem from="1511446183974" duration="598000" />
-      <workItem from="1511480486305" duration="179000" />
-      <workItem from="1511484562277" duration="271000" />
-      <workItem from="1511578217655" duration="865000" />
-      <workItem from="1511579376523" duration="7000" />
-      <workItem from="1511838805908" duration="261000" />
-      <workItem from="1511841501645" duration="1994000" />
-      <workItem from="1511866388704" duration="843000" />
-      <workItem from="1511869131380" duration="4140000" />
-      <workItem from="1511936507194" duration="909000" />
-      <workItem from="1511963941680" duration="3182000" />
-      <workItem from="1512096239661" duration="337000" />
-      <workItem from="1512117801503" duration="887000" />
-      <workItem from="1512266990839" duration="8412000" />
-      <workItem from="1512289655574" duration="3405000" />
-      <workItem from="1512294237413" duration="10000" />
-      <workItem from="1512434427417" duration="89000" />
-      <workItem from="1512434611682" duration="1505000" />
-      <workItem from="1512436922141" duration="281000" />
-      <workItem from="1512815678900" duration="4290000" />
-      <workItem from="1512820694343" duration="1390000" />
-      <workItem from="1512866715092" duration="502000" />
-      <workItem from="1513056964716" duration="10413000" />
-      <workItem from="1513080627413" duration="398000" />
-      <workItem from="1513082697120" duration="1931000" />
-      <workItem from="1513143120825" duration="668000" />
-      <workItem from="1513149378960" duration="218000" />
-      <workItem from="1513596437907" duration="192000" />
-      <workItem from="1513597092414" duration="1479000" />
-      <workItem from="1513646440557" duration="58000" />
-      <workItem from="1514605922385" duration="13535000" />
-      <workItem from="1514718192379" duration="3792000" />
-      <workItem from="1514769922107" duration="7211000" />
-      <workItem from="1514781490466" duration="4000" />
-      <workItem from="1514957098587" duration="711000" />
-      <workItem from="1515027445817" duration="12172000" />
-      <workItem from="1515112790916" duration="14904000" />
-      <workItem from="1515141271399" duration="1659000" />
-      <workItem from="1515158927589" duration="1059000" />
-      <workItem from="1515160061174" duration="1161000" />
-      <workItem from="1515161928310" duration="408000" />
-      <workItem from="1515379603146" duration="1610000" />
-      <workItem from="1515462997579" duration="3320000" />
-      <workItem from="1515482314059" duration="8527000" />
-      <workItem from="1515567310649" duration="1694000" />
-      <workItem from="1515572710326" duration="7284000" />
-      <workItem from="1515584616469" duration="2243000" />
-      <workItem from="1515587183078" duration="308000" />
-      <workItem from="1515587506792" duration="12000" />
-      <workItem from="1515926024160" duration="317000" />
-      <workItem from="1516066096996" duration="120000" />
-      <workItem from="1516099592825" duration="26000" />
-      <workItem from="1516153809814" duration="1382000" />
-      <workItem from="1516171447114" duration="4127000" />
-      <workItem from="1516182765965" duration="18000" />
-      <workItem from="1516183169152" duration="271000" />
-      <workItem from="1516183738658" duration="550000" />
-      <workItem from="1516192278463" duration="231000" />
-      <workItem from="1516604913016" duration="1776000" />
-      <workItem from="1516761073487" duration="9895000" />
-      <workItem from="1516776570201" duration="142000" />
-      <workItem from="1516777758003" duration="216000" />
-      <workItem from="1516844445695" duration="20000" />
-      <workItem from="1517273963975" duration="10668000" />
-      <workItem from="1517963228129" duration="4567000" />
-      <workItem from="1517972787050" duration="2123000" />
-      <workItem from="1518054898749" duration="7990000" />
-      <workItem from="1518087619806" duration="1459000" />
-      <workItem from="1518090095190" duration="6475000" />
-      <workItem from="1518136639646" duration="632000" />
-      <workItem from="1518144634597" duration="1692000" />
+      <workItem from="1507289273060" duration="8125000"/>
+      <workItem from="1507341419366" duration="6553000"/>
+      <workItem from="1507350409211" duration="6245000"/>
+      <workItem from="1507383770188" duration="2979000"/>
+      <workItem from="1507424736149" duration="19438000"/>
+      <workItem from="1507621751827" duration="776000"/>
+      <workItem from="1508057555919" duration="16196000"/>
+      <workItem from="1508202741996" duration="722000"/>
+      <workItem from="1508211356936" duration="434000"/>
+      <workItem from="1508222057571" duration="140000"/>
+      <workItem from="1508996674601" duration="694000"/>
+      <workItem from="1508997883499" duration="1165000"/>
+      <workItem from="1509429490125" duration="4762000"/>
+      <workItem from="1509709007649" duration="5553000"/>
+      <workItem from="1509754251540" duration="10000"/>
+      <workItem from="1509754784285" duration="372000"/>
+      <workItem from="1509790242041" duration="12864000"/>
+      <workItem from="1509847515220" duration="2521000"/>
+      <workItem from="1509851613435" duration="6000"/>
+      <workItem from="1509851730064" duration="8000"/>
+      <workItem from="1509879014583" duration="1653000"/>
+      <workItem from="1509963539410" duration="2004000"/>
+      <workItem from="1510485034214" duration="888000"/>
+      <workItem from="1510486032437" duration="1396000"/>
+      <workItem from="1510488341856" duration="20000"/>
+      <workItem from="1510493246429" duration="586000"/>
+      <workItem from="1510624958568" duration="223000"/>
+      <workItem from="1510628698798" duration="743000"/>
+      <workItem from="1510664245450" duration="457000"/>
+      <workItem from="1510701313136" duration="518000"/>
+      <workItem from="1511080595512" duration="230000"/>
+      <workItem from="1511081435473" duration="58000"/>
+      <workItem from="1511084692054" duration="1965000"/>
+      <workItem from="1511091721697" duration="2051000"/>
+      <workItem from="1511152287954" duration="10000"/>
+      <workItem from="1511327257004" duration="853000"/>
+      <workItem from="1511426407024" duration="840000"/>
+      <workItem from="1511446183974" duration="598000"/>
+      <workItem from="1511480486305" duration="179000"/>
+      <workItem from="1511484562277" duration="271000"/>
+      <workItem from="1511578217655" duration="865000"/>
+      <workItem from="1511579376523" duration="7000"/>
+      <workItem from="1511838805908" duration="261000"/>
+      <workItem from="1511841501645" duration="1994000"/>
+      <workItem from="1511866388704" duration="843000"/>
+      <workItem from="1511869131380" duration="4140000"/>
+      <workItem from="1511936507194" duration="909000"/>
+      <workItem from="1511963941680" duration="3182000"/>
+      <workItem from="1512096239661" duration="337000"/>
+      <workItem from="1512117801503" duration="887000"/>
+      <workItem from="1512266990839" duration="8412000"/>
+      <workItem from="1512289655574" duration="3405000"/>
+      <workItem from="1512294237413" duration="10000"/>
+      <workItem from="1512434427417" duration="89000"/>
+      <workItem from="1512434611682" duration="1505000"/>
+      <workItem from="1512436922141" duration="281000"/>
+      <workItem from="1512815678900" duration="4290000"/>
+      <workItem from="1512820694343" duration="1390000"/>
+      <workItem from="1512866715092" duration="502000"/>
+      <workItem from="1513056964716" duration="10413000"/>
+      <workItem from="1513080627413" duration="398000"/>
+      <workItem from="1513082697120" duration="1931000"/>
+      <workItem from="1513143120825" duration="668000"/>
+      <workItem from="1513149378960" duration="218000"/>
+      <workItem from="1513596437907" duration="192000"/>
+      <workItem from="1513597092414" duration="1479000"/>
+      <workItem from="1513646440557" duration="58000"/>
+      <workItem from="1514605922385" duration="13535000"/>
+      <workItem from="1514718192379" duration="3792000"/>
+      <workItem from="1514769922107" duration="7211000"/>
+      <workItem from="1514781490466" duration="4000"/>
+      <workItem from="1514957098587" duration="711000"/>
+      <workItem from="1515027445817" duration="12172000"/>
+      <workItem from="1515112790916" duration="14904000"/>
+      <workItem from="1515141271399" duration="1659000"/>
+      <workItem from="1515158927589" duration="1059000"/>
+      <workItem from="1515160061174" duration="1161000"/>
+      <workItem from="1515161928310" duration="408000"/>
+      <workItem from="1515379603146" duration="1610000"/>
+      <workItem from="1515462997579" duration="3320000"/>
+      <workItem from="1515482314059" duration="8527000"/>
+      <workItem from="1515567310649" duration="1694000"/>
+      <workItem from="1515572710326" duration="7284000"/>
+      <workItem from="1515584616469" duration="2243000"/>
+      <workItem from="1515587183078" duration="308000"/>
+      <workItem from="1515587506792" duration="12000"/>
+      <workItem from="1515926024160" duration="317000"/>
+      <workItem from="1516066096996" duration="120000"/>
+      <workItem from="1516099592825" duration="26000"/>
+      <workItem from="1516153809814" duration="1382000"/>
+      <workItem from="1516171447114" duration="4127000"/>
+      <workItem from="1516182765965" duration="18000"/>
+      <workItem from="1516183169152" duration="271000"/>
+      <workItem from="1516183738658" duration="550000"/>
+      <workItem from="1516192278463" duration="231000"/>
+      <workItem from="1516604913016" duration="1776000"/>
+      <workItem from="1516761073487" duration="9895000"/>
+      <workItem from="1516776570201" duration="142000"/>
+      <workItem from="1516777758003" duration="216000"/>
+      <workItem from="1516844445695" duration="20000"/>
+      <workItem from="1517273963975" duration="10668000"/>
+      <workItem from="1517963228129" duration="4567000"/>
+      <workItem from="1517972787050" duration="2123000"/>
+      <workItem from="1518054898749" duration="7990000"/>
+      <workItem from="1518087619806" duration="1459000"/>
+      <workItem from="1518090095190" duration="6475000"/>
+      <workItem from="1518136639646" duration="632000"/>
+      <workItem from="1518144634597" duration="2386000"/>
     </task>
-    <servers />
+    <servers/>
   </component>
   <component name="TestHistory">
     <history-entry file="TestDatabase - 2018.02.09 at 10h 52m 00s.xml">
-      <configuration name="TestDatabase" configurationId="JUnit" />
+      <configuration name="TestDatabase" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestDatabase - 2018.02.09 at 10h 52m 53s.xml">
-      <configuration name="TestDatabase" configurationId="JUnit" />
+      <configuration name="TestDatabase" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestServer_testHttpServer - 2018.02.08 at 19h 49m 53s.xml">
-      <configuration name="TestServer.testHttpServer" configurationId="JUnit" />
+      <configuration name="TestServer.testHttpServer" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestServer_testHttpServer - 2018.02.08 at 20h 12m 21s.xml">
-      <configuration name="TestServer.testHttpServer" configurationId="JUnit" />
+      <configuration name="TestServer.testHttpServer" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestServer_testHttpServer - 2018.02.08 at 20h 14m 10s.xml">
-      <configuration name="TestServer.testHttpServer" configurationId="JUnit" />
+      <configuration name="TestServer.testHttpServer" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestServer_testHttpServer - 2018.02.08 at 20h 19m 37s.xml">
-      <configuration name="TestServer.testHttpServer" configurationId="JUnit" />
+      <configuration name="TestServer.testHttpServer" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestServer_testHttpServer - 2018.02.08 at 20h 21m 07s.xml">
-      <configuration name="TestServer.testHttpServer" configurationId="JUnit" />
+      <configuration name="TestServer.testHttpServer" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestServer_testHttpServer - 2018.02.08 at 20h 24m 42s.xml">
-      <configuration name="TestServer.testHttpServer" configurationId="JUnit" />
+      <configuration name="TestServer.testHttpServer" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestServer_testHttpServer - 2018.02.08 at 20h 25m 56s.xml">
-      <configuration name="TestServer.testHttpServer" configurationId="JUnit" />
+      <configuration name="TestServer.testHttpServer" configurationId="JUnit"/>
     </history-entry>
     <history-entry file="TestServer_testHttpServer - 2018.02.08 at 20h 26m 12s.xml">
-      <configuration name="TestServer.testHttpServer" configurationId="JUnit" />
+      <configuration name="TestServer.testHttpServer" configurationId="JUnit"/>
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="290083000" />
+    <option name="totallyTimeSpent" value="290777000"/>
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
+      <is-autoscroll-to-source value="true"/>
     </todo-panel>
     <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
+      <are-packages-shown value="true"/>
+      <is-autoscroll-to-source value="true"/>
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="187" y="23" width="1253" height="846" extended-state="0" />
-    <editor active="true" />
+    <frame x="187" y="23" width="1253" height="846" extended-state="0"/>
+    <editor active="true"/>
     <layout>
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6697861" sideWeight="0.50289977" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32933334" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24964234" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49469495" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328877" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.51458883" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328877" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.469496" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4509284" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2782824" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="BPMNPalette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette " active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49331552" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs"/>
+      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs"/>
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6697861" sideWeight="0.50289977" order="6" side_tool="true" content_ui="tabs"/>
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs"/>
+      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs"/>
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs"/>
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs"/>
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32933334" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs"/>
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24964234" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs"/>
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs"/>
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49469495" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs"/>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328877" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs"/>
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.51458883" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs"/>
+      <window_info id="Palette	" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs"/>
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs"/>
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328877" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs"/>
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs"/>
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.469496" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs"/>
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs"/>
+      <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs"/>
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.73740053" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs"/>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2782824" sideWeight="0.5" order="0" side_tool="false" content_ui="combo"/>
+      <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs"/>
+      <window_info id="BPMNPalette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs"/>
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs"/>
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs"/>
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs"/>
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs"/>
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs"/>
+      <window_info id="Palette " active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs"/>
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo"/>
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs"/>
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs"/>
+      <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.49331552" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs"/>
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32974428" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs"/>
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="processedProjectFiles" value="true" />
+    <option name="processedProjectFiles" value="true"/>
   </component>
   <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
+    <option name="myLimit" value="2678400000"/>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
-    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
+    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true"/>
+    <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true"/>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints-dialog>
-        <breakpoints-dialog />
+        <breakpoints-dialog/>
       </breakpoints-dialog>
-      <option name="time" value="133" />
+      <option name="time" value="133"/>
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager/>
   </component>
   <component name="editorHistoryManager">
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.6/73abe75317444c91ef04eb162a17de25970eec10/Java-WebSocket-1.3.6-sources.jar!/org/java_websocket/client/WebSocketClient.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="258">
-          <caret line="546" column="18" lean-forward="true" selection-start-line="546" selection-start-column="18" selection-end-line="546" selection-end-column="18" />
+          <caret line="546" column="18" lean-forward="true" selection-start-line="546" selection-start-column="18" selection-end-line="546" selection-end-column="18"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/client/WsClientInvoke.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
-          <caret line="174" column="42" lean-forward="true" selection-start-line="174" selection-start-column="42" selection-end-line="174" selection-end-column="42" />
+          <caret line="174" column="42" lean-forward="true" selection-start-line="174" selection-start-column="42" selection-end-line="174" selection-end-column="42"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.java-websocket/Java-WebSocket/1.3.6/73abe75317444c91ef04eb162a17de25970eec10/Java-WebSocket-1.3.6-sources.jar!/org/java_websocket/WebSocket.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
-          <caret line="48" column="60" lean-forward="true" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="60" />
+          <caret line="48" column="60" lean-forward="true" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="60"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.4.8.v20171121/fef49ac6b2bbc6d142dc0be34f68f0fb0792d52b/jetty-server-9.4.8.v20171121-sources.jar!/org/eclipse/jetty/server/Server.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
-          <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+          <caret line="18" column="29" lean-forward="false" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-common/2.26/6a0bb8a27bd69422e53909f29a57b1fe3962145/jersey-common-2.26-sources.jar!/org/glassfish/jersey/internal/inject/Providers.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
-          <caret line="532" column="5" lean-forward="false" selection-start-line="532" selection-start-column="5" selection-end-line="532" selection-end-column="5" />
+          <caret line="532" column="5" lean-forward="false" selection-start-line="532" selection-start-column="5" selection-end-line="532" selection-end-column="5"/>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/config/TestApplication.java" />
+    <entry file="file://$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/config/TestApplication.java"/>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.ws.rs/javax.ws.rs-api/2.1/b693d737250f57da3bbc0fbfccf6917de18ae200/javax.ws.rs-api-2.1-sources.jar!/javax/ws/rs/core/Application.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-682">
-          <caret line="60" column="2" lean-forward="true" selection-start-line="60" selection-start-column="2" selection-end-line="60" selection-end-column="2" />
+          <caret line="60" column="2" lean-forward="true" selection-start-line="60" selection-start-column="2" selection-end-line="60" selection-end-column="2"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/config/TestConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="148">
-          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/4.3.8.RELEASE/3042554a5b03cb81bb0c4ad8d3c26fe46b6d3553/spring-beans-4.3.8.RELEASE-sources.jar!/org/springframework/beans/factory/BeanFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
-          <caret line="138" column="11" lean-forward="false" selection-start-line="138" selection-start-column="11" selection-end-line="138" selection-end-column="11" />
+          <caret line="138" column="11" lean-forward="false" selection-start-line="138" selection-start-column="11" selection-end-line="138" selection-end-column="11"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-utils/src/main/java/org/mx/ClassUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1230">
-          <caret line="86" column="34" lean-forward="true" selection-start-line="86" selection-start-column="34" selection-end-line="86" selection-end-column="34" />
+          <caret line="86" column="34" lean-forward="true" selection-start-line="86" selection-start-column="34" selection-end-line="86" selection-end-column="34"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-spring/src/test/java/org/mx/spring/TestSpring.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
-          <caret line="34" column="69" lean-forward="false" selection-start-line="34" selection-start-column="69" selection-end-line="34" selection-end-column="69" />
+          <caret line="34" column="69" lean-forward="false" selection-start-line="34" selection-start-column="69" selection-end-line="34" selection-end-column="69"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-spring/src/main/java/org/mx/spring/SpringContextHolder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="390">
-          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-dal-hibernate/src/test/java/org/mx/test/CleanH2DatabaseFile.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="86">
-          <caret line="18" column="51" lean-forward="false" selection-start-line="18" selection-start-column="51" selection-end-line="18" selection-end-column="51" />
+          <caret line="18" column="51" lean-forward="false" selection-start-line="18" selection-start-column="51" selection-end-line="18" selection-end-column="51"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-utils/src/test/java/org/mx/rate/TestIntegerTopNRate.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="94">
-          <caret line="45" column="60" lean-forward="true" selection-start-line="45" selection-start-column="60" selection-end-line="45" selection-end-column="60" />
+          <caret line="45" column="60" lean-forward="true" selection-start-line="45" selection-start-column="60" selection-end-line="45" selection-end-column="60"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/2.26/6e535868b17f48060154bc6f68c9d033497c84ea/jersey-server-2.26-sources.jar!/org/glassfish/jersey/server/model/Resource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4905">
-          <caret line="534" column="0" lean-forward="false" selection-start-line="534" selection-start-column="0" selection-end-line="534" selection-end-column="0" />
+          <caret line="534" column="0" lean-forward="false" selection-start-line="534" selection-start-column="0" selection-end-line="534" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-common/2.26/6a0bb8a27bd69422e53909f29a57b1fe3962145/jersey-common-2.26-sources.jar!/org/glassfish/jersey/internal/inject/InjectionManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
-          <caret line="67" column="32" lean-forward="true" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32" />
+          <caret line="67" column="32" lean-forward="true" selection-start-line="67" selection-start-column="32" selection-end-line="67" selection-end-column="32"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-common/2.26/6a0bb8a27bd69422e53909f29a57b1fe3962145/jersey-common-2.26-sources.jar!/org/glassfish/jersey/model/internal/ComponentBag.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="235">
-          <caret line="207" column="32" lean-forward="false" selection-start-line="207" selection-start-column="32" selection-end-line="207" selection-end-column="32" />
+          <caret line="207" column="32" lean-forward="false" selection-start-line="207" selection-start-column="32" selection-end-line="207" selection-end-column="32"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-jetty-http/2.26/d205160cd8c637184ea9455045a91becadd567a1/jersey-container-jetty-http-2.26-sources.jar!/org/glassfish/jersey/jetty/JettyHttpContainerFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="111">
-          <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
+          <caret line="133" column="0" lean-forward="false" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-common/2.26/6a0bb8a27bd69422e53909f29a57b1fe3962145/jersey-common-2.26-sources.jar!/org/glassfish/jersey/model/internal/CommonConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
-          <caret line="500" column="42" lean-forward="true" selection-start-line="500" selection-start-column="42" selection-end-line="500" selection-end-column="42" />
+          <caret line="500" column="42" lean-forward="true" selection-start-line="500" selection-start-column="42" selection-end-line="500" selection-end-column="42"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/2.26/6e535868b17f48060154bc6f68c9d033497c84ea/jersey-server-2.26-sources.jar!/org/glassfish/jersey/server/ResourceConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
-          <caret line="450" column="0" lean-forward="false" selection-start-line="450" selection-start-column="0" selection-end-line="450" selection-end-column="0" />
+          <caret line="450" column="0" lean-forward="false" selection-start-line="450" selection-start-column="0" selection-end-line="450" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-common/2.26/6a0bb8a27bd69422e53909f29a57b1fe3962145/jersey-common-2.26-sources.jar!/org/glassfish/jersey/internal/util/ReflectionHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="111">
-          <caret line="422" column="0" lean-forward="false" selection-start-line="422" selection-start-column="0" selection-end-line="422" selection-end-column="0" />
+          <caret line="422" column="0" lean-forward="false" selection-start-line="422" selection-start-column="0" selection-end-line="422" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-common/2.26/6a0bb8a27bd69422e53909f29a57b1fe3962145/jersey-common-2.26-sources.jar!/org/glassfish/jersey/internal/ServiceFinder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="103">
-          <caret line="289" column="0" lean-forward="false" selection-start-line="289" selection-start-column="0" selection-end-line="289" selection-end-column="0" />
+          <caret line="289" column="0" lean-forward="false" selection-start-line="289" selection-start-column="0" selection-end-line="289" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.8.v20171121/a74ecb43f96b2e21852f6908604316d7348a16ad/jetty-util-9.4.8.v20171121-sources.jar!/org/eclipse/jetty/util/component/AbstractLifeCycle.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
-          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <caret line="34" column="0" lean-forward="false" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.4.8.v20171121/fef49ac6b2bbc6d142dc0be34f68f0fb0792d52b/jetty-server-9.4.8.v20171121-sources.jar!/org/eclipse/jetty/server/handler/AbstractHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="111">
-          <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
+          <caret line="55" column="0" lean-forward="false" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-jetty-http/2.26/d205160cd8c637184ea9455045a91becadd567a1/jersey-container-jetty-http-2.26-sources.jar!/org/glassfish/jersey/jetty/JettyHttpContainerProvider.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="130">
-          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.containers/jersey-container-jetty-http/2.26/d205160cd8c637184ea9455045a91becadd567a1/jersey-container-jetty-http-2.26-sources.jar!/org/glassfish/jersey/jetty/JettyHttpContainer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="81">
-          <caret line="468" column="0" lean-forward="false" selection-start-line="468" selection-start-column="0" selection-end-line="468" selection-end-column="0" />
+          <caret line="468" column="0" lean-forward="false" selection-start-line="468" selection-start-column="0" selection-end-line="468" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.ws.rs/javax.ws.rs-api/2.1/b693d737250f57da3bbc0fbfccf6917de18ae200/javax.ws.rs-api-2.1-sources.jar!/javax/ws/rs/container/ContainerRequestFilter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="112">
-          <caret line="80" column="17" lean-forward="false" selection-start-line="80" selection-start-column="17" selection-end-line="80" selection-end-column="17" />
+          <caret line="80" column="17" lean-forward="false" selection-start-line="80" selection-start-column="17" selection-end-line="80" selection-end-column="17"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.ws.rs/javax.ws.rs-api/2.1/b693d737250f57da3bbc0fbfccf6917de18ae200/javax.ws.rs-api-2.1-sources.jar!/javax/ws/rs/container/PreMatching.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="254">
-          <caret line="65" column="29" lean-forward="false" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="29" />
+          <caret line="65" column="29" lean-forward="false" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="29"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.8.v20171121/a74ecb43f96b2e21852f6908604316d7348a16ad/jetty-util-9.4.8.v20171121-sources.jar!/org/eclipse/jetty/util/component/ContainerLifeCycle.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="111">
-          <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+          <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.ws.rs/javax.ws.rs-api/2.1/b693d737250f57da3bbc0fbfccf6917de18ae200/javax.ws.rs-api-2.1-sources.jar!/javax/ws/rs/Priorities.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-158">
-          <caret line="63" column="19" lean-forward="false" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19" />
+          <caret line="63" column="19" lean-forward="false" selection-start-line="63" selection-start-column="19" selection-end-line="63" selection-end-column="19"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/2.26/6e535868b17f48060154bc6f68c9d033497c84ea/jersey-server-2.26-sources.jar!/org/glassfish/jersey/server/ContainerFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
-          <caret line="81" column="0" lean-forward="false" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0" />
+          <caret line="81" column="0" lean-forward="false" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/StartServer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/websocket/EchoSocket.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="533">
-          <caret line="48" column="19" lean-forward="true" selection-start-line="48" selection-start-column="19" selection-end-line="48" selection-end-column="19" />
+          <caret line="48" column="19" lean-forward="true" selection-start-line="48" selection-start-column="19" selection-end-line="48" selection-end-column="19"/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.core/jersey-server/2.26/6e535868b17f48060154bc6f68c9d033497c84ea/jersey-server-2.26-sources.jar!/org/glassfish/jersey/server/filter/UriConnegFilter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
-          <caret line="101" column="17" lean-forward="true" selection-start-line="101" selection-start-column="17" selection-end-line="101" selection-end-column="17" />
+          <caret line="101" column="17" lean-forward="true" selection-start-line="101" selection-start-column="17" selection-end-line="101" selection-end-column="17"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/websocket/BaseWebsocket.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
-          <caret line="72" column="70" lean-forward="true" selection-start-line="72" selection-start-column="70" selection-end-line="72" selection-end-column="70" />
+          <caret line="72" column="70" lean-forward="true" selection-start-line="72" selection-start-column="70" selection-end-line="72" selection-end-column="70"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/config/ServerConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="411">
-          <caret line="47" column="57" lean-forward="true" selection-start-line="47" selection-start-column="57" selection-end-line="47" selection-end-column="57" />
-          <folding />
+          <caret line="47" column="57" lean-forward="true" selection-start-line="47" selection-start-column="57" selection-end-line="47" selection-end-column="57"/>
+          <folding/>
         </state>
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.glassfish.jersey.ext/jersey-spring4/2.26/bcddfaf2be9d75ef02be22c104b7cd2307b6e61c/jersey-spring4-2.26-sources.jar!/org/glassfish/jersey/server/spring/SpringComponentProvider.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="231">
-          <caret line="159" column="0" lean-forward="false" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
+          <caret line="159" column="0" lean-forward="false" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/servlet/BaseHttpServlet.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/ServletServerFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="284">
-          <caret line="66" column="27" lean-forward="true" selection-start-line="66" selection-start-column="27" selection-end-line="66" selection-end-column="27" />
+          <caret line="66" column="27" lean-forward="true" selection-start-line="66" selection-start-column="27" selection-end-line="66" selection-end-column="27"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/rest/DemoRestResource.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
-          <caret line="22" column="8" lean-forward="true" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+          <caret line="22" column="8" lean-forward="true" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/server/HttpServerFactory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
-          <caret line="71" column="12" lean-forward="false" selection-start-line="71" selection-start-column="12" selection-end-line="71" selection-end-column="12" />
+          <caret line="71" column="12" lean-forward="false" selection-start-line="71" selection-start-column="12" selection-end-line="71" selection-end-column="12"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/test/java/org/mx/service/server/TestServer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-102">
-          <caret line="63" column="104" lean-forward="false" selection-start-line="63" selection-start-column="104" selection-end-line="63" selection-end-column="104" />
+          <caret line="63" column="104" lean-forward="false" selection-start-line="63" selection-start-column="104" selection-end-line="63" selection-end-column="104"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-service-utils/src/main/java/org/mx/service/ws/ConnectionManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
-          <caret line="73" column="5" lean-forward="false" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="5" />
+          <caret line="73" column="5" lean-forward="false" selection-start-line="73" selection-start-column="5" selection-end-line="73" selection-end-column="5"/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-dal-hibernate/src/test/java/org/mx/test/TestDatabase.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
-          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-          <folding />
+          <caret line="15" column="13" lean-forward="false" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13"/>
+          <folding/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx/dal/service/impl/GeneralEntityAccessorImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1140">
-          <caret line="379" column="18" lean-forward="true" selection-start-line="379" selection-start-column="18" selection-end-line="379" selection-end-column="18" />
-          <folding />
+          <caret line="379" column="18" lean-forward="true" selection-start-line="379" selection-start-column="18" selection-end-line="379" selection-end-column="18"/>
+          <folding/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx/dal/service/impl/OperateLogServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
-          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-          <folding />
+          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13"/>
+          <folding/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-dal-hibernate/src/main/java/org/mx/dal/service/impl/GeneralDictEntityAccessorImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
-          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-          <folding />
+          <caret line="24" column="13" lean-forward="false" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13"/>
+          <folding/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-dal-mongodb/src/main/java/org/mx/dal/service/impl/OperateLogServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="468">
-          <caret line="36" column="7" lean-forward="false" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7" />
+          <caret line="36" column="7" lean-forward="false" selection-start-line="36" selection-start-column="7" selection-end-line="36" selection-end-column="7"/>
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false"/>
           </folding>
         </state>
       </provider>
@@ -1434,26 +1423,26 @@
     <entry file="file://$PROJECT_DIR$/mx-dal-mongodb/src/main/java/org/mx/dal/service/impl/GeneralEntityAccessorImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
-          <caret line="12" column="44" lean-forward="true" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44" />
-          <folding />
+          <caret line="12" column="44" lean-forward="true" selection-start-line="12" selection-start-column="44" selection-end-line="12" selection-end-column="44"/>
+          <folding/>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/mx-dal-mongodb/src/main/java/org/mx/dal/service/impl/GeneralDictEntityAccessorImpl.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
-          <caret line="2" column="7" lean-forward="true" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+          <caret line="2" column="7" lean-forward="true" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7"/>
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false"/>
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="67" column="18" lean-forward="false" selection-start-line="67" selection-start-column="18" selection-end-line="67" selection-end-column="18" />
-          <folding />
+        <state relative-caret-position="310">
+          <caret line="67" column="18" lean-forward="false" selection-start-line="67" selection-start-column="18" selection-end-line="67" selection-end-column="18"/>
+          <folding/>
         </state>
       </provider>
     </entry>
@@ -1462,11 +1451,11 @@
     <states>
       <state key="ArtifactsStructureConfigurable.UI">
         <settings>
-          <artifact-editor />
+          <artifact-editor/>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.28965518" />
+                <option value="0.28965518"/>
               </list>
             </option>
           </splitter-proportions>
@@ -1478,7 +1467,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.28965518" />
+                <option value="0.28965518"/>
               </list>
             </option>
           </splitter-proportions>
@@ -1489,7 +1478,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.28965518" />
+                <option value="0.28965518"/>
               </list>
             </option>
           </splitter-proportions>
@@ -1501,7 +1490,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.28965518" />
+                <option value="0.28965518"/>
               </list>
             </option>
           </splitter-proportions>
@@ -1513,8 +1502,8 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.28965518" />
-                <option value="0.6" />
+                <option value="0.28965518"/>
+                <option value="0.6"/>
               </list>
             </option>
           </splitter-proportions>
@@ -1525,7 +1514,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.28965518" />
+                <option value="0.28965518"/>
               </list>
             </option>
           </splitter-proportions>

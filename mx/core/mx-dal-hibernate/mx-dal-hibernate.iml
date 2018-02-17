@@ -8,14 +8,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false"/>
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true"/>
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true"/>
-      <excludeFolder url="file://$MODULE_DIR$/build"/>
       <excludeFolder url="file://$MODULE_DIR$/.gradle"/>
+      <excludeFolder url="file://$MODULE_DIR$/build"/>
     </content>
     <orderEntry type="sourceFolder" forTests="false"/>
-    <orderEntry module-name="mx-dal" type="module" scope="PROVIDED"/>
-    <orderEntry module-name="mx-utils" type="module" scope="PROVIDED"/>
-    <orderEntry module-name="mx-spring" type="module" scope="PROVIDED"/>
-    <orderEntry type="module-library" scope="PROVIDED">
+    <orderEntry type="module" module-name="mx-dal"/>
+    <orderEntry type="module" module-name="mx-spring"/>
+    <orderEntry type="module" module-name="mx-utils"/>
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.h2database/h2/1.4.196/dd0034398d593aa3588c6773faac429bbd9aea0e/h2-1.4.196.jar!/"/>
@@ -26,7 +26,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/c4f4a76171671ccf293be8995a498eab7fa8ed24/commons-dbcp2-2.1.1.jar!/"/>
@@ -37,7 +37,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/2.0.0.RELEASE/37298e64c40bfd4b51335df41afa8a5e509ba5de/spring-data-jpa-2.0.0.RELEASE.jar!/"/>
@@ -48,62 +48,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-entitymanager/5.2.9.Final/c967ff4d212c14cac9a5e2161b1ea36b22352d0a/hibernate-entitymanager-5.2.9.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-entitymanager/5.2.9.Final/5e35ce9c2897196c9707394fc40923da52883183/hibernate-entitymanager-5.2.9.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/46deba4adbdb4967367b013cbc67b7f7373da60a/mysql-connector-java-5.1.34.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/240221147d8f9e26b25625bc3c4660cfb8ac92ac/mysql-connector-java-5.1.34-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/e5f4f28f19d57716fbc3989d7a357ebf1e454fea/commons-pool2-2.4.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/2c9dcae4975caff05a627b99fae76e6fef2a3a0e/commons-pool2-2.4.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.0.RELEASE/b97dad2d501c2baf49b497733bb19f7a05d52142/spring-data-commons-2.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.0.RELEASE/731800ab3782adeb780e0211058d134fe4cafcdc/spring-data-commons-2.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-orm/5.0.0.RELEASE/3b129d4a305f0fba7c4e9210b6dd3e6cb6e9f6c4/spring-orm-5.0.0.RELEASE.jar!/"/>
@@ -114,194 +59,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.0.RELEASE/bf5165fcd47f582f9addcd2a41424b08ea00d880/spring-context-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.0.RELEASE/6a83d26644fab9004a58a1390a31f87207f4f5e9/spring-context-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.0.RELEASE/717d06b89e32f51f329094f709662f8414c0843f/spring-aop-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.0.RELEASE/5fac2b5596d003378ac94db4f2344588d6b4909f/spring-aop-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.8.10/1a14fe9e912f6e8bdbb5429b78b4090d8b47bc1/aspectjrt-1.8.10.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.8.10/230c528119f8479c4f130fbaeebc67fc986afb88/aspectjrt-1.8.10-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/da76ca59f6a57ee3102f8f9bd9cee742973efa8a/slf4j-api-1.7.25.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/962153db4a9ea71b79d047dfd1b2a0d80d8f4739/slf4j-api-1.7.25-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.0.Final/3616bb87707910296e2c195dc016287080bba5af/jboss-logging-3.3.0.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.0.Final/3625e6818158ddb4754fa2ec51299e5f57e596b4/jboss-logging-3.3.0.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.2.9.Final/284e5c769bbcc3fe1d4961f163b7360e6b4e2422/hibernate-core-5.2.9.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.2.9.Final/48cd5241964e6c85952626a2d197f60f415554e1/hibernate-core-5.2.9.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/dom4j/dom4j/1.6.1/5d3ccc056b6f056dbf0dddfdf43894b9065a8f94/dom4j-1.6.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/dom4j/dom4j/1.6.1/a8e7149359255f43e0e5e3b1837948f9ed5861fb/dom4j-1.6.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.1.Final/71e1cff3fcb20d3b3af4f3363c3ddb24d33c6879/hibernate-commons-annotations-5.0.1.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.1.Final/203038e420aaa3fa6df8bad4fda19ca1e2824005/hibernate-commons-annotations-5.0.1.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.javax.persistence/hibernate-jpa-2.1-api/1.0.0.Final/5e731d961297e5a07290bfaf3db1fbc8bbbf405a/hibernate-jpa-2.1-api-1.0.0.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.javax.persistence/hibernate-jpa-2.1-api/1.0.0.Final/33fbaa7276b774ef0925f541640f6ff23fbc62dc/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/a9cbcdfb7e9f86fbc74d3afae65f2248bfbf82a0/javassist-3.20.0-GA.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/d8fdc08a455bc0b28bc0bed1f0d032d935cee8e1/javassist-3.20.0-GA-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.6.6/7d421c533adb4e1948e3219572f94c485f09a644/byte-buddy-1.6.6.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.6.6/e2cdbc0ecebd601c9cea804fa3f46fbbabd5dbe9/byte-buddy-1.6.6-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.spec.javax.transaction/jboss-transaction-api_1.2_spec/1.0.1.Final/4441f144a2a1f46ed48fcc6b476a4b6295e6d524/jboss-transaction-api_1.2_spec-1.0.1.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.spec.javax.transaction/jboss-transaction-api_1.2_spec/1.0.1.Final/2d0cb1e79e030277b094ef55fcfb97fd0443ee43/jboss-transaction-api_1.2_spec-1.0.1.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/2878958d7631337dcfe3bb4e541aa34478367e66/fastjson-1.2.29.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/e0d92bca2f0bd8f0e9b21bb089edb499c7c9176d/fastjson-1.2.29-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/e590eeb783348ce8ddef205b82127f9084d82bf3/log4j-api-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/459702eacc545a5478627fe879cec6e004c00f3a/log4j-api-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/979fc0cf8460302e4ffbfe38c1b66a99450b0bb7/log4j-core-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/4693b08b8d9abe152417b9564bb7a68d82630180/log4j-core-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-jcl/2.8.2/3e3fb203422887b4a2f06d55c1344f96a0098694/log4j-jcl-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-jcl/2.8.2/2d20548e90820eca0a459dcecbdedd38a42bea67/log4j-jcl-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/36bc2a99b86be26ccdc51fe288458dc712d280c1/log4j-slf4j-impl-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/c5f494286f220ba330c6eabccf10740458ef1fab/log4j-slf4j-impl-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jdbc/5.0.0.RELEASE/e6c73a4dd93956fcfd59887c64f0989f3fd004b5/spring-jdbc-5.0.0.RELEASE.jar!/"/>
@@ -312,38 +70,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.7/83cd2cd674a217ade95a4bb83a8a14f351f48bd0/antlr-2.7.7.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES/>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.3.Final/bfc4d6257dbff7a33a357f0de116be6ff951d849/jandex-2.0.3.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.3.Final/edc4552ad816df11579a8e02e19f778c77a915b5/jandex-2.0.3.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.0/183407ff982e9375f1a1c4a51ed0a9307c598fc7/classmate-1.3.0.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.0/818530d5e3e8f862d0aeefb4c2df8e07a1d9ad83/classmate-1.3.0-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-tx/5.0.0.RELEASE/359eb5245c54257085b9eb2fc11c68dde3325d7/spring-tx-5.0.0.RELEASE.jar!/"/>
@@ -354,87 +81,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.0.0.RELEASE/6f95f071cfe29a84661648e5445dcb054be0cfa7/spring-beans-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.0.0.RELEASE/fcae8253f6748d47a25f6ef2fd0898c03a379365/spring-beans-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.0.RELEASE/3a9bb910e8943b5ef59b193a1621daba46456ca9/spring-core-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.0.RELEASE/13b6e8a3fa7972a1aeab793a1a3e3eeb68808c6e/spring-core-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.0.RELEASE/ab0a2114cab7b9e04adf79d812c714f3cbf4abf7/spring-jcl-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.0.RELEASE/d927a8acb9723c60472a548625843329be45b3a7/spring-jcl-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="PROVIDED">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.0.0.RELEASE/48cdf1b2ea2a510c731e5e08f75299e3cb8e9d68/spring-expression-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.0.0.RELEASE/508b9306ca35645ced73ab87037fcde61592cd/spring-expression-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry module-name="mx-dal" type="module" scope="RUNTIME"/>
-    <orderEntry module-name="mx-utils" type="module" scope="RUNTIME"/>
-    <orderEntry module-name="mx-spring" type="module" scope="RUNTIME"/>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.h2database/h2/1.4.196/dd0034398d593aa3588c6773faac429bbd9aea0e/h2-1.4.196.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.h2database/h2/1.4.196/1646e9e294b9c956a441bc383ca17a62c4b52311/h2-1.4.196-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/c4f4a76171671ccf293be8995a498eab7fa8ed24/commons-dbcp2-2.1.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/e312d6c766f8b2a95dee5d9335e5dbe40a304621/commons-dbcp2-2.1.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/2.0.0.RELEASE/37298e64c40bfd4b51335df41afa8a5e509ba5de/spring-data-jpa-2.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/2.0.0.RELEASE/42a44b0ecf3c19f302b4362efaf97350a61d2744/spring-data-jpa-2.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-entitymanager/5.2.9.Final/c967ff4d212c14cac9a5e2161b1ea36b22352d0a/hibernate-entitymanager-5.2.9.Final.jar!/"/>
@@ -445,7 +92,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/46deba4adbdb4967367b013cbc67b7f7373da60a/mysql-connector-java-5.1.34.jar!/"/>
@@ -456,7 +103,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/e5f4f28f19d57716fbc3989d7a357ebf1e454fea/commons-pool2-2.4.2.jar!/"/>
@@ -467,205 +114,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.0.RELEASE/b97dad2d501c2baf49b497733bb19f7a05d52142/spring-data-commons-2.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.0.RELEASE/731800ab3782adeb780e0211058d134fe4cafcdc/spring-data-commons-2.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-orm/5.0.0.RELEASE/3b129d4a305f0fba7c4e9210b6dd3e6cb6e9f6c4/spring-orm-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-orm/5.0.0.RELEASE/6eb458322dc81feea961d69e63702fb50f954ddb/spring-orm-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.0.RELEASE/bf5165fcd47f582f9addcd2a41424b08ea00d880/spring-context-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.0.RELEASE/6a83d26644fab9004a58a1390a31f87207f4f5e9/spring-context-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.0.RELEASE/717d06b89e32f51f329094f709662f8414c0843f/spring-aop-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.0.RELEASE/5fac2b5596d003378ac94db4f2344588d6b4909f/spring-aop-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.8.10/1a14fe9e912f6e8bdbb5429b78b4090d8b47bc1/aspectjrt-1.8.10.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.8.10/230c528119f8479c4f130fbaeebc67fc986afb88/aspectjrt-1.8.10-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/da76ca59f6a57ee3102f8f9bd9cee742973efa8a/slf4j-api-1.7.25.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/962153db4a9ea71b79d047dfd1b2a0d80d8f4739/slf4j-api-1.7.25-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.0.Final/3616bb87707910296e2c195dc016287080bba5af/jboss-logging-3.3.0.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.0.Final/3625e6818158ddb4754fa2ec51299e5f57e596b4/jboss-logging-3.3.0.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.2.9.Final/284e5c769bbcc3fe1d4961f163b7360e6b4e2422/hibernate-core-5.2.9.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.2.9.Final/48cd5241964e6c85952626a2d197f60f415554e1/hibernate-core-5.2.9.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/dom4j/dom4j/1.6.1/5d3ccc056b6f056dbf0dddfdf43894b9065a8f94/dom4j-1.6.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/dom4j/dom4j/1.6.1/a8e7149359255f43e0e5e3b1837948f9ed5861fb/dom4j-1.6.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.1.Final/71e1cff3fcb20d3b3af4f3363c3ddb24d33c6879/hibernate-commons-annotations-5.0.1.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.1.Final/203038e420aaa3fa6df8bad4fda19ca1e2824005/hibernate-commons-annotations-5.0.1.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.javax.persistence/hibernate-jpa-2.1-api/1.0.0.Final/5e731d961297e5a07290bfaf3db1fbc8bbbf405a/hibernate-jpa-2.1-api-1.0.0.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.javax.persistence/hibernate-jpa-2.1-api/1.0.0.Final/33fbaa7276b774ef0925f541640f6ff23fbc62dc/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/a9cbcdfb7e9f86fbc74d3afae65f2248bfbf82a0/javassist-3.20.0-GA.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/d8fdc08a455bc0b28bc0bed1f0d032d935cee8e1/javassist-3.20.0-GA-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.6.6/7d421c533adb4e1948e3219572f94c485f09a644/byte-buddy-1.6.6.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.6.6/e2cdbc0ecebd601c9cea804fa3f46fbbabd5dbe9/byte-buddy-1.6.6-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.spec.javax.transaction/jboss-transaction-api_1.2_spec/1.0.1.Final/4441f144a2a1f46ed48fcc6b476a4b6295e6d524/jboss-transaction-api_1.2_spec-1.0.1.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.spec.javax.transaction/jboss-transaction-api_1.2_spec/1.0.1.Final/2d0cb1e79e030277b094ef55fcfb97fd0443ee43/jboss-transaction-api_1.2_spec-1.0.1.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/2878958d7631337dcfe3bb4e541aa34478367e66/fastjson-1.2.29.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/e0d92bca2f0bd8f0e9b21bb089edb499c7c9176d/fastjson-1.2.29-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/e590eeb783348ce8ddef205b82127f9084d82bf3/log4j-api-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/459702eacc545a5478627fe879cec6e004c00f3a/log4j-api-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/979fc0cf8460302e4ffbfe38c1b66a99450b0bb7/log4j-core-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/4693b08b8d9abe152417b9564bb7a68d82630180/log4j-core-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-jcl/2.8.2/3e3fb203422887b4a2f06d55c1344f96a0098694/log4j-jcl-2.8.2.jar!/"/>
@@ -676,71 +125,51 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/36bc2a99b86be26ccdc51fe288458dc712d280c1/log4j-slf4j-impl-2.8.2.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/c5f494286f220ba330c6eabccf10740458ef1fab/log4j-slf4j-impl-2.8.2-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jdbc/5.0.0.RELEASE/e6c73a4dd93956fcfd59887c64f0989f3fd004b5/spring-jdbc-5.0.0.RELEASE.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.0.RELEASE/b97dad2d501c2baf49b497733bb19f7a05d52142/spring-data-commons-2.0.0.RELEASE.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jdbc/5.0.0.RELEASE/b67868f9c319513def51b104c15a7a4af60e56d5/spring-jdbc-5.0.0.RELEASE-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.0.RELEASE/731800ab3782adeb780e0211058d134fe4cafcdc/spring-data-commons-2.0.0.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.7/83cd2cd674a217ade95a4bb83a8a14f351f48bd0/antlr-2.7.7.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES/>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.3.Final/bfc4d6257dbff7a33a357f0de116be6ff951d849/jandex-2.0.3.Final.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.0.RELEASE/bf5165fcd47f582f9addcd2a41424b08ea00d880/spring-context-5.0.0.RELEASE.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.3.Final/edc4552ad816df11579a8e02e19f778c77a915b5/jandex-2.0.3.Final-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.0.RELEASE/6a83d26644fab9004a58a1390a31f87207f4f5e9/spring-context-5.0.0.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.0/183407ff982e9375f1a1c4a51ed0a9307c598fc7/classmate-1.3.0.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.0.RELEASE/717d06b89e32f51f329094f709662f8414c0843f/spring-aop-5.0.0.RELEASE.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.0/818530d5e3e8f862d0aeefb4c2df8e07a1d9ad83/classmate-1.3.0-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.0.RELEASE/5fac2b5596d003378ac94db4f2344588d6b4909f/spring-aop-5.0.0.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-tx/5.0.0.RELEASE/359eb5245c54257085b9eb2fc11c68dde3325d7/spring-tx-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-tx/5.0.0.RELEASE/38db9f58b3f0795e0deb855090a915939498b811/spring-tx-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.0.0.RELEASE/6f95f071cfe29a84661648e5445dcb054be0cfa7/spring-beans-5.0.0.RELEASE.jar!/"/>
@@ -751,29 +180,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.0.RELEASE/3a9bb910e8943b5ef59b193a1621daba46456ca9/spring-core-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.0.RELEASE/13b6e8a3fa7972a1aeab793a1a3e3eeb68808c6e/spring-core-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.0.RELEASE/ab0a2114cab7b9e04adf79d812c714f3cbf4abf7/spring-jcl-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.0.RELEASE/d927a8acb9723c60472a548625843329be45b3a7/spring-jcl-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.0.0.RELEASE/48cdf1b2ea2a510c731e5e08f75299e3cb8e9d68/spring-expression-5.0.0.RELEASE.jar!/"/>
@@ -784,61 +191,210 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry module-name="mx-dal" type="module" scope="TEST"/>
-    <orderEntry module-name="mx-utils" type="module" scope="TEST"/>
-    <orderEntry module-name="mx-spring" type="module" scope="TEST"/>
-    <orderEntry type="module-library" scope="TEST">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.h2database/h2/1.4.196/dd0034398d593aa3588c6773faac429bbd9aea0e/h2-1.4.196.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.0.RELEASE/3a9bb910e8943b5ef59b193a1621daba46456ca9/spring-core-5.0.0.RELEASE.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.h2database/h2/1.4.196/1646e9e294b9c956a441bc383ca17a62c4b52311/h2-1.4.196-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.0.RELEASE/13b6e8a3fa7972a1aeab793a1a3e3eeb68808c6e/spring-core-5.0.0.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/c4f4a76171671ccf293be8995a498eab7fa8ed24/commons-dbcp2-2.1.1.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.8.10/1a14fe9e912f6e8bdbb5429b78b4090d8b47bc1/aspectjrt-1.8.10.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-dbcp2/2.1.1/e312d6c766f8b2a95dee5d9335e5dbe40a304621/commons-dbcp2-2.1.1-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.8.10/230c528119f8479c4f130fbaeebc67fc986afb88/aspectjrt-1.8.10-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/2.0.0.RELEASE/37298e64c40bfd4b51335df41afa8a5e509ba5de/spring-data-jpa-2.0.0.RELEASE.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/36bc2a99b86be26ccdc51fe288458dc712d280c1/log4j-slf4j-impl-2.8.2.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-jpa/2.0.0.RELEASE/42a44b0ecf3c19f302b4362efaf97350a61d2744/spring-data-jpa-2.0.0.RELEASE-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/c5f494286f220ba330c6eabccf10740458ef1fab/log4j-slf4j-impl-2.8.2-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-entitymanager/5.2.9.Final/c967ff4d212c14cac9a5e2161b1ea36b22352d0a/hibernate-entitymanager-5.2.9.Final.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/da76ca59f6a57ee3102f8f9bd9cee742973efa8a/slf4j-api-1.7.25.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-entitymanager/5.2.9.Final/5e35ce9c2897196c9707394fc40923da52883183/hibernate-entitymanager-5.2.9.Final-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/962153db4a9ea71b79d047dfd1b2a0d80d8f4739/slf4j-api-1.7.25-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/46deba4adbdb4967367b013cbc67b7f7373da60a/mysql-connector-java-5.1.34.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.2.9.Final/284e5c769bbcc3fe1d4961f163b7360e6b4e2422/hibernate-core-5.2.9.Final.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/5.1.34/240221147d8f9e26b25625bc3c4660cfb8ac92ac/mysql-connector-java-5.1.34-sources.jar!/"/>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.2.9.Final/48cd5241964e6c85952626a2d197f60f415554e1/hibernate-core-5.2.9.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.1.Final/71e1cff3fcb20d3b3af4f3363c3ddb24d33c6879/hibernate-commons-annotations-5.0.1.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.1.Final/203038e420aaa3fa6df8bad4fda19ca1e2824005/hibernate-commons-annotations-5.0.1.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.0.Final/3616bb87707910296e2c195dc016287080bba5af/jboss-logging-3.3.0.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.0.Final/3625e6818158ddb4754fa2ec51299e5f57e596b4/jboss-logging-3.3.0.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/dom4j/dom4j/1.6.1/5d3ccc056b6f056dbf0dddfdf43894b9065a8f94/dom4j-1.6.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/dom4j/dom4j/1.6.1/a8e7149359255f43e0e5e3b1837948f9ed5861fb/dom4j-1.6.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.javax.persistence/hibernate-jpa-2.1-api/1.0.0.Final/5e731d961297e5a07290bfaf3db1fbc8bbbf405a/hibernate-jpa-2.1-api-1.0.0.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.javax.persistence/hibernate-jpa-2.1-api/1.0.0.Final/33fbaa7276b774ef0925f541640f6ff23fbc62dc/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/a9cbcdfb7e9f86fbc74d3afae65f2248bfbf82a0/javassist-3.20.0-GA.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/d8fdc08a455bc0b28bc0bed1f0d032d935cee8e1/javassist-3.20.0-GA-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.6.6/7d421c533adb4e1948e3219572f94c485f09a644/byte-buddy-1.6.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.6.6/e2cdbc0ecebd601c9cea804fa3f46fbbabd5dbe9/byte-buddy-1.6.6-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.spec.javax.transaction/jboss-transaction-api_1.2_spec/1.0.1.Final/4441f144a2a1f46ed48fcc6b476a4b6295e6d524/jboss-transaction-api_1.2_spec-1.0.1.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.spec.javax.transaction/jboss-transaction-api_1.2_spec/1.0.1.Final/2d0cb1e79e030277b094ef55fcfb97fd0443ee43/jboss-transaction-api_1.2_spec-1.0.1.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/2878958d7631337dcfe3bb4e541aa34478367e66/fastjson-1.2.29.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/e0d92bca2f0bd8f0e9b21bb089edb499c7c9176d/fastjson-1.2.29-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/979fc0cf8460302e4ffbfe38c1b66a99450b0bb7/log4j-core-2.8.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/4693b08b8d9abe152417b9564bb7a68d82630180/log4j-core-2.8.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/e590eeb783348ce8ddef205b82127f9084d82bf3/log4j-api-2.8.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/459702eacc545a5478627fe879cec6e004c00f3a/log4j-api-2.8.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.7/83cd2cd674a217ade95a4bb83a8a14f351f48bd0/antlr-2.7.7.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.3.Final/bfc4d6257dbff7a33a357f0de116be6ff951d849/jandex-2.0.3.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.3.Final/edc4552ad816df11579a8e02e19f778c77a915b5/jandex-2.0.3.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.0/183407ff982e9375f1a1c4a51ed0a9307c598fc7/classmate-1.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.0/818530d5e3e8f862d0aeefb4c2df8e07a1d9ad83/classmate-1.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.0.RELEASE/ab0a2114cab7b9e04adf79d812c714f3cbf4abf7/spring-jcl-5.0.0.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.0.RELEASE/d927a8acb9723c60472a548625843329be45b3a7/spring-jcl-5.0.0.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -856,339 +412,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/e5f4f28f19d57716fbc3989d7a357ebf1e454fea/commons-pool2-2.4.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-pool2/2.4.2/2c9dcae4975caff05a627b99fae76e6fef2a3a0e/commons-pool2-2.4.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.0.RELEASE/b97dad2d501c2baf49b497733bb19f7a05d52142/spring-data-commons-2.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.0.0.RELEASE/731800ab3782adeb780e0211058d134fe4cafcdc/spring-data-commons-2.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-orm/5.0.0.RELEASE/3b129d4a305f0fba7c4e9210b6dd3e6cb6e9f6c4/spring-orm-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-orm/5.0.0.RELEASE/6eb458322dc81feea961d69e63702fb50f954ddb/spring-orm-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.0.RELEASE/bf5165fcd47f582f9addcd2a41424b08ea00d880/spring-context-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.0.0.RELEASE/6a83d26644fab9004a58a1390a31f87207f4f5e9/spring-context-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.0.RELEASE/717d06b89e32f51f329094f709662f8414c0843f/spring-aop-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.0.0.RELEASE/5fac2b5596d003378ac94db4f2344588d6b4909f/spring-aop-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.8.10/1a14fe9e912f6e8bdbb5429b78b4090d8b47bc1/aspectjrt-1.8.10.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.aspectj/aspectjrt/1.8.10/230c528119f8479c4f130fbaeebc67fc986afb88/aspectjrt-1.8.10-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/da76ca59f6a57ee3102f8f9bd9cee742973efa8a/slf4j-api-1.7.25.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/962153db4a9ea71b79d047dfd1b2a0d80d8f4739/slf4j-api-1.7.25-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.0.Final/3616bb87707910296e2c195dc016287080bba5af/jboss-logging-3.3.0.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.0.Final/3625e6818158ddb4754fa2ec51299e5f57e596b4/jboss-logging-3.3.0.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.2.9.Final/284e5c769bbcc3fe1d4961f163b7360e6b4e2422/hibernate-core-5.2.9.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate/hibernate-core/5.2.9.Final/48cd5241964e6c85952626a2d197f60f415554e1/hibernate-core-5.2.9.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/dom4j/dom4j/1.6.1/5d3ccc056b6f056dbf0dddfdf43894b9065a8f94/dom4j-1.6.1.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/dom4j/dom4j/1.6.1/a8e7149359255f43e0e5e3b1837948f9ed5861fb/dom4j-1.6.1-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.1.Final/71e1cff3fcb20d3b3af4f3363c3ddb24d33c6879/hibernate-commons-annotations-5.0.1.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.common/hibernate-commons-annotations/5.0.1.Final/203038e420aaa3fa6df8bad4fda19ca1e2824005/hibernate-commons-annotations-5.0.1.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.javax.persistence/hibernate-jpa-2.1-api/1.0.0.Final/5e731d961297e5a07290bfaf3db1fbc8bbbf405a/hibernate-jpa-2.1-api-1.0.0.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hibernate.javax.persistence/hibernate-jpa-2.1-api/1.0.0.Final/33fbaa7276b774ef0925f541640f6ff23fbc62dc/hibernate-jpa-2.1-api-1.0.0.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/a9cbcdfb7e9f86fbc74d3afae65f2248bfbf82a0/javassist-3.20.0-GA.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.20.0-GA/d8fdc08a455bc0b28bc0bed1f0d032d935cee8e1/javassist-3.20.0-GA-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.6.6/7d421c533adb4e1948e3219572f94c485f09a644/byte-buddy-1.6.6.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.6.6/e2cdbc0ecebd601c9cea804fa3f46fbbabd5dbe9/byte-buddy-1.6.6-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.spec.javax.transaction/jboss-transaction-api_1.2_spec/1.0.1.Final/4441f144a2a1f46ed48fcc6b476a4b6295e6d524/jboss-transaction-api_1.2_spec-1.0.1.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss.spec.javax.transaction/jboss-transaction-api_1.2_spec/1.0.1.Final/2d0cb1e79e030277b094ef55fcfb97fd0443ee43/jboss-transaction-api_1.2_spec-1.0.1.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/"/>
         </CLASSES>
         <JAVADOC/>
         <SOURCES>
           <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/2878958d7631337dcfe3bb4e541aa34478367e66/fastjson-1.2.29.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.alibaba/fastjson/1.2.29/e0d92bca2f0bd8f0e9b21bb089edb499c7c9176d/fastjson-1.2.29-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/e590eeb783348ce8ddef205b82127f9084d82bf3/log4j-api-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.8.2/459702eacc545a5478627fe879cec6e004c00f3a/log4j-api-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/979fc0cf8460302e4ffbfe38c1b66a99450b0bb7/log4j-core-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.8.2/4693b08b8d9abe152417b9564bb7a68d82630180/log4j-core-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-jcl/2.8.2/3e3fb203422887b4a2f06d55c1344f96a0098694/log4j-jcl-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-jcl/2.8.2/2d20548e90820eca0a459dcecbdedd38a42bea67/log4j-jcl-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/36bc2a99b86be26ccdc51fe288458dc712d280c1/log4j-slf4j-impl-2.8.2.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.8.2/c5f494286f220ba330c6eabccf10740458ef1fab/log4j-slf4j-impl-2.8.2-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jdbc/5.0.0.RELEASE/e6c73a4dd93956fcfd59887c64f0989f3fd004b5/spring-jdbc-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jdbc/5.0.0.RELEASE/b67868f9c319513def51b104c15a7a4af60e56d5/spring-jdbc-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/antlr/antlr/2.7.7/83cd2cd674a217ade95a4bb83a8a14f351f48bd0/antlr-2.7.7.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES/>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.3.Final/bfc4d6257dbff7a33a357f0de116be6ff951d849/jandex-2.0.3.Final.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.jboss/jandex/2.0.3.Final/edc4552ad816df11579a8e02e19f778c77a915b5/jandex-2.0.3.Final-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.0/183407ff982e9375f1a1c4a51ed0a9307c598fc7/classmate-1.3.0.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.3.0/818530d5e3e8f862d0aeefb4c2df8e07a1d9ad83/classmate-1.3.0-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-tx/5.0.0.RELEASE/359eb5245c54257085b9eb2fc11c68dde3325d7/spring-tx-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-tx/5.0.0.RELEASE/38db9f58b3f0795e0deb855090a915939498b811/spring-tx-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.0.0.RELEASE/6f95f071cfe29a84661648e5445dcb054be0cfa7/spring-beans-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.0.0.RELEASE/fcae8253f6748d47a25f6ef2fd0898c03a379365/spring-beans-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.0.RELEASE/3a9bb910e8943b5ef59b193a1621daba46456ca9/spring-core-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.0.0.RELEASE/13b6e8a3fa7972a1aeab793a1a3e3eeb68808c6e/spring-core-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.0.RELEASE/ab0a2114cab7b9e04adf79d812c714f3cbf4abf7/spring-jcl-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.0.0.RELEASE/d927a8acb9723c60472a548625843329be45b3a7/spring-jcl-5.0.0.RELEASE-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.0.0.RELEASE/48cdf1b2ea2a510c731e5e08f75299e3cb8e9d68/spring-expression-5.0.0.RELEASE.jar!/"/>
-        </CLASSES>
-        <JAVADOC/>
-        <SOURCES>
-          <root url="jar:///Users/john/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.0.0.RELEASE/508b9306ca35645ced73ab87037fcde61592cd/spring-expression-5.0.0.RELEASE-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
