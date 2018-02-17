@@ -1,0 +1,77 @@
+plugins {
+  id 'com.jfrog.bintray' version '1.8.0'
+}
+
+apply from: '../../../../dependencies.gradle'
+
+apply from: '../../../../allprojects.gradle'
+
+project(':mx-ff-service') {
+  version = '1.0.0'
+  description = 'Mx Tools (Family Fee) Service based mx-dal-service &amp; mx-rest-utils.'
+
+  dependencies {
+    compile(
+      libs.'mx-utils',
+      libs.'mx-spring',
+      libs.'mx-dal',
+      libs.'mx-rbac-service',
+      libs.'mx-service-utils',
+      libs.'aspectj'
+    )
+  }
+}
+
+project(':mx-ff-service-hibernate') {
+  version = '1.0.0.'
+  description = 'Mx Tools (Family Fee) Service for hibernate based mx-dal-hibernate &amp; mx-rbac-service-hibernate.'
+
+  dependencies {
+    compile(
+      project(':mx-ff-service'),
+      libs.'javax-el-api',
+      libs.'mx-dal-hibernate',
+      libs.'mx-rbac-service-hibernate',
+      libs.'spring-tx'
+    )
+  }
+}
+
+project(':mx-ff-service-mongodb') {
+  version = '1.0.0'
+  description = 'Mx Tools (Family Fee) Service for mongodb based mx-dal-mongodb &amp; mx-rbac-service-mongodb.'
+
+  dependencies {
+    compile(
+      project(':mx-ff-service'),
+      libs.'mx-dal-mongodb',
+      libs.'mx-rbac-service-mongodb'
+    )
+    testCompile(
+      libs.'mongodb-embed'
+    )
+  }
+}
+
+project(':mx-ff-restful') {
+  version = '1.0.0'
+  description = 'Mx Tools (Family Fee) Service for restful based mx-rbac-restful &amp; mx-rest-utils.'
+
+  dependencies {
+    compile(
+      project(':mx-ff-service'),
+      project(':mx-ff-service-hibernate'),
+      libs.'jersey-server',
+      libs.'jersey-media-jackson',
+      libs.'jersey-jetty-http',
+      libs.'jersey-jetty-servlet',
+      libs.'jersey-hk2',
+      libs.'jetty-server',
+      libs.'jetty-servlet',
+      libs.'jetty-websocket'
+      // project(':mx-ff-service-mongodb')
+    )
+  }
+}
+
+apply from: '../../../../subproject.gradle'

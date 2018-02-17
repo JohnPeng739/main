@@ -1,0 +1,6 @@
+rootProject.name = 'family-fee'
+
+include 'mx-ff-service'
+include 'mx-ff-service-hibernate'
+include 'mx-ff-service-mongodb'
+include 'mx-ff-restful'
