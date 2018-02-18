@@ -44,12 +44,12 @@ public interface Family extends Base {
      *
      * @return 成员集合
      */
-    Set<FfeeAccount> getMembers();
+    Set<FamilyMember> getMembers();
 
     /**
      * 设置家庭成员集合
      *
      * @param members 成员集合
      */
-    void setMembers(Set<FfeeAccount> members);
+    void setMembers(Set<FamilyMember> members);
 }

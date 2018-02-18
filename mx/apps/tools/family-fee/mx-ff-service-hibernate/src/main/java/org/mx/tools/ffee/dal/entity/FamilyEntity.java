@@ -3,6 +3,7 @@ package org.mx.tools.ffee.dal.entity;
 import org.mx.dal.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -20,8 +21,16 @@ public class FamilyEntity extends BaseEntity implements Family {
     private String desc;
     @ManyToOne(targetEntity = FfeeAccount.class)
     private FfeeAccount owner;
-    @OneToMany(targetEntity = FfeeAccount.class, cascade = {CascadeType.REFRESH}, mappedBy = "family", fetch = FetchType.EAGER)
-    private Set<FfeeAccount> members;
+    @OneToMany(targetEntity = FamilyMemberEntity.class, cascade = {CascadeType.REFRESH}, mappedBy = "family", fetch = FetchType.EAGER)
+    private Set<FamilyMember> members;
+
+    /**
+     * 默认的构造函数
+     */
+    public FamilyEntity() {
+        super();
+        members = new HashSet<>();
+    }
 
     /**
      * {@inheritDoc}
@@ -64,7 +73,7 @@ public class FamilyEntity extends BaseEntity implements Family {
      *
      * @see Family#getMembers()
      */
-    public Set<FfeeAccount> getMembers() {
+    public Set<FamilyMember> getMembers() {
         return members;
     }
 
@@ -73,7 +82,7 @@ public class FamilyEntity extends BaseEntity implements Family {
      *
      * @see Family#setMembers(Set)
      */
-    public void setMembers(Set<FfeeAccount> members) {
+    public void setMembers(Set<FamilyMember> members) {
         this.members = members;
     }
 }

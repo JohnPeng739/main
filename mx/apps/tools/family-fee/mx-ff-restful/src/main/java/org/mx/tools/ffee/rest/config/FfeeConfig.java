@@ -1,4 +1,4 @@
-package org.mx.tools.ffee.restful.config;
+package org.mx.tools.ffee.rest.config;
 
 import org.mx.comps.rbac.RBACRestApplication;
 import org.springframework.context.annotation.ComponentScan;
