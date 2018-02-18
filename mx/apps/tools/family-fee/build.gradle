@@ -15,7 +15,7 @@ project(':mx-ff-service') {
       libs.'mx-utils',
       libs.'mx-spring',
       libs.'mx-dal',
-      libs.'mx-rbac-service',
+      libs.'mx-rbac-restful',
       libs.'mx-service-utils',
       libs.'aspectj'
     )

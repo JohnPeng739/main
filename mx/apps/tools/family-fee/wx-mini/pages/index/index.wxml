@@ -28,7 +28,7 @@
       <button class="button.single" id="../spending/spending" type="primary" bindtap="gotoPage">记支出</button>
       <button class="button.single" id="../income/income" bindtap="gotoPage">记收入</button>
       <button class="button.single" id="../budget/budget" bindtap="gotoPage">调预算</button>
-      <button class="button.single" id="../cource/cource" bindtap="gotoPage">变科目</button>
+      <button class="button.single" id="../course/course" bindtap="gotoPage">变科目</button>
       <button class="button.single" id="../family/family" bindtap="gotoPage">我们家</button>
       <button class="button.single" id="../test/test" bindtap="gotoPage">测试</button>
     </block>

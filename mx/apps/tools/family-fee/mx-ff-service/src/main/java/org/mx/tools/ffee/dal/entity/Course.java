@@ -8,7 +8,7 @@ import org.mx.dal.entity.Base;
  * @author: John.Peng
  * @date: 2018/2/17 下午4:46
  */
-public interface Cource extends Base {
+public interface Course extends Base {
     String getName();
 
     void setName(String name);

@@ -3,6 +3,8 @@ package org.mx.tools.ffee.dal.entity;
 import org.mx.dal.entity.BaseEntity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * 描述： 科目明细信息实体类，基于Hibernate实现。
@@ -10,18 +12,20 @@ import javax.persistence.Column;
  * @author: John.Peng
  * @date: 2018/2/17 下午5:30
  */
-public class CourceEntity extends BaseEntity implements Cource {
+@Entity
+@Table(name = "TB_COURSE")
+public class CourseEntity extends BaseEntity implements Course {
     @Column(name = "NAME", length = 50)
     private String name;
-    @Column(name = "DESCRIPTION", length = 255)
+    @Column(name = "DESCRIPTION")
     private String desc;
-    @Column(name = "COURCE_TYPE")
+    @Column(name = "COURSE_TYPE")
     private BudgetItem.Type type;
 
     /**
      * {@inheritDoc}
      *
-     * @see Cource#getName()
+     * @see Course#getName()
      */
     public String getName() {
         return name;
@@ -30,7 +34,7 @@ public class CourceEntity extends BaseEntity implements Cource {
     /**
      * {@inheritDoc}
      *
-     * @see Cource#setName(String)
+     * @see Course#setName(String)
      */
     public void setName(String name) {
         this.name = name;
@@ -39,7 +43,7 @@ public class CourceEntity extends BaseEntity implements Cource {
     /**
      * {@inheritDoc}
      *
-     * @see Cource#getDesc()
+     * @see Course#getDesc()
      */
     public String getDesc() {
         return desc;
@@ -48,7 +52,7 @@ public class CourceEntity extends BaseEntity implements Cource {
     /**
      * {@inheritDoc}
      *
-     * @see Cource#setDesc(String)
+     * @see Course#setDesc(String)
      */
     public void setDesc(String desc) {
         this.desc = desc;
@@ -57,7 +61,7 @@ public class CourceEntity extends BaseEntity implements Cource {
     /**
      * {@inheritDoc}
      *
-     * @see Cource#getType()
+     * @see Course#getType()
      */
     public BudgetItem.Type getType() {
         return type;
@@ -66,7 +70,7 @@ public class CourceEntity extends BaseEntity implements Cource {
     /**
      * {@inheritDoc}
      *
-     * @see Cource#setType(BudgetItem.Type)
+     * @see Course#setType(BudgetItem.Type)
      */
     public void setType(BudgetItem.Type type) {
         this.type = type;

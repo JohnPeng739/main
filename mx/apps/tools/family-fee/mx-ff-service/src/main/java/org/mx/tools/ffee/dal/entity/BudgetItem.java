@@ -9,6 +9,10 @@ import org.mx.dal.entity.Base;
  * @date: 2018/2/17 下午4:44
  */
 public interface BudgetItem extends Base {
+    int getYear();
+
+    void setYear(int year);
+
     Type getType();
 
     void setType(Type type);
@@ -21,9 +25,9 @@ public interface BudgetItem extends Base {
 
     void setDesc(String desc);
 
-    Cource getCource();
+    Course getCource();
 
-    void setCource(Cource cource);
+    void setCource(Course course);
 
     enum Type {
         /**
