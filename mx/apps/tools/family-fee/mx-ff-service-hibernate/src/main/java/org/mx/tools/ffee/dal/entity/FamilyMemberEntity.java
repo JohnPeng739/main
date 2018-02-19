@@ -10,8 +10,8 @@ import javax.persistence.Table;
 /**
  * 描述： 家庭成员信息实体类，基于Hibernate实现。
  *
- * @author: John.Peng
- * @date: 2018/2/18 下午7:52
+ * @author John.Peng
+ *         Date time 2018/2/18 下午7:52
  */
 @Entity
 @Table(name = "TB_FAMILY_MEMBER")

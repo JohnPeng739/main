@@ -7,8 +7,8 @@ import java.util.Set;
 /**
  * 描述： FFEE中家庭信息对象定义
  *
- * @author: John.Peng
- * @date: 2018/2/17 下午4:35
+ * @author John.Peng
+ *         Date time 2018/2/17 下午4:35
  */
 public interface Family extends Base {
     /**

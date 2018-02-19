@@ -4,9 +4,10 @@ import org.mx.tools.ffee.rest.config.FfeeConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
- * TODO 请输入类描述
+ * 描述： FFEE后台应用启动程序
  *
- * @author : John.Peng on 2018/2/18 下午4:50.
+ * @author John.Peng
+ *         Date time 2018/2/19 下午5:15
  */
 public class FfeeApplication {
     public static void main(String[] args) {

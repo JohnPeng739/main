@@ -4,15 +4,16 @@ import org.mx.error.UserInterfaceError;
 import org.mx.error.UserInterfaceException;
 
 /**
- * TODO 请输入类描述
+ * 描述： FFEE人机交互错误异常定义
  *
- * @author : John.Peng on 2018/2/18 下午8:18.
+ * @author John.Peng
+ *         Date time 2018/2/19 下午5:18
  */
 public class UserInterfaceFfeeErrorException extends UserInterfaceException {
     /**
      * 默认的构造函数
      */
-    public UserInterfaceFfeeErrorException() {
+    UserInterfaceFfeeErrorException() {
         this(UserInterfaceFfeeErrorException.FfeeErrors.FFEE_OTHER_FAIL);
     }
 
@@ -35,6 +36,10 @@ public class UserInterfaceFfeeErrorException extends UserInterfaceException {
         ACCOUNT_NOT_EXISTED("指定的账户不存在。"),
         ACCOUNT_IN_MEMBERS("指定的账户已经是家庭成员。"),
 
+        COURSE_NOT_EXISTED("指定的科目不存在。"),
+
+        FAMILY_MEMBER_SAVE_FAIL("保存家庭成员信息失败。"),
+
         FFEE_OTHER_FAIL("未知家庭账簿错误。");
 
         public static final int BASE_ORDINAL = 100;
@@ -45,7 +50,7 @@ public class UserInterfaceFfeeErrorException extends UserInterfaceException {
          *
          * @param errorMessage 错误信息
          */
-        private FfeeErrors(String errorMessage) {
+        FfeeErrors(String errorMessage) {
             this.errorMessage = errorMessage;
         }
 

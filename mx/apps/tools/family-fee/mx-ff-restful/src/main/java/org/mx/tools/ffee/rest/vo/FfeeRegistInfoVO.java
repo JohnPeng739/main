@@ -1,9 +1,10 @@
 package org.mx.tools.ffee.rest.vo;
 
 /**
- * TODO 请输入类描述
+ * 描述：
  *
- * @author : John.Peng on 2018/2/18 下午5:03.
+ * @author John.Peng
+ *         Date time 2018/2/19 下午5:13
  */
 public class FfeeRegistInfoVO {
     private String code, name, password;

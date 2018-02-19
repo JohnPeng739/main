@@ -5,10 +5,10 @@ import org.mx.dal.entity.Base;
 /**
  * 描述： 收入或支出的明细信息定义
  *
- * @author: John.Peng
- * @date: 2018/2/17 下午5:26
+ * @author John.Peng
+ *         Date time 2018/2/17 下午5:26
  */
-public interface MoneyItem  extends Base {
+public interface MoneyItem extends Base {
     Course getCource();
 
     void setCource(Course course);

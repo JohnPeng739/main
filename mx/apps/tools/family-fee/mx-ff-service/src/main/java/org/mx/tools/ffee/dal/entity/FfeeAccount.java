@@ -6,8 +6,8 @@ import org.mx.dal.entity.Base;
 /**
  * 描述： FFEE中的账户信息接口定义，依赖RBAC中的Account。
  *
- * @author: John.Peng
- * @date: 2018/2/17 下午4:28
+ * @author John.Peng
+ *         Date time 2018/2/17 下午4:28
  */
 public interface FfeeAccount extends Base {
     /**

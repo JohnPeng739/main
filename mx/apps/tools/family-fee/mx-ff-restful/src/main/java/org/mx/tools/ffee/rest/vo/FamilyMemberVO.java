@@ -10,8 +10,8 @@ import java.util.List;
 /**
  * 描述： 家庭成员信息值对象
  *
- * @author: John.Peng
- * @date: 2018/2/18 下午7:54
+ * @author John.Peng
+ *         Date time 2018/2/18 下午7:54
  */
 public class FamilyMemberVO extends BaseVO {
     private String memberRole;
@@ -42,19 +42,19 @@ public class FamilyMemberVO extends BaseVO {
         return list;
     }
 
-    public void setMemberRole(String memberRole) {
-        this.memberRole = memberRole;
-    }
-
-    public void setFfeeAccount(FfeeAccountVO ffeeAccount) {
-        this.ffeeAccount = ffeeAccount;
-    }
-
     public String getMemberRole() {
         return memberRole;
     }
 
+    public void setMemberRole(String memberRole) {
+        this.memberRole = memberRole;
+    }
+
     public FfeeAccountVO getFfeeAccount() {
         return ffeeAccount;
+    }
+
+    public void setFfeeAccount(FfeeAccountVO ffeeAccount) {
+        this.ffeeAccount = ffeeAccount;
     }
 }

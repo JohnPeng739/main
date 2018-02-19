@@ -9,8 +9,8 @@ import java.util.Set;
 /**
  * 描述： 家庭信息实体类，基于Hibernate实现。
  *
- * @author: John.Peng
- * @date: 2018/2/18 上午10:49
+ * @author John.Peng
+ *         Date time 2018/2/18 上午10:49
  */
 @Entity
 @Table(name = "TB_FAMILY")

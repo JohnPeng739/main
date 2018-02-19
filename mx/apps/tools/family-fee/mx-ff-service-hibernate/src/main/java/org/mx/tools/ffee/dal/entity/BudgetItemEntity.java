@@ -10,8 +10,8 @@ import javax.persistence.Table;
 /**
  * 描述： 预算明细信息实体类，基于hibernate实现。
  *
- * @author: John.Peng
- * @date: 2018/2/18 上午10:22
+ * @author John.Peng
+ *         Date time 2018/2/18 上午10:22
  */
 @Entity
 @Table(name = "TB_BUDGET_ITEM")

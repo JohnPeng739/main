@@ -9,8 +9,8 @@ import javax.persistence.*;
 /**
  * 描述： FFEE应用中的账户实体类，基于Hibernate实现，依赖RBAC中的Account。
  *
- * @author: John.Peng
- * @date: 2018/2/18 上午10:29
+ * @author John.Peng
+ *         Date time 2018/2/18 上午10:29
  */
 @Entity
 @Table(name = "TB_FFEE_ACCOUNT")

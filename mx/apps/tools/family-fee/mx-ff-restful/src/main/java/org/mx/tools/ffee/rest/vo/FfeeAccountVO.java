@@ -11,8 +11,8 @@ import java.util.List;
 /**
  * 描述： FFEE账户信息值对象
  *
- * @author: John.Peng
- * @date: 2018/2/18 下午4:58
+ * @author John.Peng
+ *         Date time 2018/2/18 下午4:58
  */
 public class FfeeAccountVO extends BaseVO {
     private FfeeAccount.AccountSourceType sourceType;

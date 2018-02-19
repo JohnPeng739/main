@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * 描述： 家庭信息值对象
  *
- * @author: John.Peng
- * @date: 2018/2/18 下午7:44
+ * @author John.Peng
+ *         Date time 2018/2/18 下午7:44
  */
 public class FamilyVO extends BaseVO {
     private String name;

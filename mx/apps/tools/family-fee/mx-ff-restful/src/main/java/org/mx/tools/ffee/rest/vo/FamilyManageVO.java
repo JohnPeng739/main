@@ -3,8 +3,8 @@ package org.mx.tools.ffee.rest.vo;
 /**
  * 描述： 家庭管理信息值对象
  *
- * @author: John.Peng
- * @date: 2018/2/18 下午8:09
+ * @author John.Peng
+ *         Date time 2018/2/18 下午8:09
  */
 public class FamilyManageVO {
     private String familyId, ffeeAccountId, name, memberRole;

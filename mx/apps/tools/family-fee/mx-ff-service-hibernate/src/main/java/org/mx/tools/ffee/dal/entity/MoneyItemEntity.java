@@ -9,8 +9,8 @@ import javax.persistence.MappedSuperclass;
 /**
  * 描述： 收入或支持的明细信息实体超类，基于Hibernate实现。
  *
- * @author: John.Peng
- * @date: 2018/2/18 上午11:02
+ * @author John.Peng
+ *         Date time 2018/2/18 上午11:02
  */
 @MappedSuperclass
 public class MoneyItemEntity extends BaseEntity implements MoneyItem {
@@ -74,7 +74,7 @@ public class MoneyItemEntity extends BaseEntity implements MoneyItem {
      * @see MoneyItem#setDesc(String)
      */
     public void setDesc(String desc) {
-        this.setDesc(desc);
+        this.desc = desc;
     }
 
     /**
@@ -91,7 +91,7 @@ public class MoneyItemEntity extends BaseEntity implements MoneyItem {
      *
      * @see MoneyItem#setOwner(FfeeAccount)
      */
-    public void setOwner(FfeeAccount account) {
+    public void setOwner(FfeeAccount owner) {
         this.owner = owner;
     }
 }

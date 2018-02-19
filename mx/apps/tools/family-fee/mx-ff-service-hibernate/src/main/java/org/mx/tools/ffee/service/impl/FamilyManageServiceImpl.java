@@ -2,9 +2,11 @@ package org.mx.tools.ffee.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.OperateLogService;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FamilyMember;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
@@ -22,8 +24,8 @@ import java.util.Set;
 /**
  * 描述： 基于Hibernate实现的家庭管理服务。
  *
- * @author: John.Peng
- * @date: 2018/2/18 下午8:13
+ * @author John.Peng
+ *         Date time 2018/2/18 下午8:13
  */
 @Component
 public class FamilyManageServiceImpl implements FamilyManageService {
@@ -39,14 +41,34 @@ public class FamilyManageServiceImpl implements FamilyManageService {
     /**
      * {@inheritDoc}
      *
+     * @see FamilyManageService#getFamily(String, String)
+     */
+    @Transactional(readOnly = true)
+    public Family getFamily(String id, String name) {
+        if (StringUtils.isBlank(id) && StringUtils.isBlank(name)) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("The family's id and name is blank.");
+            }
+            throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
+        } else if (!StringUtils.isBlank(id)) {
+            return accessor.getById(id, Family.class);
+        } else {
+            List<GeneralAccessor.ConditionTuple> tuples = new ArrayList<>();
+            tuples.add(new GeneralAccessor.ConditionTuple("name", name));
+            List<Family> families = accessor.find(tuples, Family.class);
+            return families == null || families.isEmpty() ? null : families.get(0);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see FamilyManageService#createFamily(String, String, String)
      */
     @Transactional()
     public Family createFamily(String name, String ffeeAccountId, String memberRole) {
-        List<GeneralAccessor.ConditionTuple> tuples = new ArrayList<>();
-        tuples.add(new GeneralAccessor.ConditionTuple("name", name));
-        List<Family> families = accessor.find(tuples, Family.class);
-        if (families != null && !families.isEmpty()) {
+        Family family = getFamily(null, name);
+        if (family != null) {
             throw new UserInterfaceFfeeErrorException(UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_EXISTED);
         }
         FfeeAccount ffeeAccount = accessor.getById(ffeeAccountId, FfeeAccount.class);
@@ -61,7 +83,7 @@ public class FamilyManageServiceImpl implements FamilyManageService {
             logger.debug(String.format("Create a new family member, account: %s, family: %s.",
                     ffeeAccount.getAccount().getName(), name));
         }
-        Family family = EntityFactory.createEntity(Family.class);
+        family = EntityFactory.createEntity(Family.class);
         family.setName(name);
         family.setOwner(ffeeAccount);
         family.getMembers().add(member);
@@ -71,7 +93,7 @@ public class FamilyManageServiceImpl implements FamilyManageService {
                     ffeeAccount.getAccount().getName()));
         }
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Create the family[%] successfully, account: %s.",
+            logger.debug(String.format("Create the family[%s] successfully, account: %s.",
                     family.getName(), ffeeAccount.getAccount().getName()));
         }
         return family;
@@ -84,7 +106,7 @@ public class FamilyManageServiceImpl implements FamilyManageService {
      */
     @Transactional()
     public Family joinFamily(String familyId, String ffeeAccountId, String memberRole) {
-        Family family = accessor.getById(familyId, Family.class);
+        Family family = getFamily(familyId, null);
         if (family == null) {
             throw new UserInterfaceFfeeErrorException(UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED);
         }
@@ -107,6 +129,9 @@ public class FamilyManageServiceImpl implements FamilyManageService {
             logger.debug(String.format("Create a new family member, account: %s, family: %s.",
                     ffeeAccount.getAccount().getName(), family.getName()));
         }
+        if (members == null) {
+            throw new UserInterfaceFfeeErrorException(UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_MEMBER_SAVE_FAIL);
+        }
         members.add(member);
         family = accessor.save(family, false);
         if (operateLogService != null) {
@@ -114,7 +139,7 @@ public class FamilyManageServiceImpl implements FamilyManageService {
                     family.getName()));
         }
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Account[%s] join the family[%] successfully.",
+            logger.debug(String.format("Account[%s] join the family[%s] successfully.",
                     ffeeAccount.getAccount().getName(), family.getName()));
         }
         return family;
