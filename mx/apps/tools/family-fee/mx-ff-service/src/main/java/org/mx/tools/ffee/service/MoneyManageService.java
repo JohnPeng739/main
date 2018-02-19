@@ -34,6 +34,14 @@ public interface MoneyManageService {
 
     double getIncomeTotal(long startDatetime, long endDatetime);
 
+    List<Income> getIncomes();
+
+    List<Income> getIncomes(int year);
+
+    List<Income> getIncomes(int year, int month);
+
+    List<Income> getIncomes(long startDatetime, long endDatetime);
+
     Spending spend(String courseId, String ownerId, double money, String desc, long datetime);
 
     double getSpendingTotal();
@@ -43,4 +51,12 @@ public interface MoneyManageService {
     double getSpendingTotal(int year, int month);
 
     double getSpendingTotal(long startDatetime, long endDatetime);
+
+    List<Spending> getSpendings();
+
+    List<Spending> getSpendings(int year);
+
+    List<Spending> getSpendings(int year, int month);
+
+    List<Spending> getSpendings(long startDatetime, long endDatetime);
 }

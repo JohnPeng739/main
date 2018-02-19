@@ -197,6 +197,51 @@ public class MoneyManageServiceImpl implements MoneyManageService {
     }
 
     /**
+     * 获取指定所有的收入明细列表
+     *
+     * @see MoneyManageService#getIncomes()
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Income> getIncomes() {
+        return getIncomes(-1);
+    }
+
+    /**
+     * 获取指定年的收入明细列表
+     *
+     * @see MoneyManageService#getIncomes(int)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Income> getIncomes(int year) {
+        return getIncomes(year, -1);
+    }
+
+    /**
+     * 获取指定年、月的收入明细列表
+     *
+     * @see MoneyManageService#getIncomes(int, int)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Income> getIncomes(int year, int month) {
+        DatetimeRange range = new DatetimeRange(year, month);
+        return getIncomes(range.start, range.end);
+    }
+
+    /**
+     * 获取指定时间范围的收入明细列表
+     *
+     * @see MoneyManageService#getIncomes(long, long)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Income> getIncomes(long startDatetime, long endDatetime) {
+        return incomeRepository.listIncomesBetween(startDatetime, endDatetime);
+    }
+
+    /**
      * 记入一笔支出信息
      *
      * @see MoneyManageService#spend(String, String, double, String, long)
@@ -281,6 +326,51 @@ public class MoneyManageServiceImpl implements MoneyManageService {
                     endDatetime));
         }
         return total;
+    }
+
+    /**
+     * 获取所有的支出明细列表
+     *
+     * @see MoneyManageService#getSpendings()
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Spending> getSpendings() {
+        return getSpendings(-1);
+    }
+
+    /**
+     * 获取指定年的支出明细列表
+     *
+     * @see MoneyManageService#getSpendings(int)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Spending> getSpendings(int year) {
+        return getSpendings(year, -1);
+    }
+
+    /**
+     * 获取指定年、月的支出明细列表
+     *
+     * @see MoneyManageService#getSpendings(int, int)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Spending> getSpendings(int year, int month) {
+        DatetimeRange range = new DatetimeRange(year, month);
+        return getSpendings(range.start, range.end);
+    }
+
+    /**
+     * 获取指定时间范围的支出明细列表
+     *
+     * @see MoneyManageService#getSpendings(long, long)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<Spending> getSpendings(long startDatetime, long endDatetime) {
+        return spendingRepository.listSpendingsBetween(startDatetime, endDatetime);
     }
 
     private class DatetimeRange {
