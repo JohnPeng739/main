@@ -25,9 +25,6 @@ import java.util.List;
         "org.mx.comps.jwt"
 })
 public class RbacRestConfig {
-    @Autowired
-    private ApplicationContext context = null;
-
     @Bean(name = "restfulClassesRBAC")
     public List<Class<?>> rbacRestfulClasses() {
         return Arrays.asList(UserManageResource.class, AccountManageResource.class, RoleManageResource.class,
