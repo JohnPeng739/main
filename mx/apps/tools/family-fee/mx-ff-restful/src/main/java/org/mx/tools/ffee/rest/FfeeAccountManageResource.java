@@ -29,9 +29,9 @@ public class FfeeAccountManageResource {
     @Autowired
     private FfeeAccountManageService ffeeAccountManageService = null;
 
-    @Path("regist")
+    @Path("signUp")
     @POST
-    public DataVO<FfeeAccountVO> regist(FfeeRegistInfoVO registInfoVO) {
+    public DataVO<FfeeAccountVO> signUp(FfeeRegistInfoVO registInfoVO) {
         try {
             FfeeAccount ffeeAccount = ffeeAccountManageService.regist(registInfoVO.getCode(), registInfoVO.getName(),
                     registInfoVO.getPassword());
