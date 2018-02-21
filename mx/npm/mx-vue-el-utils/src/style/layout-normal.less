@@ -73,12 +73,13 @@ body {
 
 .popover-account {
   margin: 2px 0;
+  font-size: @content-text-font-size;
   .title {
     text-align: center;
     margin-bottom: 10px;
     color: @content-color;
-    font-size: 20px;
     font-weight: 600;
+    font-size: @content-text-font-size * 1.1;
   }
   .popover-menu {
     padding: 10px 4px;
@@ -87,11 +88,10 @@ body {
     .icon {
       vertical-align: bottom;
       margin: 0 5px;
-      font-size: 24px;
+      font-size: @content-text-font-size * 1.3;
     }
     .item {
-      // float: right;
-      font-size: 18px;
+      color: @nav-color;
     }
     &:hover {
       background: rgba(64,158,255,.1);
@@ -116,11 +116,11 @@ body {
       width: 200px;
     }
     .menu-item {
-      font-size: 18px;
+      font-size: @content-text-font-size * 1.1;
       color: @nav-color;
     }
     .submenu-item {
-      font-size: 14px;
+      font-size: @content-text-font-size * 0.9;
       color: @nav-color;
     }
   }
