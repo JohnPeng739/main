@@ -1,6 +1,8 @@
 import Mock from 'mockjs'
 
-const mocks = []
+import Account from '../mock/account'
+
+const mocks = [Account]
 // TODO 添加相关模块的Mock模拟
 
 const mock = function () {

@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import LoginPage from '../pages/login.vue'
+import SignUpPage from '../pages/sign-up.vue'
+import AboutPage from '../pages/about.vue'
 
 const navData = [{
   path: '/home',
@@ -18,14 +20,14 @@ const router = new Router({
     component: LoginPage
   }, {
     path: '/signUp',
-    redirect: '/login?type=signUp'
+    component: SignUpPage
   }, {
     path: '/home',
     component: resolve => require(['../layout.vue'], resolve),
     meta: {needAuth: true},
     children: [{
       path: '',
-      component: LoginPage
+      component: AboutPage
     }]
   }]
 })

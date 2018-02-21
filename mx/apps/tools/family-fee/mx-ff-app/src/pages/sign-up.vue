@@ -2,25 +2,28 @@
   <div class="layout-login">
     <div class="layout-title">
       <span class="title">
-        {{$t('pages.login.title.signIn')}}
+        {{$t('pages.login.title.signUp')}}
       </span>
     </div>
     <el-form ref="formSign" :model="formSign" :rules="rulesSign" label-width="130px">
       <el-form-item prop="code" :label="$t('pages.login.code')">
         <el-input ref="inputCode" autofocus v-model="formSign.code"></el-input>
       </el-form-item>
+      <el-form-item prop="name" :label="$t('pages.login.name')">
+        <el-input v-model="formSign.name"></el-input>
+      </el-form-item>
       <el-form-item prop="password" :label="$t('pages.login.password')">
         <el-input type="password" v-model="formSign.password"></el-input>
       </el-form-item>
-      <el-form-item prop="forced" :label="$t('pages.login.forcedReplace')">
-        <el-switch v-model="formSign.forced"></el-switch>
+      <el-form-item prop="confirm" :label="$t('pages.login.confirm')">
+        <el-input type="password" v-model="formSign.confirm"></el-input>
       </el-form-item>
       <el-form-item>
         <div class="login-buttons">
           <el-button class="button reset" @click="handleReset">{{$t('button.reset')}}</el-button>
           <el-button class="button login" @click="handleClickOK">{{$t('button.ok')}}</el-button>
-          <el-button class="text-button" type="text" size="mini" @click="$router.push('/signUp')" plain>
-            {{$t('pages.login.signUp')}}
+          <el-button class="text-button" type="text" size="mini" @click="$router.push('/login')" plain>
+            {{$t('pages.login.signIn')}}
           </el-button>
         </div>
       </el-form-item>
@@ -29,11 +32,19 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
-  import { MxFormValidateRules, MxNotify } from 'mx-vue-el-utils'
+  import { logger } from 'mx-app-utils'
+  import { MxFormValidateRules, MxNotify, MxAjax } from 'mx-vue-el-utils'
 
   export default {
     data () {
+      let passwordMatchValidator = (rule, value, cb) => {
+        let {password, confirm} = this.formSign
+        if (password && confirm && password === confirm) {
+          cb()
+        } else {
+          cb(new Error(this.$t('pages.login.message.passwordNotMatch')))
+        }
+      }
       let formValidateTips = (field) => {
         return this.$t('pages.common.message.form.required', [this.$t('pages.login.' + field)])
       }
@@ -43,39 +54,29 @@
           code: '',
           name: '',
           password: '',
-          confirm: '',
-          forced: false
+          confirm: ''
         },
         rulesSign: {
           code: [MxFormValidateRules.requiredRule({msg: formValidateTips('code')})],
-          password: [MxFormValidateRules.requiredRule({msg: formValidateTips('password')})]
+          name: [MxFormValidateRules.requiredRule({msg: formValidateTips('name')})],
+          password: [MxFormValidateRules.requiredRule({msg: formValidateTips('password')})],
+          confirm: [MxFormValidateRules.requiredRule({msg: formValidateTips('confirm')}),
+            MxFormValidateRules.customRule({validator: passwordMatchValidator})]
         }
       }
     },
     methods: {
-      ...mapActions({
-        login: 'login'
-      }),
       handleClickOK () {
         this.$refs['formSign'].validate(valid => {
           if (valid) {
-            let {code, password, forced} = this.formSign
-            let success = (data) => {
-              if (data && data.account) {
-                let {token} = data
-                let {id, code, name, favoriteTools, roles} = data.account
-                let roleCodes = []
-                if (roles && roles instanceof Array && roles.length > 0) {
-                  roles.forEach(role => roleCodes.push(role.code))
-                }
-                let authUser = {id, code, name, token, favoriteTools, roles: roleCodes}
-                sessionStorage.setItem('auth.user', JSON.stringify(authUser))
-                sessionStorage.setItem('auth.time', new Date().getTime())
-                MxNotify.info(this.$t('pages.login.message.signInSuccess', {code, name}))
-                this.$router.push('/')
-              }
+            let {code, name, password} = this.formSign
+            let url = '/rest/signUp'
+            logger.debug('send POST "%s"', url)
+            let fnSuccess = (data) => {
+              MxNotify.info(this.$t('pages.login.message.signUpSuccess', [data.account.name]))
+              this.$router.push('/')
             }
-            this.login({code, password, forced, success})
+            MxAjax.post({url, data: {code, name, password}, fnSuccess})
           } else {
             MxNotify.formValidateWarn()
           }
