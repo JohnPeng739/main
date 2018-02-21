@@ -3,7 +3,7 @@
     <mx-normal-layout v-if="authenticated" :title="title" :login-user="loginUser" :navData="navData"
                       v-on:clickMenu="handleClickMenu" v-on:showNotice="handleShowNotice" v-on:goto="handleGoto">
       <div v-if="loginTime > 0" slot="account-info" class="account-info">
-        <div class="title">{{$t('pages.layout.loginTime')}}</div>
+        <div class="title">{{$t('pages.login.loginTime')}}</div>
         <div class="loginTime">{{formatter.formatDatetime(loginTime)}}</div>
       </div>
       <router-view slot="content-body"></router-view>
@@ -92,14 +92,25 @@
   @import "./assets/style/base.less";
 
   .account-info {
-    color: @nav-color;
+    color: @header-hover-color;
+    height: 40px;
+    background-color: rgba(red(@header-hover-color), green(@header-hover-color), blue(@header-hover-color), 0.03);
+    white-space: nowrap;
+    margin: 0 -12px;
     .title {
-      padding: 0 0 0 5px;
+      display: inline-block;
+      vertical-align: top;
+      margin: 0 0 0 10px;
       font-weight: 600;
     }
     .loginTime {
+      display: inline-block;
       float: right;
-      padding: 10px 0 0 0;
+      text-align: center;
+      white-space: pre-wrap;
+      width: 80px;
+      word-break: break-all;
+      margin: 0 10px 0 0;
     }
   }
 </style>

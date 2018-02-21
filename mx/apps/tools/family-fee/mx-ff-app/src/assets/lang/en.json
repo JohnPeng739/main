@@ -23,6 +23,7 @@
       "forcedReplace": "Forced replace",
       "signUp": "Sign up...",
       "signIn": "Sign in...",
+      "loginTime": "Login time",
       "message": {
         "passwordNotMatch": "The two passwords do not match.",
         "signUpSuccess": "The account [{0}] sign up successfully."
