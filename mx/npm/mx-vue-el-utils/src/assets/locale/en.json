@@ -15,9 +15,9 @@
     "submit": "Submit",
     "close": "Close",
     "choose": "Choose...",
-    "logout": "Logout",
+    "logout": "Exit application",
     "changePassword": "Change password",
-    "mySetting": "My settings"
+    "mySetting": "Favorite settings"
   },
   "message": {
     "title": {
