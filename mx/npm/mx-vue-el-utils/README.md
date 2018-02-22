@@ -1,6 +1,6 @@
 # mx-vue-el-utils
 ====
-<h5>版本： V1.4.8</h5>
+<h5>版本： V1.4.9</h5>
 一个非常简单使用的面向HTML5的WEB开发的框架模块，使用了VUE 2和Element-UI。目前封装了:
 
 1. 工具类：<br/>
@@ -11,8 +11,9 @@
   2.1 form组件：tagNormal和tagCouple两个常规的标签组件；<br/>
   2.2 Icon组件：支持所有material design图标；<br/>
   2.3 PaginatePane组件：支持常规新增、修改、删除、详情、刷新和分页显示的面板组件。<br/>
-  2.4 添加了一个基于Input控件的选择组件（ChooseInput），支持定义显示内容，数据为JSON对象。<br/>
-  2.5 添加了一个基于tag控件的选择组件（ChooseTag），支持定义显示内容，数据为JSON对象。<br/>
+  2.4 基于Input控件的选择组件（ChooseInput），支持定义显示内容，数据为JSON对象。<br/>
+  2.5 基于tag控件的选择组件（ChooseTag），支持定义显示内容，数据为JSON对象。<br/>
+  2.6 基于Input控件的密码组件（Password），支持显示或隐藏密码。<br/>
 3. 布局：<br/>
   3.1 normal布局组件(LayoutNormal)：常规的顶栏+左边栏导航布局。<br/>
 4. 对话框（DialogPane）<br/>
@@ -37,6 +38,9 @@
 
 
 ## 修改历史
+**1.4.9**<br>
+1. 添加了一个密码输入控件，支持显示或隐藏密码内容。
+
 **1.4.8**<br>
 1. 修改了ChooseTag添加功能中存在性匹配中的bug。
 2. 调整了显示框架中的样式。

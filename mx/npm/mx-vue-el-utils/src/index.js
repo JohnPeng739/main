@@ -8,6 +8,7 @@ import MxIcon from './components/mx-icon'
 import MxDialog from './components/mx-dialog'
 import MxPaginateTable from './components/mx-paginate-table'
 
+import MxPassword from './components/mx-password'
 import MxChooseTag from './components/mx-choose-tag'
 import MxChooseInput from './components/mx-choose-input'
 import MxTagNormal from './components/mx-tag-normal'
@@ -19,6 +20,7 @@ const components = [
   MxIcon,
   MxDialog,
   MxPaginateTable,
+  MxPassword,
   MxChooseTag,
   MxChooseInput,
   MxTagNormal,
@@ -49,6 +51,7 @@ export default {
   MxIcon,
   MxDialog,
   MxPaginateTable,
+  MxPassword,
   MxChooseTag,
   MxChooseInput,
   MxTagNormal,
@@ -65,6 +68,7 @@ export {
   MxIcon,
   MxDialog,
   MxPaginateTable,
+  MxPassword,
   MxChooseTag,
   MxChooseInput,
   MxTagNormal,

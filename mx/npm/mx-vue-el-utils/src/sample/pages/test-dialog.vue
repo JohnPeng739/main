@@ -12,6 +12,9 @@
         <el-form-item prop="code" label="代码">
           <el-input v-model="formUser.code" :readonly="readonly"></el-input>
         </el-form-item>
+        <el-form-item prop="password" label="密码">
+          <mx-password v-model="formUser.password" :readonly="readonly"></mx-password>
+        </el-form-item>
         <el-form-item prop="name" label="名称">
           <el-input v-model="formUser.name" :readonly="readonly"></el-input>
         </el-form-item>
@@ -22,17 +25,19 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  // import {MxFormValidateRules} from '@/index'
-  import { MxFormValidateRules, MxNotify } from '../../../dist/mx-vue-el-utils.min'
+  import {MxFormValidateRules, MxNotify, MxPassword} from '@/index'
+  // import { MxFormValidateRules, MxNotify } from '../../../dist/mx-vue-el-utils.min'
 
   export default {
     name: 'test-dialog-page',
+    components: {MxPassword},
     data () {
       return {
         operate: 'details',
-        formUser: {code: 'abcd', name: '123143434545674567'},
+        formUser: {code: 'abcd', password: '12345678', name: '123143434545674567'},
         rulesUser: {
           code: [MxFormValidateRules.requiredRule(), MxFormValidateRules.rangeRule({min: 3, max: 10})],
+          password: [MxFormValidateRules.requiredRule(), MxFormValidateRules.rangeRule({min: 3, max: 10})],
           name: [MxFormValidateRules.requiredRule({msg: '必须输入名称'}), MxFormValidateRules.rangeRule({
             type: 'string',
             min: 10
@@ -64,8 +69,8 @@
       handleSubmit (done) {
         this.$refs['formUser'].validate(valid => {
           if (valid) {
-            let {code, name} = this.formUser
-            let data = {code, name}
+            let {code, password, name} = this.formUser
+            let data = {code, password, name}
             logger.debug('submit data: %j.', data)
             done()
           } else {
