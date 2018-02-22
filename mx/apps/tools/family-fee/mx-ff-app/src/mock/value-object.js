@@ -38,4 +38,15 @@ let loginHistory = {
   'online|1': true
 }
 
-export {account, role, loginHistory}
+let family = {
+  'id': '@id',
+  'name': '@ctitle',
+  'owner': account,
+  'members|0-5': [{
+    'id': '@id',
+    'memberRole': '@ctitle',
+    'ffeeAccount': account
+  }]
+}
+
+export {account, role, loginHistory, family}

@@ -29,6 +29,19 @@
         "signUpSuccess": "账户 [{0}] 注册成功。",
         "signInSuccess": "账户 [{0} - {1}] 登入系统成功。"
       }
+    },
+    "family": {
+      "title": {
+        "owner": "家主大人",
+        "members": "家庭成员"
+      },
+      "button": {
+        "create": "建立新家庭",
+        "join": "加入家庭"
+      },
+      "message": {
+        "noFamily": "你还没有成立家庭。"
+      }
     }
   }
 }

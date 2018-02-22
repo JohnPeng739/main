@@ -2,12 +2,39 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import LoginPage from '../pages/login.vue'
 import SignUpPage from '../pages/sign-up.vue'
-import AboutPage from '../pages/about.vue'
+
+import FamilyPage from '../pages/user/family.vue'
+// import AboutPage from '../pages/about.vue'
 
 const navData = [{
   path: '/home',
   icon: 'home',
   name: 'nav.home'
+}, {
+  path: '/user',
+  icon: 'home',
+  name: 'nav.user',
+  children: [{
+    path: '/user/family',
+    icon: 'home',
+    name: 'nav.user.family'
+  }, {
+    path: '/user/income',
+    icon: 'home',
+    name: 'nav.user.income'
+  }, {
+    path: '/user/spend',
+    icon: 'home',
+    name: 'nav.user.spend'
+  }, {
+    path: '/user/course',
+    icon: 'home',
+    name: 'nav.user.course'
+  }, {
+    path: '/user/budget',
+    icon: 'home',
+    name: 'nav.user.budget'
+  }]
 }]
 
 Vue.use(Router)
@@ -27,7 +54,18 @@ const router = new Router({
     meta: {needAuth: true},
     children: [{
       path: '',
-      component: AboutPage
+      redirect: '/user/family'
+    }, {
+      path: '/user/family',
+      component: FamilyPage
+    }, {
+      path: '/user/income'
+    }, {
+      path: '/user/spend'
+    }, {
+      path: '/user/course'
+    }, {
+      path: '/user/budget'
     }]
   }]
 })

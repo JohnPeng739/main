@@ -29,6 +29,19 @@
         "signUpSuccess": "The account [{0}] sign up successfully.",
         "signInSuccess": "The account [{0} - {1}] sign in successfully."
       }
+    },
+    "family": {
+      "title": {
+        "owner": "Family's owner",
+        "members": "Family's members"
+      },
+      "button": {
+        "create": "Create new family",
+        "join": "Join the family"
+      },
+      "message": {
+        "noFamily": "You haven't set up a family yet."
+      }
     }
   }
 }

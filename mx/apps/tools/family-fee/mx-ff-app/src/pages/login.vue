@@ -72,7 +72,11 @@
                 sessionStorage.setItem('auth.user', JSON.stringify(authUser))
                 sessionStorage.setItem('auth.time', new Date().getTime())
                 MxNotify.info(this.$t('pages.login.message.signInSuccess', [code, name]))
-                this.$router.push('/')
+                if (roleCodes.indexOf('user')) {
+                  this.$router.push('/user/family')
+                } else {
+                  this.$router.push('/home')
+                }
               }
             }
             this.login({code, password, forced, success})
