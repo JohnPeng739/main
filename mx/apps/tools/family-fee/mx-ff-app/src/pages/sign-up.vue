@@ -13,10 +13,10 @@
         <el-input v-model="formSign.name"></el-input>
       </el-form-item>
       <el-form-item prop="password" :label="$t('pages.login.password')">
-        <el-input type="password" v-model="formSign.password"></el-input>
+        <mx-password v-model="formSign.password"></mx-password>
       </el-form-item>
       <el-form-item prop="confirm" :label="$t('pages.login.confirm')">
-        <el-input type="password" v-model="formSign.confirm"></el-input>
+        <mx-password v-model="formSign.confirm"></mx-password>
       </el-form-item>
       <el-form-item>
         <div class="login-buttons">

@@ -10,7 +10,7 @@
         <el-input ref="inputCode" autofocus v-model="formSign.code"></el-input>
       </el-form-item>
       <el-form-item prop="password" :label="$t('pages.login.password')">
-        <el-input type="password" v-model="formSign.password"></el-input>
+        <mx-password v-model="formSign.password"></mx-password>
       </el-form-item>
       <el-form-item prop="forced" :label="$t('pages.login.forcedReplace')">
         <el-switch v-model="formSign.forced"></el-switch>
@@ -71,7 +71,7 @@
                 let authUser = {id, code, name, token, favoriteTools, roles: roleCodes}
                 sessionStorage.setItem('auth.user', JSON.stringify(authUser))
                 sessionStorage.setItem('auth.time', new Date().getTime())
-                MxNotify.info(this.$t('pages.login.message.signInSuccess', {code, name}))
+                MxNotify.info(this.$t('pages.login.message.signInSuccess', [code, name]))
                 this.$router.push('/')
               }
             }

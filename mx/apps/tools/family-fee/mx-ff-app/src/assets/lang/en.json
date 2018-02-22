@@ -26,7 +26,8 @@
       "loginTime": "Login time",
       "message": {
         "passwordNotMatch": "The two passwords do not match.",
-        "signUpSuccess": "The account [{0}] sign up successfully."
+        "signUpSuccess": "The account [{0}] sign up successfully.",
+        "signInSuccess": "The account [{0} - {1}] sign in successfully."
       }
     }
   }

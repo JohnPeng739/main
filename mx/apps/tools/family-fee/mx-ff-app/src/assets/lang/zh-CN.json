@@ -26,7 +26,8 @@
       "loginTime": "登入时间",
       "message": {
         "passwordNotMatch": "两次输入的密码不匹配。",
-        "signUpSuccess": "账户 [{0}] 注册成功。"
+        "signUpSuccess": "账户 [{0}] 注册成功。",
+        "signInSuccess": "账户 [{0} - {1}] 登入系统成功。"
       }
     }
   }
