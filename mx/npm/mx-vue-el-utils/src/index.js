@@ -13,6 +13,7 @@ import MxChooseTag from './components/mx-choose-tag'
 import MxChooseInput from './components/mx-choose-input'
 import MxTagNormal from './components/mx-tag-normal'
 import MxTagCouple from './components/mx-tag-couple'
+import MxDictSelect from './components/mx-dict-select'
 
 import MxNormalLayout from './layout/mx-normal'
 
@@ -25,6 +26,7 @@ const components = [
   MxChooseInput,
   MxTagNormal,
   MxTagCouple,
+  MxDictSelect,
   MxNormalLayout
 ]
 
@@ -56,6 +58,7 @@ export default {
   MxChooseInput,
   MxTagNormal,
   MxTagCouple,
+  MxDictSelect,
   MxNormalLayout
 }
 
@@ -73,5 +76,6 @@ export {
   MxChooseInput,
   MxTagNormal,
   MxTagCouple,
+  MxDictSelect,
   MxNormalLayout
 }

@@ -13,6 +13,7 @@
   @import "../style/layout-normal.less";
   @import "../style/dialog.less";
   @import "../style/tag.less";
+  @import "../style/dict-select.less";
   @import "../style/pagination.less";
 
   @font-face {
