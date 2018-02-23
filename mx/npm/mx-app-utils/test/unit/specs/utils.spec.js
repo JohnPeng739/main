@@ -1,5 +1,5 @@
-// import {round, mixin} from '../../../src/index'
-import {round, mixin} from '../../../dist/mx-app-utils.min'
+import {round, mixin, clone} from '../../../src/index'
+// import {round, mixin, clone} from '../../../dist/mx-app-utils.min'
 
 describe('test utils', () => {
     it('test round', () => {
@@ -44,5 +44,39 @@ describe('test utils', () => {
         expect(src2.b.b1).toBe('b1')
         expect(src2.b.b2).toBe('b2')
         expect(src2.c).toBe('ccc')
+    })
+    it('test clone', () => {
+        let src = {
+            code: 'code',
+            age: 10,
+            date: new Date(),
+            members: [{
+                code: 'key1',
+                age: 4
+            }, {
+                code: 'key2',
+                age:5
+            }]
+        }
+        let tar = clone(src)
+        expect(src.code).toBe(tar.code)
+        expect(src.age).toBe(tar.age)
+        expect(src.date.getTime()).toBe(tar.date.getTime())
+        expect(src.members.length).toBe(tar.members.length)
+        expect(src.members[0].code).toBe(tar.members[0].code)
+        expect(src.members[0].age).toBe(tar.members[0].age)
+        expect(src.members[1].code).toBe(tar.members[1].code)
+        expect(src.members[1].age).toBe(tar.members[1].age)
+
+        delete tar.code
+        delete tar.members
+        expect(src.code).toBe('code')
+        expect(src.members.length).toBe(2)
+        expect(src.members[0].code).toBe('key1')
+        expect(src.members[0].age).toBe(4)
+        expect(src.members[1].code).toBe('key2')
+        expect(src.members[1].age).toBe(5)
+        expect(tar.code).toBe(undefined)
+        expect(tar.members).toBe(undefined)
     })
 })
