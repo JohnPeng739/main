@@ -9,8 +9,8 @@
       <el-row type="flex">
         <el-col :span="24">
           <div class="tag-popover">
-            <el-button class="button" @click="handleCancel">{{$t('button.cancel')}}</el-button>
-            <el-button class="button" @click="handleOk">{{$t('button.ok')}}</el-button>
+            <el-button class="button" @click="handleCancel">{{$t('common.cancel')}}</el-button>
+            <el-button class="button" @click="handleOk">{{$t('common.ok')}}</el-button>
           </div>
         </el-col>
       </el-row>
@@ -19,7 +19,7 @@
       <el-button v-if="showClear" type="text" slot="suffix" size="mini" :disabled="disabled" @click="handleClear">
         <mx-icon name="close"></mx-icon>
       </el-button>
-      <el-button slot="append" :disabled="disabled" v-popover:popover>{{$t('button.choose')}}</el-button>
+      <el-button slot="append" :disabled="disabled" v-popover:popover>{{$t('common.choose')}}</el-button>
     </el-input>
   </div>
 </template>

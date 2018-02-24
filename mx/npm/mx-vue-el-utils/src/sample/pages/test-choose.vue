@@ -60,8 +60,8 @@
         chooseInput: {id: 'id', code: 'code', name: 'name'},
         chooseTag: [{id: 'id', code: 'code', name: 'name'}],
         tableData: [],
-        selected1: null,
-        selected2: null,
+        selected1: undefined,
+        selected2: undefined,
         selected3: []
       }
     },

@@ -12,8 +12,8 @@
       <el-row type="flex">
         <el-col :span="24">
           <div class="tag-popover">
-            <el-button class="button" @click="handleCancel">{{$t('button.cancel')}}</el-button>
-            <el-button class="button" @click="handleOk">{{$t('button.ok')}}</el-button>
+            <el-button class="button" @click="handleCancel">{{$t('common.cancel')}}</el-button>
+            <el-button class="button" @click="handleOk">{{$t('common.ok')}}</el-button>
           </div>
         </el-col>
       </el-row>
@@ -69,27 +69,29 @@
       },
       handleOk () {
         this.$emit('selected', (selected) => {
-          let tags = selected && selected instanceof Array ? selected : [selected]
-          if (tags.length > 0) {
-            for (let index in tags) {
-              let tag = tags[index]
-              if (!tag[this.keyField]) {
-                MxNotify.error(this.$t('message.tag.fieldNotExist', [this.keyField]))
-                return
-              }
-              for (let innerIndex in this.tags) {
-                if (this.tags[innerIndex][this.keyField] === tag[this.keyField]) {
-                  MxNotify.warn(this.$t('message.tag.existed', {tag: this.getDisplayName(tag)}))
+          if (selected !== undefined && selected !== null) {
+            let tags = selected && selected instanceof Array ? selected : [selected]
+            if (tags.length > 0) {
+              for (let index in tags) {
+                let tag = tags[index]
+                if (!tag[this.keyField]) {
+                  MxNotify.error(this.$t('message.tag.fieldNotExist', [this.keyField]))
                   return
                 }
+                for (let innerIndex in this.tags) {
+                  if (this.tags[innerIndex][this.keyField] === tag[this.keyField]) {
+                    MxNotify.warn(this.$t('message.tag.existed', [this.getDisplayName(tag)]))
+                    return
+                  }
+                }
               }
+              this.tags = this.tags.concat(tags)
+              this.visible = false
+              this.$emit('change', this.tags)
+              return
             }
-            this.tags = this.tags.concat(tags)
-            this.visible = false
-            this.$emit('change', this.tags)
-          } else {
-            MxNotify.info(this.$t('message.choose'))
           }
+          MxNotify.info(this.$t('message.choose'))
         })
       },
       handleCancel () {

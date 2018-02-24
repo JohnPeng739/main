@@ -13,22 +13,22 @@
       </el-row>
       <el-row v-if="authenticated" type="flex" justify="center" class="popover-account">
         <el-col :span="24">
-          <div class="popover-menu" @click="handleClickMenu('changePassword')">
-            <mx-icon name="lock" class="icon"></mx-icon><span class="item">{{$t('button.changePassword')}}</span>
+          <div class="popover-menu" @click="handleClickPersonalMenu('changePassword')">
+            <mx-icon name="lock" class="icon"></mx-icon><span class="item">{{$t('common.changePassword')}}</span>
           </div>
         </el-col>
       </el-row>
       <el-row v-if="authenticated" type="flex" justify="center" class="popover-account">
         <el-col :span="24">
-          <div class="popover-menu" @click="handleClickMenu('mySetting')">
-            <mx-icon name="settings" class="icon"></mx-icon><span class="item">{{$t('button.mySetting')}}</span>
+          <div class="popover-menu" @click="handleClickPersonalMenu('mySetting')">
+            <mx-icon name="settings" class="icon"></mx-icon><span class="item">{{$t('common.mySetting')}}</span>
           </div>
         </el-col>
       </el-row>
       <el-row v-if="authenticated" type="flex" justify="center" class="popover-account">
         <el-col :span="24">
-          <div class="popover-menu" @click="handleClickMenu('logout')">
-            <mx-icon name="exit_to_app" class="icon"></mx-icon><span class="item">{{$t('button.logout')}}</span>
+          <div class="popover-menu" @click="handleClickPersonalMenu('logout')">
+            <mx-icon name="exit_to_app" class="icon"></mx-icon><span class="item">{{$t('common.logout')}}</span>
         </div></el-col>
       </el-row>
     </el-popover>
@@ -59,9 +59,9 @@
       loginUserName () {
         let user = this.loginUser
         if (user && user.name) {
-          return this.$t('welcome') + user.name
+          return this.$t('common.welcome') + ' ' + user.name
         } else {
-          return this.$t('notLogin')
+          return this.$t('common.notLogin')
         }
       }
     },
@@ -69,9 +69,9 @@
       handleNavToggled () {
         this.$emit('navToggled')
       },
-      handleClickMenu (menu) {
+      handleClickPersonalMenu (menu) {
         this.popoverVisible = false
-        this.$emit('clickMenu', menu)
+        this.$emit('clickPersonalMenu', menu)
       }
     }
   }

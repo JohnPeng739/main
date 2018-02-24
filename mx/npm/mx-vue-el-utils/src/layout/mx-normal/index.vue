@@ -2,7 +2,7 @@
   <el-container>
     <el-header height="10vh" class="layout-header">
       <layout-header :title="title" :login-user="loginUser" :nav-data="navData"
-                     v-on:navToggled="handleNavToggled" v-on:clickMenu="handleClickMenu">
+                     v-on:navToggled="handleNavToggled" v-on:clickPersonalMenu="handleClickPersonalMenu">
         <div slot="account-info"><slot name="account-info"></slot></div>
         <layout-nav-favorite-tools slot="favorite-tools" class="favorite-tools hidden-xs-only hidden-sm-only"
                                    :roles="roles"
@@ -18,7 +18,7 @@
       <div class="layout-right">
         <el-breadcrumb>
           <el-breadcrumb-item>
-            {{$t('message.title.current')}}
+            {{$t('common.current')}}
             <span class="breadcrumb-item">{{pathName}}</span>
           </el-breadcrumb-item>
         </el-breadcrumb>
@@ -137,8 +137,8 @@
         logger.debug('click the nav toggle, old: %s.', this.toggleState)
         this.toggleState = !this.toggleState
       },
-      handleClickMenu (menu) {
-        this.$emit('clickMenu', menu)
+      handleClickPersonalMenu (menu) {
+        this.$emit('clickPersonalMenu', menu)
       }
     }
   }

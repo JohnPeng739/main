@@ -62,7 +62,7 @@
           layout.forEach(button => {
             if (button) {
               if (typeof button === 'string' && defaultButtons.indexOf(button) >= 0) {
-                buttons.push({code: button, name: this.$t('button.' + button), icon: button})
+                buttons.push({code: button, name: this.$t('common.' + button), icon: button})
               } else if (button.code && button.name) {
                 buttons.push(button)
               }

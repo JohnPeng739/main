@@ -1,5 +1,5 @@
 <template>
-  <el-menu :default-active="defaultActive" :collapse="toggled" unique-opened router class="nav-menu">
+  <el-menu :default-active="defaultActive" :collapse="toggled" unique-opened @select="handleClickMenu" class="nav-menu">
     <template v-for="item in navData">
       <nav-sub-menu v-if="item.children && isRole(item)" :roles="roles" :item="item"></nav-sub-menu>
       <el-menu-item v-else-if="isRole(item)" :index="item.path" class="menu-item">
@@ -27,6 +27,9 @@
       isRole (item) {
         let roles = this.roles
         return (roles && roles instanceof Array && roles.indexOf(item.role) >= 0) || !item.role
+      },
+      handleClickMenu (index) {
+        this.$emit('goto', index)
       }
     }
   }

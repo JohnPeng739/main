@@ -4,9 +4,9 @@
                :width="width">
       <slot name="form"></slot>
       <div slot="footer">
-        <el-button class="button" @click.native="handleReset" :disabled="readonly">{{$t('button.reset')}}</el-button>
-        <el-button class="button" @click.native="handleSubmit" :disabled="readonly">{{$t('button.submit')}}</el-button>
-        <el-button class="button" @click.native="handleClose">{{$t('button.close')}}</el-button>
+        <el-button class="button" @click.native="handleReset" :disabled="readonly">{{$t('common.reset')}}</el-button>
+        <el-button class="button" @click.native="handleSubmit" :disabled="readonly">{{$t('common.submit')}}</el-button>
+        <el-button class="button" @click.native="handleClose">{{$t('common.close')}}</el-button>
       </div>
     </el-dialog>
   </keep-alive>

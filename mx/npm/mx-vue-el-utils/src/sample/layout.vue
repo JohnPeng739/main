@@ -1,6 +1,6 @@
 <template>
   <mx-normal-layout :title="title" :login-user="loginUser" :navData="navData"
-                    :notice-value="noticeValue" v-on:clickMenu="handleClickMenu"
+                    :notice-value="noticeValue" v-on:clickPersonalMenu="handleClickPersonalMenu"
                     v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
     <div slot="account-info" style="color: red;">登入时间：453453</div>
     <router-view slot="content-body"></router-view>
@@ -36,7 +36,7 @@
         logger.debug('Router click: %s', path)
         this.$router.push(path)
       },
-      handleClickMenu (menu) {
+      handleClickPersonalMenu (menu) {
         logger.debug('click menu: %s.', menu)
       }
     }

@@ -8,7 +8,7 @@ import router from './router'
 
 Vue.config.productionTip = false
 
-changeLanguage('en')
+changeLanguage('zh-CN')
 
 Vue.use(ElementUI, {
   i18n: (k, v) => MxLocale.i18n.t(k, v)

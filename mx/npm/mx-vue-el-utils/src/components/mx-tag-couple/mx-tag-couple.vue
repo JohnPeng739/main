@@ -74,7 +74,7 @@
           let tag = left + this.separator + right
           let tagIndex = this.getTagIndex(tags, left)
           if (tagIndex >= 0) {
-            MxNotify.warn(this.$t('message.tag.existed', {tag}))
+            MxNotify.warn(this.$t('message.tag.existed', [tag]))
             return
           }
           let oldIndex = -1

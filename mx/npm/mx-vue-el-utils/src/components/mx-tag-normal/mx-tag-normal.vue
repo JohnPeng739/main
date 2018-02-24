@@ -50,7 +50,7 @@
         if (tag) {
           let oldIndex = -1
           if (tags.indexOf(tag) >= 0) {
-            MxNotify.warn(this.$t('message.tag.existed', {tag}))
+            MxNotify.warn(this.$t('message.tag.existed', [tag]))
             return
           } else {
             let old = this.oldValue
