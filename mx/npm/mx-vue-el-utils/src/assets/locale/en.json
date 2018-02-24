@@ -78,6 +78,13 @@
       }
     },
     "choose": "Please choose the data.",
+    "list": {
+      "refreshSuccess": "Refresh the {0}'s list successfully.",
+      "addSuccess": "Create a new {0} successfully.",
+      "editSuccess": "Update the {0}'s information successfully.",
+      "deleteSuccess": "Delete the {0}'s information successfully.",
+      "needChoose": "You need choose a {0} for operating before."
+    },
     "validate": {
       "default": "The form's data validate fail, please check the input data.",
       "required": "The field [{0}] be required.",

@@ -72,12 +72,19 @@
     },
     "dialog": {
       "title": {
-        "add": "Create a new {0}",
-        "edit": "Edit the {0}'s information",
-        "details": "Show the {0}'s information"
+        "add": "创建一个新 {0}",
+        "edit": "修改 {0} 信息",
+        "details": "显示 {0} 信息"
       }
     },
     "choose": "请选择数据。",
+    "list": {
+      "refreshSuccess": "刷新 {0} 列表数据成功。",
+      "addSuccess": "创建一个新 {0} 成功。",
+      "editSuccess": "修改 {0} 信息成功。",
+      "deleteSuccess": "删除 {0} 信息成功。",
+      "needChoose": "你需要在操作前先选中一个 {0}。"
+    },
     "validate": {
       "default": "表单数据校验失败，请检查输入的数据。",
       "required": "字段 [{0}] 必须输入。",
