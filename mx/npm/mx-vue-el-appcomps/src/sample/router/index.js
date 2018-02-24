@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import LoginPage from '../pages/login.vue'
 import ChangePasswordPage from '../pages/change-password.vue'
 import ChangeMySetting from '../pages/change-my-setting.vue'
@@ -12,7 +13,7 @@ import {
   MxPrivilegeManage,
   MxRoleManage,
   MxUserManage
-} from '../../index' // '../../../dist/mx-vue-el-appcomps.min'
+} from '../../index'
 
 export const navData = [{
   path: '/home',
@@ -20,59 +21,60 @@ export const navData = [{
   name: 'nav.home'
 }, {
   path: '/manage',
-  icon: 'apps',
-  name: 'nav.manage.value',
+  icon: 'view_module',
+  name: 'manage.value',
   role: 'admin',
   children: [{
     path: '/manage/user',
-    icon: 'apps',
-    name: 'nav.manage.user'
+    icon: 'person',
+    name: 'manage.user'
   }, {
     path: '/manage/account',
-    icon: 'apps',
-    name: 'nav.manage.account'
+    icon: 'account_box',
+    name: 'manage.account'
   }, {
     path: '/manage/role',
-    icon: 'apps',
-    name: 'nav.manage.role'
+    icon: 'group',
+    name: 'manage.role'
   }, {
     path: '/manage/privilege',
-    icon: 'apps',
-    name: 'nav.manage.privilege'
+    icon: 'folder_special',
+    name: 'manage.privilege'
   }, {
     path: '/manage/department',
-    icon: 'apps',
-    name: 'nav.manage.department'
+    icon: 'group_work',
+    name: 'manage.department'
   }, {
     path: '/manage/accredit',
-    icon: 'apps',
-    name: 'nav.manage.accredit'
+    icon: 'folder_shared',
+    name: 'manage.accredit'
   }, {
     path: '/manage/logs',
-    icon: 'apps',
-    name: 'nav.manage.logs'
+    icon: 'history',
+    name: 'manage.operateLog'
   }, {
     path: '/manage/loginHistory',
-    icon: 'apps',
-    name: 'nav.manage.loginHistory'
+    icon: 'access_time',
+    name: 'manage.loginHistory'
   }]
 }, {
   path: '/personal',
   icon: 'apps',
-  name: 'nav.manage.value',
+  name: 'common.personal',
   role: 'user',
   children: [{
     path: '/personal/changePassword',
     icon: 'apps',
-    name: 'button.changePassword'
+    name: 'common.changePassword'
   }, {
     path: '/personal/mySetting',
     icon: 'apps',
-    name: 'button.mySetting'
+    name: 'common.mySetting'
   }]
 }]
 
 Vue.use(Router)
+
 const router = new Router({
   routes: [{
     path: '/',

@@ -17,6 +17,7 @@ import MxAccreditManage from './components/rbac/mx-accredit-manage'
 import MxLoginHistoryManage from './components/rbac/mx-login-history-manage'
 import MxOperateLogManage from './components/rbac/mx-operate-log-manage'
 
+import RbacLayout from './layout/rbac-layout.vue'
 import MxStoreAccount from './store/account'
 
 const AppLocaleMessages = {
@@ -38,7 +39,8 @@ const components = [
   MxAccountManage,
   MxAccreditManage,
   MxLoginHistoryManage,
-  MxOperateLogManage
+  MxOperateLogManage,
+  RbacLayout
 ]
 
 const install = function (Vue, opts = {}) {
@@ -68,7 +70,8 @@ export default {
   MxAccreditManage,
   MxLoginHistoryManage,
   MxOperateLogManage,
-  MxStoreAccount
+  MxStoreAccount,
+  RbacLayout
 }
 
 export {
@@ -87,5 +90,6 @@ export {
   MxAccreditManage,
   MxLoginHistoryManage,
   MxOperateLogManage,
-  MxStoreAccount
+  MxStoreAccount,
+  RbacLayout
 }

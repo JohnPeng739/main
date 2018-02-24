@@ -1,3 +1,27 @@
+.account-info {
+  font-size: @content-text-font-size;
+  color: @header-hover-color;
+  height: 40px;
+  background-color: rgba(red(@header-hover-color), green(@header-hover-color), blue(@header-hover-color), 0.03);
+  white-space: nowrap;
+  margin: 0 -12px;
+  .title {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 0 0 10px;
+    font-weight: 600;
+  }
+  .loginTime {
+    display: inline-block;
+    float: right;
+    text-align: center;
+    white-space: pre-wrap;
+    width: 80px;
+    word-break: break-all;
+    margin: 0 10px 0 0;
+  }
+}
+
 .online {
   color: green;
 }

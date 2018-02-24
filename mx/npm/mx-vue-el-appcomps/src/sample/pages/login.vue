@@ -28,8 +28,8 @@
       return {
         formLogin: {code: '', password: '', forced: false},
         rulesLogin: {
-          code: [MxFormValidateRules.requiredRule()],
-          password: [MxFormValidateRules.requiredRule()]
+          code: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', ['Code'])})],
+          password: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', ['Password'])})]
         }
       }
     },
@@ -54,7 +54,8 @@
                 }
                 roles = roleCodes
                 sessionStorage.setItem('auth.user', JSON.stringify({id, code, name, favoriteTools, roles}))
-                MxNotify.info(this.$t('rbac.account.message.loginSuccess', {code, name}))
+                sessionStorage.setItem('auth.time', new Date().getTime())
+                MxNotify.info(this.$t('pages.account.message.loginSuccess', [code, name]))
                 this.$router.push('/')
               }
             }

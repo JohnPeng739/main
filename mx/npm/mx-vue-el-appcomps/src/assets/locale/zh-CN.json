@@ -1,127 +1,63 @@
 {
-  "rbac": {
-    "common": {
-      "fields": {
-        "FEMALE": "女性",
-        "MALE": "男性",
-        "NA": "未知",
-        "id": "ID",
-        "code": "代码",
-        "name": "名称",
-        "desc": "描述",
-        "status": "状态",
-        "createdTime": "创建时间",
-        "updatedTime": "更新时间",
-        "operator": "操作人",
-        "roles": "角色",
-        "online": "在线",
-        "offline": "离线",
-        "closed": "已关闭",
-        "from": "来自"
-      },
-      "title": {
-        "add": "创建一个新{module}",
-        "edit": "修改{module}信息",
-        "details": "显示{module}信息"
-      },
-      "message": {
-        "refreshSuccess": "刷新{module}列表数据成功。",
-        "addSuccess": "创建一个新{module}成功。",
-        "editSuccess": "修改{module}信息成功。",
-        "deleteSuccess": "删除{module}信息成功。",
-        "needChoose": "你需要在操作前先选中一个{module}。"
-      },
-      "validate": {
-        "requiredCode": "你需要输入代码。",
-        "requiredName": "你需要输入名称。"
-      }
+  "manage": {
+    "value": "管理",
+    "user": "用户管理",
+    "department": "部门管理",
+    "account": "账户管理",
+    "role": "角色管理",
+    "privilege": "特权管理",
+    "accredit": "授权管理",
+    "operateLog": "操作日志",
+    "loginHistory": "登录历史"
+  },
+  "pages": {
+    "personal": {
     },
     "user": {
-      "module": "用户",
+      "name": "用户",
       "fields": {
-        "name": "姓名",
-        "sex": "性别",
-        "birthday": "出生日期",
-        "department": "部门",
-        "station": "岗位",
-        "firstName": "姓",
+        "firstName": "名",
         "middleName": "辈",
-        "lastName": "名"
+        "lastName": "姓",
+        "department": "部门",
+        "station": "岗位"
+      }
+    },
+    "department": {
+      "name": "部门"
+    },
+    "account": {
+      "name": "账户",
+      "fields": {
+        "allocate": "分配",
+        "owner": "所属用户",
+        "roles": "角色",
+        "oldPassword": "旧密码",
+        "confirm": "确认密码"
       },
-      "validate": {
-        "requiredFirstName": "你需要输入用户的姓。",
-        "requiredLastName": "你需要输入用户的名"
+      "message": {
+        "allocate": "为用户分配一个新账户",
+        "loginSuccess": "账户 [{0} - {1}] 登入成功。",
+        "logoutSuccess": "账户 [{0} - {1}] 登出成功。",
+        "passwordMatch": "两次输入的密码不匹配。",
+        "changePasswordSuccess": "修改账户 [{0} - {1}] 密码成功。",
+        "changePersonalSuccess": "修改账户 [{0} - {1}] 个性化信息成功。"
       }
     },
     "role": {
-      "module": "角色"
-    },
-    "department": {
-      "module": "部门"
+      "name": "角色"
     },
     "privilege": {
-      "module": "特权"
-    },
-    "loginHistory": {
-      "module": "登录历史",
-      "fields": {
-        "loginTime": "登入时间",
-        "logoutTime": "登出时间",
-        "online": "是否在线"
-      }
+      "name": "特权"
     },
     "accredit": {
-      "module": "授权",
-      "fields": {
-        "src": "源账户",
-        "tar": "目标账户",
-        "roles": "角色",
-        "startTime": "开始时间",
-        "endTime": "结束时间",
-        "closed": "是否关闭"
-      },
-      "validate": {
-        "src": "你需要选择一个源账户。",
-        "tar": "你需要选择一个目标账户。",
-        "roles": "你至少要选择一个角色。",
-        "startTime": "你需要输入开始时间。"
-      }
+      "name": "授权"
     },
-    "logs": {
-      "module": "操作日志",
-      "fields": {
-        "time": "时间",
-        "content": "内容"
-      }
+    "operateLog": {
+      "name": "操作日志"
     },
-    "account": {
-      "module": "账户",
-      "fields": {
-        "owner": "所属人",
-        "oldPassword": "旧密码",
-        "password": "新密码",
-        "confirm": "确认密码",
-        "favoriteTools": "常用功能",
-        "menuItem": "菜单项"
-      },
-      "title": {
-        "allocate": "分配",
-        "password": "修改密码"
-      },
-      "validate": {
-        "requiredOwner": "你需要为本账户选择一个用户。",
-        "requiredRoles": "你至少需要选择一个角色。",
-        "requiredPassword": "你必须要输入密码。",
-        "requiredConfirm": "你必须输入确认密码。",
-        "passwordMatch": "输入的密码和确认密码不一致。",
-        "requireSelected": "你至少需要选择一个 {0} 。"
-      },
-      "message": {
-        "loginSuccess": "账户[{code} - {name}]成功登入系统。",
-        "logoutSuccess": "账户[{code} - {name}]成功登出系统。",
-        "changePasswordSuccess": "修改账户[{code} - {name}]的密码成功。",
-        "changePersonalSuccess": "修改账户[{code} - {name}]的个性化信息成功。"
-      }
+    "loginHistory": {
+      "name": "登录历史"
     }
   }
 }

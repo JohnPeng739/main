@@ -3,26 +3,26 @@
     <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick">
       <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row header-row-class-name="table-header">
-        <el-table-column prop="fullName" :label="$t('rbac.user.fields.name')" :width="100"></el-table-column>
-        <el-table-column prop="sex" :label="$t('rbac.user.fields.sex')" :width="80">
+        <el-table-column prop="fullName" :label="$t('common.name')" :width="100"></el-table-column>
+        <el-table-column prop="sex" :label="$t('common.gender')" :width="80">
           <template slot-scope="scope">
-            <span v-if="scope.row.sex === 'FEMALE'">{{$t('rbac.common.fields.FEMALE')}}</span>
-            <span v-else-if="scope.row.sex === 'MALE'">{{$t('rbac.common.fields.MALE')}}</span>
-            <span v-else>{{$t('rbac.common.fields.NA')}}</span>
+            <span v-if="scope.row.sex === 'FEMALE'">{{$t('common.FEMALE')}}</span>
+            <span v-else-if="scope.row.sex === 'MALE'">{{$t('common.MALE')}}</span>
+            <span v-else>{{$t('common.NA')}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="birthday" :label="$t('rbac.user.fields.birthday')" :width="100">
+        <el-table-column prop="birthday" :label="$t('common.birthday')" :width="100">
           <template slot-scope="scope">
             {{parseDate(scope.row.birthday)}}
           </template>
         </el-table-column>
-        <el-table-column prop="department" :label="$t('rbac.user.fields.department')" :width="100">
+        <el-table-column prop="department" :label="$t('pages.user.fields.department')" :width="100">
           <template slot-scope="scope">
             {{getDepartmentName(scope.row.department)}}
           </template>
         </el-table-column>
-        <el-table-column prop="station" :label="$t('rbac.user.fields.station')" :width="120"></el-table-column>
-        <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
+        <el-table-column prop="station" :label="$t('pages.user.fields.station')" :width="120"></el-table-column>
+        <el-table-column prop="desc" :label="$t('common.desc')"></el-table-column>
       </el-table>
     </mx-paginate-table>
     <mx-dialog ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit"
@@ -30,53 +30,53 @@
       <el-form ref="formUser" slot="form" :model="formUser" :rules="rulesUser" label-width="130px" class="dialog-form">
         <el-row type="flex">
           <el-col :span="8">
-            <el-form-item prop="firstName" :label="$t('rbac.user.fields.firstName')">
+            <el-form-item prop="firstName" :label="$t('pages.user.fields.firstName')">
               <el-input v-model="formUser.firstName" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item prop="middleName" :label="$t('rbac.user.fields.middleName')">
+            <el-form-item prop="middleName" :label="$t('pages.user.fields.middleName')">
               <el-input v-model="formUser.middleName" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item prop="lastName" :label="$t('rbac.user.fields.lastName')">
+            <el-form-item prop="lastName" :label="$t('pages.user.fields.lastName')">
               <el-input v-model="formUser.lastName" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item prop="desc" :label="$t('rbac.common.fields.desc')">
+            <el-form-item prop="desc" :label="$t('common.desc')">
               <el-input type="textarea" v-model="formUser.desc" :rows="4" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item prop="sex" :label="$t('rbac.user.fields.sex')">
-              <el-select v-model="formUser.sex" :disabled="readonly">
-                <el-option value="FEMALE" :label="$t('rbac.common.fields.FEMALE')"></el-option>
-                <el-option value="MALE" :label="$t('rbac.common.fields.MALE')"></el-option>
-                <el-option value="NA" :label="$t('rbac.common.fields.NA')"></el-option>
+            <el-form-item prop="sex" :label="$t('common.gender')">
+              <el-select v-model="formUser.sex" :disabled="readonly" style="width: 100%;">
+                <el-option value="FEMALE" :label="$t('common.FEMALE')"></el-option>
+                <el-option value="MALE" :label="$t('common.MALE')"></el-option>
+                <el-option value="NA" :label="$t('common.NA')"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="birthday" :label="$t('rbac.user.fields.birthday')">
+            <el-form-item prop="birthday" :label="$t('common.birthday')">
               <el-date-picker v-model="formUser.birthday" type="date" :readonly="readonly"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item prop="department" :label="$t('rbac.user.fields.department')">
+            <el-form-item prop="department" :label="$t('pages.user.fields.department')">
               <mx-choose-dict-input v-model="formUser.department" restUrl="/rest/departments"
                                     displayFormat="{code} - {name}" :disabled="readonly"></mx-choose-dict-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="station" :label="$t('rbac.user.fields.station')">
+            <el-form-item prop="station" :label="$t('pages.user.fields.station')">
               <el-select v-model="formUser.station" filterable allow-create :disabled="readonly">
                 <el-option v-for="item in stations" :key="item" :label="item" :value="item"></el-option>
               </el-select>
@@ -112,8 +112,8 @@
         selected: null,
         formUser: this.newUser(),
         rulesUser: {
-          firstName: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.user.validate.requiredFirstName')})],
-          lastName: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.user.validate.requiredLastName')})]
+          firstName: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('pages.user.fields.firstName')])})],
+          lastName: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('pages.user.fields.lastName')])})]
         }
       }
     },
@@ -124,15 +124,15 @@
     },
     methods: {
       title () {
-        let module = this.$t('rbac.user.module')
+        let module = this.$t('pages.user.name')
         switch (this.operate) {
           case 'add':
-            return this.$t('rbac.common.title.add', {module})
+            return this.$t('message.dialog.title.add', [module])
           case 'edit':
-            return this.$t('rbac.common.title.edit', {module})
+            return this.$t('message.dialog.title.edit', [module])
           case 'details':
           default:
-            return this.$t('rbac.common.title.details', {module})
+            return this.$t('message.dialog.title.details', [module])
         }
       },
       newUser () {
@@ -153,7 +153,7 @@
         if (longDate) {
           return formatter.formatDate(longDate)
         } else {
-          return this.$t('rbac.common.fields.NA')
+          return this.$t('common.NA')
         }
       },
       getDepartmentName (department) {
@@ -169,14 +169,14 @@
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.user.module')}))
+            MxNotify.info(this.$t('message.list.refreshSuccess', [this.$t('pages.user.name')]))
           }
         }
         MxAjax.post({url: '/rest/users', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {
-          logger.error('未设置有效数据。')
+          logger.error('not set the required data.')
           return
         }
         let {id, firstName, middleName, lastName, desc, station, sex, birthday, department} = data
@@ -206,7 +206,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  MxNotify.info(this.$t('rbac.common.message.addSuccess', {module: this.$t('rbac.user.module')}))
+                  MxNotify.info(this.$t('message.list.addSuccess', [this.$t('pages.user.name')]))
                 }
               }
               MxAjax.post({
@@ -231,7 +231,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  MxNotify.info(this.$t('rbac.common.message.editSuccess', {module: this.$t('rbac.user.module')}))
+                  MxNotify.info(this.$t('message.list.editSuccess', [this.$t('pages.user.name')]))
                 }
               }
               MxAjax.put({
@@ -270,7 +270,7 @@
           case 'delete':
           case 'details':
             if (!this.selected) {
-              MxNotify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.user.module')}))
+              MxNotify.info(this.$t('message.list.needChoose', [this.$t('pages.user.name')]))
               break
             }
             if (operate === 'delete') {
@@ -280,7 +280,7 @@
               let fnSuccess = (data) => {
                 if (data) {
                   this.refreshData(pagination)
-                  MxNotify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.$t('rbac.user.module')}))
+                  MxNotify.info(this.$t('message.list.deleteSuccess', [this.$t('pages.user.name')]))
                 }
               }
               MxAjax.del({url, fnSuccess})

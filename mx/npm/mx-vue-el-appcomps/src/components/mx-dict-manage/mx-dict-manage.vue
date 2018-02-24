@@ -3,20 +3,20 @@
     <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick">
       <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row header-row-class-name="table-header">
-        <el-table-column prop="code" :label="$t('rbac.common.fields.code')" :width="100"></el-table-column>
-        <el-table-column prop="name" :label="$t('rbac.common.fields.name')" :width="120"></el-table-column>
-        <el-table-column prop="createdTime" :label="$t('rbac.common.fields.createdTime')" :width="100">
+        <el-table-column prop="code" :label="$t('common.code')" :width="100"></el-table-column>
+        <el-table-column prop="name" :label="$t('common.name')" :width="120"></el-table-column>
+        <el-table-column prop="createdTime" :label="$t('common.createdTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.createdTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="updatedTime" :label="$t('rbac.common.fields.updatedTime')" :width="100">
+        <el-table-column prop="updatedTime" :label="$t('common.updatedTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.updatedTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="operator" :label="$t('rbac.common.fields.operator')" :width="130"></el-table-column>
-        <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
+        <el-table-column prop="operator" :label="$t('common.operator')" :width="130"></el-table-column>
+        <el-table-column prop="desc" :label="$t('common.desc')"></el-table-column>
       </el-table>
       <mx-dialog ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit"
                  class="layout-dialog">
@@ -24,19 +24,19 @@
                  class="dialog-form">
           <el-row type="flex">
             <el-col :span="8">
-              <el-form-item prop="code" :label="$t('rbac.common.fields.code')">
+              <el-form-item prop="code" :label="$t('common.code')">
                 <el-input v-model="formCommon.code" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="16">
-              <el-form-item prop="name" :label="$t('rbac.common.fields.name')">
+              <el-form-item prop="name" :label="$t('common.name')">
                 <el-input v-model="formCommon.name" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row type="flex">
             <el-col :span="24">
-              <el-form-item prop="desc" :label="$t('rbac.common.fields.desc')">
+              <el-form-item prop="desc" :label="$t('common.desc')">
                 <el-input type="textarea" v-model="formCommon.desc" :rows="4" :readonly="readonly"></el-input>
               </el-form-item>
             </el-col>
@@ -62,8 +62,8 @@
         selected: null,
         formCommon: this.newDict(),
         rulesCommon: {
-          code: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.common.validate.requiredCode')})],
-          name: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.common.validate.requiredName')})]
+          code: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.requiredCode', [this.$t('common.code')])})],
+          name: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.requiredName', [this.$t('common.name')])})]
         }
       }
     },
@@ -72,7 +72,7 @@
         return this.operate === 'details'
       },
       moduleName () {
-        return this.$t('rbac.' + this.module + '.module')
+        return this.$t('pages.' + this.module + '.name')
       }
     },
     methods: {
@@ -80,12 +80,12 @@
         let module = this.moduleName
         switch (this.operate) {
           case 'add':
-            return this.$t('rbac.common.title.add', {module})
+            return this.$t('message.dialog.title.add', [module])
           case 'edit':
-            return this.$t('rbac.common.title.edit', {module})
+            return this.$t('message.dialog.title.edit', [module])
           case 'details':
           default:
-            return this.$t('rbac.common.title.details', {module})
+            return this.$t('message.dialog.title.details', [module])
         }
       },
       newDict () {
@@ -104,14 +104,14 @@
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.moduleName}))
+            MxNotify.info(this.$t('message.list.refreshSuccess', [this.moduleName]))
           }
         }
         MxAjax.post({url: '/rest/' + this.module + 's', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {
-          logger.error('未设置有效数据。')
+          logger.error('not set the required data.')
           return
         }
         let {id, code, name, desc} = data
@@ -131,7 +131,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  MxNotify.info(this.$t('rbac.common.message.addSuccess', {module: this.moduleName}))
+                  MxNotify.info(this.$t('message.list.addSuccess', [this.moduleName]))
                 }
               }
               MxAjax.post({url, data: {id, code, name, desc}, fnSuccess})
@@ -142,7 +142,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  MxNotify.info(this.$t('rbac.common.message.editSuccess', {module: this.moduleName}))
+                  MxNotify.info(this.$t('message.list.editSuccess', [this.moduleName]))
                 }
               }
               MxAjax.put({url, data: {id, code, name, desc}, fnSuccess})
@@ -167,7 +167,7 @@
           case 'delete':
           case 'details':
             if (!this.selected) {
-              MxNotify.info(this.$t('rbac.common.message.needChoose', {module: this.moduleName}))
+              MxNotify.info(this.$t('message.list.needChoose', [this.moduleName]))
               break
             }
             if (operate === 'delete') {
@@ -177,7 +177,7 @@
               let fnSuccess = (data) => {
                 if (data) {
                   this.refreshData(pagination)
-                  MxNotify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.moduleName}))
+                  MxNotify.info(this.$t('message.list.deleteSuccess', [this.moduleName]))
                 }
               }
               MxAjax.del({url, fnSuccess})

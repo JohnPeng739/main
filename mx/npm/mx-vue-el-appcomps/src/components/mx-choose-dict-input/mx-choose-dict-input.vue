@@ -5,8 +5,8 @@
       <el-col :span="24">
         <el-table :data="tableData" class="inner-table" :max-height="400" highlight-current-row
                   @current-change="handleCurrentChange" header-row-class-name="table-header">
-          <el-table-column prop="code" :label="$t('rbac.common.fields.code')"></el-table-column>
-          <el-table-column prop="name" :label="$t('rbac.common.fields.name')"></el-table-column>
+          <el-table-column prop="code" :label="$t('common.code')"></el-table-column>
+          <el-table-column prop="name" :label="$t('common.name')"></el-table-column>
         </el-table>
       </el-col>
     </el-row>

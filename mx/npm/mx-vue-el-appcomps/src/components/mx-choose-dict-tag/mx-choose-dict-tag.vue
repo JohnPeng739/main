@@ -7,8 +7,8 @@
                   @current-change="handleCurrentChange" @selection-change="handleSelectChange"
                   header-row-class-name="table-header" style="width: 100%;">
           <el-table-column v-if="multiple" type="selection" width="50" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="code" :label="$t('rbac.common.fields.code')" width="150"></el-table-column>
-          <el-table-column prop="name" :label="$t('rbac.common.fields.name')"></el-table-column>
+          <el-table-column prop="code" :label="$t('common.code')" width="150"></el-table-column>
+          <el-table-column prop="name" :label="$t('common.name')"></el-table-column>
         </el-table>
       </el-col>
     </el-row>

@@ -4,38 +4,38 @@
                        :buttonsLayout="['add', 'delete', 'details', 'refresh']">
       <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row  header-row-class-name="table-header">
-        <el-table-column prop="src" :label="$t('rbac.accredit.fields.src')" :width="100">
+        <el-table-column prop="src" :label="$t('common.src')" :width="100">
           <template slot-scope="scope">
             {{getUserName(scope.row.src)}}
           </template>
         </el-table-column>
-        <el-table-column prop="roles" :label="$t('rbac.accredit.fields.roles')" :width="150">
+        <el-table-column prop="roles" :label="$t('pages.account.fields.roles')" :width="150">
           <template slot-scope="scope">
             {{getRoles(scope.row.roles)}}
           </template>
         </el-table-column>
-        <el-table-column prop="tar" :label="$t('rbac.accredit.fields.tar')" :width="100">
+        <el-table-column prop="tar" :label="$t('common.tar')" :width="100">
           <template slot-scope="scope">
             {{getUserName(scope.row.tar)}}
           </template>
         </el-table-column>
-        <el-table-column prop="startTime" :label="$t('rbac.accredit.fields.startTime')" :width="100">
+        <el-table-column prop="startTime" :label="$t('common.startTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.startTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="endTime" :label="$t('rbac.accredit.fields.endTime')" :width="100">
+        <el-table-column prop="endTime" :label="$t('common.endTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.endTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="closed" :label="$t('rbac.accredit.fields.closed')" :width="100">
+        <el-table-column prop="closed" :label="$t('common.closed')" :width="100">
           <template slot-scope="scope">
-            <span v-if="scope.row.closed" class="online">{{$t('rbac.common.fields.closed')}}</span>
+            <span v-if="scope.row.closed" class="online">{{$t('common.closed')}}</span>
             <span v-else></span>
           </template>
         </el-table-column>
-        <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
+        <el-table-column prop="desc" :label="$t('common.desc')"></el-table-column>
       </el-table>
     </mx-paginate-table>
     <mx-dialog ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit"
@@ -44,13 +44,13 @@
                class="dialog-form">
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item prop="src" :label="$t('rbac.accredit.fields.src')">
+            <el-form-item prop="src" :label="$t('common.src')">
               <mx-choose-dict-input v-model="formAccredit.src" restUrl="/rest/accounts" displayFormat="{code} - {name}"
                                  :disabled="readonly"></mx-choose-dict-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="tar" :label="$t('rbac.accredit.fields.tar')">
+            <el-form-item prop="tar" :label="$t('common.tar')">
               <mx-choose-dict-input v-model="formAccredit.tar" restUrl="/rest/accounts" displayFormat="{code} - {name}"
                                     :disabled="readonly"></mx-choose-dict-input>
             </el-form-item>
@@ -58,7 +58,7 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item prop="roles" :label="$t('rbac.accredit.fields.roles')">
+            <el-form-item prop="roles" :label="$t('pages.account.fields.roles')">
               <mx-choose-dict-tag v-model="formAccredit.roles" restUrl="/rest/roles" displayFormat="{code} - {name}"
                                   :disabled="readonly"></mx-choose-dict-tag>
             </el-form-item>
@@ -66,19 +66,19 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item prop="startTime" :label="$t('rbac.accredit.fields.startTime')">
+            <el-form-item prop="startTime" :label="$t('common.startTime')">
               <el-date-picker type="datetime" v-model="formAccredit.startTime" :readonly="readonly"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item prop="endTime" :label="$t('rbac.accredit.fields.endTime')">
+            <el-form-item prop="endTime" :label="$t('common.endTime')">
               <el-date-picker type="datetime" v-model="formAccredit.endTime" :readonly="readonly"></el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item prop="desc" :label="$t('rbac.common.fields.desc')">
+            <el-form-item prop="desc" :label="$t('common.desc')">
               <el-input type="textarea" v-model="formAccredit.desc" :rows="4" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
@@ -105,10 +105,10 @@
         selected: null,
         formAccredit: this.newAccredit(),
         rulesAccredit: {
-          src: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.src'), trigger: 'change'})],
-          tar: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.tar'), trigger: 'change'})],
-          roles: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.roles'), trigger: 'change'})],
-          startTime: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.accredit.validate.startTime')})]
+          src: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('common.src')]), trigger: 'change'})],
+          tar: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('common.tar')]), trigger: 'change'})],
+          roles: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('pages.account.fields.roles')]), trigger: 'change'})],
+          startTime: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('common.startTime')])})]
         }
       }
     },
@@ -119,15 +119,15 @@
     },
     methods: {
       title () {
-        let module = this.$t('rbac.accredit.module')
+        let module = this.$t('pages.accredit.name')
         switch (this.operate) {
           case 'add':
-            return this.$t('rbac.common.title.add', {module})
+            return this.$t('message.dialog.title.add', [module])
           case 'edit':
-            return this.$t('rbac.common.title.edit', {module})
+            return this.$t('message.dialog.title.edit', [module])
           case 'details':
           default:
-            return this.$t('rbac.common.title.details', {module})
+            return this.$t('message.dialog.title.details', [module])
         }
       },
       newAccredit () {
@@ -145,14 +145,14 @@
         if (longDate) {
           return formatter.formatDatetime(longDate)
         } else {
-          return this.$t('rbac.common.fields.NA')
+          return this.$t('common.NA')
         }
       },
       getUserName (user) {
         if (user && user.name) {
           return user.name
         } else {
-          return this.$t('rbac.common.fields.NA')
+          return this.$t('common.NA')
         }
       },
       getRoles (roles) {
@@ -170,14 +170,14 @@
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.accredit.module')}))
+            MxNotify.info(this.$t('message.list.refreshSuccess', [this.$t('pages.accredit.name')]))
           }
         }
         MxAjax.post({url: '/rest/accredits', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {
-          logger.error('未设置有效数据。')
+          logger.error('not set the required data.')
           return
         }
         let {id, src, tar, roles, startTime, endTime, desc} = data
@@ -212,7 +212,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  MxNotify.info(this.$t('rbac.common.message.addSuccess', {module: this.$t('rbac.accredit.module')}))
+                  MxNotify.info(this.$t('message.list.addSuccess', [this.$t('pages.accredit.name')]))
                 }
               }
               MxAjax.post({url, data: {id, src, tar, roles, startTime, endTime, desc}, fnSuccess})
@@ -237,7 +237,7 @@
           case 'delete':
           case 'details':
             if (!this.selected) {
-              MxNotify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.accredit.module')}))
+              MxNotify.info(this.$t('message.list.needChoose', [this.$t('pages.accredit.name')]))
               break
             }
             if (operate === 'delete') {
@@ -247,7 +247,7 @@
               let fnSuccess = (data) => {
                 if (data) {
                   this.refreshData(pagination)
-                  MxNotify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.$t('rbac.accredit.module')}))
+                  MxNotify.info(this.$t('message.list.deleteSuccess', [this.$t('pages.accredit.name')]))
                 }
               }
               MxAjax.del({url, fnSuccess})

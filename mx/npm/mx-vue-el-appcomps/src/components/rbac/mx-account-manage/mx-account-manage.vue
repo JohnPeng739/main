@@ -3,24 +3,24 @@
     <mx-paginate-table ref="paginatePane" v-on:buttonHandle="handleButtonClick" :buttons-layout="buttonsLayout">
       <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row header-row-class-name="table-header">
-        <el-table-column prop="code" :label="$t('rbac.common.fields.code')" :width="80"></el-table-column>
-        <el-table-column prop="name" :label="$t('rbac.common.fields.name')" :width="100">
+        <el-table-column prop="code" :label="$t('common.code')" :width="80"></el-table-column>
+        <el-table-column prop="name" :label="$t('common.name')" :width="100">
           <template slot-scope="scope">
             {{scope.row.name}}<br/>
-            <span class="reference">{{$t('rbac.common.fields.from')}} {{getOwnerName(scope.row.owner)}}</span>
+            <span class="reference">{{$t('common.from')}} {{getOwnerName(scope.row.owner)}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="roles" :label="$t('rbac.common.fields.roles')" :width="120">
+        <el-table-column prop="roles" :label="$t('pages.account.fields.roles')" :width="120">
           <template slot-scope="scope">
             {{getRoles(scope.row.roles)}}
           </template>
         </el-table-column>
-        <el-table-column prop="createdTime" :label="$t('rbac.common.fields.createdTime')" :width="100">
+        <el-table-column prop="createdTime" :label="$t('common.createdTime')" :width="100">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.createdTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="desc" :label="$t('rbac.common.fields.desc')"></el-table-column>
+        <el-table-column prop="desc" :label="$t('common.desc')"></el-table-column>
       </el-table>
     </mx-paginate-table>
     <mx-dialog ref="dialogPane" :title="title()" v-on:reset="handleReset" v-on:submit="handleSubmit"
@@ -29,22 +29,22 @@
                class="dialog-form">
         <el-row type="flex">
           <el-col :span="8">
-            <el-form-item prop="code" :label="$t('rbac.common.fields.code')">
+            <el-form-item prop="code" :label="$t('common.code')">
               <el-input v-model="formAccount.code" :readonly="readonly || operate !== 'allocate'"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="16">
-            <el-form-item v-if="operate === 'allocate'" prop="owner" :label="$t('rbac.account.fields.owner')">
+            <el-form-item v-if="operate === 'allocate'" prop="owner" :label="$t('pages.account.fields.owner')">
               <mx-choose-user-input v-model="formAccount.owner" :disabled="readonly"></mx-choose-user-input>
             </el-form-item>
-            <el-form-item v-else prop="name" :label="$t('rbac.common.fields.name')">
+            <el-form-item v-else prop="name" :label="$t('common.name')">
               <el-input v-model="formAccount.name" :readonly="readonly || operate !== 'allocate'"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item prop="roles" :label="$t('rbac.common.fields.roles')">
+            <el-form-item prop="roles" :label="$t('pages.account.fields.roles')">
               <mx-choose-dict-tag v-model="formAccount.roles" :multiple="true" restUrl="/rest/roles" displayFormat="{code} - {name}"
                                   :disabled="readonly"></mx-choose-dict-tag>
             </el-form-item>
@@ -52,7 +52,7 @@
         </el-row>
         <el-row type="flex">
           <el-col :span="24">
-            <el-form-item prop="desc" :label="$t('rbac.common.fields.desc')">
+            <el-form-item prop="desc" :label="$t('common.desc')">
               <el-input type="textarea" v-model="formAccount.desc" :rows="4" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
@@ -75,7 +75,7 @@
       return {
         buttonsLayout: [{
           code: 'allocate',
-          name: this.$t('rbac.account.title.allocate'),
+          name: this.$t('pages.account.fields.allocate'),
           icon: 'assignment_ind'
         }, 'edit', 'delete', 'details', 'refresh'],
         tableMaxHeight: 540,
@@ -84,13 +84,13 @@
         selected: null,
         formAccount: this.newAccount(),
         rulesAccount: {
-          code: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.common.validate.requiredCode')})],
-          name: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.common.validate.requiredName')})],
+          code: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('common.code')])})],
+          name: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('common.name')])})],
           owner: [MxFormValidateRules.requiredRule({
-            msg: this.$t('rbac.account.validate.requiredOwner'),
+            msg: this.$t('message.validate.required', [this.$t('pages.account.fields.owner')]),
             trigger: 'change'
           })],
-          roles: [MxFormValidateRules.requiredRule({msg: this.$t('rbac.account.validate.requiredRoles')})]
+          roles: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('pages.account.fields.roles')])})]
         }
       }
     },
@@ -101,15 +101,15 @@
     },
     methods: {
       title () {
-        let module = this.$t('rbac.account.module')
+        let module = this.$t('pages.account.name')
         switch (this.operate) {
           case 'allocate':
-            return this.$t('rbac.account.title.allocate', {module})
+            return this.$t('pages.account.message.allocate')
           case 'edit':
-            return this.$t('rbac.common.title.edit', {module})
+            return this.$t('message.dialog.title.edit', [module])
           case 'details':
           default:
-            return this.$t('rbac.common.title.details', {module})
+            return this.$t('message.dialog.title.details', [module])
         }
       },
       getRoles (roles) {
@@ -123,7 +123,7 @@
         if (user && user.fullName) {
           return user.fullName
         } else {
-          return this.$t('NA')
+          return this.$t('common.NA')
         }
       },
       newAccount () {
@@ -133,7 +133,7 @@
         if (longDate) {
           return formatter.formatDatetime(longDate)
         } else {
-          return this.$t('rbac.common.fields.NA')
+          return this.$t('common.NA')
         }
       },
       refreshData (pagination) {
@@ -142,14 +142,14 @@
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.account.module')}))
+            MxNotify.info(this.$t('message.list.refreshSuccess', [this.$t('pages.account.name')]))
           }
         }
         MxAjax.post({url: '/rest/accounts', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {
-          logger.error('No data.')
+          logger.error('not set the required data.')
           return
         }
         let {id, code, name, desc, owner, roles} = data
@@ -179,7 +179,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  MxNotify.info(this.$t('rbac.common.message.addSuccess', {module: this.$t('rbac.account.module')}))
+                  MxNotify.info(this.$t('message.list.addSuccess', [this.$t('pages.account.name')]))
                 }
               }
               MxAjax.post({url, data: {code, desc, ownerId: owner.id, roleIds}, fnSuccess})
@@ -190,7 +190,7 @@
                 if (data) {
                   this.$refs['dialogPane'].hide()
                   this.refreshData(null)
-                  MxNotify.info(this.$t('rbac.common.message.editSuccess', {module: this.$t('rbac.account.module')}))
+                  MxNotify.info(this.$t('message.list.editSuccess', [this.$t('pages.account.name')]))
                 }
               }
               MxAjax.put({url, data: {id, code, desc, ownerId: owner.id, roleIds}, fnSuccess})
@@ -215,7 +215,7 @@
           case 'delete':
           case 'details':
             if (!this.selected) {
-              MxNotify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.account.module')}))
+              MxNotify.info(this.$t('message.list.needChoose', [this.$t('pages.account.name')]))
               break
             }
             if (operate === 'delete') {
@@ -225,7 +225,7 @@
               let fnSuccess = (data) => {
                 if (data) {
                   this.refreshData(pagination)
-                  MxNotify.info(this.$t('rbac.common.message.deleteSuccess', {module: this.$t('rbac.account.module')}))
+                  MxNotify.info(this.$t('message.list.deleteSuccess', [this.$t('pages.account.name')]))
                 }
               }
               MxAjax.del({url, fnSuccess})

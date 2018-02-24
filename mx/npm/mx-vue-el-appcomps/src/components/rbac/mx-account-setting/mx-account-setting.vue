@@ -2,19 +2,19 @@
   <el-form ref="formSetting" :model="formSetting" :rules="rulesSetting" label-width="120px" class="dialog-form">
     <el-row type="flex">
       <el-col :span="12">
-        <el-form-item prop="code" :label="$t('rbac.common.fields.code')">
+        <el-form-item prop="code" :label="$t('common.code')">
           <el-input :value="accountCode" :readonly="true"></el-input>
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item prop="name" :label="$t('rbac.common.fields.name')">
+        <el-form-item prop="name" :label="$t('common.name')">
           <el-input :value="accountName" :readonly="true"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
     <el-row type="flex">
       <el-col :span="24">
-        <el-form-item prop="tools" :label="$t('rbac.account.fields.favoriteTools')">
+        <el-form-item prop="tools" :label="$t('common.favorite')">
           <mx-choose-tag ref="tag" v-model="formSetting.tools" displayFormat="{label}" @change="handleTagChange"
                          @selected="handleSelected" keyField="path" type="gray" :popover-width="300">
             <div class="dict-tree">
@@ -27,8 +27,8 @@
     <el-row type="flex">
       <el-col :span="24">
         <div class="form-buttons">
-          <el-button class="button" @click.native="handleReset">{{$t('button.reset')}}</el-button>
-          <el-button class="button" @click.native="handleSubmit">{{$t('button.submit')}}</el-button>
+          <el-button class="button" @click.native="handleReset">{{$t('common.reset')}}</el-button>
+          <el-button class="button" @click.native="handleSubmit">{{$t('common.submit')}}</el-button>
         </div>
       </el-col>
     </el-row>
@@ -56,7 +56,7 @@
           tools: []
         },
         rulesSetting: {
-          tools: [MxFormValidateRules.requiredRule({msg: 'require favorite tools.'})]
+          tools: [MxFormValidateRules.requiredRule({msg: this.$t('message.validate.required', [this.$t('common.favorite')])})]
         },
         treeData: []
       }
@@ -138,7 +138,7 @@
             logger.debug('send POST "%s".', url)
             let fnSuccess = (data) => {
               if (data) {
-                MxNotify.info(this.$t('rbac.account.message.changePersonalSuccess', {code, name}))
+                MxNotify.info(this.$t('pages.account.message.changePersonalSuccess', [code, name]))
                 this.$router.push('/')
               }
             }

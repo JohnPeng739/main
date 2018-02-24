@@ -4,25 +4,25 @@
                        :buttons-layout="['details', 'refresh']">
       <el-table :data="tableData" class="table" :max-height="tableMaxHeight" @current-change="handleCurrentChange"
                 highlight-current-row header-row-class-name="table-header">
-        <el-table-column :label="$t('rbac.common.fields.name')" :width="150">
+        <el-table-column :label="$t('common.name')" :width="150">
           <template slot-scope="scope">
             {{scope.row.account && scope.row.account.name ? scope.row.account.name : 'NA'}}
           </template>
         </el-table-column>
-        <el-table-column prop="loginTime" :label="$t('rbac.loginHistory.fields.loginTime')">
+        <el-table-column prop="loginTime" :label="$t('common.loginTime')">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.loginTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="logoutTime" :label="$t('rbac.loginHistory.fields.logoutTime')">
+        <el-table-column prop="logoutTime" :label="$t('common.logoutTime')">
           <template slot-scope="scope">
             {{parseDatetime(scope.row.logoutTime)}}
           </template>
         </el-table-column>
-        <el-table-column prop="online" :label="$t('rbac.loginHistory.fields.online')" :width="150">
+        <el-table-column prop="online" :label="$t('common.online')" :width="150">
           <template slot-scope="scope">
-            <span v-if="scope.row.online" class="online">{{$t('rbac.common.fields.online')}}</span>
-            <span v-else class="offline">{{$t('rbac.common.fields.offline')}}</span>
+            <span v-if="scope.row.online" class="online">{{$t('common.online')}}</span>
+            <span v-else class="offline">{{$t('common.offline')}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -31,29 +31,29 @@
       <el-form ref="formLoginHistory" slot="form" :model="formLoginHistory" label-width="130px" class="dialog-form">
         <el-row type="flex">
           <el-col :span="8">
-            <el-form-item :label="$t('rbac.common.fields.code')">
+            <el-form-item :label="$t('common.code')">
               <el-input v-model="formLoginHistory.account.code" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('rbac.common.fields.name')">
+            <el-form-item :label="$t('common.name')">
               <el-input v-model="formLoginHistory.account.name" :readonly="readonly"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item :label="$t('rbac.loginHistory.fields.online')">
+            <el-form-item :label="$t('common.online')">
               <el-switch v-model="formLoginHistory.online" :disabled="readonly"></el-switch>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row type="flex">
           <el-col :span="12">
-            <el-form-item :label="$t('rbac.loginHistory.fields.loginTime')">
+            <el-form-item :label="$t('common.loginTime')">
               <el-date-picker type="datetime" v-model="formLoginHistory.loginTime" :readonly="readonly"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item :label="$t('rbac.loginHistory.fields.logoutTime')">
+            <el-form-item :label="$t('common.logoutTime')">
               <el-date-picker type="datetime" v-model="formLoginHistory.logoutTime" :readonly="readonly"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -91,14 +91,14 @@
     },
     methods: {
       title () {
-        let module = this.$t('rbac.loginHistory.module')
-        return this.$t('rbac.common.title.details', {module})
+        let module = this.$t('pages.loginHistory.name')
+        return this.$t('message.dialog.title.details', [module])
       },
       parseDatetime (longDate) {
         if (longDate) {
           return formatter.formatDatetime(longDate)
         } else {
-          return this.$t('rbac.common.fields.NA')
+          return this.$t('common.NA')
         }
       },
       refreshData (pagination) {
@@ -107,14 +107,14 @@
           if (data && data instanceof Array) {
             this.tableData = data
             this.$refs['paginatePane'].setPagination(pagination)
-            MxNotify.info(this.$t('rbac.common.message.refreshSuccess', {module: this.$t('rbac.loginHistory.module')}))
+            MxNotify.info(this.$t('message.list.refreshSuccess', [this.$t('pages.loginHistory.name')]))
           }
         }
         MxAjax.post({url: '/rest/loginHistories', data: pagination, fnSuccess})
       },
       showData (data, operate) {
         if (!data) {
-          logger.error('未设置有效数据。')
+          logger.error('not set the required data.')
           return
         }
         let {id, account, online, loginTime, logoutTime} = data
@@ -143,7 +143,7 @@
             break
           case 'details':
             if (!this.selected) {
-              MxNotify.info(this.$t('rbac.common.message.needChoose', {module: this.$t('rbac.loginHistory.module')}))
+              MxNotify.info(this.$t('message.list.needChoose', [this.$t('pages.loginHistory.name')]))
               break
             }
             this.showData(this.selected, operate)
