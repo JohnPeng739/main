@@ -58,6 +58,10 @@
     "value": "Value",
     "welcome": "Welcome"
   },
+  "locale": {
+    "en": "English",
+    "zh-CN": "简体中文"
+  },
   "message": {
     "notify": {
       "confirm": "Confirm information",

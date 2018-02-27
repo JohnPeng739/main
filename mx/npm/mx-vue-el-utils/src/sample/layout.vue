@@ -1,5 +1,5 @@
 <template>
-  <mx-normal-layout :title="title" :login-user="loginUser" :navData="navData"
+  <mx-normal-layout :title="title" :login-user="loginUser" :navData="navData" v-on:changeLocale="handleChangeLocale"
                     :notice-value="noticeValue" v-on:clickPersonalMenu="handleClickPersonalMenu"
                     v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
     <div slot="account-info" style="color: red;">登入时间：453453</div>
@@ -10,6 +10,7 @@
 <script>
   import { logger } from 'mx-app-utils'
   import { navData } from './router'
+  import {changeLanguage} from './lang/index'
 
   export default {
     name: 'app',
@@ -31,6 +32,9 @@
       handleShowNotice () {
         this.noticeValue = 0
         logger.debug('show notices.')
+      },
+      handleChangeLocale (lang) {
+        changeLanguage(lang)
       },
       handleGoto (path) {
         logger.debug('Router click: %s', path)

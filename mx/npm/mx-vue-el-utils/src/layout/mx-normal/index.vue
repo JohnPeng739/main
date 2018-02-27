@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header height="10vh" class="layout-header">
-      <layout-header :title="title" :login-user="loginUser" :nav-data="navData"
+      <layout-header :title="title" :login-user="loginUser" :nav-data="navData" v-on:changeLocale="handleChangeLocale"
                      v-on:navToggled="handleNavToggled" v-on:clickPersonalMenu="handleClickPersonalMenu">
         <div slot="account-info"><slot name="account-info"></slot></div>
         <layout-nav-favorite-tools slot="favorite-tools" class="favorite-tools hidden-xs-only hidden-sm-only"
@@ -128,10 +128,16 @@
         return this.findMenuItem(path, this.navData)
       },
       handleShowNotice () {
+        logger.debug('Click the show notice tool.')
         this.$emit('showNotice')
       },
       handleGoto (path) {
+        logger.debug('Goto page: %s.', path)
         this.$emit('goto', path)
+      },
+      handleChangeLocale (lang) {
+        logger.debug('change locale: %s.', lang)
+        this.$emit('changeLocale', lang)
       },
       handleNavToggled () {
         logger.debug('click the nav toggle, old: %s.', this.toggleState)

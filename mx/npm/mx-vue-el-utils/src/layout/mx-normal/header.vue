@@ -7,21 +7,25 @@
     <el-popover ref="popoverAccount" v-model="popoverVisible" placement="bottom" width="200" trigger="click">
       <el-row type="flex" justify="center" class="popover-account">
         <el-col :span="24">
-          <el-dropdown @command="handleSwitchLocale" class="change-locale-menu">
-            <div>
-              <mx-icon name="language" class="icon"></mx-icon>
-            </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="en"><img src="../../assets/locale/en.png" class="locale-image">English</el-dropdown-item>
-              <el-dropdown-item command="zh-CN"><img src="../../assets/locale/zh-CN.png" class="locale-image">简体中文</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-          <div class="title login-user-name">{{loginUserName}}</div>
+          <div class="title">{{loginUserName}}</div>
         </el-col>
       </el-row>
       <el-row v-if="authenticated" type="flex" justify="center">
         <el-col :span="24">
           <slot name="account-info"></slot>
+        </el-col>
+      </el-row>
+      <el-row type="flex" justify="center">
+        <el-col :span="24">
+          <el-select v-model="locale" @change="handleSwitchLocale" size="mini" class="change-locale-menu">
+            <el-option v-for="item in locales" :key="item.id" :value="item.id" :label="$t('locale.' + item.id)">
+              <img :src="item.img" class="locale-image">
+              <span class="locale-text">
+                <mx-icon class="locale-icon" v-if="locale === item.id" name="checked"></mx-icon>
+                {{$t('locale.' + item.id)}}
+              </span>
+            </el-option>
+          </el-select>
         </el-col>
       </el-row>
       <el-row v-if="authenticated" type="flex" justify="center" class="popover-account">
@@ -57,10 +61,9 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import MxIcon from '../../components/mx-icon'
-  import MxLocale from '../../utils/mx-locale'
-  import MxVueElUtils from '../../index'
+  import imgEn from '../../assets/locale/en.png'
+  import imgZhCN from '../../assets/locale/zh-CN.png'
 
   export default {
     name: 'mx-normal-header',
@@ -68,6 +71,14 @@
     props: ['title', 'loginUser'],
     data () {
       return {
+        locales: [{
+          id: 'en',
+          img: imgEn
+        }, {
+          id: 'zh-CN',
+          img: imgZhCN
+        }],
+        locale: 'en',
         popoverVisible: false
       }
     },
@@ -91,13 +102,20 @@
       },
       handleSwitchLocale (lang) {
         if (lang) {
-          MxLocale.setLanguage(lang)
-          Vue.use(MxVueElUtils, {locale: lang})
+          this.$emit('changeLocale', lang)
         }
       },
       handleClickPersonalMenu (menu) {
         this.popoverVisible = false
         this.$emit('clickPersonalMenu', menu)
+      }
+    },
+    mounted () {
+      if (window && window.localStorage) {
+        let locale = window.localStorage.getItem('locale')
+        if (locale && typeof locale === 'string' && locale.length > 0) {
+          this.locale = locale
+        }
       }
     }
   }
