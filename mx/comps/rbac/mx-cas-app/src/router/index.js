@@ -18,58 +18,58 @@ import ChangeMySetting from '../pages/personal/change-my-setting.vue'
 export const navData = [{
   path: '/home',
   icon: 'home',
-  name: 'nav.home'
+  name: 'cas.nav.home'
 }, {
   path: '/manage',
   icon: 'view_module',
-  name: 'nav.manage.value',
+  name: 'cas.nav.manage.value',
   role: 'admin',
   children: [{
     path: '/manage/user',
     icon: 'person',
-    name: 'nav.manage.user'
+    name: 'cas.nav.manage.user'
   }, {
     path: '/manage/account',
     icon: 'account_box',
-    name: 'nav.manage.account'
+    name: 'cas.nav.manage.account'
   }, {
     path: '/manage/role',
     icon: 'group',
-    name: 'nav.manage.role'
+    name: 'cas.nav.manage.role'
   }, {
     path: '/manage/privilege',
     icon: 'folder_special',
-    name: 'nav.manage.privilege'
+    name: 'cas.nav.manage.privilege'
   }, {
     path: '/manage/department',
     icon: 'group_work',
-    name: 'nav.manage.department'
+    name: 'cas.nav.manage.department'
   }, {
     path: '/manage/accredit',
     icon: 'folder_shared',
-    name: 'nav.manage.accredit'
+    name: 'cas.nav.manage.accredit'
   }, {
     path: '/manage/logs',
     icon: 'history',
-    name: 'nav.manage.logs'
+    name: 'cas.nav.manage.logs'
   }, {
     path: '/manage/loginHistory',
     icon: 'access_time',
-    name: 'nav.manage.loginHistory'
+    name: 'cas.nav.manage.loginHistory'
   }]
 }, {
   path: '/personal',
   icon: 'favorite',
-  name: 'nav.personal',
+  name: 'cas.nav.personal',
   role: 'user',
   children: [{
     path: '/personal/changePassword',
     icon: 'lock',
-    name: 'button.changePassword'
+    name: 'common.changePassword'
   }, {
     path: '/personal/mySetting',
     icon: 'settings',
-    name: 'button.mySetting'
+    name: 'common.mySetting'
   } ]
 }]
 

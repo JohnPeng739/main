@@ -9,8 +9,8 @@ const MxLocale = MxVueElUtils.MxLocale
 
 MxLocale.mergeMessages(AppComps.AppLocaleMessages)
 MxLocale.mergeMessages({
-  en: myEn,
-  'zh-CN': myZhCN
+  en: {cas: myEn},
+  'zh-CN': {cas: myZhCN}
 })
 
 const changeLanguage = (lang) => {
