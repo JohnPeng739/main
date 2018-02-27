@@ -2,7 +2,7 @@
   <div>
     <mx-normal-layout v-if="authenticated" :title="title" :login-user="loginUser" :navData="navData"
                       v-on:clickPersonalMenu="handleClickPersonalMenu" v-on:showNotice="handleShowNotice"
-                      v-on:goto="handleGoto">
+                      v-on:changeLocale="handleChangeLocale" v-on:goto="handleGoto">
       <div v-if="loginTime > 0" slot="account-info" class="account-info">
         <div class="title">{{$t('common.loginTime')}}</div>
         <div class="loginTime">{{formatter.formatDatetime(loginTime)}}</div>
@@ -46,6 +46,9 @@
       }),
       handleGoto (path) {
         this.$router.push(path)
+      },
+      handleChangeLocale (lang) {
+        this.$emit('changeLocale', lang)
       },
       handleLogout () {
         let success = (data) => {
