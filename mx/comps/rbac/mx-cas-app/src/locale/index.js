@@ -18,6 +18,9 @@ const changeLanguage = (lang) => {
     MxLocale.setLanguage(lang)
     Vue.use(MxVueElUtils, {locale: lang})
     Vue.use(AppComps, {locale: lang})
+    if (window && window.localStorage) {
+      window.localStorage.setItem('locale', lang)
+    }
   }
 }
 
