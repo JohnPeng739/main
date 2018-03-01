@@ -7,11 +7,11 @@ import formatter from './formatter'
 import parser from './parser'
 import createWsClient from './websocket'
 
-function clone(obj) {
+const clone = function (obj) {
     //
     // We only need to clone reference types (Object)
     //
-    var copy = {}
+    let copy = {}
 
     if (obj instanceof Error) {
         // With potential custom Error objects, this might not be exactly correct,
@@ -27,7 +27,7 @@ function clone(obj) {
         return new Date(obj.getTime())
     }
 
-    for (var i in obj) {
+    for (let i in obj) {
         if (Array.isArray(obj[i])) {
             copy[i] = obj[i].slice(0)
         } else if (obj[i] instanceof Buffer) {
@@ -42,7 +42,11 @@ function clone(obj) {
     return copy
 }
 
-function mixin(dest, src) {
+const cloneData = function (data) {
+    return JSON.parse(JSON.stringify(data))
+}
+
+const mixin = function (dest, src) {
     if (dest === null || dest === undefined) {
         dest = {}
     }
@@ -51,19 +55,23 @@ function mixin(dest, src) {
     }
     for (let key in src) {
         let tar = dest[key]
-        if (tar === null || tar === undefined || typeof tar !== 'object') {
+        if (tar === null || tar === undefined) {
             dest[key] = src[key]
-        } else {
+        } else if (tar instanceof Array) {
+            dest[key] = dest[key].concat(src[key])
+        } else if (dest[key] instanceof Object) {
             mixin(dest[key], src[key])
+        } else {
+            dest[key] = src[key]
         }
     }
 }
 
-function timestamp() {
+const timestamp = function () {
     return new Date().toISOString()
 }
 
-function round(value, digits) {
+const round = function (value, digits) {
     if (value && typeof value === 'number') {
         if (!digits || typeof digits !== 'number' || digits < 0) {
             digits = 0
@@ -75,4 +83,4 @@ function round(value, digits) {
     }
 }
 
-export {ajax, logger, formatter, parser, createWsClient, timestamp, mixin, clone, round}
+export {ajax, logger, formatter, parser, createWsClient, timestamp, mixin, clone, cloneData, round}
