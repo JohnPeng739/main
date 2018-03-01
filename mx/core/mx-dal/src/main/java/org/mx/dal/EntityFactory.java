@@ -23,7 +23,10 @@ public class EntityFactory {
      */
     public static <T> T createEntity(Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException {
         Assert.notNull(entityInterfaceClass, "The class of the entity interface is null.");
-        String entityName = String.format("%sEntity", entityInterfaceClass.getName());
+        String entityName = entityInterfaceClass.getName();
+        if (entityInterfaceClass.isInterface()) {
+            entityName = String.format("%sEntity", entityName);
+        }
         try {
             Class<T> entityClass = (Class<T>) Class.forName(entityName);
             return entityClass.newInstance();
