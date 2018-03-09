@@ -74,10 +74,10 @@ public class FileProcessorCategoryImpl extends RandomAccessFileProcessor {
     /**
      * {@inheritDoc}
      *
-     * @see FileReadProcessor#init(HttpServletRequest)
+     * @see FileReadProcessor#init(Object)
      */
     @Override
-    public void init(HttpServletRequest req) {
+    public void init(Object initReq) {
         if (isOpened()) {
             if (logger.isErrorEnabled()) {
                 logger.error("The File is opened, please not reopen it.");
@@ -86,27 +86,34 @@ public class FileProcessorCategoryImpl extends RandomAccessFileProcessor {
         }
         List<String> categories = null;
         String filename = null;
-        if (req.getMethod().equalsIgnoreCase("get")) {
-            String str = req.getParameter("categories");
-            categories = Arrays.asList(StringUtils.split(str));
-            filename = req.getParameter("filename");
-        } else if (req.getMethod().equalsIgnoreCase("post")) {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(req.getInputStream()));
-                String str = reader.readLine();
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Post data: %s.", str));
+        if (initReq instanceof HttpServletRequest) {
+            HttpServletRequest req = (HttpServletRequest) initReq;
+            if (req.getMethod().equalsIgnoreCase("get")) {
+                String str = req.getParameter("categories");
+                categories = Arrays.asList(StringUtils.split(str));
+                filename = req.getParameter("filename");
+            } else if (req.getMethod().equalsIgnoreCase("post")) {
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(req.getInputStream()));
+                    String str = reader.readLine();
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Post data: %s.", str));
+                    }
+                    JSONObject json = JSON.parseObject(str);
+                    categories = json.getObject("categories", List.class);
+                    filename = json.getString("filename");
+                } catch (IOException ex) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(ex);
+                    }
                 }
-                JSONObject json = JSON.parseObject(str);
-                categories = json.getObject("categories", List.class);
-                filename = json.getString("filename");
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(ex);
-                }
+            } else {
+                throw new UnsupportedOperationException(String.format("Unsupported method: %s.", req.getMethod()));
             }
         } else {
-            throw new UnsupportedOperationException(String.format("Unsupported method: %s.", req.getMethod()));
+            // TODO 可能根据需要添加新的初始化参数对象
+            throw new UnsupportedOperationException(String.format("Unsupported init parameter object: %s.",
+                    initReq.getClass().getName()));
         }
         if (categories == null || categories.isEmpty()) {
             categories = Arrays.asList("category");

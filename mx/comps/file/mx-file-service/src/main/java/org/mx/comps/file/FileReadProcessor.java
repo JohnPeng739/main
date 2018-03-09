@@ -29,11 +29,11 @@ public interface FileReadProcessor {
     void close();
 
     /**
-     * 根据HTTP请求中的参数初始化处理器
+     * 根据请求对象的参数初始化处理器
      *
-     * @param req HTTP请求
+     * @param initReq 初始化请求对象，比如HTTP请求等
      */
-    void init(HttpServletRequest req);
+    void init(Object initReq);
 
     /**
      * 将打开的文件内容读入到输出流中

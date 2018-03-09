@@ -72,10 +72,10 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
     /**
      * {@inheritDoc}
      *
-     * @see FileReadProcessor#init(HttpServletRequest)
+     * @see FileReadProcessor#init(Object)
      */
     @Override
-    public void init(HttpServletRequest req) {
+    public void init(Object initReq) {
         if (isOpened()) {
             if (logger.isErrorEnabled()) {
                 logger.error("The File is opened, please not reopen it.");
@@ -83,26 +83,33 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
             return;
         }
         String directory = null, filename = null;
-        if (req.getMethod().equalsIgnoreCase("get")) {
-            directory = req.getParameter("directory");
-            filename = req.getParameter("filename");
-        } else if (req.getMethod().equalsIgnoreCase("post")) {
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(req.getInputStream()));
-                String str = reader.readLine();
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Post data: %s.", str));
+        if (initReq instanceof HttpServletRequest) {
+            HttpServletRequest req = (HttpServletRequest) initReq;
+            if (req.getMethod().equalsIgnoreCase("get")) {
+                directory = req.getParameter("directory");
+                filename = req.getParameter("filename");
+            } else if (req.getMethod().equalsIgnoreCase("post")) {
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(req.getInputStream()));
+                    String str = reader.readLine();
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Post data: %s.", str));
+                    }
+                    JSONObject json = JSON.parseObject(str);
+                    directory = json.getString("directory");
+                    filename = json.getString("filename");
+                } catch (IOException ex) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(ex);
+                    }
                 }
-                JSONObject json = JSON.parseObject(str);
-                directory = json.getString("directory");
-                filename = json.getString("filename");
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(ex);
-                }
+            } else {
+                throw new UnsupportedOperationException(String.format("Unsupported method: %s.", req.getMethod()));
             }
         } else {
-            throw new UnsupportedOperationException(String.format("Unsupported method: %s.", req.getMethod()));
+            // TODO 可能根据需要添加新的初始化参数对象
+            throw new UnsupportedOperationException(String.format("Unsupported init parameter object: %s.",
+                    initReq.getClass().getName()));
         }
         if (StringUtils.isBlank(directory)) {
             directory = "./";
