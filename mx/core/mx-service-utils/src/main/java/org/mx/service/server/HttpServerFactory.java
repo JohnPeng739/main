@@ -98,7 +98,6 @@ public class HttpServerFactory extends AbstractServerFactory {
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Start HttpServer success, listen base uri: %s.", uri));
             }
-
         }
     }
 }

@@ -1,4 +1,4 @@
-package org.mx.service.ws.client;
+package org.mx.service.client.websocket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

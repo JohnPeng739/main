@@ -6,8 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mx.service.server.config.TestListFilterBlockConfig;
-import org.mx.service.ws.client.BaseWebsocketClientListener;
-import org.mx.service.ws.client.WsClientInvoke;
+import org.mx.service.client.websocket.BaseWebsocketClientListener;
+import org.mx.service.client.websocket.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import static org.junit.Assert.*;
@@ -39,7 +39,7 @@ public class TestListFilterBlock {
             // test websocket client
             WsClientInvoke invoke1 = new WsClientInvoke();
             TestWebsocketListener listener = new TestWebsocketListener();
-            invoke1.init("ws://localhost:9997/echo", listener);
+            invoke1.init("ws://localhost:9997/echo", listener, false);
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.CLOSED, invoke1.getState());
             invoke1.close();

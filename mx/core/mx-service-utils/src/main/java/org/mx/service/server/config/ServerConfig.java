@@ -1,12 +1,13 @@
 package org.mx.service.server.config;
 
 import org.mx.service.server.HttpServerFactory;
-import org.mx.service.server.WebsocketServerFactory;
 import org.mx.service.server.ServletServerFactory;
-import org.mx.service.ws.ConnectRuleFactory;
-import org.mx.service.ws.ConnectionManager;
+import org.mx.service.server.WebsocketServerFactory;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.mx.spring.config.SpringConfig;
 import org.springframework.context.annotation.*;
+
+import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
 
 /**
  * REST服务器的Java Configure定义
@@ -36,17 +37,13 @@ public class ServerConfig {
     }
 
     @Bean(initMethod = "init", destroyMethod = "destroy")
+    @DependsOn({"wsSessionManager"})
     public WebsocketServerFactory websocketServerFactory() {
         return new WebsocketServerFactory();
     }
 
-    @Bean(initMethod = "init")
-    public ConnectRuleFactory connectRuleFactory() {
-        return new ConnectRuleFactory();
-    }
-
-    @Bean(initMethod = "init", destroyMethod = "destroy")
-    public ConnectionManager connectionManager() {
-        return new ConnectionManager();
+    @Bean(name = "wsSessionManager", initMethod = "init", destroyMethod = "destroy")
+    public WsSessionManager wsSessionManager() {
+        return new WsSessionManager();
     }
 }

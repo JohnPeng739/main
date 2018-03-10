@@ -30,6 +30,7 @@ public class SpringContextHolder implements ApplicationContextAware {
      *
      * @param applicationContext 上下文
      */
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         SpringContextHolder.applicationContext = applicationContext;
     }

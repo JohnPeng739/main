@@ -6,8 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mx.service.server.config.TestDdosFilterConfig;
-import org.mx.service.ws.client.BaseWebsocketClientListener;
-import org.mx.service.ws.client.WsClientInvoke;
+import org.mx.service.client.websocket.BaseWebsocketClientListener;
+import org.mx.service.client.websocket.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.HashSet;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.*;
 
+import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.*;
 
 /**
@@ -46,6 +47,7 @@ public class TestDdosFilter {
             for (int index = 0; index < 19; index++) {
                 tasks.add(new TestWebsocketTask(0, 5, false));
             }
+            tasks.add(new TestWebsocketTask(1, 5, false));
             List<Future<Boolean>> result = service.invokeAll(tasks);
             boolean finish, success = true;
             do {
@@ -84,9 +86,12 @@ public class TestDdosFilter {
         try {
             ExecutorService service = Executors.newFixedThreadPool(50);
             Set<TestWebsocketTask> tasks = new HashSet<>();
-            for (int index = 0; index < 20; index++) {
-                tasks.add(new TestWebsocketTask(0, 30, true));
+            for (int index = 0; index < 19; index++) {
+                tasks.add(new TestWebsocketTask(0, 5, false));
             }
+            tasks.add(new TestWebsocketTask(1, 5, false));
+            tasks.add(new TestWebsocketTask(2, 5, true));
+            tasks.add(new TestWebsocketTask(2, 5, true));
             List<Future<Boolean>> result = service.invokeAll(tasks);
             boolean finish, success = true;
             do {
@@ -109,52 +114,6 @@ public class TestDdosFilter {
                 fail("Some error");
             }
             Thread.sleep(3000);
-            service.shutdownNow();
-        } catch (Exception ex) {
-            fail(ex.getMessage());
-        }
-    }
-
-    @Test
-    public void testConfirmTimeoutConnect() {
-
-        AbstractServerFactory factory = context.getBean(WebsocketServerFactory.class);
-        assertNotNull(factory);
-        Server server = factory.getServer();
-        assertNotNull(server);
-
-        try {
-            ExecutorService service = Executors.newFixedThreadPool(50);
-            Set<TestWebsocketTask> tasks = new HashSet<>();
-            for (int index = 0; index < 10; index++) {
-                tasks.add(new TestWebsocketTask(0, 15, true));
-            }
-            tasks.add(new TestWebsocketTask(15, 1, false));
-            List<Future<Boolean>> result = service.invokeAll(tasks);
-
-            boolean finish, success = true;
-            do {
-                finish = true;
-                for (Future<Boolean> future : result) {
-                    if (future.isDone()) {
-                        try {
-                            if (!future.get()) {
-                                success = false;
-                            }
-                        } catch (ExecutionException ex) {
-                            success = false;
-                        }
-                        break;
-                    } else {
-                        finish = false;
-                    }
-                }
-            } while (!finish);
-            if (!success) {
-                fail("Some error");
-            }
-
-            Thread.sleep(20000);
             service.shutdownNow();
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -199,7 +158,7 @@ public class TestDdosFilter {
             } else {
                 try {
                     assertEquals(WebSocket.READYSTATE.OPEN, invoke1.getState());
-                    assertEquals("Server is ok.", listener.textMsg);
+                    assertThat(listener.textMsg, startsWith("Server is ok:"));
                     String msg = "hello, john";
                     invoke1.send(msg);
                     Thread.sleep(1000);

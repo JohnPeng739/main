@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @Import(TestConfig.class)
 @PropertySource({
-        "classpath:connect-filter-rules-ddos.properties"
+        "classpath:server-filter-ddos.properties"
 })
 public class TestDdosFilterConfig {
 }

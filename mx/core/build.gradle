@@ -23,7 +23,7 @@ project(':mx-utils') {
 }
 
 project(':mx-spring') {
-  version = '1.1.0'
+  version = '1.1.1'
   description = 'Many utility based on spring, such as : SpringContextHolder, etc.'
 
   dependencies {
@@ -80,7 +80,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-service-utils') {
-  version = '1.5.7'
+  version = '1.6.0'
   description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
   dependencies {

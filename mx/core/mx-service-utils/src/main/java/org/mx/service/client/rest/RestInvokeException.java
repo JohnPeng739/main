@@ -1,4 +1,4 @@
-package org.mx.service.rest.client;
+package org.mx.service.client.rest;
 
 /**
  * Rest服务调用过程中发生的异常

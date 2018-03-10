@@ -9,9 +9,8 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
-import org.mx.service.server.websocket.BaseWebsocket;
-import org.mx.service.ws.ConnectRuleFactory;
-import org.mx.service.ws.ConnectionManager;
+import org.mx.service.server.websocket.SimpleWsObject;
+import org.mx.service.server.websocket.WsSessionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -34,7 +33,7 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     @Autowired
     private ApplicationContext context = null;
 
-    private Map<String, BaseWebsocket> socketBeans = null;
+    private Map<String, SimpleWsObject> socketBeans = null;
 
     public WebsocketServerFactory() {
         super();
@@ -67,8 +66,8 @@ public class WebsocketServerFactory extends AbstractServerFactory {
                     List<Class<?>> websocketClasses = (List) this.context.getBean(classesDef, List.class);
                     if (websocketClasses != null && !websocketClasses.isEmpty()) {
                         websocketClasses.forEach((clazz) -> {
-                            BaseWebsocket websocket = (BaseWebsocket) this.context.getBean(clazz);
-                            socketBeans.put(websocket.getPath(), websocket);
+                            WsSessionListener listener = (WsSessionListener) context.getBean(clazz);
+                            socketBeans.put(listener.getPath(), new SimpleWsObject(listener));
                         });
                     }
                 }
@@ -85,6 +84,9 @@ public class WebsocketServerFactory extends AbstractServerFactory {
             server.setStopTimeout(10);
             super.setServer(server);
             server.start();
+            if (logger.isInfoEnabled()) {
+                logger.info(String.format("Start Websocket server success, listen port: %d.", port));
+            }
         }
     }
 

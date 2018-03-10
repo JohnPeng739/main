@@ -9,18 +9,18 @@ import org.java_websocket.WebSocket;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mx.service.rest.client.RestClientInvoke;
-import org.mx.service.rest.client.RestInvokeException;
+import org.mx.service.client.rest.RestClientInvoke;
+import org.mx.service.client.rest.RestInvokeException;
+import org.mx.service.client.websocket.BaseWebsocketClientListener;
+import org.mx.service.client.websocket.WsClientInvoke;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.service.server.config.TestConfig;
-import org.mx.service.server.config.TestConfigSsl;
-import org.mx.service.ws.client.BaseWebsocketClientListener;
-import org.mx.service.ws.client.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.*;
 
 /**
@@ -110,20 +110,21 @@ public class TestServer {
         TestWebsocketListener listener = new TestWebsocketListener();
         try {
             invoke.init("ws://localhost:9997/echo", listener, false);
-            Thread.sleep(1000);
+            Thread.sleep(3000);
             assertEquals(WebSocket.READYSTATE.OPEN, invoke.getState());
-            assertEquals("Server is ok.", listener.textMsg);
+            assertThat(listener.textMsg, startsWith("Server is ok:"));
             String msg = "hello, john";
             invoke.send(msg);
-            Thread.sleep(1000);
+            Thread.sleep(3000);
             assertEquals(String.format("Server echo: %s.", msg), listener.textMsg);
             invoke.send(msg.getBytes());
-            Thread.sleep(1000);
+            Thread.sleep(3000);
             assertEquals(msg, new String(listener.binaryMsg));
             invoke.close();
-            Thread.sleep(1000);
+            Thread.sleep(3000);
             assertEquals(WebSocket.READYSTATE.CLOSED, invoke.getState());
         } catch (Exception ex) {
+            ex.printStackTrace();
             fail(ex.getMessage());
         }
         // 测试手动关闭后无法重连
@@ -149,7 +150,7 @@ public class TestServer {
             invoke.init("ws://localhost:9997/echo", listener, true);
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.OPEN, invoke.getState());
-            assertEquals("Server is ok.", listener.textMsg);
+            assertThat(listener.textMsg, startsWith("Server is ok:"));
             // 等待直到服务器关闭连接
             Thread.sleep(30000);
 
@@ -186,7 +187,7 @@ public class TestServer {
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.OPEN, invoke1.getState());
             assertEquals(WebSocket.READYSTATE.OPEN, invoke2.getState());
-            assertEquals("Server is ok.", listener.textMsg);
+            assertThat(listener.textMsg, startsWith("Server is ok:"));
             String msg = "hello, john";
             invoke1.send(msg);
             invoke2.send(msg);

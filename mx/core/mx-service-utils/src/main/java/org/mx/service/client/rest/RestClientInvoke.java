@@ -1,4 +1,4 @@
-package org.mx.service.rest.client;
+package org.mx.service.client.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

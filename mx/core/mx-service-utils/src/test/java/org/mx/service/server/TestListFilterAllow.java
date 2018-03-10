@@ -1,25 +1,16 @@
 package org.mx.service.server;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.eclipse.jetty.server.Server;
 import org.java_websocket.WebSocket;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mx.service.rest.client.RestClientInvoke;
-import org.mx.service.rest.client.RestInvokeException;
-import org.mx.service.server.config.TestConfig;
 import org.mx.service.server.config.TestListFilterAllowConfig;
-import org.mx.service.ws.client.BaseWebsocketClientListener;
-import org.mx.service.ws.client.WsClientInvoke;
+import org.mx.service.client.websocket.BaseWebsocketClientListener;
+import org.mx.service.client.websocket.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
+import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.*;
 
 /**
@@ -49,10 +40,10 @@ public class TestListFilterAllow {
             // test websocket client
             WsClientInvoke invoke1 = new WsClientInvoke();
             TestWebsocketListener listener = new TestWebsocketListener();
-            invoke1.init("ws://localhost:9997/echo", listener);
+            invoke1.init("ws://localhost:9997/echo", listener, false);
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.OPEN, invoke1.getState());
-            assertEquals("Server is ok.", listener.textMsg);
+            assertThat(listener.textMsg, startsWith("Server is ok:"));
             String msg = "hello, john";
             invoke1.send(msg);
             Thread.sleep(1000);

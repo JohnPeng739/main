@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @Import(TestConfig.class)
 @PropertySource({
-        "classpath:connect-filter-rules-block.properties"
+        "classpath:server-filter-list-blocks.properties"
 })
 public class TestListFilterBlockConfig {
 }

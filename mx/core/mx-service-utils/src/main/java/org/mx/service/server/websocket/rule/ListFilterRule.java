@@ -1,22 +1,37 @@
-package org.mx.service.ws.rule;
+package org.mx.service.server.websocket.rule;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
-import org.mx.spring.SpringContextHolder;
+import org.mx.service.server.websocket.WsSessionFilterRule;
+import org.mx.service.server.websocket.WsSessionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * 基于白名单、黑名单的连接过滤规则实现
+ * 描述： 根据黑白名单进行过滤的规则<br>
+ * 黑白名单可能在加载的properties配置文件中进行如下定义：<br>
+ * <pre>
+ *     websocket.session.filter.rules.list.allows=127.0.0.1,::1,10.1
+ *     websocket.session.filter.rules.list.blocks=168.192
+ * </pre>
+ * <strong>如果同时配置了黑白名单，以白名单为准。</strong>
  *
- * @author : john.peng created on date : 2018/1/4
+ * @author John.Peng
+ *         Date time 2018/3/10 下午7:02
  */
-public class ListFilterRule implements ConnectFilterRule {
+@Component("listFilterRule")
+public class ListFilterRule implements WsSessionFilterRule {
     private static final Log logger = LogFactory.getLog(ListFilterRule.class);
+
+    @Autowired
+    private Environment env = null;
 
     private Set<byte[]> allows, blocks;
 
@@ -52,6 +67,41 @@ public class ListFilterRule implements ConnectFilterRule {
     }
 
     /**
+     * {@inheritDoc}
+     *
+     * @see WsSessionFilterRule#init(WsSessionManager)
+     */
+    @Override
+    public void init(WsSessionManager manager) {
+        String allowsStr = env.getProperty("websocket.session.filter.rules.list.allows");
+        if (!StringUtils.isBlank(allowsStr)) {
+            // 设置白名单
+            addFilter(allowsStr, allows);
+        }
+        String blocksStr = env.getProperty("websocket.session.filter.rules.list.blocks");
+        if (allows.isEmpty() && !StringUtils.isBlank(blocksStr)) {
+            // 设置黑名单
+            addFilter(blocksStr, blocks);
+        }
+        if (allows.isEmpty() && blocks.isEmpty()) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("There may not be set the security role for Websocket server.");
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see WsSessionFilterRule#destroy()
+     */
+    @Override
+    public void destroy() {
+        allows.clear();
+        blocks.clear();
+    }
+
+    /**
      * 判定指定的seg是否在过滤规则中
      *
      * @param filter 过滤规则，白名单 or 黑名单
@@ -76,7 +126,7 @@ public class ListFilterRule implements ConnectFilterRule {
     /**
      * {@inheritDoc}
      *
-     * @see ConnectFilterRule#filter(Session)
+     * @see WsSessionFilterRule#filter(Session)
      */
     @Override
     public boolean filter(Session session) {
@@ -85,50 +135,9 @@ public class ListFilterRule implements ConnectFilterRule {
         } else {
             byte[] segs = session.getRemoteAddress().getAddress().getAddress();
             if (!allows.isEmpty()) {
-                return found(allows, segs);
+                return !found(allows, segs);
             }
-            return !found(blocks, segs);
+            return found(blocks, segs);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see ConnectFilterRule#init(String)
-     */
-    @Override
-    public void init(String key) {
-        if (StringUtils.isBlank(key)) {
-            if (logger.isErrorEnabled()) {
-                logger.error("The list filter rule' configuration error");
-            }
-            return;
-        }
-        Environment env = SpringContextHolder.getApplicationContext().getEnvironment();
-        String allows = env.getProperty(String.format("%s.allows", key));
-        if (!StringUtils.isBlank(allows)) {
-            // 设置白名单
-            this.addFilter(allows, this.allows);
-        }
-        String blocks = env.getProperty(String.format("%s.blocks", key));
-        if (this.allows.isEmpty() && !StringUtils.isBlank(blocks)) {
-            // 设置黑名单
-            this.addFilter(blocks, this.blocks);
-        }
-        if (this.allows.isEmpty() && this.blocks.isEmpty()) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("There may not be set the security role for Websocket server.");
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see ConnectFilterRule#getName()
-     */
-    @Override
-    public String getName() {
-        return "List filter rule";
     }
 }

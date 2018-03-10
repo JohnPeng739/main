@@ -1,4 +1,4 @@
-package org.mx.service.ws.client;
+package org.mx.service.client.websocket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -171,7 +171,7 @@ public class WsClientInvoke {
      */
     private void closeClient() {
         if (client != null) {
-            client.close(0);
+            client.close(1000, "Notmal close operate request.");
             if (logger.isDebugEnabled()) {
                 logger.debug("The Websocket client is closed.");
             }

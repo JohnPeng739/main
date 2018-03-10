@@ -2,7 +2,7 @@ package org.mx.service.server.config;
 
 import org.mx.service.server.rest.DemoRestResource;
 import org.mx.service.server.servlet.DownloadFileServlet;
-import org.mx.service.server.websocket.EchoSocket;
+import org.mx.service.server.websocket.EchoWebsocket;
 import org.springframework.context.annotation.*;
 
 import java.util.Arrays;
@@ -28,6 +28,6 @@ public class TestConfigSsl {
 
     @Bean(name = "websocketClassesTest")
     public List<Class<?>> websocketClassesTest() {
-        return Arrays.asList(EchoSocket.class);
+        return Arrays.asList(EchoWebsocket.class);
     }
 }
