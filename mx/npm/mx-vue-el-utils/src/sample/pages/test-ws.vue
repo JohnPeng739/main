@@ -39,7 +39,7 @@
     name: 'test-websocket-page',
     data () {
       return {
-        wsUri: 'ws://localhost:9997/notify',
+        wsUri: 'ws://localhost:9997/echo',
         myWebSocket: null,
         interval: null,
         deviceId: '',
@@ -77,8 +77,8 @@
         this.interval = setInterval(() => {
           device.longitude = Math.random() * 180
           device.latitude = Math.random() * 90
-          this.send({command: 'pong', type: 'system', data: device})
-        }, 30000)
+          this.send({command: 'test', type: 'system', data: device})
+        }, 5000)
       },
       handleClose () {
         if (this.interval) {
