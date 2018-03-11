@@ -1,6 +1,5 @@
 package org.mx.comps.file;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.OutputStream;
 
 /**
@@ -34,6 +33,14 @@ public interface FileReadProcessor {
      * @param initReq 初始化请求对象，比如HTTP请求等
      */
     void init(Object initReq);
+
+    /**
+     * 将打开的文件内容按照限定缓冲读入到二进制数组中，如果返回长度小于数组长度，表示文件已经到末尾。
+     *
+     * @param buffer 二进制数据数组
+     * @return 本次读取数据的长度
+     */
+    int read(byte[] buffer);
 
     /**
      * 将打开的文件内容读入到输出流中

@@ -106,6 +106,9 @@ public class FileProcessorSimpleImpl extends RandomAccessFileProcessor {
             } else {
                 throw new UnsupportedOperationException(String.format("Unsupported method: %s.", req.getMethod()));
             }
+        } else if (initReq instanceof JSONObject) {
+            directory = ((JSONObject)initReq).getString("directory");
+            filename = ((JSONObject)initReq).getString("filename");
         } else {
             // TODO 可能根据需要添加新的初始化参数对象
             throw new UnsupportedOperationException(String.format("Unsupported init parameter object: %s.",

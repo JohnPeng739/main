@@ -89,16 +89,18 @@ public class FileUploadWebsocket extends DefaultWsSessionMonitor {
 
     /**
      * 将收到的文本消息转换为JSONObject对象描述的命令对象，该对象至少包括：command字段，如：
+     * <pre>
      * {
-     * command: 'init',
-     * processorType: 'simple'
+     *     command: 'init',
+     *     processorType: 'simple'
      * }
      * 或
      * {
-     * command: 'start',
-     * directory: '/root',
-     * filename: 'filename.txt'
+     *     command: 'start',
+     *     directory: '/root',
+     *     filename: 'filename.txt'
      * }
+     * </pre>
      *
      * @see DefaultWsSessionMonitor#hasText(String, String)
      */

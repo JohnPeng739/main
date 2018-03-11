@@ -130,6 +130,24 @@ public abstract class RandomAccessFileProcessor implements FileWriteProcessor, F
     /**
      * {@inheritDoc}
      *
+     * @see FileReadProcessor#read(byte[])
+     */
+    public int read(byte[] buffer) {
+        Assert.notNull(buffer, "The byte array is null.");
+        Assert.isTrue(isOpened(), "The Processor is not opened.");
+        try {
+            return randomAccessFile.read(buffer);
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Read data from file fail.", ex);
+            }
+            return -1;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see FileReadProcessor#read(OutputStream)
      */
     @Override

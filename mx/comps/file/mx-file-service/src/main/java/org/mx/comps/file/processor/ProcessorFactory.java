@@ -56,6 +56,10 @@ public class ProcessorFactory {
         switch (type) {
             case simple:
                 return context.getBean("simpleFilePersistProcessor", FileWriteProcessor.class);
+            case category:
+                return context.getBean("categoryFilePersistProcessor", FileWriteProcessor.class);
+            case ftp:
+            case hdfs:
             default:
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("Unsupported type: %s.", type));
@@ -69,8 +73,20 @@ public class ProcessorFactory {
      */
     public enum ProcessorType {
         /**
-         * 简单文件处理类型，提供目录和文件名
+         * 简单文件类型，提供目录和文件名
          */
-        simple
+        simple,
+        /**
+         * 分组目录类型，提供目录和文件名，并支持Hash分组
+         */
+        category,
+        /**
+         * ftp类型
+         */
+        ftp,
+        /**
+         * hdfs类型
+         */
+        hdfs
     }
 }
