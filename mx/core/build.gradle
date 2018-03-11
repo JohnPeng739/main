@@ -23,7 +23,7 @@ project(':mx-utils') {
 }
 
 project(':mx-spring') {
-  version = '1.1.1'
+  version = '1.1.2'
   description = 'Many utility based on spring, such as : SpringContextHolder, etc.'
 
   dependencies {
@@ -35,7 +35,7 @@ project(':mx-spring') {
 }
 
 project(':mx-dal') {
-  version = '1.1.5'
+  version = '1.1.6'
   description = 'data access layer abstract classes and interfaces.'
 
   dependencies {
@@ -48,7 +48,7 @@ project(':mx-dal') {
 }
 
 project(':mx-dal-hibernate') {
-  version = '1.1.8'
+  version = '1.1.9'
   description = 'Dal with hibernate JPA.'
 
   dependencies {
@@ -65,7 +65,7 @@ project(':mx-dal-hibernate') {
 }
 
 project(':mx-dal-mongodb') {
-  version = '1.1.6'
+  version = '1.1.7'
   description = 'dal with mongoldb.'
 
   dependencies {
@@ -80,7 +80,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-service-utils') {
-  version = '1.6.1'
+  version = '1.6.2'
   description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
   dependencies {
