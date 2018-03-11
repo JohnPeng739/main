@@ -88,7 +88,7 @@ public class NotifyWsClient {
      * @param longitude 设备当前经度
      * @param latitude  设备当前纬度
      */
-    public void pong(String deviceId, String state, double longitude, double latitude) {
+    public void ping(String deviceId, String state, double longitude, double latitude) {
         PingCommand command = new PingCommand(deviceId, state, longitude, latitude);
         invoke.send(JSON.toJSONString(command));
     }

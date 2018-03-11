@@ -20,12 +20,12 @@ public class TestNotifySend extends BaseTest {
             Thread.sleep(500);
             assertEquals(WebSocket.READYSTATE.OPEN, wsClient.getState());
             wsClient.regiesty("device01", "registry", 129.1234, 31.1234);
-            wsClient.pong("device01", "alive", 129.1234, 31.1234);
+            wsClient.ping("device01", "alive", 129.1234, 31.1234);
             TestNotifyEvent event = new TestNotifyEvent("id", "address", "description");
-            wsClient.notify("system", NotifyBean.TarType.IPs, "127.0.0.1", -1, true, event);
+            wsClient.notify("system", "device01",  NotifyBean.TarType.IPs, "127.0.0.1", -1, event);
 
-            NotifyBean<TestNotifyEvent> notify = new NotifyBean<>("test system **", NotifyBean.TarType.IPs, "127.0.0.1",
-                    -1, true, event);
+            NotifyBean<TestNotifyEvent> notify = new NotifyBean<>("test system **", "device01",  NotifyBean.TarType.IPs, "127.0.0.1",
+                    -1, event);
             assertEquals(true, restClient.sendNotify(notify));
             wsClient.unregistry("device01");
         } catch (Exception ex) {

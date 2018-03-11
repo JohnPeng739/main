@@ -16,7 +16,6 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2018/1/3
  */
-@Configuration
 @Import({ServerConfig.class})
 @ComponentScan({
         "org.mx.comps.notify.websocket",

@@ -161,23 +161,26 @@ public class NotifyProcessor {
         }
         if (sessionManager != null) {
             String connectKey = data.getString("connectKey");
-            Session session = sessionManager.getSession(connectKey);
-            if (session != null) {
-                JSONObject res = new JSONObject();
-                res.put("srcCommand", NotifyCommandProcessor.COMMAND);
-                res.put("deviceId", deviceId);
-                res.put("status", success ? "ok" : "error");
-                res.put("error", success ? null : "Notify process has any error.");
-                try {
-                    session.getRemote().sendString(JSON.toJSONString(res));
-                } catch (IOException ex) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(String.format("Send notfiy response message to session[%s] fail.", connectKey), ex);
+            if (!StringUtils.isBlank(connectKey)) {
+                // 如果没有设置connectKey，意味着来自于Restful的请求，就不需要向请求方进行反馈响应。
+                Session session = sessionManager.getSession(connectKey);
+                if (session != null) {
+                    JSONObject res = new JSONObject();
+                    res.put("srcCommand", NotifyCommandProcessor.COMMAND);
+                    res.put("deviceId", deviceId);
+                    res.put("status", success ? "ok" : "error");
+                    res.put("error", success ? null : "Notify process has any error.");
+                    try {
+                        session.getRemote().sendString(JSON.toJSONString(res));
+                    } catch (IOException ex) {
+                        if (logger.isErrorEnabled()) {
+                            logger.error(String.format("Send notfiy response message to session[%s] fail.", connectKey), ex);
+                        }
                     }
-                }
-            } else {
-                if (logger.isWarnEnabled()) {
-                    logger.warn(String.format("The session[%s] not existed.", connectKey));
+                } else {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn(String.format("The session[%s] not existed.", connectKey));
+                    }
                 }
             }
         } else {

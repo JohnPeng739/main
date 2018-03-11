@@ -32,9 +32,10 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     private static final Log logger = LogFactory.getLog(OnlineManagerSimpleImpl.class);
 
     private final Serializable onlineDeviceMutex = "ONLINE_DEVICE";
+    private final String deviceIdleTimeoutSecKey = "websocket.notify.device.idleTimeoutSecs";
     private ConcurrentMap<String, OnlineDevice> onlineDevices = null;
     private Timer cleanTimer = null;
-    private long pongIdleTimeoutSecs = 60l;
+    private int deviceIdleTimeoutSecs = 60;
 
     @Autowired
     private Environment env = null;
@@ -75,10 +76,10 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     @Override
     public void afterPropertiesSet() throws Exception {
         if (env != null) {
-            pongIdleTimeoutSecs = env.getProperty("websocket.pong.idleTimeoutSecs", Long.class, 60l);
+            deviceIdleTimeoutSecs = env.getProperty(deviceIdleTimeoutSecKey, Integer.class, 60);
         }
         cleanTimer = new Timer();
-        cleanTimer.scheduleAtFixedRate(new CleanTask(), 5000, pongIdleTimeoutSecs * 1000 / 3);
+        cleanTimer.scheduleAtFixedRate(new CleanTask(), 5000, deviceIdleTimeoutSecs * 1000 / 3);
     }
 
     /**
@@ -209,7 +210,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
             Set<String> invalid = new HashSet<>();
             onlineDevices.forEach((k, v) -> {
                 long delay = (System.currentTimeMillis() - v.getLastTime()) / 1000;
-                if (delay > pongIdleTimeoutSecs) {
+                if (delay > deviceIdleTimeoutSecs) {
                     // 超过约定时间没有心跳，判定为无效在线设备
                     onlineDevices.remove(k);
                     if (logger.isDebugEnabled()) {
