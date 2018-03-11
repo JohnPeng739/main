@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Import;
 import java.util.Arrays;
 import java.util.List;
 
-@Configuration
 @Import(SpringConfig.class)
 public class TestTaskConfig {
     @Bean(name = "initializeTasks")

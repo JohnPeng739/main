@@ -11,9 +11,11 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.mx.StringUtils;
 import org.mx.service.server.servlet.BaseHttpServlet;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/10/6
  */
+@Component("servletServerFactory")
 public class ServletServerFactory extends AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(ServletServerFactory.class);
 
@@ -34,10 +37,10 @@ public class ServletServerFactory extends AbstractServerFactory {
     /**
      * {@inheritDoc}
      *
-     * @see AbstractServerFactory#init()
+     * @see InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void init() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         boolean enabled = env.getProperty("servlet.enabled", Boolean.class, true);
         if (!enabled) {
             // 显式配置enable为false，表示不进行初始化。

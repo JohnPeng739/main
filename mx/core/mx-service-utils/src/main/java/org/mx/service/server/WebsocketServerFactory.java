@@ -11,9 +11,11 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
 import org.mx.service.server.websocket.SimpleWsObject;
 import org.mx.service.server.websocket.WsSessionListener;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import java.util.Map;
  *
  * @author : john.peng created on date : 2017/11/4
  */
+@Component("websocketServerFactory")
 public class WebsocketServerFactory extends AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(WebsocketServerFactory.class);
 
@@ -35,6 +38,9 @@ public class WebsocketServerFactory extends AbstractServerFactory {
 
     private Map<String, SimpleWsObject> socketBeans = null;
 
+    /**
+     * 默认的构造函数
+     */
     public WebsocketServerFactory() {
         super();
         this.socketBeans = new HashMap<>();
@@ -43,10 +49,10 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     /**
      * {@inheritDoc}
      *
-     * @see AbstractServerFactory#init()
+     * @see InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void init() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         boolean enabled = env.getProperty("websocket.enabled", Boolean.class, true);
         if (!enabled) {
             // 显式配置enable为false，表示不进行初始化。

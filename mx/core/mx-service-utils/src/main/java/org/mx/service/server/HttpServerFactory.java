@@ -10,16 +10,22 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.mx.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.util.List;
 
 /**
- * Created by john on 2017/11/4.
+ * 描述： 基于Jetty的Http服务的工程类
+ *
+ * @author John.Peng
+ *         Date time 2018/3/11 上午11:11
  */
+@Component("httpServerFactory")
 public class HttpServerFactory extends AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(HttpServerFactory.class);
 
@@ -31,10 +37,10 @@ public class HttpServerFactory extends AbstractServerFactory {
     /**
      * {@inheritDoc}
      *
-     * @see AbstractServerFactory#init()
+     * @see InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void init() throws Exception {
+    public void afterPropertiesSet() throws Exception {
         boolean enabled = this.env.getProperty("restful.enabled", Boolean.class, true);
         if (!enabled) {
             // 显式配置enable为false，表示不进行初始化。

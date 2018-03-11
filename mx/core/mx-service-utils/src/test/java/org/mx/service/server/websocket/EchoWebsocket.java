@@ -3,7 +3,7 @@ package org.mx.service.server.websocket;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
-import org.mx.spring.SpringContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -15,6 +15,9 @@ import java.util.concurrent.TimeUnit;
 public class EchoWebsocket extends DefaultWsSessionMonitor {
     private static final Log logger = LogFactory.getLog(EchoWebsocket.class);
     private final CountDownLatch closeLatch;
+
+    @Autowired
+    private WsSessionManager manager = null;
 
     public EchoWebsocket() {
         super("/echo");
@@ -29,7 +32,6 @@ public class EchoWebsocket extends DefaultWsSessionMonitor {
     public void afterConnect(String connectKey) {
         super.afterConnect(connectKey);
         try {
-            WsSessionManager manager = SpringContextHolder.getBean(WsSessionManager.class);
             if (manager != null) {
                 Session session = manager.getSession(connectKey);
                 if (session != null) {
@@ -47,7 +49,6 @@ public class EchoWebsocket extends DefaultWsSessionMonitor {
     public void hasText(String connectKey, String message) {
         super.hasText(connectKey, message);
         try {
-            WsSessionManager manager = SpringContextHolder.getBean(WsSessionManager.class);
             if (manager != null) {
                 Session session = manager.getSession(connectKey);
                 if (session != null) {
@@ -65,7 +66,6 @@ public class EchoWebsocket extends DefaultWsSessionMonitor {
     public void hasBinary(String connectKey, byte[] buffer) {
         super.hasBinary(connectKey, buffer);
         try {
-            WsSessionManager manager = SpringContextHolder.getBean(WsSessionManager.class);
             if (manager != null) {
                 Session session = manager.getSession(connectKey);
                 if (session != null) {

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 /**
  * Created by john on 2017/11/4.
  */
-@Configuration
 @Import(TestConfig.class)
 @PropertySource({
         "classpath:server-filter-ddos.properties"

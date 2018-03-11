@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * Created by john on 2017/11/4.
  */
-@Configuration
 @Import(ServerConfig.class)
 @PropertySource({"classpath:server-ssl.properties"})
 @ComponentScan({"org.mx.service.server.rest", "org.mx.service.server.servlet", "org.mx.service.server.websocket"})

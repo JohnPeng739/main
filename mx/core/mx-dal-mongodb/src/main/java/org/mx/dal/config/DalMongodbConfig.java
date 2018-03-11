@@ -24,7 +24,6 @@ import java.net.UnknownHostException;
  *
  * @author : john.peng date : 2017/10/8
  */
-@Configuration
 @Import({DalConfig.class})
 @PropertySource("classpath:mongodb.properties")
 @ComponentScan({"org.mx.dal.service.impl"})

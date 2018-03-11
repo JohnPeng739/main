@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author : john.peng created on date : 2018/1/5
  */
-@Configuration
 @ComponentScan({
         "org.mx.spring"
 })

@@ -25,7 +25,6 @@ import java.util.Set;
  * @author : john.peng date : 2017/10/7
  * @see DalConfig
  */
-@Configuration
 @EnableTransactionManagement
 @Import(DalConfig.class)
 @PropertySource({

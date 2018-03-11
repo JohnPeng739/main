@@ -15,7 +15,6 @@ import org.springframework.core.env.Environment;
  *
  * @author : john.peng date : 2017/10/7
  */
-@Configuration
 @PropertySource({"classpath:h2-server.properties"})
 public class DatabaseServerConfig {
     private static final Log logger = LogFactory.getLog(DatabaseServerConfig.class);

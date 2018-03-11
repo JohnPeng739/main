@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
  *
  * @author : john.peng date : 2017/10/7
  */
-@Configuration
 @ComponentScan({
         "org.mx.dal.session.impl"
 })

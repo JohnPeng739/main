@@ -5,8 +5,12 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
-import org.mx.spring.SpringContextHolder;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,13 +29,17 @@ import java.util.concurrent.ConcurrentMap;
  * @author John.Peng
  *         Date time 2018/3/10 上午10:07
  */
-public class WsSessionManager {
+@Component("wsSessionManager")
+public class WsSessionManager implements InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(WsSessionManager.class);
     private static final String pingCycleSecKey = "websocket.session.ping.cycleSec";
     private static final String cleanCycleSecKey = "websocket.session.clean.cycleSec";
-
     private final Serializable setMutex = "Set task";
     private final int PONG_ERROR_CODE = 4001, BLOCK_ERROR_CODE = 4002;
+    @Autowired
+    private Environment env = null;
+    @Autowired
+    private ApplicationContext context = null;
     private Timer pingTimer = null, cleanTimer = null;
     private int pingCycleSec = 10, cleanCycleSec = 60;
 
@@ -226,16 +234,18 @@ public class WsSessionManager {
     }
 
     /**
-     * 管理器初始化方法，被Spring IoC调用
+     * {@inheritDoc}
+     *
+     * @see InitializingBean#afterPropertiesSet()
      */
-    public void init() {
-        Environment env = SpringContextHolder.getBean(Environment.class);
+    @Override
+    public void afterPropertiesSet() throws Exception {
         // 配置过滤规则
         if (env != null) {
             String filtersStr = env.getProperty("websocket.session.filter.rules");
             if (!StringUtils.isBlank(filtersStr)) {
                 for (String filterStr : StringUtils.split(filtersStr, ",", true, true)) {
-                    WsSessionFilterRule rule = SpringContextHolder.getBean(filterStr, WsSessionFilterRule.class);
+                    WsSessionFilterRule rule = context.getBean(filterStr, WsSessionFilterRule.class);
                     if (rule != null) {
                         rule.init(this);
                         rules.add(rule);
@@ -259,9 +269,12 @@ public class WsSessionManager {
     }
 
     /**
-     * 管理器销毁方法，被Spring IoC调用
+     * {@inheritDoc}
+     *
+     * @see DisposableBean#destroy()
      */
-    public void destroy() {
+    @Override
+    public void destroy() throws Exception {
         // 清理ping定时任务
         if (pingTimer != null) {
             pingTimer.cancel();
