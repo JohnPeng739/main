@@ -6,10 +6,9 @@ package org.mx.comps.notify.client;
  * @author : john.peng created on date : 2018/1/9
  */
 public class NotifyBean<T> {
-    private String src, tar;
+    private String src, tar, deviceId;
     private TarType tarType = TarType.Devices;
     private long expiredTime;
-    private boolean needAck;
     private T message;
 
     /**
@@ -23,19 +22,19 @@ public class NotifyBean<T> {
      * 默认的构造函数
      *
      * @param src         源
+     * @param deviceId    设备ID
      * @param tarType     目标类型
      * @param tar         目标
      * @param expiredTime 过期时间
-     * @param needAck     是否需要确认
      * @param message     业务消息对象
      */
-    public NotifyBean(String src, TarType tarType, String tar, long expiredTime, boolean needAck, T message) {
+    public NotifyBean(String src, String deviceId, TarType tarType, String tar, long expiredTime, T message) {
         super();
         this.src = src;
+        this.deviceId = deviceId;
         this.tarType = tarType;
         this.tar = tar;
         this.expiredTime = expiredTime;
-        this.needAck = needAck;
         this.message = message;
     }
 
@@ -55,6 +54,24 @@ public class NotifyBean<T> {
      */
     public void setSrc(String src) {
         this.src = src;
+    }
+
+    /**
+     * 设备ID
+     *
+     * @return 设备ID
+     */
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    /**
+     * 设备ID
+     *
+     * @param deviceId 设备ID
+     */
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     /**
@@ -109,24 +126,6 @@ public class NotifyBean<T> {
      */
     public void setExpiredTime(long expiredTime) {
         this.expiredTime = expiredTime;
-    }
-
-    /**
-     * 获取是否需要确认
-     *
-     * @return 需要确认返回true，否则返回false
-     */
-    public boolean isNeedAck() {
-        return needAck;
-    }
-
-    /**
-     * 设置是否需要确认
-     *
-     * @param needAck 需要确认设置为true，否则设置为false
-     */
-    public void setNeedAck(boolean needAck) {
-        this.needAck = needAck;
     }
 
     /**

@@ -97,16 +97,16 @@ public class NotifyWsClient {
      * 发送推送通知指令
      *
      * @param src         推送源
+     * @param deviceId    设备ID
      * @param tarType     目标类型
      * @param tar         推送目标
      * @param expiredTime 通知过期时间
-     * @param needAck     设置为true标示需要回复确认
      * @param notify      通知消息内容对象
      * @param <T>         通知消息内容对象泛型
      */
-    public <T> void notify(String src, NotifyBean.TarType tarType, String tar, long expiredTime,
-                           boolean needAck, T notify) {
-        NotifyCommand<T> command = new NotifyCommand<T>(src, tarType, tar, expiredTime, needAck, notify);
+    public <T> void notify(String src, String deviceId, NotifyBean.TarType tarType, String tar, long expiredTime,
+                           T notify) {
+        NotifyCommand<T> command = new NotifyCommand<T>(src, deviceId, tarType, tar, expiredTime, notify);
         invoke.send(JSON.toJSONString(command));
     }
 

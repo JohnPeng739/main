@@ -188,6 +188,7 @@ public class NotifyProcessor {
         if (listener != null) {
             listener.after(data, success, set.invalidDevices);
         }
+        // TODO 根据set中的maybeCluster状态，添加中继到其他集群节点中进行转发
     }
 
     // 内部描述推送信息的类定义
