@@ -4,60 +4,35 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.mx.StringUtils;
 import org.mx.comps.notify.processor.MessageProcessorChain;
-import org.mx.service.server.websocket.BaseWebsocket;
+import org.mx.service.server.websocket.DefaultWsSessionMonitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.InputStream;
-
 /**
- * 基于Websocket的通知通用消息服务器
+ * 基于Websocket的通知通用消息服务
  *
  * @author : john.peng created on date : 2018/1/3
  */
 @Component("notifyWebsocket")
-@WebSocket
-public final class NotificationWebsocket extends BaseWebsocket {
+public final class NotificationWebsocket extends DefaultWsSessionMonitor {
     private static final Log logger = LogFactory.getLog(NotificationWebsocket.class);
 
     @Autowired
     private MessageProcessorChain processorChain = null;
 
     public NotificationWebsocket() {
-        super("/notify", false);
+        super("/notify");
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#afterConnect(Session)
+     * @see DefaultWsSessionMonitor#hasText(String, String)
      */
     @Override
-    protected void afterConnect(Session session) {
-        super.afterConnect(session);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see BaseWebsocket#beforeClose(Session, int, String)
-     */
-    @Override
-    protected void beforeClose(Session session, int statusCode, String reason) {
-        super.beforeClose(session, statusCode, reason);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see BaseWebsocket#receiveText(Session, String)
-     */
-    @Override
-    protected void receiveText(Session session, String message) {
+    public void hasText(String connectKey, String message) {
         if (StringUtils.isBlank(message)) {
             if (logger.isWarnEnabled()) {
                 logger.warn("The text message is blank.");
@@ -65,24 +40,24 @@ public final class NotificationWebsocket extends BaseWebsocket {
         } else {
             try {
                 JSONObject json = JSON.parseObject(message);
-                processorChain.processJsonCommand(session, json);
+                processorChain.processJsonCommand(connectKey, json);
             } catch (Exception ex) {
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("Parse message into JSONObject fail, message: %s.", message), ex);
                 }
             }
         }
-        super.receiveText(session, message);
+        super.hasText(connectKey, message);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#receiveBinary(Session, InputStream)
+     * @see DefaultWsSessionMonitor#hasBinary(String, byte[]) (String, byte[])
      */
     @Override
-    protected void receiveBinary(Session session, InputStream in) {
-        processorChain.processBinaryData(session, in);
-        super.receiveBinary(session, in);
+    public void hasBinary(String connectKey, byte[] buffer) {
+        processorChain.processBinaryData(connectKey, buffer);
+        super.hasBinary(connectKey, buffer);
     }
 }

@@ -3,11 +3,11 @@ package org.mx.comps.notify.client;
 import com.alibaba.fastjson.JSON;
 import org.java_websocket.WebSocket;
 import org.mx.comps.notify.client.command.NotifyCommand;
-import org.mx.comps.notify.client.command.PongCommand;
+import org.mx.comps.notify.client.command.PingCommand;
 import org.mx.comps.notify.client.command.RegistryCommand;
 import org.mx.comps.notify.client.command.UnregistryCommand;
-import org.mx.service.ws.client.BaseWebsocketClientListener;
-import org.mx.service.ws.client.WsClientInvoke;
+import org.mx.service.client.websocket.BaseWebsocketClientListener;
+import org.mx.service.client.websocket.WsClientInvoke;
 
 /**
  * 基于Websocket接口调用的通知客户端
@@ -89,7 +89,7 @@ public class NotifyWsClient {
      * @param latitude  设备当前纬度
      */
     public void pong(String deviceId, String state, double longitude, double latitude) {
-        PongCommand command = new PongCommand(deviceId, state, longitude, latitude);
+        PingCommand command = new PingCommand(deviceId, state, longitude, latitude);
         invoke.send(JSON.toJSONString(command));
     }
 

@@ -2,6 +2,7 @@ package org.mx.comps.notify.processor.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import org.eclipse.jetty.websocket.api.Session;
+import org.mx.TypeUtils;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.comps.notify.processor.NotifyProcessor;
@@ -10,7 +11,46 @@ import org.mx.spring.SpringContextHolder;
 import java.io.InputStream;
 
 /**
- * 通知命令处理器
+ * 通知命令处理器，收到本命令后，将命令中的数据直接P2P地发送到指定范围的注册设备上。<br>
+ * 收到的指令格式为：
+ * <pre>
+ * {
+ *     commond: 'notify',
+ *     type: 'user',
+ *     data: {
+ *         src: '',
+ *         deviceId: '',
+ *         tarType: '',
+ *         tar: '',
+ *         expiredTime: -1,
+ *         message: {
+ *             ......
+ *         }
+ *     }
+ * }
+ * </pre>
+ * 其中：tarType可以是 devices | ips | states | later | early ，
+ * 分别对于tar中的设备号列表、IP列表、状态列表、晚于/早于时间(long)内容。<br>
+ * 处理后封装的发送数据格式为：
+ * <pre>
+ * {
+ *     src: '',
+ *     deviceId: '',
+ *     pushTime: 0,
+ *     message: {
+ *         ......
+ *     }
+ * }
+ * </pre>
+ * 响应给发送终端的数据格式为：
+ * <pre>
+ * {
+ *     srcCommand: 'notify',
+ *     deviceId: '',
+ *     status: 'ok',
+ *     error: ''
+ * }
+ * </pre>
  *
  * @author : john.peng created on date : 2018/1/6
  */
@@ -39,6 +79,9 @@ public class NotifyCommandProcessor implements MessageProcessor {
         if (COMMAND.equals(command) && MessageProcessorChain.TYPE_USER.equals(type)) {
             // 通知消息
             JSONObject data = json.getJSONObject("data");
+            String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
+            int port = session.getRemoteAddress().getPort();
+            data.put("connectKey", String.format("%s:%d", ip, port));
             NotifyProcessor notifyProcessor = SpringContextHolder.getBean(NotifyProcessor.class);
             notifyProcessor.notifyProcess(data);
             return true;
@@ -49,10 +92,10 @@ public class NotifyCommandProcessor implements MessageProcessor {
     /**
      * {@inheritDoc}
      *
-     * @see MessageProcessor#processBinaryData(Session, InputStream)
+     * @see MessageProcessor#processBinaryData(Session, byte[])
      */
     @Override
-    public boolean processBinaryData(Session session, InputStream in) {
+    public boolean processBinaryData(Session session, byte[] buffer) {
         return false;
     }
 }

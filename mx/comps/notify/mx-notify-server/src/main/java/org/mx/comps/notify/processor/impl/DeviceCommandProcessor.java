@@ -1,12 +1,18 @@
 package org.mx.comps.notify.processor.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
+import org.mx.StringUtils;
 import org.mx.TypeUtils;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.processor.MessageProcessor;
+import org.mx.service.server.websocket.WsSessionManager;
+import org.mx.spring.SpringContextHolder;
 
-import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * 终端命令处理器
@@ -14,6 +20,8 @@ import java.io.InputStream;
  * @author : john.peng created on date : 2018/1/5
  */
 public abstract class DeviceCommandProcessor implements MessageProcessor {
+    private static final Log logger = LogFactory.getLog(DeviceCommandProcessor.class);
+
     /**
      * 设备命令处理
      *
@@ -47,12 +55,53 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
     }
 
     /**
+     * 向发出命令的终端回复一条响应消息
+     *
+     * @param connectKey 连接关键字
+     * @param command    命令
+     * @param deviceId   设备ID
+     * @param error      错误信息
+     */
+    protected void sendResponseMessage(String connectKey, String command, String deviceId, String error) {
+        WsSessionManager sessionManager = SpringContextHolder.getBean(WsSessionManager.class);
+        if (sessionManager != null) {
+            Session session = sessionManager.getSession(connectKey);
+            if (session != null) {
+                JSONObject res = new JSONObject();
+                res.put("srcCommand", command);
+                res.put("deviceId", deviceId);
+                boolean status = StringUtils.isBlank(error);
+                res.put("status", status ? "ok" : "error");
+                if (!status) {
+                    res.put("error", error);
+                }
+                try {
+                    session.getRemote().sendString(JSON.toJSONString(res));
+                } catch (IOException ex) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(String.format("Send registry response message to session[%s] fail.",
+                                connectKey), ex);
+                    }
+                }
+            } else {
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format("The session[%s] not existed.", connectKey));
+                }
+            }
+        } else {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The WsSessionManager is not initialized.");
+            }
+        }
+    }
+
+    /**
      * {@inheritDoc}
      *
-     * @see MessageProcessor#processBinaryData(Session, InputStream)
+     * @see MessageProcessor#processBinaryData(Session, byte[])
      */
     @Override
-    public boolean processBinaryData(Session session, InputStream in) {
+    public boolean processBinaryData(Session session, byte[] buffer) {
         return false;
     }
 }

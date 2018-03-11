@@ -6,7 +6,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
-import org.mx.service.ws.ConnectionManager;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.mx.spring.SpringContextHolder;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -188,19 +188,25 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     @Override
     public Session getConnectionSession(String connectKey) {
         if (!StringUtils.isBlank(connectKey)) {
-            ConnectionManager connectionManager = SpringContextHolder.getBean(ConnectionManager.class);
-            return connectionManager.getSession(connectKey);
-        } else {
-            return null;
+            WsSessionManager sessionManager = SpringContextHolder.getBean(WsSessionManager.class);
+            if (sessionManager == null) {
+                return sessionManager.getSession(connectKey);
+            } else {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("The WsSessionManager is not initialized.");
+                }
+            }
         }
+        return null;
     }
 
     /**
      * 根据心跳时间来清除无效的连接设备
      */
     private void cleanInvalidDevices() {
-        ConnectionManager connectionManager = SpringContextHolder.getBean(ConnectionManager.class);
+        WsSessionManager sessionManager = SpringContextHolder.getBean(WsSessionManager.class);
         synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
+            Set<String> invalid = new HashSet<>();
             onlineDevices.forEach((k, v) -> {
                 long delay = (System.currentTimeMillis() - v.getLastTime()) / 1000;
                 if (delay > pongIdleTimeoutSecs) {
@@ -210,12 +216,13 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
                         logger.debug(String.format("The device[%s, %s] has been cleared for %d seconds without a heartbeat.",
                                 v.getDeviceId(), v.getConnectKey(), delay));
                     }
-                    if (connectionManager != null) {
-                        // 同时对设备的会话进行反注册
-                        connectionManager.unregistryConnection(connectionManager.getSession(v.getConnectKey()));
+                    if (sessionManager != null) {
+                        // 同时对设备的会话进行清理
+                        invalid.add(v.getConnectKey());
                     }
                 }
             });
+            sessionManager.removeWsSessions(invalid, 4002, "Be blocked for device's ping.");
         }
     }
 

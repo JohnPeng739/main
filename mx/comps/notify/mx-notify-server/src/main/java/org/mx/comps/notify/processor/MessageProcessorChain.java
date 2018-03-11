@@ -5,12 +5,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.comps.notify.processor.impl.NotifyCommandProcessor;
-import org.mx.comps.notify.processor.impl.PongCommandProcessor;
+import org.mx.comps.notify.processor.impl.PingCommandProcessor;
 import org.mx.comps.notify.processor.impl.RegistryCommandProcessor;
 import org.mx.comps.notify.processor.impl.UnregistryCommandProcessor;
+import org.mx.service.server.websocket.WsSessionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,10 +22,11 @@ import java.util.Set;
  */
 @Component("messageProcessorChain")
 public class MessageProcessorChain {
-    private static final Log logger = LogFactory.getLog(MessageProcessorChain.class);
-
     public static final String TYPE_SYSTEM = "system";
     public static final String TYPE_USER = "user";
+    private static final Log logger = LogFactory.getLog(MessageProcessorChain.class);
+    @Autowired
+    private WsSessionManager manager = null;
 
     private Set<MessageProcessor> processors = null;
 
@@ -36,7 +38,7 @@ public class MessageProcessorChain {
         this.processors = new HashSet<>();
         this.processors.add(new RegistryCommandProcessor());
         this.processors.add(new UnregistryCommandProcessor());
-        this.processors.add(new PongCommandProcessor());
+        this.processors.add(new PingCommandProcessor());
         this.processors.add(new NotifyCommandProcessor());
     }
 
@@ -54,10 +56,10 @@ public class MessageProcessorChain {
     /**
      * 处理收到的一条JSON消息
      *
-     * @param session 会话
-     * @param json    消息
+     * @param connectKey 连接关键字
+     * @param json       消息
      */
-    public void processJsonCommand(final Session session, final JSONObject json) {
+    public void processJsonCommand(final String connectKey, final JSONObject json) {
         if (json == null) {
             if (logger.isWarnEnabled()) {
                 logger.warn("The JSON command is null.");
@@ -70,9 +72,15 @@ public class MessageProcessorChain {
             }
             return;
         }
+        Session session = manager.getSession(connectKey);
+        if (session == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The session[%s] not existed.", connectKey));
+            }
+        }
         for (MessageProcessor processor : processors) {
             if (processor.processJsonCommand(session, json)) {
-                return;
+                break;
             }
         }
     }
@@ -80,13 +88,13 @@ public class MessageProcessorChain {
     /**
      * 处理收到的流式数据
      *
-     * @param session 会话
-     * @param in      输入流
+     * @param connectKey 连接关键字
+     * @param buffer     二进制数据
      */
-    public void processBinaryData(final Session session, final InputStream in) {
-        if (in == null) {
+    public void processBinaryData(final String connectKey, final byte[] buffer) {
+        if (buffer == null) {
             if (logger.isWarnEnabled()) {
-                logger.warn("The input stream is null.");
+                logger.warn("The binary data is null.");
             }
             return;
         }
@@ -96,8 +104,14 @@ public class MessageProcessorChain {
             }
             return;
         }
+        Session session = manager.getSession(connectKey);
+        if (session == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The session[%s] not existed.", connectKey));
+            }
+        }
         for (MessageProcessor processor : processors) {
-            if (processor.processBinaryData(session, in)) {
+            if (processor.processBinaryData(session, buffer)) {
                 return;
             }
         }

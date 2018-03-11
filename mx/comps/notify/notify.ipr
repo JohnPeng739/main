@@ -9,8 +9,8 @@
     <wildcardResourcePatterns>
       <entry name="!?*.class"/>
       <entry name="!?*.scala"/>
-      <entry name="!?*.java"/>
       <entry name="!?*.groovy"/>
+      <entry name="!?*.java"/>
     </wildcardResourcePatterns>
     <annotationProcessing enabled="false" useClasspath="true"/>
     <bytecodeTargetLevel target="1.8"/>
@@ -48,8 +48,8 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module filepath="$PROJECT_DIR$/notify.iml" fileurl="file://$PROJECT_DIR$/notify.iml"/>
-      <module filepath="$PROJECT_DIR$/mx-notify-server/mx-notify-server.iml" fileurl="file://$PROJECT_DIR$/mx-notify-server/mx-notify-server.iml"/>
+      <module fileurl="file://$PROJECT_DIR$/notify.iml" filepath="$PROJECT_DIR$/notify.iml"/>
+      <module fileurl="file://$PROJECT_DIR$/mx-notify-server/mx-notify-server.iml" filepath="$PROJECT_DIR$/mx-notify-server/mx-notify-server.iml"/>
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" assert-keyword="true" jdk-15="true" project-jdk-type="JavaSDK" assert-jdk-15="true" project-jdk-name="1.8">

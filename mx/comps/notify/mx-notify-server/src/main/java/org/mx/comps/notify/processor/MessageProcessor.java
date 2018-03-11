@@ -3,8 +3,6 @@ package org.mx.comps.notify.processor;
 import com.alibaba.fastjson.JSONObject;
 import org.eclipse.jetty.websocket.api.Session;
 
-import java.io.InputStream;
-
 /**
  * 消息处理接口定义
  *
@@ -32,8 +30,8 @@ public interface MessageProcessor {
      * 处理流式数据
      *
      * @param session 会话
-     * @param in      输入流
+     * @param buffer  二进制数据
      * @return 如果返回true，表示不需要再传递处理；否则返回false。
      */
-    boolean processBinaryData(Session session, InputStream in);
+    boolean processBinaryData(Session session, byte[] buffer);
 }

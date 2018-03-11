@@ -7,11 +7,11 @@ import org.mx.comps.notify.processor.MessageProcessorChain;
  *
  * @author : john.peng created on date : 2018/1/9
  */
-public class PongCommand extends BaseCommand {
+public class PingCommand extends BaseCommand {
     private PongData data;
 
-    public PongCommand(String deviceId, String state, double longitude, double latitude) {
-        super("pong", MessageProcessorChain.TYPE_SYSTEM);
+    public PingCommand(String deviceId, String state, double longitude, double latitude) {
+        super("ping", MessageProcessorChain.TYPE_SYSTEM);
         this.data = new PongData(deviceId, state, longitude, latitude);
     }
 

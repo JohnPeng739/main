@@ -6,7 +6,7 @@ import org.mx.comps.notify.client.NotifyBean;
 import org.mx.comps.notify.client.NotifyRestClient;
 import org.mx.comps.notify.client.NotifyWsClient;
 import org.mx.comps.notify.test.TestNotifyEvent;
-import org.mx.service.ws.client.BaseWebsocketClientListener;
+import org.mx.service.client.websocket.BaseWebsocketClientListener;
 
 import static org.junit.Assert.*;
 
