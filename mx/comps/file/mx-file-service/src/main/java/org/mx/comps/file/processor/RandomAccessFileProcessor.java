@@ -25,8 +25,6 @@ import java.nio.file.Paths;
  *
  * @author : john.peng created on date : 2017/12/04
  */
-@Component("simpleFilePersistProcessor")
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public abstract class RandomAccessFileProcessor implements FileWriteProcessor, FileReadProcessor {
     private static final Log logger = LogFactory.getLog(RandomAccessFileProcessor.class);
 
@@ -142,6 +140,24 @@ public abstract class RandomAccessFileProcessor implements FileWriteProcessor, F
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error("Read file's data fail.", ex);
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see FileWriteProcessor#write(byte[])
+     */
+    @Override
+    public void write(byte[] buffer) {
+        Assert.notNull(buffer, "The byte array is null.");
+        Assert.isTrue(isOpened(), "The Processor is not opened.");
+        try {
+            randomAccessFile.write(buffer, 0, buffer.length);
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Write file's data fail.", ex);
             }
         }
     }

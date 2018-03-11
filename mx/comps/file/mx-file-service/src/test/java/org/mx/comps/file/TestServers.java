@@ -19,11 +19,11 @@ import org.mx.FileUtils;
 import org.mx.comps.file.config.FileServiceConfig;
 import org.mx.comps.file.servlet.FileDownloadServlet;
 import org.mx.comps.file.websocket.FileUploadWebsocket;
+import org.mx.service.client.websocket.BaseWebsocketClientListener;
+import org.mx.service.client.websocket.WsClientInvoke;
 import org.mx.service.server.AbstractServerFactory;
 import org.mx.service.server.ServletServerFactory;
 import org.mx.service.server.WebsocketServerFactory;
-import org.mx.service.ws.client.BaseWebsocketClientListener;
-import org.mx.service.ws.client.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.BufferedReader;
@@ -186,7 +186,7 @@ public class TestServers {
             assertEquals("ok", json.getString("result"));
             invoke.send(createFinishCmd().toJSONString());
             Thread.sleep(1000);
-            // 这里后台应该抛出异常，前端收到error消息。
+            // 这里后台应该抛出会话被关闭的异常，前端收到error消息。
             textMsg = listener.textMsg;
             json = JSON.parseObject(textMsg);
             assertEquals("finish", json.getString("command"));

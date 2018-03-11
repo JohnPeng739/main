@@ -5,18 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.mx.StringUtils;
 import org.mx.comps.file.FileWriteProcessor;
 import org.mx.comps.file.processor.ProcessorFactory;
-import org.mx.service.server.websocket.BaseWebsocket;
+import org.mx.service.server.websocket.DefaultWsSessionMonitor;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * 基于Websocket实现的文件上传实现类
@@ -24,40 +22,30 @@ import java.io.InputStream;
  * @author : john.peng created on date : 2017/12/04
  */
 @Component("fileUploadWebsocket")
-@WebSocket
-public class FileUploadWebsocket extends BaseWebsocket {
+public class FileUploadWebsocket extends DefaultWsSessionMonitor {
     public static final String FILE_UPLOAD_URI_PATH = "/wsupload";
     public static final String CLOSE_FILE_FOR_ERROR = "file.error.close";
     private static final Log logger = LogFactory.getLog(FileUploadWebsocket.class);
     @Autowired
     private Environment env = null;
-
     @Autowired
-    private ApplicationContext context = null;
+    private ProcessorFactory processorFactory = null;
+    @Autowired
+    private WsSessionManager manager = null;
 
     private FileWriteProcessor writeProcessor = null;
 
     public FileUploadWebsocket() {
-        super(FILE_UPLOAD_URI_PATH, true);
+        super(FILE_UPLOAD_URI_PATH);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#afterConnect(Session)
+     * @see DefaultWsSessionMonitor#beforeClose(String)
      */
     @Override
-    public void afterConnect(Session session) {
-        super.afterConnect(session);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see BaseWebsocket#beforeClose(Session, int, String)
-     */
-    @Override
-    public void beforeClose(Session session, int statusCode, String reason) {
+    public void beforeClose(String connectKey) {
         if (writeProcessor.isOpened()) {
             writeProcessor.close();
         } else {
@@ -65,38 +53,38 @@ public class FileUploadWebsocket extends BaseWebsocket {
                 logger.error("The FileWriteProcessor has been closed.");
             }
         }
-        super.beforeClose(session, statusCode, reason);
+        super.beforeClose(connectKey);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#afterError(Session, Throwable)
+     * @see DefaultWsSessionMonitor#hasError(String, Throwable)
      */
     @Override
-    public void afterError(Session session, Throwable throwable) {
+    public void hasError(String connectKey, Throwable throwable) {
         boolean closeFileForError = env.getProperty(CLOSE_FILE_FOR_ERROR, Boolean.class, true);
         if (closeFileForError) {
             writeProcessor.close();
         }
-        super.afterError(session, throwable);
+        super.hasError(connectKey, throwable);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseWebsocket#receiveBinary(Session, InputStream)
+     * @see DefaultWsSessionMonitor#hasBinary(String, byte[])
      */
     @Override
-    public void receiveBinary(Session session, InputStream in) {
+    public void hasBinary(String connectKey, byte[] buffer) {
         if (writeProcessor.isOpened()) {
-            writeProcessor.write(in);
+            writeProcessor.write(buffer);
         } else {
             if (logger.isErrorEnabled()) {
                 logger.error("The FileWriteProcessor is not opened.");
             }
         }
-        super.receiveBinary(session, in);
+        super.hasBinary(connectKey, buffer);
     }
 
     /**
@@ -112,10 +100,10 @@ public class FileUploadWebsocket extends BaseWebsocket {
      * filename: 'filename.txt'
      * }
      *
-     * @see BaseWebsocket#receiveText(Session, String)
+     * @see DefaultWsSessionMonitor#hasText(String, String)
      */
     @Override
-    public void receiveText(Session session, String message) {
+    public void hasText(String connectKey, String message) {
         if (StringUtils.isBlank(message)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The command data is blank.");
@@ -127,15 +115,14 @@ public class FileUploadWebsocket extends BaseWebsocket {
             String command = json.getString("command");
             if ("init".equalsIgnoreCase(command)) {
                 // 初始化FileWriteProcessor
-                ProcessorFactory factory = context.getBean("fileServiceProcessorFactory", ProcessorFactory.class);
-                if (factory == null) {
+                if (processorFactory == null) {
                     throw new Exception("Get ProcessorFactory fail, name: fileServiceProcessorFactory.");
                 }
                 String type = json.getString("processorType");
                 if (StringUtils.isBlank(type)) {
                     throw new Exception("The processor's type is blank in 'init' command.");
                 }
-                writeProcessor = factory.createWriteProcessor(ProcessorFactory.ProcessorType.valueOf(type));
+                writeProcessor = processorFactory.createWriteProcessor(ProcessorFactory.ProcessorType.valueOf(type));
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Init a %s FileWriteProcessor successfully.", type));
                 }
@@ -147,12 +134,19 @@ public class FileUploadWebsocket extends BaseWebsocket {
             json.put("result", "error");
         }
         try {
-            session.getRemote().sendString(json.toJSONString());
+            Session session = manager.getSession(connectKey);
+            if (session != null) {
+                session.getRemote().sendString(json.toJSONString());
+            } else {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The session[%s] not existed.", connectKey));
+                }
+            }
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Send file upload response fail.", ex);
             }
         }
-        super.receiveText(session, message);
+        super.hasText(connectKey, message);
     }
 }

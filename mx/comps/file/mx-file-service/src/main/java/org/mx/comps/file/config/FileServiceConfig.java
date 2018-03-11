@@ -13,9 +13,10 @@ import java.util.List;
  *
  * @author : john.peng created on date : 2017/12/04
  */
-@Configuration
 @Import({ServerConfig.class})
-@PropertySource({"classpath:file-processor.properties"})
+@PropertySource({
+        "classpath:file-persist.properties"
+})
 @ComponentScan({
         "org.mx.comps.file.processor",
         "org.mx.comps.file.servlet",

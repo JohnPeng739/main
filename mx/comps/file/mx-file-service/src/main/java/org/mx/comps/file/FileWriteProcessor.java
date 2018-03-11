@@ -45,6 +45,13 @@ public interface FileWriteProcessor {
     void command(JSONObject json) throws Exception;
 
     /**
+     * 将接收到的二进制数据写入到打开的文件中
+     *
+     * @param buffer 二进制数据数组
+     */
+    void write(byte[] buffer);
+
+    /**
      * 将输入流中的数据写入到打开的文件中
      *
      * @param in 输入流
