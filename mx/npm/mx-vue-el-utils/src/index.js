@@ -1,6 +1,7 @@
 import MxLocale from './utils/mx-locale'
 import MxNotify from './utils/mx-notify'
 import MxAjax from './utils/mx-ajax'
+import MxAjaxEl from './utils/mx-ajax-el'
 import MxEcharts from './utils/mx-echarts'
 import MxFormValidateRules from './utils/mx-form-validate-rules'
 
@@ -48,6 +49,7 @@ export default {
   MxLocale,
   MxNotify,
   MxAjax,
+  MxAjaxEl,
   MxEcharts,
   MxFormValidateRules,
   MxIcon,
@@ -66,6 +68,7 @@ export {
   MxLocale,
   MxNotify,
   MxAjax,
+  MxAjaxEl,
   MxEcharts,
   MxFormValidateRules,
   MxIcon,
