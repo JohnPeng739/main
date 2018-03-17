@@ -2,10 +2,12 @@
  * Created by john on 2017/6/10.
  */
 import ajax from './ajax'
+import AjaxAxios from './ajax/ajax-axios'
 import logger from './logger'
 import formatter from './formatter'
 import parser from './parser'
 import createWsClient from './websocket'
+import WsClient from './websocket/ws-client'
 
 const clone = function (obj) {
     //
@@ -83,4 +85,4 @@ const round = function (value, digits) {
     }
 }
 
-export {ajax, logger, formatter, parser, createWsClient, timestamp, mixin, clone, cloneData, round}
+export {ajax, logger, formatter, parser, createWsClient, timestamp, mixin, clone, cloneData, round, AjaxAxios, WsClient}

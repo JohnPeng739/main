@@ -1,13 +1,13 @@
 # mx-app-utils
 ====
-<h5>版本： V1.6.17</h5>
+<h5>版本： V1.6.18</h5>
 一个非常简单使用的面向HTML5的WEB开发的工具类模块。目前封装了:
 1. logger：LOG（debug、info、warn、error）
-2. ajax：使用axios的简单AJAX调用工具方法
+2. ajax和AjaxAxios：使用axios的简单AJAX调用工具方法
 3. formatter: 支持格式化字符串、日期格式化等方法
 4. parser: 支持日期、json等解析和转换
 5. round、mixin、clone和timestamp的工具方法
-6. MyWebSocket: 一个通用的Js WebSocket客户端
+6. MyWebSocket和WsClient: 一个通用的Js WebSocket客户端
 
 ## 安装
     npm i mx-app-utils --save
@@ -29,6 +29,10 @@
 
 
 ## 修改历史
+**1.6.18**<br>
+1. 采用Class方式重构了基于axios的Ajax，新加了AjaxAxios类。
+2. 采用Class方式重构了WebSocket客户端，新加了WsClient类。
+
 **1.6.17**<br>
 1. 修改了生产环境配置脚本，瘦身了编译后代码。
 2. 完善了ajax功能，添加了默认的配置和调用时传输的配置信息对象，重构了token和header的使用方式。
