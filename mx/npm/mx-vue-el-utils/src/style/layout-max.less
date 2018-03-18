@@ -1,7 +1,41 @@
 .layout-max__header {
-  //
+  padding: 0;
+  margin: 0;
+}
+
+.layout-max__header1 {
+  background: @header-bg-color;
+  .nav-menu {
+    display: inline-block;
+    color: @header-color;
+    .menu-item {
+      margin: 15px 10px 10px 5px;
+    }
+  }
+  .title {
+    margin: 2px auto;
+    text-align: center;
+    color: @header-color;
+    font-size: @header-font-size;
+  }
+}
+
+.nav-icon {
+  display: inline-block;
+  font-size: @header-font-size * 0.8;
+  color: @header-color;
+  vertical-align: middle;
+}
+.nav-text {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: @header-font-size * 0.5;
+  color: @header-color;
+  margin-left: -5px;
 }
 
 .layout-max__main {
-  //
+  height: 90vh;
+  padding: 0;
+  margin: 0;
 }

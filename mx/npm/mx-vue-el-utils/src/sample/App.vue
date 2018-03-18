@@ -12,6 +12,7 @@
   @import "../style/password.less";
   @import "../style/layout.less";
   @import "../style/layout-normal.less";
+  @import "../style/layout-max.less";
   @import "../style/dialog.less";
   @import "../style/tag.less";
   @import "../style/dict-select.less";
@@ -48,10 +49,6 @@
     -moz-osx-font-smoothing: grayscale;
     /* Support for IE. */
     font-feature-settings: 'liga';
-  }
-
-  body {
-    margin: 0;
   }
 </style>
 

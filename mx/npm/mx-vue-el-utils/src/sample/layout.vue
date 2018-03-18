@@ -1,21 +1,32 @@
 <template>
-  <mx-normal-layout :title="title" :login-user="loginUser" :navData="navData" v-on:changeLocale="handleChangeLocale"
-                    :notice-value="noticeValue" v-on:clickPersonalMenu="handleClickPersonalMenu"
-                    v-on:goto="handleGoto" v-on:showNotice="handleShowNotice">
-    <div slot="account-info" style="color: red;">登入时间：453453</div>
-    <router-view slot="content-body"></router-view>
-  </mx-normal-layout>
+  <div>
+    <mx-normal-layout v-if="layout === 'normal'" :title="title" :login-user="loginUser" :nav-data="navData"
+                      :notice-value="noticeValue" v-on:changeLocale="handleChangeLocale"
+                      v-on:clickPersonalMenu="handleClickPersonalMenu" v-on:goto="handleGoto"
+                      v-on:showNotice="handleShowNotice">
+      <div slot="account-info" style="color: red;">登入时间：453453</div>
+      <router-view slot="content-body"></router-view>
+    </mx-normal-layout>
+    <mx-max-layout v-else-if="layout === 'max'" :title="title" :login-user="loginUser" :nav-data="navData"
+                   :notice-value="noticeValue" v-on:changeLocale="handleChangeLocale"
+                   v-on:clickPersonalMenu="handleClickPersonalMenu" v-on:goto="handleGoto"
+                   v-on:showNotice="handleShowNotice">
+      <div slot="account-info" style="color: blue;">登入时间：123456</div>
+      <router-view slot="content-body"></router-view>
+    </mx-max-layout>
+  </div>
 </template>
 
 <script>
   import { logger } from 'mx-app-utils'
   import { navData } from './router'
-  import {MxLocale} from '../utils/mx-locale'
+  import { MxLocale } from '../utils/mx-locale'
 
   export default {
     name: 'app',
     data () {
       return {
+        layout: 'max',
         title: 'The Demo System',
         loginUser: {
           code: 'pengmx',
