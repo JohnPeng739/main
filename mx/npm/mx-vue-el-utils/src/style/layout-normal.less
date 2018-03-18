@@ -3,7 +3,6 @@
   background-color: @header-bg-color;
   color: @header-color;
   width: 100vw;
-  height: @header-height;
   position: fixed;
   top: 0;
   left: 0;
@@ -12,11 +11,11 @@
   .toggle-button {
     display: inline-block;
     vertical-align: middle;
-    margin: 2vh auto;
+    margin: 10px auto;
     padding: 0;
     .toggle-icon {
       padding-left: 10px;
-      font-size: @header-icon-size;
+      font-size: @header-icon-size * 0.7;
       color: @header-color;
     }
   }
@@ -24,41 +23,14 @@
     display: inline-block;
     vertical-align: middle;
     padding-left: 5px;
-    font-size: @header-font-size;
+    font-size: @header-font-size * 0.7;
     font-weight: 600;
   }
-  .favorite-tools {
-    display: inline-block;
-    float: right;
-    .tools {
-      text-align: center;
-      width: @button-width * 1.2;
-      color: @header-color;
-      &:hover {
-        color: @header-hover-color;
-      }
-      .tool-icon {
-        font-size: @header-icon-size;
-      }
-      .badge-item {
-        vertical-align: baseline;
-        .tool-icon {
-          font-size: @header-icon-size - 1.5vh;
-        }
-      }
-    }
-  }
-}
-
-.change-locale-menu {
-  width: 100%;
-  height: @content-text-font-size * 1.8;
-  margin: 10px 0;
 }
 
 .layout-normal__main {
   overflow: hidden;
-  margin-top: @header-height;
+  margin-top: 56px;
   width: 100vw;
   height: 90vh;
   z-index: 100;

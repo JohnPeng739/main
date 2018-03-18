@@ -26,6 +26,12 @@ body {
   vertical-align: middle;
 }
 
+.change-locale-menu {
+  width: 100%;
+  height: @content-text-font-size * 1.8;
+  margin: 10px 0;
+}
+
 .account {
   float: right;
   padding: 0;
@@ -66,6 +72,31 @@ body {
     }
     &:hover {
       background: rgba(64, 158, 255, 0.1);
+    }
+  }
+}
+
+.favorite-tools {
+  display: inline-block;
+  float: right;
+  .tools {
+    padding: 0;
+    margin: 10px 0 0 10px;
+    text-align: center;
+    width: @button-width * 0.6;
+    color: @header-color;
+    &:hover {
+      color: @header-hover-color;
+    }
+    .tool-icon {
+      font-size: @header-icon-size * 0.6;
+    }
+    .badge-item {
+      vertical-align: baseline;
+      margin: 6px;
+      .tool-icon {
+        font-size: @header-icon-size - 3vh;
+      }
     }
   }
 }

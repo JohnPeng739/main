@@ -26,10 +26,10 @@
 </template>
 
 <script>
-  import MxIcon from '../../components/mx-icon'
+  import MxIcon from '../../components/mx-icon/index'
 
   export default {
-    name: 'mx-normal-nav-favorite-tools',
+    name: 'mx-favorite-tools',
     components: {MxIcon},
     props: ['roles', 'tools', 'noticeValue'],
     data () {

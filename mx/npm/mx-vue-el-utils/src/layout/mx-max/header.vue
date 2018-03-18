@@ -4,7 +4,7 @@
       <el-row type="flex" align="center">
         <el-col :span="8">
           <div v-for="item in navData" :key="item.path" class="nav-menu">
-            <div v-if="item.children && item.children.length > 0" class="menu-item">
+            <div v-if="item.children && item.children.length > 0 && isRole(item)" class="menu-item">
               <el-dropdown @command="handleClickMenu">
                 <div>
                   <mx-icon :name="item.icon" class="nav-icon"></mx-icon>
@@ -17,7 +17,7 @@
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
-            <div v-else class="menu-item" @click="handleClickMenu(item.path)">
+            <div v-else-if="isRole(item)" class="menu-item" @click="handleClickMenu(item.path)">
               <mx-icon :name="item.icon" class="nav-icon"></mx-icon>
               <div class="nav-text">{{item.name}}</div>
             </div>
@@ -30,6 +30,12 @@
           <div>
             <mx-account :loginUser="loginUser" v-on:changeLocale="handleChangeLocale"
                         v-on:clickPersonalMenu="handleClickPersonalMenu"></mx-account>
+            <mx-favorite-tools slot="favorite-tools" class="favorite-tools hidden-xs-only hidden-sm-only"
+                               :roles="roles"
+                               :tools="favoriteTools"
+                               :notice-value="noticeValue" v-on:goto="handleClickMenu"
+                               v-on:showNotice="handleShowNotice">
+            </mx-favorite-tools>
           </div>
         </el-col>
       </el-row>
@@ -40,32 +46,14 @@
 
 <script>
   import MxAccount from '../common/account.vue'
+  import MxFavoriteTools from '../common/favorite-tools.vue'
 
   export default {
     name: 'mx-max-header',
-    props: {
-      value: false,
-      title: {
-        type: String,
-        default: 'Application title'
-      },
-      loginUser: {
-        type: Object,
-        default: undefined
-      },
-      navData: {
-        type: Array,
-        default: []
-      },
-      noticeValue: {
-        type: Number,
-        deault: 0
-      }
-    },
-    components: {MxAccount},
+    props: ['value', 'title', 'roles', 'navData', 'loginUser', 'favoriteTools', 'noticeValue'],
+    components: {MxAccount, MxFavoriteTools},
     data () {
-      return {
-      }
+      return {}
     },
     computed: {
       headerMax () {
@@ -73,6 +61,10 @@
       }
     },
     methods: {
+      isRole (item) {
+        let roles = this.roles
+        return (roles && roles instanceof Array && roles.indexOf(item.role) >= 0) || !item.role
+      },
       handleClickMenu (path) {
         this.$router.push(path)
       },
@@ -84,6 +76,9 @@
       },
       handleClickPersonalMenu (menu) {
         this.$emit('clickPersonalMenu', menu)
+      },
+      handleShowNotice () {
+        this.$emit('showNotice')
       }
     }
   }
