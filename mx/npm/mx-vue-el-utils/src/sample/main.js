@@ -1,32 +1,32 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import {MxLocale, changeLanguage} from './lang/index'
+import MxVueElUtils from '../index'
 
-import App from './App'
+import myEn from './lang/en.json'
+import myZhCN from './lang/zh-CN.json'
+
+import App from './App.vue'
 import router from './router'
 
 Vue.config.productionTip = false
 
-let lang = 'en'
-if (window && window.localStorage) {
-  let l = window.localStorage.getItem('locale')
-  if (l && typeof l === 'string' && l.length > 0) {
-    lang = l
-  }
-}
-
-changeLanguage(lang)
-
-Vue.use(ElementUI, {
-  i18n: (k, v) => MxLocale.i18n.t(k, v)
+MxVueElUtils.MxLocale.mergeMessages({
+  en: myEn,
+  'zh-CN': myZhCN
 })
 
-console.log(MxLocale.i18n.t('test'))
+Vue.use(MxVueElUtils)
+
+Vue.use(ElementUI, {
+  i18n: (k, v) => MxVueElUtils.MxLocale.i18n().t(k, v)
+})
+
+console.log(MxVueElUtils.MxLocale.i18n().t('test'))
 
 /* eslint-disable no-new */
 new Vue({
-  i18n: MxLocale.i18n,
+  i18n: MxVueElUtils.MxLocale.i18n(),
   el: '#app',
   router,
   template: '<App/>',

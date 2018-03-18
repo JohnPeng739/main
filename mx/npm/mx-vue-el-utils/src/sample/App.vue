@@ -10,6 +10,7 @@
   */
   @import "../style/button.less";
   @import "../style/password.less";
+  @import "../style/layout.less";
   @import "../style/layout-normal.less";
   @import "../style/dialog.less";
   @import "../style/tag.less";

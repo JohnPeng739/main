@@ -1,29 +1,9 @@
 import { logger, parser } from 'mx-app-utils'
-import locale from './mx-locale'
+import {MxLocale} from './mx-locale'
 
-const i18n = locale.i18n
+const i18n = MxLocale.i18n()
 
-const requiredRule = (param) => {
-  let {type, msg, trigger} = param || {}
-  let rule = {required: true}
-  if (type && typeof type === 'string' && type !== '') {
-    rule.type = type
-  }
-  if (msg && typeof msg === 'string' && msg !== '') {
-    rule.message = msg
-  } else {
-    rule.message = i18n.t('message.validate.required', [''])
-  }
-  if (trigger && typeof trigger === 'string' && trigger !== '') {
-    rule.trigger = trigger
-  } else {
-    rule.trigger = 'blur'
-  }
-  logger.debug('create a required rule: %j', rule)
-  return rule
-}
-
-const _processExtremeInteger = (min, max) => {
+const _processExtremeInteger = function (min, max) {
   if (!min || !Number.isInteger(min)) {
     min = -1
   }
@@ -33,7 +13,7 @@ const _processExtremeInteger = (min, max) => {
   return {minValue: min, maxValue: max}
 }
 
-const _rangeStringRule = (min, max, msg, trigger) => {
+const _rangeStringRule = function (min, max, msg, trigger) {
   let rule = {type: 'string'}
   if (!msg && msg !== '') {
     rule.message = msg
@@ -68,7 +48,7 @@ const _rangeStringRule = (min, max, msg, trigger) => {
   return rule
 }
 
-const _rangeNumberRule = (min, max, msg, trigger) => {
+const _rangeNumberRule = function (min, max, msg, trigger) {
   let {minValue, maxValue} = _processExtremeInteger(min, max)
   let numberValidator = (rule, value, callback) => {
     if (minValue !== -1 && maxValue !== -1) {
@@ -99,7 +79,7 @@ const _rangeNumberRule = (min, max, msg, trigger) => {
   return rule
 }
 
-const _processExtremeDate = (min, max) => {
+const _processExtremeDate = function (min, max) {
   if (min && typeof min === 'string') {
     min = parser.parseDate(min)
   } else {
@@ -113,7 +93,7 @@ const _processExtremeDate = (min, max) => {
   return {minValue: min, maxValue: max}
 }
 
-const _rangeDateRule = (min, max, msg, trigger) => {
+const _rangeDateRule = function (min, max, msg, trigger) {
   let {minValue, maxValue} = _processExtremeDate(min, max)
   let dateValidator = (rule, value, callback) => {
     if (minValue !== null && maxValue !== null) {
@@ -144,7 +124,7 @@ const _rangeDateRule = (min, max, msg, trigger) => {
   return rule
 }
 
-const _rangeArrayRule = (min, max, msg, trigger) => {
+const _rangeArrayRule = function (min, max, msg, trigger) {
   let {minValue, maxValue} = _processExtremeInteger(min, max)
   let arrayValidator = (rule, value, callback) => {
     if (minValue !== -1 && maxValue !== -1) {
@@ -175,60 +155,81 @@ const _rangeArrayRule = (min, max, msg, trigger) => {
   return rule
 }
 
-const rangeRule = (param) => {
-  let {type, min, max, msg, trigger} = param || {}
-  if (!min && !max) {
-    throw new Error('You need set the min or max value for the range rule.')
+class MxFormValidateRules {
+  static requiredRule (param) {
+    let {type, msg, trigger} = param || {}
+    let rule = {required: true}
+    if (type && typeof type === 'string' && type !== '') {
+      rule.type = type
+    }
+    if (msg && typeof msg === 'string' && msg !== '') {
+      rule.message = msg
+    } else {
+      rule.message = i18n.t('message.validate.required', [''])
+    }
+    if (trigger && typeof trigger === 'string' && trigger !== '') {
+      rule.trigger = trigger
+    } else {
+      rule.trigger = 'blur'
+    }
+    logger.debug('create a required rule: %j', rule)
+    return rule
   }
-  if (!type) {
-    type = 'string'
+
+  static rangeRule (param) {
+    let {type, min, max, msg, trigger} = param || {}
+    if (!min && !max) {
+      throw new Error('You need set the min or max value for the range rule.')
+    }
+    if (!type) {
+      type = 'string'
+    }
+    switch (type) {
+      case 'number':
+        return _rangeNumberRule(min, max, msg, trigger)
+      case 'date':
+        return _rangeDateRule(min, max, msg, trigger)
+      case 'array':
+        return _rangeArrayRule(min, max, msg, trigger)
+      case 'string':
+      default:
+        return _rangeStringRule(min, max, msg, trigger)
+    }
   }
-  switch (type) {
-    case 'number':
-      return _rangeNumberRule(min, max, msg, trigger)
-    case 'date':
-      return _rangeDateRule(min, max, msg, trigger)
-    case 'array':
-      return _rangeArrayRule(min, max, msg, trigger)
-    case 'string':
-    default:
-      return _rangeStringRule(min, max, msg, trigger)
+
+  static emailRule (param) {
+    let {msg, trigger} = param || {}
+    let rule = {type: 'email'}
+    if (msg && typeof msg === 'string' && msg !== '') {
+      rule.message = msg
+    } else {
+      rule.message = i18n.t('message.validate.email')
+    }
+    if (trigger && typeof trigger === 'string' && trigger !== '') {
+      rule.trigger = trigger
+    } else {
+      rule.trigger = 'blur'
+    }
+    return rule
+  }
+
+  static customRule (param) {
+    let {validator, trigger} = param || {}
+    let rule = {}
+    if (validator && typeof validator === 'function') {
+      rule.validator = validator
+    } else {
+      throw new Error('You need define a custom validator for the custom rule.')
+    }
+    if (trigger !== null && trigger !== undefined && trigger !== '') {
+      rule.trigger = trigger
+    } else {
+      rule.trigger = 'blur'
+    }
+    return rule
   }
 }
-
-const emailRule = (param) => {
-  let {msg, trigger} = param || {}
-  let rule = {type: 'email'}
-  if (msg && typeof msg === 'string' && msg !== '') {
-    rule.message = msg
-  } else {
-    rule.message = i18n.t('message.validate.email')
-  }
-  if (trigger && typeof trigger === 'string' && trigger !== '') {
-    rule.trigger = trigger
-  } else {
-    rule.trigger = 'blur'
-  }
-  return rule
-}
-
-const customRule = (param) => {
-  let {validator, trigger} = param || {}
-  let rule = {}
-  if (validator && typeof validator === 'function') {
-    rule.validator = validator
-  } else {
-    throw new Error('You need define a custom validator for the custom rule.')
-  }
-  if (trigger !== null && trigger !== undefined && trigger !== '') {
-    rule.trigger = trigger
-  } else {
-    rule.trigger = 'blur'
-  }
-  return rule
-}
-
-let MxFormValidateRules = {requiredRule, rangeRule, emailRule, customRule}
 
 export default MxFormValidateRules
+
 export { MxFormValidateRules }

@@ -1,6 +1,6 @@
 # mx-vue-el-utils
 ====
-<h5>版本： V1.5.4</h5>
+<h5>版本： V1.5.5</h5>
 一个非常简单使用的面向HTML5的WEB开发的框架模块，使用了VUE 2和Element-UI。目前封装了:
 
 1. 工具类：<br/>
@@ -17,6 +17,7 @@
   2.7 基于Cascader控件的树型字典选择组件（DictSelect），数据为JSON对象。<br/>
 3. 布局：<br/>
   3.1 normal布局组件(LayoutNormal)：常规的顶栏+左边栏导航布局。<br/>
+  3.2 max布局组件（LayoutMax）：最大化操作区，顶栏可隐藏，无边栏导航。<br/>
 4. 对话框（DialogPane）<br/>
 5. 国际化（MxLocale）
 
@@ -39,6 +40,11 @@
 
 
 ## 修改历史
+**1.5.5**<br>
+1. 根据重构后的AjaxAxios，新加了MxAjaxEl组件。
+2. 添加了MaxLayout布局。
+3. 重构了布局相关的less样式。
+
 **1.5.4**<br>
 1. 添加了公共的翻译内容。
 2. 添加了中英国旗资源。

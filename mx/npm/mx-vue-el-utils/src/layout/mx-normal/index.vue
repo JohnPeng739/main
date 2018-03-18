@@ -1,20 +1,20 @@
 <template>
   <el-container>
-    <el-header height="10vh" class="layout-header">
-      <layout-header :title="title" :login-user="loginUser" :nav-data="navData" v-on:changeLocale="handleChangeLocale"
+    <el-header height="10vh" class="layout-normal__header">
+      <mx-normal-header :title="title" :login-user="loginUser" :nav-data="navData" v-on:changeLocale="handleChangeLocale"
                      v-on:navToggled="handleNavToggled" v-on:clickPersonalMenu="handleClickPersonalMenu">
         <div slot="account-info"><slot name="account-info"></slot></div>
-        <layout-nav-favorite-tools slot="favorite-tools" class="favorite-tools hidden-xs-only hidden-sm-only"
+        <mx-normal-nav-favorite-tools slot="favorite-tools" class="favorite-tools hidden-xs-only hidden-sm-only"
                                    :roles="roles"
                                    :tools="favoriteTools"
                                    :notice-value="noticeValue" v-on:goto="handleGoto"
                                    v-on:showNotice="handleShowNotice">
-        </layout-nav-favorite-tools>
-      </layout-header>
+        </mx-normal-nav-favorite-tools>
+      </mx-normal-header>
     </el-header>
-    <el-main class="layout-main">
-      <layout-nav-menu :toggled="toggled()" :roles="roles" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav">
-      </layout-nav-menu>
+    <el-main class="layout-normal__main">
+      <mx-normal-nav-menu :toggled="toggled()" :roles="roles" :nav-data="navData" v-on:goto="handleGoto" class="layout-nav">
+      </mx-normal-nav-menu>
       <div class="layout-right">
         <el-breadcrumb>
           <el-breadcrumb-item>
@@ -34,13 +34,13 @@
 
 <script>
   import { logger } from 'mx-app-utils'
-  import LayoutHeader from './header.vue'
-  import LayoutNavFavoriteTools from './nav-favorite-tools.vue'
-  import LayoutNavMenu from './nav-menu.vue'
+  import MxNormalHeader from './header.vue'
+  import MxNormalNavFavoriteTools from './nav-favorite-tools.vue'
+  import MxNormalNavMenu from './nav-menu.vue'
 
   export default {
     name: 'mx-normal-layout',
-    components: {LayoutHeader, LayoutNavFavoriteTools, LayoutNavMenu},
+    components: {MxNormalHeader, MxNormalNavFavoriteTools, MxNormalNavMenu},
     props: {
       title: {
         type: String,

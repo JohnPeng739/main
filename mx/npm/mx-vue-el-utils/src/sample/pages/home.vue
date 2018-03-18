@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import {changeLanguage} from '../lang'
+  import {MxLocale} from '../../utils/mx-locale'
 
   export default {
     name: 'home-page',
@@ -32,7 +32,7 @@
         this.$router.push(path)
       },
       handleChangeLanguage (lang) {
-        changeLanguage(lang)
+        MxLocale.changeLanguage(lang)
       }
     }
   }

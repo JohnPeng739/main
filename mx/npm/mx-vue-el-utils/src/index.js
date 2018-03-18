@@ -17,6 +17,12 @@ import MxTagCouple from './components/mx-tag-couple'
 import MxDictSelect from './components/mx-dict-select'
 
 import MxNormalLayout from './layout/mx-normal'
+import MxMaxLayout from './layout/mx-max'
+
+import ElEn from 'element-ui/lib/locale/lang/en'
+import ElZhCN from 'element-ui/lib/locale/lang/zh-CN'
+import MxEn from './assets/locale/en.json'
+import MxZhCN from './assets/locale/zh-CN.json'
 
 const components = [
   MxIcon,
@@ -28,11 +34,19 @@ const components = [
   MxTagNormal,
   MxTagCouple,
   MxDictSelect,
-  MxNormalLayout
+  MxNormalLayout,
+  MxMaxLayout
 ]
 
 const install = function (Vue, opts = {}) {
-  MxLocale.setLanguage(opts.locale)
+  MxLocale.mergeMessages({
+    en: ElEn,
+    'zh-CN': ElZhCN
+  })
+  MxLocale.mergeMessages({
+    en: MxEn,
+    'zh-CN': MxZhCN
+  })
   components.map(component => {
     Vue.component(component.name, component)
   })
@@ -43,8 +57,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  locale: MxLocale.i18n.locale,
-  i18n: MxLocale.i18n,
+  i18n: MxLocale.i18n(),
   install,
   MxLocale,
   MxNotify,
@@ -61,7 +74,8 @@ export default {
   MxTagNormal,
   MxTagCouple,
   MxDictSelect,
-  MxNormalLayout
+  MxNormalLayout,
+  MxMaxLayout
 }
 
 export {
@@ -80,5 +94,6 @@ export {
   MxTagNormal,
   MxTagCouple,
   MxDictSelect,
-  MxNormalLayout
+  MxNormalLayout,
+  MxMaxLayout
 }

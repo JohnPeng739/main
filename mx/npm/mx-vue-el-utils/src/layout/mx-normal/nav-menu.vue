@@ -1,7 +1,7 @@
 <template>
   <el-menu :default-active="defaultActive" :collapse="toggled" unique-opened @select="handleClickMenu" class="nav-menu">
     <template v-for="item in navData">
-      <nav-sub-menu v-if="item.children && isRole(item)" :roles="roles" :item="item"></nav-sub-menu>
+      <mx-normal-nav-sub-menu v-if="item.children && isRole(item)" :roles="roles" :item="item"></mx-normal-nav-sub-menu>
       <el-menu-item v-else-if="isRole(item)" :index="item.path" class="menu-item">
         <mx-icon :name="item.icon" class="menu-item"></mx-icon>
         <span slot="title" class="menu-item">{{$t(item.name)}}</span>
@@ -12,11 +12,11 @@
 
 <script>
   import MxIcon from '../../components/mx-icon'
-  import NavSubMenu from './nav-sub-menu.vue'
+  import MxNormalNavSubMenu from './nav-sub-menu.vue'
 
   export default {
     name: 'mx-normal-nav-menu',
-    components: {MxIcon, NavSubMenu},
+    components: {MxIcon, MxNormalNavSubMenu},
     props: ['toggled', 'roles', 'navData'],
     computed: {
       defaultActive () {

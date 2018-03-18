@@ -1,8 +1,8 @@
 import { ajax } from 'mx-app-utils'
 import MxNotify from './mx-notify'
-import locale from './mx-locale'
+import MxLocale from './mx-locale'
 
-const i18n = locale.i18n
+const i18n = MxLocale.i18n()
 
 const _defaultError = (errorMessage) => {
   let response = errorMessage.response

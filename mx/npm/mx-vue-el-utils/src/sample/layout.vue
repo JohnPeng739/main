@@ -10,7 +10,7 @@
 <script>
   import { logger } from 'mx-app-utils'
   import { navData } from './router'
-  import {changeLanguage} from './lang/index'
+  import {MxLocale} from '../utils/mx-locale'
 
   export default {
     name: 'app',
@@ -34,7 +34,7 @@
         logger.debug('show notices.')
       },
       handleChangeLocale (lang) {
-        changeLanguage(lang)
+        MxLocale.changeLanguage(lang)
       },
       handleGoto (path) {
         logger.debug('Router click: %s', path)

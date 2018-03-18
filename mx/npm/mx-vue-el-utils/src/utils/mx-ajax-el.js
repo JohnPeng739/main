@@ -1,8 +1,8 @@
 import {AjaxAxios} from 'mx-app-utils'
 import MxNotify from './mx-notify'
-import locale from './mx-locale'
+import MxLocale from './mx-locale'
 
-const i18n = locale.i18n
+const i18n = MxLocale.i18n()
 let token
 if (window.sessionStorage) {
   token = window.sessionStorage.getItem('auth.token')

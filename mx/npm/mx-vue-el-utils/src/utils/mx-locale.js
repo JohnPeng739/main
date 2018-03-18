@@ -1,50 +1,67 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-
-import ElEn from 'element-ui/lib/locale/lang/en'
-import ElZhCN from 'element-ui/lib/locale/lang/zh-CN'
-
-import MxEn from '../assets/locale/en.json'
-import MxZhCN from '../assets/locale/zh-CN.json'
+import { logger } from 'mx-app-utils'
 
 Vue.use(VueI18n)
 
-const i18n = new VueI18n({
-  locale: 'en',
-  fallbackLocale: 'en',
-  messages: {
-    en: MxEn,
-    'zh-CN': MxZhCN
+class MxLocale {
+  static currentLanguage () {
+    return MxLocale._lang
   }
-})
 
-let setLanguage = (l) => {
-  if (l) {
-    if (l === 'en') {
-      i18n.locale = 'en'
-      i18n.mergeLocaleMessage('en', ElEn)
-    } else if (l === 'zh-CN') {
-      i18n.locale = 'zh-CN'
-      i18n.mergeLocaleMessage('zh-CN', ElZhCN)
+  static changeLanguage (lang) {
+    if (lang !== MxLocale._lang) {
+      if (MxLocale._supports.indexOf(lang) >= 0) {
+        MxLocale._i18n.locale = lang
+        if (window.localStorage) {
+          window.localStorage.setItem('locale', lang)
+        }
+      } else {
+        logger.warn('Unsupported language: %s.', lang)
+      }
+    }
+  }
+
+  static i18n () {
+    return MxLocale._i18n
+  }
+
+  static supports () {
+    return MxLocale._supports
+  }
+
+  static mergeMessage (lang, message) {
+    if (lang && typeof lang === 'string' && lang.length > 0 && message && message instanceof Object) {
+      MxLocale._i18n.mergeLocaleMessage(lang, message)
+    }
+  }
+
+  static mergeMessages (messages) {
+    if (messages && messages instanceof Object) {
+      Object.keys(messages).map(k => {
+        if (MxLocale._supports.indexOf(k) >= 0) {
+          // 仅合并在支持列表中的语种资源
+          this.mergeMessage(k, messages[k])
+        }
+      })
     }
   }
 }
 
-let mergeMessage = (lang, message) => {
-  if (lang && message) {
-    i18n.mergeLocaleMessage(lang, message)
+MxLocale._lang = 'en'
+if (window.localStorage) {
+  let lang = window.localStorage.getItem('locale')
+  if (lang && typeof lang === 'string' && lang.length > 0) {
+    MxLocale._lang = lang
   }
 }
+MxLocale._i18n = new VueI18n({
+  locale: MxLocale._lang,
+  fallbackLocale: 'en',
+  messages: {}
+})
+MxLocale._supports = ['en', 'zh-CN']
 
-let mergeMessages = (messages) => {
-  if (messages) {
-    Object.keys(messages).map(k => mergeMessage(k, messages[k]))
-  }
-}
+export default MxLocale
 
-export default {
-  i18n,
-  mergeMessage,
-  mergeMessages,
-  setLanguage
-}
+export { MxLocale }

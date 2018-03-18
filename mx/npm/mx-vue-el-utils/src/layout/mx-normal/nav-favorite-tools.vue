@@ -29,7 +29,7 @@
   import MxIcon from '../../components/mx-icon'
 
   export default {
-    name: 'mx-normal-favorite-tools',
+    name: 'mx-normal-nav-favorite-tools',
     components: {MxIcon},
     props: ['roles', 'tools', 'noticeValue'],
     data () {
