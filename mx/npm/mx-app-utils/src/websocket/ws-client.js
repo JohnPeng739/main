@@ -5,7 +5,7 @@ const OPEN = 1
 const CLOSING = 2
 const CLOSED = 3
 
-const _prepare = function (url, cbConfig) {
+const _prepare = function (uri, cbConfig) {
     let ws = new WebSocket(uri)
     let {afterConnect, afterClose, hasError, hasText, hasBinary} = cbConfig
 
