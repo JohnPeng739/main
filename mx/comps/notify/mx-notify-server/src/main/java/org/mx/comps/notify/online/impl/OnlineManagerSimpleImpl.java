@@ -190,7 +190,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     public Session getConnectionSession(String connectKey) {
         if (!StringUtils.isBlank(connectKey)) {
             WsSessionManager sessionManager = SpringContextHolder.getBean(WsSessionManager.class);
-            if (sessionManager == null) {
+            if (sessionManager != null) {
                 return sessionManager.getSession(connectKey);
             } else {
                 if (logger.isWarnEnabled()) {
