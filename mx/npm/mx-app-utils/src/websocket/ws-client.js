@@ -80,10 +80,11 @@ class WsClient {
     }
 
     set uri(uri) {
-        if (!uri || typeof uri !== 'string' || uri.length <= 0) {
+        if (uri && typeof uri === 'string' && uri.length > 0) {
+            this._uri = uri
+        } else {
             throw new Error('The uri of WebSocket is blank or not a string.')
         }
-        this._uri = uri
     }
 
     get reconnected() {
@@ -107,10 +108,11 @@ class WsClient {
     }
 
     set cbConfig(cbConfig) {
-        if (!cbConfig || cbConfig instanceof Object) {
+        if (cbConfig && cbConfig instanceof Object) {
+            this._cbConfig = cbConfig
+        } else {
             throw new Error('The callback config is null or not a Object.')
         }
-        this._cbConfig = cbConfig
     }
 
     get state() {
@@ -133,7 +135,7 @@ class WsClient {
                         this._ws = _prepare(this._uri, this._cbConfig)
                         logger.debug('Reconnect successfully for the WsClient.')
                     }
-                })
+                }, this.testCycleSecs * 1000)
             }, 5000)
         }
         logger.debug('Init the WsClient successfully.')
