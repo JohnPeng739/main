@@ -7,7 +7,7 @@ const CLOSED = 3
 
 const _prepare = function (url, cbConfig) {
     let ws = new WebSocket(uri)
-    let {afterConnect, beforeClose, hasError, hasText, hasBinary} = cbConfig
+    let {afterConnect, afterClose, hasError, hasText, hasBinary} = cbConfig
 
     ws.onopen = function (event) {
         logger.debug('WebSocket onopen.')
@@ -18,8 +18,8 @@ const _prepare = function (url, cbConfig) {
     ws.onclose = function (event) {
         let {code, reason} = event
         logger.debug('WebSocket onclose, code: %d, reason: %s.', code, reason)
-        if (beforeClose && typeof beforeClose === 'function') {
-            beforeClose(code, reason)
+        if (afterClose && typeof afterClose === 'function') {
+            afterClose(code, reason)
         }
     }
     ws.onerror = function (event) {
