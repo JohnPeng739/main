@@ -5,11 +5,16 @@
         <el-input v-model="wsUri" placeholder="WebSocket URI"></el-input>
       </el-col>
       <el-col :span="6">
+        <el-input v-model="srcIp" placeholder="tar ip"></el-input>
+      </el-col>
+      <el-col :span="6">
         <el-input v-model="deviceId" placeholder="Device ID"></el-input>
       </el-col>
       <el-col :span="6">
         <el-input v-model="deviceState" placeholder="Device state"></el-input>
       </el-col>
+    </el-row>
+    <el-row type="flex" justify="center">
       <el-col :span="6">
         {{state()}}
         <el-button @click="handleClose">关闭</el-button>
@@ -33,15 +38,16 @@
 </template>
 
 <script>
-  import { logger, createWsClient } from 'mx-app-utils'
+  import { logger, WsClient } from 'mx-app-utils'
 
   export default {
     name: 'test-websocket-page',
     data () {
       return {
-        wsUri: 'ws://localhost:9997/echo',
+        wsUri: 'ws://192.168.0.248:9997/notify',
         myWebSocket: null,
         interval: null,
+        srcIp: '::1',
         deviceId: '',
         deviceState: '',
         message: '',
@@ -50,7 +56,8 @@
     },
     methods: {
       state () {
-        return this.myWebSocket ? this.myWebSocket.state() : -1
+        // return this.myWebSocket ? this.myWebSocket.state() : -1
+        return this.myWebSocket ? this.myWebSocket.state : -1
       },
       send (json) {
         if (this.myWebSocket) {
@@ -60,6 +67,7 @@
       handleConnect () {
         let receiveMessage = message => {
           if (typeof message === 'string') {
+            message = message + ', time: ' + new Date()
             logger.debug('Receive a text message: %s.', message)
             this.items.unshift(message)
           } else {
@@ -73,11 +81,13 @@
           this.send({command: 'registry', type: 'system', data: device})
           logger.debug('Send registry command.')
         }
-        this.myWebSocket = createWsClient(this.wsUri, true, {receiveMessage, afterConnect})
+        // this.myWebSocket = createWsClient(this.wsUri, true, {receiveMessage, afterConnect})
+        this.myWebSocket = new WsClient(this.wsUri, true, 3, {afterConnect, hasText: receiveMessage})
+        this.myWebSocket.init()
         this.interval = setInterval(() => {
           device.longitude = Math.random() * 180
           device.latitude = Math.random() * 90
-          this.send({command: 'test', type: 'system', data: device})
+          this.send({command: 'ping', type: 'system', data: device})
         }, 5000)
       },
       handleClose () {
@@ -92,10 +102,11 @@
         }
       },
       handleSendMessage () {
+        console.log(this.srcIp)
         let notify = {
           src: this.deviceId,
           tarType: 'IPs',
-          tar: '::1',
+          tar: this.srcIp,
           expiredTime: -1,
           needAck: true,
           message: {message: this.message}
