@@ -12,6 +12,7 @@ import org.mx.service.server.websocket.DefaultWsSessionMonitor;
 import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -24,6 +25,7 @@ import java.util.TimerTask;
  * @author John.Peng
  *         Date time 2018/3/11 下午1:19
  */
+@Component("fileDownloadWebsocket")
 public class FileDownloadWebsocket extends DefaultWsSessionMonitor {
     public static final String FILE_DOWNLOAD_URI_PATH = "/wsdownload";
     public static final String CLOSE_FILE_FOR_ERROR = "file.error.close";
