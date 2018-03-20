@@ -148,10 +148,10 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     /**
      * {@inheritDoc}
      *
-     * @see OnlineManager#pongDevice(OnlineDevice)
+     * @see OnlineManager#pingDevice(OnlineDevice)
      */
     @Override
-    public void pongDevice(OnlineDevice onlineDevice) {
+    public void pingDevice(OnlineDevice onlineDevice) {
         synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
             String key = String.format("%s@%s", onlineDevice.getDeviceId(), onlineDevice.getConnectKey());
             if (onlineDevices.containsKey(key)) {

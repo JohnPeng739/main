@@ -65,7 +65,7 @@ public class PingCommandProcessor extends DeviceCommandProcessor {
                 }
                 return false;
             }
-            onlineManager.pongDevice(onlineDevice);
+            onlineManager.pingDevice(onlineDevice);
             String connectKey = onlineDevice.getConnectKey();
             super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(), null);
             if (logger.isDebugEnabled()) {

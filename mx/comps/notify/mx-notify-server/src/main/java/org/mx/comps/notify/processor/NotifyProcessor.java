@@ -172,6 +172,9 @@ public class NotifyProcessor {
                     res.put("error", success ? null : "Notify process has any error.");
                     try {
                         session.getRemote().sendString(JSON.toJSONString(res));
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(String.format("Push message successfully for session[%s].", connectKey));
+                        }
                     } catch (IOException ex) {
                         if (logger.isErrorEnabled()) {
                             logger.error(String.format("Send notfiy response message to session[%s] fail.", connectKey), ex);

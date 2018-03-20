@@ -42,7 +42,7 @@ public interface OnlineManager {
      *
      * @param onlineDevice 设备对象
      */
-    void pongDevice(OnlineDevice onlineDevice);
+    void pingDevice(OnlineDevice onlineDevice);
 
     /**
      * 获取指定的连接会话
