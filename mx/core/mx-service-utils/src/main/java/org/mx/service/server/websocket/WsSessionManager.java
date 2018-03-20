@@ -321,7 +321,7 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
                 if (pongTime <= 0) {
                     pongTime = System.currentTimeMillis();
                 }
-                if (pongTime - pingTime >= 3 * pingCycleSec * 1000 || pongTime <= pingTime) {
+                if (Math.abs(pongTime - pingTime) >= 3 * pingCycleSec * 1000) {
                     // 超过3个ping周期没有收到pong回应，则认为该连接已经异常中断
                     invalid.add(connectKey);
                 }

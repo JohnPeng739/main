@@ -80,7 +80,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-service-utils') {
-  version = '1.6.2'
+  version = '1.6.3'
   description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
   dependencies {

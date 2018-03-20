@@ -30,7 +30,7 @@ ext.versions = [
   zookeeper	: '3.4.9',
   'mx-utils'    : '2.1.10',
   'mx-spring'	: '1.1.2',
-  'mx-service-utils'	: '1.6.2',
+  'mx-service-utils'	: '1.6.3',
   'mx-dal'      : '1.1.6',
   'mx-dal-hibernate'    : '1.1.9',
   'mx-dal-mongodb'      : '1.1.7',
