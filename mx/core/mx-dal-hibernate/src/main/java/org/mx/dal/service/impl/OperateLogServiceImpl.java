@@ -23,7 +23,7 @@ public class OperateLogServiceImpl implements OperateLogService {
     private static final Log logger = LogFactory.getLog(OperateLogServiceImpl.class);
 
     @Autowired
-    @Qualifier("generalEntityAccessorHibernate")
+    @Qualifier("generalAccessor")
     private GeneralAccessor accessor = null;
 
     /**

@@ -23,7 +23,7 @@ public class OperateLogServiceImpl implements OperateLogService {
     private static final Log logger = LogFactory.getLog(OperateLogServiceImpl.class);
 
     @Autowired
-    @Qualifier("generalEntityAccessorMongodb")
+    @Qualifier("generalAccessorMongodb")
     private GeneralAccessor accessor = null;
 
     @Autowired

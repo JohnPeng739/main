@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  *
  * @author : john.peng created on date : 2017/12/03
  */
+@Configuration
 @EnableTransactionManagement
 @Import(DalHibernateConfig.class)
 public class TestDalConfig {

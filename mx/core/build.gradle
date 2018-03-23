@@ -35,7 +35,7 @@ project(':mx-spring') {
 }
 
 project(':mx-dal') {
-  version = '1.1.6'
+  version = '1.1.7'
   description = 'data access layer abstract classes and interfaces.'
 
   dependencies {
@@ -48,7 +48,7 @@ project(':mx-dal') {
 }
 
 project(':mx-dal-hibernate') {
-  version = '1.1.9'
+  version = '1.1.10'
   description = 'Dal with hibernate JPA.'
 
   dependencies {
@@ -65,7 +65,7 @@ project(':mx-dal-hibernate') {
 }
 
 project(':mx-dal-mongodb') {
-  version = '1.1.7'
+  version = '1.1.8'
   description = 'dal with mongoldb.'
 
   dependencies {

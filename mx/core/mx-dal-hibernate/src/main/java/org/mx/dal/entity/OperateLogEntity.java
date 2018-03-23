@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TB_OPERATE_LOG")
 public class OperateLogEntity extends BaseEntity implements OperateLog {
-    @Column(nullable = false)
+    @Column(name = "CONTENT", nullable = false)
     private String content;
 
     /**

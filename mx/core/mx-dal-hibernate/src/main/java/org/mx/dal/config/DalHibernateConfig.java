@@ -1,5 +1,7 @@
 package org.mx.dal.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.util.Dbcp2DataSourceFactory;
@@ -7,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,14 +29,17 @@ import java.util.Set;
  * @author : john.peng date : 2017/10/7
  * @see DalConfig
  */
-@EnableTransactionManagement
+@Configuration
 @Import(DalConfig.class)
 @PropertySource({
         "classpath:database.properties",
         "classpath:jpa.properties"
 })
 @ComponentScan({"org.mx.dal.service.impl"})
+@EnableTransactionManagement
 public class DalHibernateConfig implements TransactionManagementConfigurer {
+    private static final Log logger = LogFactory.getLog(DalHibernateConfig.class);
+
     @Autowired
     private Environment env = null;
 
@@ -53,7 +60,7 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      */
     @Bean(name = "generalAccessor")
     public GeneralAccessor generalAccessor() {
-        return context.getBean("generalEntityAccessorHibernate", GeneralAccessor.class);
+        return context.getBean("generalAccessorJpa", GeneralAccessor.class);
     }
 
     /**
@@ -63,7 +70,7 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      */
     @Bean(name = "generalDictAccessor")
     public GeneralDictAccessor generalDictAccessor() {
-        return context.getBean("generalDictEntityAccessorHibernate", GeneralDictAccessor.class);
+        return context.getBean("generalDictAccessorJpa", GeneralDictAccessor.class);
     }
 
     @Bean(name = "dataSourceFactory", initMethod = "init", destroyMethod = "close")
@@ -71,7 +78,15 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      * 创建JDBC数据源工厂
      */
     public Dbcp2DataSourceFactory dataSourceFactory() {
-        return new Dbcp2DataSourceFactory(env);
+        Dbcp2DataSourceFactory factory = new Dbcp2DataSourceFactory(env);
+        try {
+            factory.init();
+        } catch (SQLException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Init DB connection pool fail.", ex);
+            }
+        }
+        return factory;
     }
 
     @Bean(name = "dataSource")

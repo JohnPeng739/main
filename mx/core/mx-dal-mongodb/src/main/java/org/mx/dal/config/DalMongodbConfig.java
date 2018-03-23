@@ -48,7 +48,7 @@ public class DalMongodbConfig {
      */
     @Bean(name = "generalAccessor")
     public GeneralAccessor generalAccessor() {
-        return context.getBean("generalEntityAccessorMongodb", GeneralAccessor.class);
+        return context.getBean("generalAccessorMongodb", GeneralAccessor.class);
     }
 
     /**
@@ -58,7 +58,7 @@ public class DalMongodbConfig {
      */
     @Bean(name = "generalDictAccessor")
     public GeneralDictAccessor generalDictAccessor() {
-        return context.getBean("generalDictEntityAccessorMongodb", GeneralDictAccessor.class);
+        return context.getBean("generalDictAccessorMongodb", GeneralDictAccessor.class);
     }
 
     /**

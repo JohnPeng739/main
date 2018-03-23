@@ -1,6 +1,6 @@
 package org.mx.dal;
 
-public class UserEntity implements User {
+public class UserEntity extends BaseEntity implements User {
     private String code = null;
 
     public UserEntity() {

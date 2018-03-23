@@ -16,104 +16,104 @@ public interface GeneralAccessor {
     /**
      * 对指定的实体类型进行计数，实体接口必须继承Base接口。
      *
-     * @param entityInterfaceClass 实体接口类型
+     * @param clazz 实体接口类型
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 指定实体的数量
      * @throws UserInterfaceDalErrorException 计数过程中发生的异常
      */
-    <T extends Base> long count(Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException;
+    <T extends Base> long count(Class<T> clazz) throws UserInterfaceDalErrorException;
 
     /**
      * 对指定的实体类型进行计数，实体接口必须继承Base接口。
      *
-     * @param entityInterfaceClass 实体接口类型
+     * @param clazz 实体接口类型
      * @param isValid              如果设置为true，仅返回有效的记录；否则对所有记录计数。
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 指定实体的数量
      * @throws UserInterfaceDalErrorException 计数过程中发生的异常
      */
-    <T extends Base> long count(Class<T> entityInterfaceClass, boolean isValid) throws UserInterfaceDalErrorException;
+    <T extends Base> long count(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException;
 
     /**
      * 获取指定实体类型的数据集合，实体接口必须继承Base接口。
      *
-     * @param entityInterfaceClass 实体接口类型
+     * @param clazz 实体接口类型
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 指定实体对象类别
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
-    <T extends Base> List<T> list(Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException;
+    <T extends Base> List<T> list(Class<T> clazz) throws UserInterfaceDalErrorException;
 
     /**
      * 获取指定实体类型的数据集合，实体接口必须继承Base接口。
      *
-     * @param entityInterfaceClass 实体接口类型
+     * @param clazz 实体接口类型
      * @param isValid              如果设置为true，仅返回有效的记录；否则返回所有记录。
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 指定实体对象类别
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
-    <T extends Base> List<T> list(Class<T> entityInterfaceClass, boolean isValid) throws UserInterfaceDalErrorException;
+    <T extends Base> List<T> list(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException;
 
     /**
      * 根据分页信息获取指定实体类型的数据子集合，实体接口必须继承Base接口。
      *
      * @param pagination           分页信息
-     * @param entityInterfaceClass 实体接口类型
+     * @param clazz 实体接口类型
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 指定实体对象集合
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
-    <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException;
+    <T extends Base> List<T> list(Pagination pagination, Class<T> clazz) throws UserInterfaceDalErrorException;
 
     /**
      * 根据分页信息获取指定实体类型的数据子集合，实体接口必须继承Base接口。
      *
      * @param pagination           分页信息
-     * @param entityInterfaceClass 实体接口类型
+     * @param clazz 实体接口类型
      * @param isValid              如果设置为true，仅返回有效的记录；否则返回所有记录。
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 指定实体对象集合
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
-    <T extends Base> List<T> list(Pagination pagination, Class<T> entityInterfaceClass, boolean isValid) throws UserInterfaceDalErrorException;
+    <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException;
 
     /**
      * 根据实体ID和实体接口类型获取实体，实体接口必须继承Base接口。
      *
      * @param id                   实体ID
-     * @param entityInterfaceClass 实体接口类
+     * @param clazz 实体接口类
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 实体，如果实体不存在，则返回null。
      * @throws UserInterfaceDalErrorException 获取实体过程中发生的异常
      */
-    <T extends Base> T getById(String id, Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException;
+    <T extends Base> T getById(String id, Class<T> clazz) throws UserInterfaceDalErrorException;
 
     /**
      * 根据指定字段的值获取数据记录集合，多个条件采用and组合。
      *
      * @param tuples               条件元组（包括字段名和字段值）
-     * @param entityInterfaceClass 实体接口类
+     * @param clazz 实体接口类
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 实体对象集合
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      * @see ConditionTuple
      */
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> entityInterfaceClass)
+    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz)
             throws UserInterfaceDalErrorException;
 
     /**
      * 根据指定字段的值获取一条数据记录，多个条件采用and组合。
      *
      * @param tuples               条件元组（包括字段名和字段值）
-     * @param entityInterfaceClass 实体接口类
+     * @param clazz 实体接口类
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 实体对象，如果不存在则返回null
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      * @see ConditionTuple
      * @see #find(List, Class)
      */
-    <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> entityInterfaceClass)
+    <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz)
             throws UserInterfaceDalErrorException;
 
     /**
@@ -141,24 +141,24 @@ public interface GeneralAccessor {
      * 逻辑删除指定关键字ID的数据实体
      *
      * @param id                   关键字ID
-     * @param entityInterfaceClass 实体接口类
+     * @param clazz 实体接口类
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 删除的实体
      * @throws UserInterfaceDalErrorException 删除过程中发生的异常
      */
-    <T extends Base> T remove(String id, Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException;
+    <T extends Base> T remove(String id, Class<T> clazz) throws UserInterfaceDalErrorException;
 
     /**
      * 逻辑删除指定关键字ID的数据实体
      *
      * @param id                   关键字ID
-     * @param entityInterfaceClass 实体接口类
+     * @param clazz 实体接口类
      * @param logicRemove          设置为true表示逻辑删除，否则物理删除。
      * @param <T>                  实现Base接口的泛型对象类型
      * @return 删除的实体
      * @throws UserInterfaceDalErrorException 删除过程中发生的异常
      */
-    <T extends Base> T remove(String id, Class<T> entityInterfaceClass, boolean logicRemove)
+    <T extends Base> T remove(String id, Class<T> clazz, boolean logicRemove)
             throws UserInterfaceDalErrorException;
 
     /**

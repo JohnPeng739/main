@@ -9,14 +9,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
 
 public class TestDatabase extends BaseTest {
     @Test
     public void testUserInterface() {
-        GeneralDictEntityAccessor accessor = context.getBean("generalDictAccessor",
-                GeneralDictEntityAccessor.class);
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+                GeneralDictAccessor.class);
         assertNotNull(accessor);
+        GeneralTextSearchAccessor searchAccessor = context.getBean("generalDictAccessor",
+                GeneralTextSearchAccessor.class);
 
         try {
             assertEquals(0, accessor.count(User.class));
@@ -48,20 +49,20 @@ public class TestDatabase extends BaseTest {
             assertEquals(user.getName(), check.getName());
 
             // test text search
-            List<User> users = accessor.search("address", true, User.class, true);
+            List<User> users = searchAccessor.search("address", true, User.class);
             assertNotNull(user);
             assertEquals(1, users.size());
             assertNotNull(users.get(0));
             assertEquals(check.getId(), users.get(0).getId());
-            users = accessor.search(Arrays.asList("address", "here", "some"), true, User.class, true);
+            users = searchAccessor.search(Arrays.asList("address", "here", "some"), true, User.class);
             assertNotNull(user);
             assertEquals(1, users.size());
             assertNotNull(users.get(0));
             assertEquals(check.getId(), users.get(0).getId());
-            users = accessor.search("\"Josh Peng\"", true, User.class, true);
+            users = searchAccessor.search("\"Josh Peng\"", true, User.class);
             assertNotNull(user);
             assertEquals(0, users.size());
-            users = accessor.search("中华人民共和国", true, User.class, true);
+            users = searchAccessor.search("中华人民共和国", true, User.class);
             assertNotNull(user);
             assertEquals(1, users.size());
             assertNotNull(users.get(0));
@@ -111,12 +112,12 @@ public class TestDatabase extends BaseTest {
             assertEquals(2, accessor.count(User.class, false));
             assertFalse(check.isValid());
 
-            List<User> list = ((GeneralEntityAccessor) accessor).find(Arrays.asList(
+            List<User> list = ((GeneralAccessor) accessor).find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("code", "john"),
                     new GeneralAccessor.ConditionTuple("valid", true)
             ), User.class);
             assertEquals(0, list.size());
-            list = ((GeneralEntityAccessor) accessor).find(Arrays.asList(
+            list = ((GeneralAccessor) accessor).find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("code", "josh"),
                     new GeneralAccessor.ConditionTuple("valid", true)
             ), User.class);
