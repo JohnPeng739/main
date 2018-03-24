@@ -1,0 +1,6 @@
+rootProject.name = 'kbm'
+
+include 'mx-kbm-service'
+include 'mx-kbm-persist'
+include 'mx-kbm-version'
+include 'mx-kbm-version-git'

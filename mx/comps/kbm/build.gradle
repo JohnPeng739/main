@@ -1,0 +1,61 @@
+plugins {
+  id 'com.jfrog.bintray' version '1.8.0'
+}
+
+apply from: '../../../dependencies.gradle'
+
+apply from: '../../../allprojects.gradle'
+
+project(':mx-kbm-service') {
+  version = '0.0.1'
+  description = 'Knowledge base management service components based mx-dal-mongodb &amp; mx-service-utils.'
+
+  dependencies {
+    compile(
+      libs.'mx-utils',
+      libs.'mx-spring',
+      libs.'mx-dal',
+      libs.'mx-service-utils',
+      libs.'aspectj'
+    )
+  }
+}
+
+project(':mx-kbm-persist') {
+  version = '0.0.1'
+  description = 'Knowledge base management persistence components based mx-dal-mongodb.'
+
+  dependencies {
+    compile(
+      project(':mx-kbm-service'),
+      libs.'mx-dal-mongodb'
+    )
+    testCompile(
+      libs.'mongodb-embed'
+    )
+  }
+}
+
+project(':mx-kbm-version') {
+  version = '0.0.1'
+  description = 'Knowledge base management version service components.'
+
+  dependencies {
+    compile(
+      project(':mx-kbm-service')
+    )
+  }
+}
+
+project(':mx-kbm-version-git') {
+  version = '0.0.1'
+  description = 'Knowledge base management version service components based on git.'
+
+  dependencies {
+    compile(
+      project(':mx-kbm-version')
+    )
+  }
+}
+
+apply from: '../../../subproject.gradle'
