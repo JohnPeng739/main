@@ -16,7 +16,8 @@ project(':mx-kbm-service') {
       libs.'mx-spring',
       libs.'mx-dal',
       libs.'mx-service-utils',
-      libs.'aspectj'
+      libs.'aspectj',
+      project(':mx-kbm-version')
     )
   }
 }
