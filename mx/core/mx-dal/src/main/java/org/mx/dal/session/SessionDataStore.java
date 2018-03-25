@@ -24,4 +24,37 @@ public interface SessionDataStore {
      * 清除当前会话关联的操作者代码
      */
     void removeCurrentUserCode();
+
+    /**
+     * 获取当前会话关联的系统
+     *
+     * @return 系统
+     */
+    String getCurrentSystem();
+
+    /**
+     * 设置当前会话关联的系统
+     *
+     * @param system 系统
+     */
+    void setCurrentSystem(String system);
+
+    /**
+     * 获取当前会话关联的模块
+     *
+     * @return 模块
+     */
+    String getCurrentModule();
+
+    /**
+     * 设置当前会话关联的模块
+     *
+     * @param module 模块
+     */
+    void setCurrentModule(String module);
+
+    /**
+     * 清除当前会话中关联的所有数据
+     */
+    void clean();
 }

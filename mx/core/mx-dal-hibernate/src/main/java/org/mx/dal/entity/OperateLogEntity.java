@@ -14,8 +14,74 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TB_OPERATE_LOG")
 public class OperateLogEntity extends BaseEntity implements OperateLog {
+    @Column(name = "SYSTEM", nullable = false)
+    private String system;
+    @Column(name = "MODULE", nullable = false)
+    private String module;
+    @Column(name = "OPERATE_TYPE", nullable = false)
+    private OperateType operateType = OperateType.QUERY;
     @Column(name = "CONTENT", nullable = false)
     private String content;
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#getSystem()
+     */
+    @Override
+    public String getSystem() {
+        return system;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#setSystem(String)
+     */
+    @Override
+    public void setSystem(String system) {
+        this.system = system;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#getModule()
+     */
+    @Override
+    public String getModule() {
+        return module;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#setModule(String)
+     */
+    @Override
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#getOperateType()
+     */
+    @Override
+    public OperateType getOperateType() {
+        return operateType;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#setOperateType(OperateType)
+     */
+    @Override
+    public void setOperateType(OperateType type) {
+        this.operateType = type;
+    }
 
     /**
      * {@inheritDoc}

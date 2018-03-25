@@ -13,6 +13,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Document(collection = "operateLog")
 public class OperateLogEntity extends BaseEntity implements OperateLog {
+    @Indexed
+    private String system, module;
+    @Indexed
+    private OperateType operateType = OperateType.QUERY;
     @TextIndexed
     private String content;
 
@@ -24,7 +28,70 @@ public class OperateLogEntity extends BaseEntity implements OperateLog {
     @Override
     public String toString() {
         return super.toString() +
+                ", system='" + system + '\'' +
+                ", module='" + module + '\'' +
+                ", operateType='" + operateType.name() + '\'' +
                 ", content='" + content + '\'';
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#getSystem()
+     */
+    @Override
+    public String getSystem() {
+        return system;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#setSystem(String)
+     */
+    @Override
+    public void setSystem(String system) {
+        this.system = system;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#getModule()
+     */
+    @Override
+    public String getModule() {
+        return module;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#setModule(String)
+     */
+    @Override
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#getOperateType()
+     */
+    @Override
+    public OperateType getOperateType() {
+        return operateType;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see OperateLog#setOperateType(OperateType)
+     */
+    @Override
+    public void setOperateType(OperateType operateType) {
+        this.operateType = operateType;
     }
 
     /**
