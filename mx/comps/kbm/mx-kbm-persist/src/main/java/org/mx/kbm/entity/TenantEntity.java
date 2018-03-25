@@ -1,6 +1,7 @@
 package org.mx.kbm.entity;
 
-import org.mx.dal.entity.BaseDictEntity;
+import org.mx.dal.entity.BaseDictTreeEntity;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -10,8 +11,30 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *         Date time 2018/3/24 下午7:43
  */
 @Document(collection = "tenant")
-public class TenantEntity extends BaseDictEntity implements Tenant {
+public class TenantEntity extends BaseDictTreeEntity implements Tenant {
+    @Indexed
+    private TenantType tenantType = TenantType.PERSONAL;
     private String managerName = null, managerPhone = null, managerEmail = null;
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Tenant#getTenantType()
+     */
+    @Override
+    public TenantType getTenantType() {
+        return tenantType;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Tenant#setTenantType(TenantType)
+     */
+    @Override
+    public void setTenantType(TenantType tenantType) {
+        this.tenantType = tenantType;
+    }
 
     /**
      * {@inheritDoc}

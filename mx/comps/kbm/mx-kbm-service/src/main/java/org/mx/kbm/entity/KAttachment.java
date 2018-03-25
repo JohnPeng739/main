@@ -102,6 +102,14 @@ public interface KAttachment extends Base {
      */
     enum AttachmentType {
         /**
+         * MD文件
+         */
+        MD,
+        /**
+         * HTML文件
+         */
+        HTML,
+        /**
          * 文本文件
          */
         TXT,
