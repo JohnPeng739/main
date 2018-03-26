@@ -34,7 +34,7 @@ ext.versions = [
   'mx-dal'      : '1.2.0',
   'mx-dal-hibernate'    : '1.2.0',
   'mx-dal-mongodb'      : '1.2.0',
-  'mx-rbac-service'	: '3.1.8',
+  'mx-rbac-service'	: '3.1.9',
   'mx-rbac-service-hibernate'	: '3.1.5',
   'mx-rbac-service-mongodb'	: '1.0.4',
   'mx-rbac-restful'	: '3.1.5',

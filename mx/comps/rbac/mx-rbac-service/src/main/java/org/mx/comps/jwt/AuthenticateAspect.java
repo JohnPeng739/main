@@ -13,7 +13,7 @@ import org.mx.service.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.core.Request;
+import javax.servlet.ServletRequest;
 
 /**
  * 身份认证自动代理切面
@@ -38,7 +38,7 @@ public class AuthenticateAspect {
      * @throws Throwable 处理过程中发生的异常
      */
     @Around(value = "@annotation(around) && args(..,request)")
-    public Object aroundBefore(ProceedingJoinPoint pjp, AuthenticateAround around, Request request) throws Throwable {
+    public Object aroundBefore(ProceedingJoinPoint pjp, AuthenticateAround around, Object request) throws Throwable {
         return around(pjp, around, request);
     }
 
@@ -52,12 +52,12 @@ public class AuthenticateAspect {
      * @throws Throwable 处理过程中发生的异常
      */
     @Around(value = "@annotation(around) && args(request,..)")
-    public Object aroundAfter(ProceedingJoinPoint pjp, AuthenticateAround around, Request request) throws Throwable {
+    public Object aroundAfter(ProceedingJoinPoint pjp, AuthenticateAround around, Object request) throws Throwable {
         return around(pjp, around, request);
     }
 
     // 环绕截面
-    private Object around(ProceedingJoinPoint pjp, AuthenticateAround around, Request request) throws Throwable {
+    private Object around(ProceedingJoinPoint pjp, AuthenticateAround around, Object request) throws Throwable {
         Object result = authenticate(pjp, around, request);
         if (result == null) {
             // 身份认证成功，调取代理方法
@@ -79,17 +79,38 @@ public class AuthenticateAspect {
     }
 
     // 进行身份认证
-    private Object authenticate(ProceedingJoinPoint pjp, AuthenticateAround around, Request request) {
+    private Object authenticate(ProceedingJoinPoint pjp, AuthenticateAround around, Object request) {
         if (logger.isDebugEnabled()) {
             logger.debug("Starting authenticate ....");
         }
         try {
-            String token = ((ContainerRequest)request).getHeaderString("token");
-            if (StringUtils.isBlank(token)) {
-                token = ((ContainerRequest)request).getHeaderString("Authorization");
-                if (!StringUtils.isBlank(token) && token.startsWith("Bearer ")) {
-                    token = token.substring("Bearer ".length());
+            String token;
+            if (request instanceof ContainerRequest) {
+                token = ((ContainerRequest) request).getHeaderString("token");
+                if (StringUtils.isBlank(token)) {
+                    token = ((ContainerRequest) request).getHeaderString("Authorization");
                 }
+            } else if (request instanceof ServletRequest) {
+                token = ((ServletRequest) request).getParameter("token");
+                if (StringUtils.isBlank(token)) {
+                    token = ((ServletRequest) request).getParameter("Authorization");
+                }
+            } else {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("Unsupported verify request object type: %s.",
+                            request.getClass().getName()));
+                }
+                return notAuthenticate(around);
+            }
+
+            if (StringUtils.isBlank(token)) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("The token is not existed in the request object.");
+                }
+                return notAuthenticate(around);
+            }
+            if (!StringUtils.isBlank(token) && token.startsWith("Bearer ")) {
+                token = token.substring("Bearer ".length());
             }
             if (jwtService.verify(token)) {
                 return null;
