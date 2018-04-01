@@ -35,7 +35,7 @@ project(':mx-spring') {
 }
 
 project(':mx-dal') {
-  version = '1.2.0'
+  version = '1.3.0'
   description = 'data access layer abstract classes and interfaces.'
 
   dependencies {
@@ -43,38 +43,6 @@ project(':mx-dal') {
       project(':mx-utils'),
       project(':mx-spring'),
       libs.'commons-dbcp2'
-    )
-  }
-}
-
-project(':mx-dal-hibernate') {
-  version = '1.2.0'
-  description = 'Dal with hibernate JPA.'
-
-  dependencies {
-    compile(
-      project(':mx-dal'),
-      libs.'h2database',
-      libs.'commons-dbcp2',
-      libs.'spring-tx',
-      libs.'spring-data-jpa',
-      libs.'hibernate-entitymanager',
-      libs.'mysql'
-    )
-  }
-}
-
-project(':mx-dal-mongodb') {
-  version = '1.2.0'
-  description = 'dal with mongoldb.'
-
-  dependencies {
-    compile(
-      project(':mx-dal'),
-      libs.'spring-data-mongodb'
-    )
-    testCompile(
-      libs.'mongodb-embed'
     )
   }
 }
@@ -101,6 +69,57 @@ project(':mx-service-utils') {
     compile(
       libs.'httpclient',
       libs.'java-websocket'
+    )
+  }
+}
+
+project(':mx-dal-hibernate') {
+  version = '1.3.0'
+  description = 'Dal with hibernate JPA.'
+
+  dependencies {
+    compile(
+      project(':mx-dal'),
+      libs.'h2database',
+      libs.'commons-dbcp2',
+      libs.'spring-tx',
+      libs.'spring-data-jpa',
+      libs.'hibernate-entitymanager',
+      libs.'mysql'
+    )
+  }
+}
+
+project(':mx-dal-mongodb') {
+  version = '1.3.0'
+  description = 'dal with mongoldb.'
+
+  dependencies {
+    compile(
+      project(':mx-dal'),
+      libs.'spring-data-mongodb'
+    )
+    testCompile(
+      libs.'mongodb-embed'
+    )
+  }
+}
+
+project(':mx-dal-elastic') {
+  version = '1.0.1'
+  description = 'dal with elasticsearch.'
+
+  dependencies {
+    compile(
+      project(':mx-service-utils'),
+      project(':mx-dal'),
+      libs.'fastjson',
+      libs.'log4j-api',
+      libs.'log4j-core',
+      libs.'log4j-jcl',
+      libs.'log4j-slf4j-impl',
+      libs.'slf4j-api',
+      libs.'elasticsearch-rest'
     )
   }
 }

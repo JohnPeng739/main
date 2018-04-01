@@ -15,10 +15,10 @@ public interface GeneralDictAccessor extends GeneralAccessor {
      * 根据实体的唯一代码获取指定的实体。
      *
      * @param code                 实体代码
-     * @param entityInterfaceClass 实体接口类
+     * @param clazz 实体接口类
      * @param <T>                  实现BaseDict接口的泛型对象类型
      * @return 实体对象，如果不存在，则返回null。
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
-    <T extends BaseDict> T getByCode(String code, Class<T> entityInterfaceClass) throws UserInterfaceDalErrorException;
+    <T extends BaseDict> T getByCode(String code, Class<T> clazz) throws UserInterfaceDalErrorException;
 }

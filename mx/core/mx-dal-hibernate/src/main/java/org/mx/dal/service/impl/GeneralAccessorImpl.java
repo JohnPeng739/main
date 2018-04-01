@@ -7,10 +7,8 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
-import org.mx.dal.entity.OperateLog;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,9 +39,6 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Autowired
     @Qualifier("sessionDataThreadLocal")
     protected SessionDataStore sessionDataStore = null;
-
-    @Autowired
-    private OperateLogService operateLogService = null;
 
     /**
      * {@inheritDoc}
@@ -253,17 +248,6 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Transactional
     @Override
     public <T extends Base> T save(T t) throws UserInterfaceDalErrorException {
-        return save(t, true);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see GeneralAccessor#save(Base, boolean)
-     */
-    @Transactional
-    @Override
-    public <T extends Base> T save(T t, boolean saveOperateog) throws UserInterfaceDalErrorException {
         t.setUpdatedTime(new Date().getTime());
         t.setOperator(sessionDataStore.getCurrentUserCode());
         if (StringUtils.isBlank(t.getId())) {
@@ -272,9 +256,6 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             t.setCreatedTime(new Date().getTime());
             entityManager.persist(t);
             entityManager.flush();
-            if (saveOperateog) {
-                writeOperateLog(t, String.format("新增了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
-            }
         } else {
             // 修改操作
             T old = getById(t.getId(), (Class<T>) t.getClass());
@@ -286,9 +267,6 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 ((BaseDict) t).setCode(((BaseDict) old).getCode());
             }
             entityManager.merge(t);
-            if (saveOperateog) {
-                writeOperateLog(t, String.format("修改了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
-            }
         }
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save entity success, entity: %s.", t));
@@ -348,22 +326,13 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         if (logicRemove) {
             // 逻辑删除
             removeEntity.setValid(false);
-            t = save(removeEntity, false);
-            writeOperateLog(t, String.format("逻辑删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
+            t = save(removeEntity);
             return t;
         } else {
             // 物理删除
             entityManager.remove(removeEntity);
             entityManager.flush();
-            writeOperateLog(t, String.format("物理删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
             return t;
         }
-    }
-
-    private <T> void writeOperateLog(T t, String content) throws UserInterfaceDalErrorException {
-        if (operateLogService == null || t instanceof OperateLog) {
-            return;
-        }
-        operateLogService.writeLog(content);
     }
 }

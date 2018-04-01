@@ -127,17 +127,6 @@ public interface GeneralAccessor {
     <T extends Base> T save(T t) throws UserInterfaceDalErrorException;
 
     /**
-     * 保存指定的实体
-     *
-     * @param t              实体对象
-     * @param saveOperateLog 是否保存一条操作日志
-     * @param <T>            实现Base接口的泛型对象类型
-     * @return 返回保存后的实体对象
-     * @throws UserInterfaceDalErrorException 保存实体过程中发生的异常
-     */
-    <T extends Base> T save(T t, boolean saveOperateLog) throws UserInterfaceDalErrorException;
-
-    /**
      * 逻辑删除指定关键字ID的数据实体
      *
      * @param id                   关键字ID

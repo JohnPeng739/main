@@ -7,11 +7,9 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
-import org.mx.dal.entity.OperateLog;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralTextSearchAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,9 +45,6 @@ public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAc
     @Autowired
     @Qualifier("sessionDataThreadLocal")
     private SessionDataStore sessionDataStore = null;
-
-    @Autowired
-    private OperateLogService operateLogService = null;
 
     /**
      * {@inheritDoc}
@@ -303,21 +298,9 @@ public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAc
      */
     @Override
     public <T extends Base> T save(T t) {
-        return save(t, true);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see GeneralAccessor#save(Base, boolean)
-     */
-    @Override
-    public <T extends Base> T save(T t, boolean saveOperateLog) {
-        boolean isNew = false;
         if (StringUtils.isBlank(t.getId())) {
             // new
             t.setCreatedTime(new Date().getTime());
-            isNew = true;
         } else {
             T old = this.getById(t.getId(), (Class<T>) t.getClass());
             if (old == null) {
@@ -333,10 +316,6 @@ public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAc
         t.setOperator(sessionDataStore.getCurrentUserCode());
         template.save(t);
         t = template.findById(t.getId(), (Class<T>) t.getClass());
-        if (saveOperateLog) {
-            writeOperateLog(t, String.format("%s了%s实体[%s]。",
-                    isNew ? "新增" : "修改", t.getClass().getSimpleName(), t.getId()));
-        }
         return t;
     }
 
@@ -385,20 +364,11 @@ public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAc
             // logically remove
             t.setValid(false);
             t = save(t);
-            writeOperateLog(t, String.format("逻辑删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
             return t;
         } else {
             // physically remove
             template.remove(t);
-            writeOperateLog(t, String.format("物理删除了%s实体[%s]。", t.getClass().getSimpleName(), t.getId()));
             return t;
         }
-    }
-
-    private <T> void writeOperateLog(T t, String content) {
-        if (operateLogService == null || t instanceof OperateLog) {
-            return;
-        }
-        operateLogService.writeLog(content);
     }
 }

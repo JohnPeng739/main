@@ -24,7 +24,7 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
     private static final Log logger = LogFactory.getLog(AbstractOperateLogService.class);
 
     @Autowired
-    @Qualifier("generalAccessor")
+    @Qualifier("generalAccessorJpa")
     private GeneralAccessor accessor = null;
 
     @Autowired
