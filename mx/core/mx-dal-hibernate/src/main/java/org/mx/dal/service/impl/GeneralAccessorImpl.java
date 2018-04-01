@@ -259,12 +259,11 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         } else {
             // 修改操作
             T old = getById(t.getId(), (Class<T>) t.getClass());
-            if (old == null) {
-                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_NOT_FOUND);
-            }
-            t.setCreatedTime(old.getCreatedTime());
-            if (t instanceof BaseDict) {
-                ((BaseDict) t).setCode(((BaseDict) old).getCode());
+            if (old != null) {
+                t.setCreatedTime(old.getCreatedTime());
+                if (t instanceof BaseDict) {
+                    ((BaseDict) t).setCode(((BaseDict) old).getCode());
+                }
             }
             entityManager.merge(t);
         }

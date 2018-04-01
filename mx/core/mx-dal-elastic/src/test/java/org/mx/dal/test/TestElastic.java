@@ -3,6 +3,7 @@ package org.mx.dal.test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mx.DigestUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.test.entity.UserEntity;
@@ -49,11 +50,12 @@ public class TestElastic {
         assertEquals(user1.getCode(), u1.getCode());
 
         UserEntity user2 = EntityFactory.createEntity(UserEntity.class);
+        user2.setId(DigestUtils.uuid());
         user2.setAge(16);
         user2.setCode("joy");
         user2.setName("Joy Peng");
         user2.setDesc("我是一个好学生。");
-        assertNull(user2.getId());
+        assertNotNull(user2.getId());
         u1 = accessor.save(user2);
         assertNotNull(u1);
         assertNotNull(user2.getId());

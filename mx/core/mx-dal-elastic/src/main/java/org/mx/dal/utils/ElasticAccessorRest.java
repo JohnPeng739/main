@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.admin.indices.close.CloseIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.open.OpenIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -26,6 +25,7 @@ import org.mx.DigestUtils;
 import org.mx.StringUtils;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
+import org.mx.dal.entity.BaseDict;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
@@ -241,13 +241,30 @@ public class ElasticAccessorRest implements ElasticAccessor, InitializingBean, D
      */
     @Override
     public <T extends Base> T save(T t) throws UserInterfaceDalErrorException {
-        t.setUpdatedTime(System.currentTimeMillis());
-        t.setOperator(sessionDataStore.getCurrentUserCode());
         try {
+            Class<T> clazz = (Class<T>) t.getClass();
+            boolean isNew;
             if (StringUtils.isBlank(t.getId())) {
                 // 新数据
                 t.setId(DigestUtils.uuid());
                 t.setCreatedTime(System.currentTimeMillis());
+                isNew = true;
+            } else {
+                T check = getById(t.getId(), clazz);
+                if (check != null) {
+                    // 修改数据
+                    t.setCreatedTime(check.getCreatedTime());
+                    if (check instanceof BaseDict) {
+                        ((BaseDict) t).setCode(((BaseDict) check).getCode());
+                    }
+                    isNew = false;
+                } else {
+                    isNew = true;
+                }
+            }
+            t.setUpdatedTime(System.currentTimeMillis());
+            t.setOperator(sessionDataStore.getCurrentUserCode());
+            if (isNew) {
                 IndexRequest request = new IndexRequest(index, t.getClass().getName(), t.getId());
                 request.source(JSON.toJSONString(t), XContentType.JSON);
                 client.index(request);

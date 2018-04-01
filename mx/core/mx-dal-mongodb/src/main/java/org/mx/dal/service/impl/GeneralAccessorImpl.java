@@ -303,13 +303,12 @@ public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAc
             t.setCreatedTime(new Date().getTime());
         } else {
             T old = this.getById(t.getId(), (Class<T>) t.getClass());
-            if (old == null) {
-                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_NOT_FOUND);
-            }
-            t.setCreatedTime(old.getCreatedTime());
-            // 修改操作不能修改代码字段
-            if (t instanceof BaseDict) {
-                ((BaseDict) t).setCode(((BaseDict) old).getCode());
+            if (old != null) {
+                t.setCreatedTime(old.getCreatedTime());
+                // 修改操作不能修改代码字段
+                if (t instanceof BaseDict) {
+                    ((BaseDict) t).setCode(((BaseDict) old).getCode());
+                }
             }
         }
         t.setUpdatedTime(new Date().getTime());

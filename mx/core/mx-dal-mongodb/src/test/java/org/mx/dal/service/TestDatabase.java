@@ -1,6 +1,7 @@
 package org.mx.dal.service;
 
 import org.junit.Test;
+import org.mx.DigestUtils;
 import org.mx.dal.BaseTest;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.entity.User;
@@ -91,6 +92,7 @@ public class TestDatabase extends BaseTest {
             assertNull(check);
 
             user = EntityFactory.createEntity(User.class);
+            user.setId(DigestUtils.uuid());
             user.setCode("josh");
             user.setName("Josh Peng");
             check = accessor.save(user);
