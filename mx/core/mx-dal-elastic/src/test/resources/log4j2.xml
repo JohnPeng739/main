@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="off" packages="com.dscomm.comp.logs.appender.db.jdbc">
+	<Properties>
+		<Property name="baseDir">logs</Property>
+	</Properties>
+	<Appenders>
+		<Console name="console" target="SYSTEM_OUT">
+			<PatternLayout charset="UTF-8"
+				pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} [%thread] %-5level %logger{10}(%line) - %msg%exception{full}%n" />
+		</Console>
+		<Async name="async">
+			<AppenderRef ref="console" />
+		</Async>
+	</Appenders>
+	<Loggers>
+		<logger name="org.mx" level="debug" additivity="false">
+			<appender-ref ref="async" />
+		</logger>
+		<logger name="com.ds" level="debug" additivity="false">
+			<appender-ref ref="async" />
+		</logger>
+		<logger name="AuditLog" level="info" additivity="false">
+			<appender-ref ref="async" />
+		</logger>
+		<root level="info">
+			<appender-ref ref="console" />
+		</root>
+	</Loggers>
+</configuration>  
