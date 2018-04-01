@@ -36,6 +36,7 @@ ext.versions = [
   'mx-dal'      : '1.2.0',
   'mx-dal-hibernate'    : '1.2.0',
   'mx-dal-mongodb'      : '1.2.0',
+  'mx-dal-elastic'	: '1.0.0',
   'mx-rbac-service'	: '3.1.9',
   'mx-rbac-service-hibernate'	: '3.1.5',
   'mx-rbac-service-mongodb'	: '1.0.4',
@@ -126,7 +127,7 @@ ext.libs = [
   "mx-dal"              : "org.mx:mx-dal:${versions.'mx-dal'}",
   "mx-dal-hibernate"    : "org.mx:mx-dal-hibernate:${versions.'mx-dal-hibernate'}",
   "mx-dal-mongodb"      : "org.mx:mx-dal-mongodb:${versions.'mx-dal-mongodb'}",
-
+  "mx-dal-elastic"	: "org.mx:mx-dal-elastic:${versions.'mx-dal-elastic'}",
   "mx-rbac-service"		: "org.mx.comps:mx-rbac-service:${versions.'mx-rbac-service'}",
   "mx-rbac-service-hibernate"	: "org.mx.comps:mx-rbac-service-hibernate:${versions.'mx-rbac-service-hibernate'}",
   "mx-rbac-service-mongodb"	: "org.mx.comps:mx-rbac-service-mongodb:${versions.'mx-rbac-service-mongodb'}",
