@@ -11,5 +11,7 @@
 /**/data/*
 /**/out/*
 /**/h2/**/*.db
+/**/*.ipr
+/**/*.iws
 /**/*.iml
 !/retl/retl-app/build/*

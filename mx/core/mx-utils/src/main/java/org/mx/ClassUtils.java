@@ -10,6 +10,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -45,18 +46,45 @@ public class ClassUtils {
     /**
      * 扫描指定包中的类文件
      *
+     * @param packageName 指定的包名
+     * @param action      扫描到后的操作
+     * @see #scanPackage(String, boolean, boolean, Consumer)
+     */
+    public static void scanPackage(String packageName, Consumer<String> action) {
+        scanPackage(packageName, true, true, action);
+    }
+
+    /**
+     * 扫描指定包中的类文件
+     *
      * @param packageName       指定的包名
      * @param recurse           如果设置为true，表示进行递归扫描；否则仅扫描第一层目录
      * @param ignoreInlineClass 如果设置为true，表示结果中忽略扫描到的内部类；否则结果中将包括内部类。
      * @return 包中所有的符合条件的类文件名称列表
+     * @see #scanPackage(String, boolean, boolean, Consumer)
      */
     public static List<String> scanPackage(String packageName, boolean recurse, boolean ignoreInlineClass) {
+        final ArrayList<String> list = new ArrayList();
+        scanPackage(packageName, recurse, ignoreInlineClass, className -> list.add(className));
+        return list;
+    }
+
+    /**
+     * 扫描指定包中的类文件
+     *
+     * @param packageName       指定的包名
+     * @param recurse           如果设置为true，表示进行递归扫描；否则仅扫描第一层目录
+     * @param ignoreInlineClass 如果设置为true，表示结果中忽略扫描到的内部类；否则结果中将包括内部类。
+     * @see #scanPackageByFile(Path, String, String, boolean, boolean, Consumer)
+     * @see #scanPackageByJar(String, boolean, boolean, Consumer)
+     */
+    public static void scanPackage(String packageName, final boolean recurse, final boolean ignoreInlineClass,
+                                   final Consumer<String> action) {
         if (StringUtils.isBlank(packageName)) {
             packageName = "";
         }
 
         packageName = packageName.replaceAll("\\.", "/");
-        ArrayList<String> list = new ArrayList();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
         try {
@@ -66,7 +94,7 @@ public class ClassUtils {
                 String protocol = url.getProtocol();
                 switch (protocol) {
                     case "jar":
-                        scanPackageByJar(url.getPath(), recurse, ignoreInlineClass, list);
+                        scanPackageByJar(url.getPath(), recurse, ignoreInlineClass, action);
                         break;
                     case "file":
                         String path = url.getPath();
@@ -76,7 +104,7 @@ public class ClassUtils {
                             root = root.substring(1);
                         }
                         // update by lichunliang window得到的root前有一个"/" 20171124 end
-                        scanPackageByFile(Paths.get(path), root, packageName, recurse, ignoreInlineClass, list);
+                        scanPackageByFile(Paths.get(path), root, packageName, recurse, ignoreInlineClass, action);
                         break;
                     default:
                         if (logger.isWarnEnabled()) {
@@ -89,7 +117,6 @@ public class ClassUtils {
                 logger.error(String.format("Get url[%] resource fail.", packageName), ex);
             }
         }
-        return list;
     }
 
     /**
@@ -97,12 +124,14 @@ public class ClassUtils {
      *
      * @param path              指定的文件路径
      * @param root              传递的根目录，便于迭代处理
-     * @param packageName
+     * @param packageName       需要检测的包名
      * @param recurse           是否迭代扫描子目录
      * @param ignoreInlineClass 是否忽略内部类文件
-     * @param list              扫描到的所有类文件名列表
+     * @param action            扫描到后的操作
      */
-    private static void scanPackageByFile(Path path, String root, String packageName, boolean recurse, boolean ignoreInlineClass, List<String> list) {
+    private static void scanPackageByFile(final Path path, final String root, String packageName,
+                                          final boolean recurse, final boolean ignoreInlineClass,
+                                          final Consumer<String> action) {
         try {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
@@ -114,12 +143,12 @@ public class ClassUtils {
                 @Override
                 public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                     String file = path.toString();
-                    if (Files.isRegularFile(path) && file.endsWith(".class") && (!ignoreInlineClass || file.indexOf("$") < 0)) {
+                    if (Files.isRegularFile(path) && file.endsWith(".class") && (!ignoreInlineClass || !file.contains("$"))) {
                         String classPath = file;
                         classPath = classPath.substring(root.length(), classPath.length() - ".class".length());
                         // list.add(classPath.replaceAll("/", "\\."));
                         // update by lichunliang 要考虑windows"\" 20171124 start
-                        list.add(classPath.replaceAll("[/\\\\]", "\\."));
+                        action.accept(classPath.replaceAll("[/\\\\]", "\\."));
                         // update by lichunliang 要考虑windows"\" 20171124 end
                     }
                     return CONTINUE;
@@ -138,9 +167,10 @@ public class ClassUtils {
      * @param path              包路径
      * @param recurse           是否迭代
      * @param ignoreInlineClass 是否忽略内部类文件
-     * @param list              扫描到的所有类文件名列表
+     * @param action            扫描到后执行的操作
      */
-    private static void scanPackageByJar(String path, boolean recurse, boolean ignoreInlineClass, List<String> list) {
+    private static void scanPackageByJar(final String path, final boolean recurse, final boolean ignoreInlineClass,
+                                         final Consumer<String> action) {
         String[] jarInfo = path.split("!");
         if (jarInfo != null && jarInfo.length == 2) {
             String jarFile = jarInfo[0].substring(jarInfo[0].indexOf("/"));
@@ -151,11 +181,11 @@ public class ClassUtils {
                 while (entries.hasMoreElements()) {
                     JarEntry entry = entries.nextElement();
                     String entryName = entry.getName();
-                    if (entryName.endsWith(".class")) {
+                    if (entryName.endsWith(".class") && (!ignoreInlineClass || !entryName.contains("$"))) {
                         entryName = entryName.substring(0, entryName.length() - ".class".length());
                         if (recurse) {
                             if (entryName.startsWith(packagePath)) {
-                                list.add(entryName.replaceAll("/", "."));
+                                action.accept(entryName.replaceAll("/", "."));
                             }
                         } else {
                             int index = entryName.lastIndexOf('/');
@@ -164,7 +194,7 @@ public class ClassUtils {
                                 check = entryName.substring(0, index);
                             }
                             if (check.equals(packagePath)) {
-                                list.add(entryName);
+                                action.accept(entryName);
                             }
                         }
                     }

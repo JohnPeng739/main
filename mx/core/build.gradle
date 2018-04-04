@@ -7,7 +7,7 @@ apply from: '../../dependencies.gradle'
 apply from: '../../allprojects.gradle'
 
 project(':mx-utils') {
-  version = '2.1.10'
+  version = '2.1.11'
   description = 'Many utility java class, such as : DateUtils, StringUtils, etc.'
 
   dependencies {
