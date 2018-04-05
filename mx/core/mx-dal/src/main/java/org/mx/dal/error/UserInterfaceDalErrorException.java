@@ -33,6 +33,7 @@ public class UserInterfaceDalErrorException extends UserInterfaceException {
         ENTITY_INSTANCE_FAIL("创建指定的实体失败。"),
         ENTITY_NOT_FOUND("指定的实体不存在。"),
         ENTITY_CLASS_INVALID("指定的实体没有实现Base接口。"),
+        ENTITY_INDEX_NOT_FOUND("指定实体没有建立索引。"),
 
         DB_OTHER_FAIL("未知数据访问错误。");
 

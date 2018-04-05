@@ -1,5 +1,7 @@
 package org.mx.dal.entity;
 
+import org.mx.dal.annotation.ElasticField;
+
 /**
  * 描述： 基于Elastic实现的基础字典实体
  *
@@ -7,7 +9,11 @@ package org.mx.dal.entity;
  *         Date time 2018/4/1 上午8:45
  */
 public class BaseDictEntity extends BaseEntity implements BaseDict {
-    private String code, name, desc;
+    private String code;
+    @ElasticField(analyzer = "hanlp")
+    private  String name;
+    @ElasticField(analyzer = "hanlp")
+    private  String desc;
 
     /**
      * {@inheritDoc}

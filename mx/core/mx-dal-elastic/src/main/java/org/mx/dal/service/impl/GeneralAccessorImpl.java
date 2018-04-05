@@ -1,13 +1,19 @@
 package org.mx.dal.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.rest.RestStatus;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.error.UserInterfaceDalErrorException;
+import org.mx.dal.service.ElasticAccessor;
 import org.mx.dal.service.GeneralAccessor;
-import org.mx.dal.utils.ElasticAccessor;
+import org.mx.dal.utils.ElasticUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,9 +23,17 @@ import java.util.List;
  *         Date time 2018/4/1 上午8:56
  */
 @Component("generalAccessorElastic")
-public class GeneralAccessorImpl implements GeneralAccessor {
+public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
     @Autowired
-    protected ElasticAccessor accessor = null;
+    protected ElasticUtil accessor = null;
+
+    private List<GeneralAccessor.ConditionTuple> validateCondition(boolean isValid) {
+        List<GeneralAccessor.ConditionTuple> list = null;
+        if (isValid) {
+            list = Collections.singletonList(new GeneralAccessor.ConditionTuple("valid", true));
+        }
+        return list;
+    }
 
     /**
      * {@inheritDoc}
@@ -38,7 +52,8 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Override
     public <T extends Base> long count(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
-        return accessor.count(clazz, isValid);
+        SearchResponse response = accessor.search(validateCondition(isValid), clazz, null);
+        return response.getHits().getTotalHits();
     }
 
     /**
@@ -58,7 +73,11 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Override
     public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
-        return accessor.list(clazz, isValid);
+        SearchResponse response = accessor.search(validateCondition(isValid), clazz, null);
+        List<T> list = new ArrayList<>();
+        response.getHits().forEach(hit -> list.add(JSON.parseObject(hit.getSourceAsString(),
+                (Class<T>) accessor.getIndexClass(hit.getIndex()))));
+        return list;
     }
 
     /**
@@ -81,7 +100,16 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         if (pagination == null) {
             pagination = new Pagination();
         }
-        return accessor.list(pagination, clazz, isValid);
+        SearchResponse response = accessor.search(validateCondition(isValid), clazz, pagination);
+        if (response.status() == RestStatus.OK) {
+            List<T> list = new ArrayList<>();
+            pagination.setTotal((int) response.getHits().getTotalHits());
+            response.getHits().forEach(hit -> list.add(JSON.parseObject(hit.getSourceAsString(),
+                    (Class<T>) accessor.getIndexClass(hit.getIndex()))));
+            return list;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -100,8 +128,24 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      * @see GeneralAccessor#find(List, Class)
      */
     @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) throws UserInterfaceDalErrorException {
-        return accessor.find(tuples, clazz);
+    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz)
+            throws UserInterfaceDalErrorException {
+        return find(tuples, Collections.singletonList(clazz));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticAccessor#find(List, List)
+     */
+    @Override
+    public <T extends Base> List<T> find(List<ConditionTuple> tuples, List<Class<? extends Base>> classes)
+            throws UserInterfaceDalErrorException {
+        SearchResponse response = accessor.search(tuples, classes, null);
+        List<T> list = new ArrayList<>();
+        response.getHits().forEach(hit -> list.add(JSON.parseObject(hit.getSourceAsString(),
+                (Class<T>) accessor.getIndexClass(hit.getIndex()))));
+        return list;
     }
 
     /**
@@ -126,7 +170,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Override
     public <T extends Base> T save(T t) throws UserInterfaceDalErrorException {
-        return accessor.save(t);
+        return accessor.index(t);
     }
 
     /**

@@ -1,13 +1,19 @@
 package org.mx.dal.entity;
 
+import org.mx.dal.annotation.ElasticField;
+import org.mx.dal.annotation.ElasticIndex;
+
 /**
  * 描述： 基于Elastic实现的操作审计日志实体
  *
  * @author John.Peng
  *         Date time 2018/4/1 上午8:50
  */
+@ElasticIndex("operateLog")
 public class OperateLogEntity extends BaseEntity implements OperateLog {
-    private String system, module, content;
+    private String system, module;
+    @ElasticField(analyzer = "hanlp")
+    private String content;
     private OperateType operateType = OperateType.QUERY;
 
     /**

@@ -6,6 +6,7 @@ import org.mx.dal.service.GeneralDictAccessor;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,8 +24,8 @@ public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements Gene
      */
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> clazz) throws UserInterfaceDalErrorException {
-        List<ConditionTuple> tuples = Arrays.asList(new ConditionTuple("code", code));
-        List<T> list = super.accessor.find(tuples, clazz);
+        List<ConditionTuple> tuples = Collections.singletonList(new ConditionTuple("code", code));
+        List<T> list = super.find(tuples, clazz);
         return list != null && !list.isEmpty() ? list.get(0) : null;
     }
 }
