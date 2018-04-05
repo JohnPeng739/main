@@ -75,6 +75,7 @@ public class ClassUtils {
      * @param packageName       指定的包名
      * @param recurse           如果设置为true，表示进行递归扫描；否则仅扫描第一层目录
      * @param ignoreInlineClass 如果设置为true，表示结果中忽略扫描到的内部类；否则结果中将包括内部类。
+     * @param action            扫描到后的操作
      * @see #scanPackageByFile(Path, String, String, boolean, boolean, Consumer)
      * @see #scanPackageByJar(String, boolean, boolean, Consumer)
      */
