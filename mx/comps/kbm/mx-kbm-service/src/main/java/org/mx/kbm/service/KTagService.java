@@ -13,11 +13,13 @@ import java.util.List;
  */
 public interface KTagService {
     KTag getTag(String tag);
+
     KTag saveTag(KTag tag);
 
     /**
      * 获取指定租户的标签集合，包括共有的和自己私有的标签。
+     *
      * @return 标签集合
      */
-    List<KTag> getMyTags(Tenant tenant);
+    List<KTag> getKTags(Tenant tenant);
 }

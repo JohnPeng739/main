@@ -42,18 +42,18 @@ public interface KAttachment extends Base {
     void setType(AttachmentType type);
 
     /**
-     * 获取URL
+     * 获取URI
      *
-     * @return URL
+     * @return URI
      */
-    String getUrl();
+    String getUri();
 
     /**
-     * 设置URL
+     * 设置URI
      *
-     * @param url URL
+     * @param uri URI
      */
-    void setUrl(String url);
+    void setUri(String uri);
 
     /**
      * 获取名称
@@ -70,18 +70,18 @@ public interface KAttachment extends Base {
     void setName(String name);
 
     /**
-     * 获取描述
+     * 获取摘要
      *
-     * @return 描述
+     * @return 摘要
      */
-    String getDesc();
+    String getSummary();
 
     /**
-     * 设置描述
+     * 设置摘要
      *
-     * @param desc 描述
+     * @param summary 摘要
      */
-    void setDesc(String desc);
+    void setSummary(String summary);
 
     /**
      * 获取租户
@@ -101,6 +101,10 @@ public interface KAttachment extends Base {
      * 附件文件类型枚举定义
      */
     enum AttachmentType {
+        /**
+         * JSON数据文件
+         */
+        JSON,
         /**
          * MD文件
          */

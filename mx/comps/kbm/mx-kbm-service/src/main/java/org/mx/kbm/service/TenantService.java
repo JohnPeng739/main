@@ -10,5 +10,6 @@ import org.mx.kbm.entity.Tenant;
  */
 public interface TenantService {
     Tenant getTenant(String code);
+    Tenant getTenantByAccount(String userCode);
     Tenant saveTenant(Tenant tenant);
 }

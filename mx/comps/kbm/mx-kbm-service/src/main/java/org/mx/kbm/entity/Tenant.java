@@ -1,6 +1,9 @@
 package org.mx.kbm.entity;
 
+import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.dal.entity.BaseDictTree;
+
+import java.util.Set;
 
 /**
  * 描述： 知识租户接口定义，租户允许建立租户树，定义了知识租户的描述性信息，一般私有知识只能从属于一个租户。
@@ -9,6 +12,13 @@ import org.mx.dal.entity.BaseDictTree;
  *         Date time 2018/3/24 下午6:15
  */
 public interface Tenant extends BaseDictTree {
+    /**
+     * 获取租户成员
+     *
+     * @return 账户列表
+     */
+    Set<Account> getTenantMember();
+
     /**
      * 获取租户类型
      *

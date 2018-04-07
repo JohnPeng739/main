@@ -18,9 +18,9 @@ public class KAttachmentEntity extends BaseEntity implements KAttachment {
     private KNode kNode = null;
     @Indexed
     private AttachmentType type = AttachmentType.TXT;
-    private String url = null;
+    private String uri = null;
     @TextIndexed
-    private String name, desc = null;
+    private String name, summary = null;
     @DBRef
     private Tenant tenant = null;
 
@@ -67,21 +67,21 @@ public class KAttachmentEntity extends BaseEntity implements KAttachment {
     /**
      * {@inheritDoc}
      *
-     * @see KAttachment#getUrl()
+     * @see KAttachment#getUri()
      */
     @Override
-    public String getUrl() {
-        return url;
+    public String getUri() {
+        return uri;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see KAttachment#setUrl(String)
+     * @see KAttachment#setUri(String)
      */
     @Override
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUri(String urli) {
+        this.uri = uri;
     }
 
     /**
@@ -107,21 +107,20 @@ public class KAttachmentEntity extends BaseEntity implements KAttachment {
     /**
      * {@inheritDoc}
      *
-     * @see KAttachment#getDesc()
+     * @see KAttachment#getSummary()
      */
-    @Override
-    public String getDesc() {
-        return desc;
+    public String getSummary() {
+        return summary;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see KAttachment#setDesc(String)
+     * @see KAttachment#setSummary(String)
      */
     @Override
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     /**

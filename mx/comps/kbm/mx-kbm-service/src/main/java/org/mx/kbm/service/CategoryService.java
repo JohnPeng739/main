@@ -14,10 +14,13 @@ import java.util.List;
 public interface CategoryService {
     /**
      * 获取指定租户的知识分类目录树
-     * @param tenant 租户
+     *
+     * @param tenant 租户，如果设置为null，表示获取公共分类目录。
      * @return 知识分类目录树
      */
-    List<Category> getMyCategories(Tenant tenant);
+    List<Category> getCategories(Tenant tenant);
+
     Category getCategory(String code);
+
     Category saveCategory(Category category, String parentCategoryId);
 }

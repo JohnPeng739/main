@@ -1,8 +1,12 @@
 package org.mx.kbm.entity;
 
+import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.dal.entity.BaseDictTreeEntity;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Set;
 
 /**
  * 描述： 知识租户实体类，基于Mongodb实现。
@@ -15,6 +19,18 @@ public class TenantEntity extends BaseDictTreeEntity implements Tenant {
     @Indexed
     private TenantType tenantType = TenantType.PERSONAL;
     private String managerName = null, managerPhone = null, managerEmail = null;
+    @DBRef
+    private Set<Account> member = null;
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see Tenant#getTenantMember()
+     */
+    @Override
+    public Set<Account> getTenantMember() {
+        return this.member;
+    }
 
     /**
      * {@inheritDoc}
