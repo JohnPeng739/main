@@ -7,9 +7,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.mx.StringUtils;
-import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
-import org.mx.service.rest.vo.DataVO;
-import org.mx.service.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,33 +55,18 @@ public class AuthenticateAspect {
 
     // 环绕截面
     private Object around(ProceedingJoinPoint pjp, AuthenticateAround around, Object request) throws Throwable {
-        Object result = authenticate(pjp, around, request);
-        if (result == null) {
-            // 身份认证成功，调取代理方法
-            result = pjp.proceed();
-        }
-        return result;
-    }
-
-    // 返回一个没有通过身份认证的结果
-    private Object notAuthenticate(AuthenticateAround around) {
-        Class<?> clazz = around.returnValueClass();
-        if (clazz.isAssignableFrom(DataVO.class)) {
-            return new DataVO<>(UserInterfaceRbacErrorException.RbacErrors.NOT_AUTHENTICATED);
-        } else if (clazz.isAssignableFrom(PaginationDataVO.class)) {
-            return new PaginationDataVO<>(UserInterfaceRbacErrorException.RbacErrors.NOT_AUTHENTICATED);
-        } else {
-            return "Not authenticate.";
-        }
+        authenticate(pjp, around, request);
+        // 身份认证成功，调取代理方法
+        return pjp.proceed();
     }
 
     // 进行身份认证
-    private Object authenticate(ProceedingJoinPoint pjp, AuthenticateAround around, Object request) {
+    private void authenticate(ProceedingJoinPoint pjp, AuthenticateAround around, Object request) throws Throwable {
         if (logger.isDebugEnabled()) {
             logger.debug("Starting authenticate ....");
         }
+        String token = "";
         try {
-            String token;
             if (request instanceof ContainerRequest) {
                 token = ((ContainerRequest) request).getHeaderString("token");
                 if (StringUtils.isBlank(token)) {
@@ -96,30 +78,35 @@ public class AuthenticateAspect {
                     token = ((ServletRequest) request).getParameter("Authorization");
                 }
             } else {
+                String message = String.format("Unsupported verify request object type: %s.",
+                        request.getClass().getName());
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("Unsupported verify request object type: %s.",
-                            request.getClass().getName()));
+                    logger.error(message);
                 }
-                return notAuthenticate(around);
+                throw new TokenVerifyException(message);
             }
 
             if (StringUtils.isBlank(token)) {
+                String message = "The token is not existed in the request object.";
                 if (logger.isErrorEnabled()) {
-                    logger.error("The token is not existed in the request object.");
+                    logger.error(message);
                 }
-                return notAuthenticate(around);
+                throw new TokenVerifyException(message);
             }
             if (!StringUtils.isBlank(token) && token.startsWith("Bearer ")) {
                 token = token.substring("Bearer ".length());
             }
             if (jwtService.verify(token)) {
-                return null;
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("The token[%s] verify passed.", token));
+                }
             }
         } catch (Exception ex) {
+            String message = String.format("The token[%s] verify fail.", token);
             if (logger.isErrorEnabled()) {
-                logger.error("JWT verify fail.", ex);
+                logger.error(message, ex);
             }
+            throw new TokenVerifyException(message, ex);
         }
-        return notAuthenticate(around);
     }
 }
