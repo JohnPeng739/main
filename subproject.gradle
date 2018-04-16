@@ -1,5 +1,8 @@
 subprojects { subprj ->
   repositories {
+//    maven {
+//      url 'http://localhost:8081/repository/jcenter/'
+//    }
     mavenCentral()
     maven {
       url 'http://repo.clojars.org/'
@@ -35,7 +38,11 @@ subprojects { subprj ->
     archives javadocJar
     archives sourcesJar
   }
-
+/*
+  signing {
+    sign configurations.archives
+  }
+*/
   configurations {
     provided
     deployerJars
@@ -53,6 +60,7 @@ subprojects { subprj ->
         groupId subprj.group
         artifactId subprj.name
         version subprj.version
+ //       packaging 'jar'
         description subprj.description
 
         from components.java
@@ -73,6 +81,10 @@ subprojects { subprj ->
           scm.appendNode('url', POM_SCM_URL)
           scm.appendNode('connection', POM_SCM_CONNECTION)
           scm.appendNode('developerConnection', POM_SCM_DEV_CONNECTION)
+
+          def developer = root.appendNode('developers').appendNode('developer')
+          developer.appendNode('name', 'John Peng')
+          developer.appendNode('email', 'josh_73_9@hotmail.com')
 
           def license = root.appendNode('licenses').appendNode('license')
           license.appendNode('name', POM_LICENCE_NAME)
@@ -106,15 +118,40 @@ subprojects { subprj ->
       }
     }
   }
-
+/*
   uploadArchives {
     repositories {
       mavenDeployer {
-        repository(url: 'file://localhost/Users/john/.m2/repository')
-        pom.groupId = subprj.group
-        pom.artifactId = subprj.name
-        pom.version = subprj.version
+        beforeDeployment {MavenDeployment deployment -> signing.signPom(deployment) }
+        repository(url: "https://oss/sonatype.org/service/local/staging/deploy/maven2/") {
+//          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+        pom.project {
+          name subprj.name
+          packaging 'jar'
+          description subprj.description
+          url subprj.url
+          scm {
+            connection subprj.scm
+            developerConnection subprj.scm
+            url subprj.url
+          }
+          licenses {
+            license {
+              name 'The Apache License, Version 2.0'
+              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+          }
+          developers {
+            developer {
+              id 'john.peng'
+              name 'John Peng'
+              email 'josh_73_9@hotmail.com'
+            }
+          }
+        }
       }
     }
   } 
+*/
 }
