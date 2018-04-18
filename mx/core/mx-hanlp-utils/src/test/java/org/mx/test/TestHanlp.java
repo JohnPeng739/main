@@ -143,7 +143,7 @@ public class TestHanlp {
             suggester.addSentence(title);
         }
 
-        System.out.println(suggester.suggest("演说", 1));       // 语义
+        System.out.println(suggester.suggest("讲演", 1));       // 语义
         System.out.println(suggester.suggest("危机攻关", 1));   // 字符
         System.out.println(suggester.suggest("wwy", 1));      // 拼音
     }

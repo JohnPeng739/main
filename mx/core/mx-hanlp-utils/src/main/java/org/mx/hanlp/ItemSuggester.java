@@ -2,7 +2,7 @@ package org.mx.hanlp;
 
 import org.springframework.util.Assert;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * 描述： 文本条目推荐操作接口
@@ -17,9 +17,9 @@ public interface ItemSuggester {
 
     String getType();
 
-    Set<SuggestItem> suggest(String keyword);
+    List<SuggestItem> suggest(String keyword);
 
-    Set<SuggestItem> suggest(String keyword, int size);
+    List<SuggestItem> suggest(String keyword, int size);
 
     class SuggestItem {
         public static final String DEFAULT_TYPE = "default";

@@ -97,7 +97,7 @@ public class ItemSuggesterImpl implements ItemSuggester {
      * @see ItemSuggester#suggest(String)
      */
     @Override
-    public Set<SuggestItem> suggest(String keyword) {
+    public List<SuggestItem> suggest(String keyword) {
         return suggest(keyword, 1);
     }
 
@@ -107,8 +107,8 @@ public class ItemSuggesterImpl implements ItemSuggester {
      * @see ItemSuggester#suggest(String, int)
      */
     @Override
-    public Set<SuggestItem> suggest(String keyword, int size) {
-        Set<SuggestItem> set = new HashSet<>();
+    public List<SuggestItem> suggest(String keyword, int size) {
+        List<SuggestItem> list = new ArrayList<>();
         List<String> contents = suggester.suggest(keyword, size);
         for (String content : contents) {
             String id = fingerprints.get(DigestUtils.md5(content));
@@ -118,9 +118,9 @@ public class ItemSuggesterImpl implements ItemSuggester {
                             "the cache is out of sync.", id, content));
                 }
             } else {
-                set.add(SuggestItem.valueOf(type, id, content));
+                list.add(SuggestItem.valueOf(type, id, content));
             }
         }
-        return set;
+        return list;
     }
 }

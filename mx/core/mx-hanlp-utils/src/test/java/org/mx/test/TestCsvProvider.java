@@ -8,6 +8,7 @@ import org.mx.hanlp.factory.SuggesterFactory;
 import org.mx.test.config.TestCsvConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -37,13 +38,18 @@ public class TestCsvProvider {
         ItemSuggester itemSuggester = factory.getSuggester("expert from text");
         assertNotNull(itemSuggester);
 
-        Set<ItemSuggester.SuggestItem> set = itemSuggester.suggest("发言");
-        assertEquals(1, set.size());
-        set = itemSuggester.suggest("危机公共");
-        assertEquals(1, set.size());
-        set = itemSuggester.suggest("may");
-        assertEquals(1, set.size());
+        List<ItemSuggester.SuggestItem> list = itemSuggester.suggest("发言");
+        assertEquals(1, list.size());
+        assertEquals("1", list.get(0).getId());
+        assertEquals("威廉王子发表演说 呼吁保护野生动物", list.get(0).getContent());
+        list = itemSuggester.suggest("危机公共");
+        assertEquals(1, list.size());
+        assertEquals("5", list.get(0).getId());
+        assertEquals("英报告说空气污染带来“公共健康危机”", list.get(0).getContent());
+        list = itemSuggester.suggest("may");
+        assertEquals(1, list.size());
+        assertEquals("2", list.get(0).getId());
+        assertEquals("《时代》年度人物最终入围名单出炉 普京马云入选", list.get(0).getContent());
 
-        // TODO 测试具体内容，并将接口中的set修改为list类型。
     }
 }
