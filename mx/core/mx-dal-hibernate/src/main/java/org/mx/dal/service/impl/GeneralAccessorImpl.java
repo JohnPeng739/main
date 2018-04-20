@@ -34,6 +34,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorImpl.class);
 
     @PersistenceContext
+    //@Autowired
     protected EntityManager entityManager = null;
 
     @Autowired

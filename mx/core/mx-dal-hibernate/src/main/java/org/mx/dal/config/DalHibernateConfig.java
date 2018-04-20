@@ -2,6 +2,7 @@ package org.mx.dal.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.util.Dbcp2DataSourceFactory;
@@ -18,6 +19,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -45,6 +48,8 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
 
     @Autowired
     private ApplicationContext context = null;
+
+    private EntityManagerFactory entityManagerFactory = null;
 
     /**
      * 默认的构造函数
@@ -108,7 +113,7 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      *
      * @return 实体管理器工厂Bean
      */
-    @Bean
+    @Bean("entityManagerFactory")
     @DependsOn({"dataSource"})
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
         String database = env.getProperty("jpa.database", String.class, "H2");
@@ -141,7 +146,7 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      *
      * @return 事务管理器
      */
-    @Bean()
+    @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());

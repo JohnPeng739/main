@@ -7,6 +7,8 @@ import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.error.UserInterfaceException;
 import org.mx.test.entity.User;
+import org.mx.test.entity.UserEntity;
+import org.mx.test.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -122,5 +124,49 @@ public class TestDatabase extends BaseTest {
         } catch (UserInterfaceException ex) {
             fail(ex.getMessage());
         }
+    }
+
+    @Test
+    public void testUserRepository() {
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+                GeneralDictAccessor.class);
+        assertNotNull(accessor);
+        UserRepository repository = context.getBean(UserRepository.class);
+        assertNotNull(repository);
+
+        assertEquals(0, accessor.count(User.class));
+        User user = EntityFactory.createEntity(User.class);
+        user.setCode("john");
+        user.setName("John Peng");
+        user.setAddress("address");
+        user.setEmail("john@hotmail.com");
+        user.setPostCode("zip");
+        user.setDesc("description");
+        User check = accessor.save(user);
+        assertNotNull(check);
+        assertNotNull(check.getId());
+        assertEquals(user.getCode(), check.getCode());
+        assertEquals(user.getName(), check.getName());
+        assertEquals(user.getAddress(), check.getAddress());
+        assertTrue(user.getCreatedTime() > 0);
+        assertEquals(1, accessor.count(User.class));
+
+        user = EntityFactory.createEntity(User.class);
+        user.setId(DigestUtils.uuid());
+        user.setCode("josh");
+        user.setName("Josh Peng");
+        user.setEmail("joy@hotmail.com");
+        check = accessor.save(user);
+        assertNotNull(check);
+        assertEquals(2, accessor.count(User.class));
+
+        List<UserEntity> list = repository.getByCode("john");
+        assertEquals(1, list.size());
+
+        list = repository.getLikeEmail("john");
+        assertEquals(1, list.size());
+
+        list = repository.getLikeEmail("hotmail");
+        assertEquals(2, list.size());
     }
 }
