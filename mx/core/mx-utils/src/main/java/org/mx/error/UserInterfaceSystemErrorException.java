@@ -32,9 +32,6 @@ public class UserInterfaceSystemErrorException extends UserInterfaceException {
 
         SYSTEM_UNSUPPORTED("不支持的操作系统，请联系开发人员。"),
 
-        SUGGESTER_NOT_FOUND("指定的推荐器不存在，请联系开发人员。"),
-        SUGGESTER_TYPE_UNMATCH("指定的推荐器类型不匹配，请联系开发人员。"),
-
         FILE_NOT_EXISTED("指定的文件不存在，请联系开发人员。"),
         FILE_READ_ERROR("读取指定文件内容错误。"),
 
