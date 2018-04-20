@@ -1,6 +1,8 @@
 package org.mx;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 类型转换工具类，包括了各种常见的类型转换方法。
@@ -8,6 +10,7 @@ import java.math.BigInteger;
  * @author : john peng date : 2016/5/29
  */
 public class TypeUtils {
+    private static final String regex = ",(?=([^\\\"^\\']*\\\"[^\\\"^']*\\\")*[^\\\"^\\']*$)";
 
     /**
      * 默认的构造函数
@@ -74,6 +77,23 @@ public class TypeUtils {
 
     private static int byte2IpInt(byte b) {
         return b >= 0 ? b : b + 256;
+    }
+
+    /**
+     * 将一行CSV数据转换为列表
+     *
+     * @param line 一行CSV数据
+     * @return 列表数据
+     */
+    public static List<String> csv2List(String line) {
+        List<String> list = new ArrayList<>();
+        if (!StringUtils.isBlank(line)) {
+            String[] segs = line.split(regex, -1);
+            for (String seg : segs) {
+                list.add(seg);
+            }
+        }
+        return list;
     }
 
     /**

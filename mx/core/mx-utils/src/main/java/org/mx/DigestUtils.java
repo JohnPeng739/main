@@ -1,5 +1,9 @@
 package org.mx;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mx.error.UserInterfaceSystemErrorException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -11,6 +15,11 @@ import java.util.UUID;
  * @author : john.peng date : 2017/9/15
  */
 public class DigestUtils {
+    private static final Log logger = LogFactory.getLog(DigestUtils.class);
+
+    /**
+     * 默认的构造函数
+     */
     private DigestUtils() {
         super();
     }
@@ -57,14 +66,20 @@ public class DigestUtils {
      * @param encodeAlgorithm 编码算法，比如：BASE，HEX等
      * @param input           待摘要的数据
      * @return 摘要后的数据
-     * @throws NoSuchAlgorithmException 指定的算法不存在
      * @see #encodeString(String, byte[])
      */
-    private static String digest(String digestAlgorithm, String encodeAlgorithm, String input)
-            throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance(digestAlgorithm);
-        digest.update(input.getBytes());
-        return encodeString(encodeAlgorithm, digest.digest());
+    private static String digest(String digestAlgorithm, String encodeAlgorithm, String input) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance(digestAlgorithm);
+            digest.update(input.getBytes());
+            return encodeString(encodeAlgorithm, digest.digest());
+        } catch (NoSuchAlgorithmException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The encode algorithm['%s'] not supported.", digestAlgorithm));
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_NO_SUCH_ALGORITHM);
+        }
     }
 
     /**
@@ -73,16 +88,19 @@ public class DigestUtils {
      * @param algorithm 编码算法，目前仅支持：BASE64和HEX两种算法
      * @param input     待编码的数据
      * @return 编码后的数据
-     * @throws NoSuchAlgorithmException 指定的算法不存在
      */
-    private static String encodeString(String algorithm, byte[] input) throws NoSuchAlgorithmException {
+    private static String encodeString(String algorithm, byte[] input) {
         switch (algorithm) {
             case "BASE64":
                 return Base64.getEncoder().encodeToString(input);
             case "HEX":
                 return StringUtils.byte2HexString(input);
             default:
-                throw new NoSuchAlgorithmException(String.format("The encode algorithm['%s'] not supported.", algorithm));
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The encode algorithm['%s'] not supported.", algorithm));
+                }
+                throw new UserInterfaceSystemErrorException(
+                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_NO_SUCH_ALGORITHM);
         }
     }
 
@@ -91,10 +109,9 @@ public class DigestUtils {
      *
      * @param src 待摘要的字符串
      * @return 摘要并编码后的字符串
-     * @throws NoSuchAlgorithmException 没有指定的算法
      * @see #digest(String, String, String)
      */
-    public static String md5(String src) throws NoSuchAlgorithmException {
+    public static String md5(String src) {
         return digest("MD5", "BASE64", src);
     }
 
@@ -103,10 +120,9 @@ public class DigestUtils {
      *
      * @param src 待摘要的字符串
      * @return 摘要并编码后的字符串
-     * @throws NoSuchAlgorithmException 没有指定的算法
      * @see #digest(String, String, String)
      */
-    public static String sha1(String src) throws NoSuchAlgorithmException {
+    public static String sha1(String src) {
         return digest("SHA-1", "BASE64", src);
     }
 
@@ -115,10 +131,9 @@ public class DigestUtils {
      *
      * @param src 待摘要的字符串
      * @return 摘要并编码后的字符串
-     * @throws NoSuchAlgorithmException 没有指定的算法
      * @see #digest(String, String, String)
      */
-    public static String sha256(String src) throws NoSuchAlgorithmException {
+    public static String sha256(String src) {
         return digest("SHA-256", "BASE64", src);
     }
 }

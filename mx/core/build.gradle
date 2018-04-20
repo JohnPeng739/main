@@ -7,7 +7,7 @@ apply from: '../../dependencies.gradle'
 apply from: '../../allprojects.gradle'
 
 project(':mx-utils') {
-  version = '2.1.11'
+  version = '2.1.12'
   description = 'Many utility java class, such as : DateUtils, StringUtils, etc.'
 
   dependencies {
@@ -130,7 +130,8 @@ project('mx-hanlp-utils') {
 
   dependencies {
     compile(
-      project(':mx-spring')
+      project(':mx-spring'),
+      project(':mx-service-utils')
     )
   }
 }
