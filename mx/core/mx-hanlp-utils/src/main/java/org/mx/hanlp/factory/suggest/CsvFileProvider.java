@@ -3,6 +3,7 @@ package org.mx.hanlp.factory.suggest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
+import org.mx.TypeUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.hanlp.ItemSuggester;
 import org.springframework.core.env.Environment;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * 描述： CSV（半角逗号分割）的文本文件，默认第一列为条目对应的ID， 第二列为推荐内容，后续列会被忽略。<br>
@@ -28,7 +30,6 @@ public class CsvFileProvider implements SuggestContentProvider {
 
     private String path = null;
     private int idFiled = 1, contentField = 2;
-    private String regex = ",(?=([^\\\"^\\']*\\\"[^\\\"^']*\\\")*[^\\\"^\\']*$)";
 
     /**
      * {@inheritDoc}
@@ -74,15 +75,15 @@ public class CsvFileProvider implements SuggestContentProvider {
                 if (StringUtils.isBlank(line)) {
                     break;
                 }
-                String[] segs = line.split(regex, -1);
-                if (idFiled > segs.length || contentField > segs.length) {
+                List<String> segs = TypeUtils.csv2List(line);
+                if (idFiled > segs.size() || contentField > segs.size()) {
                     if (logger.isWarnEnabled()) {
                         logger.warn(String.format("The line has not contain the id or content field, line: %s, " +
                                 "id field: %d, content field: %d.", line, idFiled, contentField));
                     }
                     continue;
                 }
-                String id = segs[idFiled - 1], content = segs[contentField - 1];
+                String id = segs.get(idFiled - 1), content = segs.get(contentField - 1);
                 itemSuggester.addSuggestItem(ItemSuggester.SuggestItem.valueOf(itemSuggester.getType(), id, content));
             } while (true);
             if (logger.isInfoEnabled()) {

@@ -3,7 +3,6 @@ package org.mx.hanlp.factory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
-import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.hanlp.ItemSuggester;
 import org.mx.hanlp.factory.suggest.SuggestContentProvider;
 import org.mx.hanlp.impl.ItemSuggesterImpl;

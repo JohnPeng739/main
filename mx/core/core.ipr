@@ -53,6 +53,7 @@
       <module fileurl="file://$PROJECT_DIR$/mx-dal-elastic/mx-dal-elastic.iml" filepath="$PROJECT_DIR$/mx-dal-elastic/mx-dal-elastic.iml"/>
       <module fileurl="file://$PROJECT_DIR$/mx-dal-hibernate/mx-dal-hibernate.iml" filepath="$PROJECT_DIR$/mx-dal-hibernate/mx-dal-hibernate.iml"/>
       <module fileurl="file://$PROJECT_DIR$/mx-dal-mongodb/mx-dal-mongodb.iml" filepath="$PROJECT_DIR$/mx-dal-mongodb/mx-dal-mongodb.iml"/>
+      <module fileurl="file://$PROJECT_DIR$/mx-hanlp-utils/mx-hanlp-utils.iml" filepath="$PROJECT_DIR$/mx-hanlp-utils/mx-hanlp-utils.iml"/>
       <module fileurl="file://$PROJECT_DIR$/mx-service-utils/mx-service-utils.iml" filepath="$PROJECT_DIR$/mx-service-utils/mx-service-utils.iml"/>
       <module fileurl="file://$PROJECT_DIR$/mx-spring/mx-spring.iml" filepath="$PROJECT_DIR$/mx-spring/mx-spring.iml"/>
       <module fileurl="file://$PROJECT_DIR$/mx-utils/mx-utils.iml" filepath="$PROJECT_DIR$/mx-utils/mx-utils.iml"/>
