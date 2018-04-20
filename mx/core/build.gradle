@@ -74,7 +74,7 @@ project(':mx-service-utils') {
 }
 
 project(':mx-dal-hibernate') {
-  version = '1.3.2'
+  version = '1.3.3'
   description = 'Dal with hibernate JPA.'
 
   dependencies {
