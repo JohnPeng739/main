@@ -49,6 +49,7 @@ subprojects { subprj ->
   }
 
   dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile(
       libs.'junit'
     )

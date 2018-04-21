@@ -5,11 +5,14 @@ import com.hankcs.hanlp.suggest.Suggester;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.DigestUtils;
-import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.hanlp.ItemSuggester;
+import org.mx.hanlp.error.UserInterfaceHanlpErrorException;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 描述： 基于HanLP实现的条目推荐
@@ -55,8 +58,8 @@ public class ItemSuggesterImpl implements ItemSuggester {
         Assert.notNull(suggestItem, "The suggest item can not be null.");
         String type = suggestItem.getType(), id = suggestItem.getId(), content = suggestItem.getContent();
         if (!this.type.equalsIgnoreCase(type)) {
-            throw new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SUGGESTER_TYPE_UNMATCH);
+            throw new UserInterfaceHanlpErrorException(
+                    UserInterfaceHanlpErrorException.HanlpErrors.SUGGESTER_TYPE_UNMATCH);
         }
         String fingerprint = DigestUtils.md5(content);
         fingerprints.put(fingerprint, id);

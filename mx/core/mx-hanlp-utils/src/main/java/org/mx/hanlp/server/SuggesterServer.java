@@ -21,7 +21,7 @@ public class SuggesterServer {
         startServer();
     }
 
-    public static void startServer() {
+    private static void startServer() {
         stopServer();
         context = new AnnotationConfigApplicationContext(SuggesterConfig.class);
         if (logger.isInfoEnabled()) {

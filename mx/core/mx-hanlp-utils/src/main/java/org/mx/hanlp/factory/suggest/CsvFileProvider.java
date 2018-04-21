@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * 描述： CSV（半角逗号分割）的文本文件，默认第一列为条目对应的ID， 第二列为推荐内容，后续列会被忽略。<br>
+ * 描述： CSV（半角逗号分割）的文本文件推荐数据提供器，默认第一列为条目对应的ID， 第二列为推荐内容，后续列会被忽略。<br>
  * 可以通过以下配置修改默认行为：<br>
  * prefix.fields.id=2        # 表示第二列为条目对应的ID<br>
  * prefix.fields.content=5   # 表示第五列为条目的内容
@@ -69,7 +69,7 @@ public class CsvFileProvider implements SuggestContentProvider {
     @Override
     public void loadSuggestContent(ItemSuggester itemSuggester) {
         try (BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(path)))) {
-            String line = null;
+            String line;
             do {
                 line = bf.readLine();
                 if (StringUtils.isBlank(line)) {

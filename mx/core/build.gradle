@@ -133,6 +133,7 @@ project('mx-hanlp-utils') {
       project(':mx-spring'),
       project(':mx-service-utils')
     )
+    compile 'com.oracle:ojdbc6:11.2.0.4.0-atlassian-hosted'
   }
 }
 
