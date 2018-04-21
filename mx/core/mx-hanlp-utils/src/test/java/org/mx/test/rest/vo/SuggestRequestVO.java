@@ -1,4 +1,4 @@
-package org.mx.hanlp.rest.vo;
+package org.mx.test.rest.vo;
 
 /**
  * 描述： 请求推荐的值对象定义
