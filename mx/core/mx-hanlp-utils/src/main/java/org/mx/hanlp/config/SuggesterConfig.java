@@ -21,6 +21,7 @@ import java.util.List;
         "classpath:suggester.properties"
 })
 @ComponentScan({
+        "org.mx.hanlp.impl",
         "org.mx.hanlp.factory",
         "org.mx.hanlp.server"
 })
