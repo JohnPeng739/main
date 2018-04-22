@@ -96,24 +96,36 @@ public class SystemUtils {
                 return aVoid -> {
                     String command = String.format("%s\\system32\\wbem\\wmic.exe process " +
                             "get Caption,CommandLine,KernelModeTime,UserModeTime", System.getenv("windir"));
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Command: %s", command));
+                    }
                     try {
-                        Process process = Runtime.getRuntime().exec(command);
+                        Process process = Runtime.getRuntime().exec(new String[] {"CMD", "/C", command});
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                        String line = bufferedReader.readLine();
-                        int[] pos = {line.indexOf("Caption"), line.indexOf("CommandLine"),
-                                line.indexOf("KernelModeTime"), line.indexOf("UserModeTime")};
+                        Object[] lines = bufferedReader.lines().toArray();
                         long myTime = 0, totalTime = 0;
-                        do {
-                            line = bufferedReader.readLine();
-                            String caption = line.substring(pos[0], pos[1]).trim(),
-                                    commandLine = line.substring(pos[1], pos[2]).trim();
-                            long kernelTime = Long.valueOf(line.substring(pos[2], pos[3]).trim()),
-                                    userTime = Long.valueOf(line.substring(pos[3]).trim());
-                            totalTime += kernelTime + userTime;
-                            if (caption.contains(identity) || commandLine.contains(identity)) {
-                                myTime = kernelTime + userTime;
+                        if (lines.length > 0){
+                            String line = (String)lines[0];
+                            int[] pos = {line.indexOf("Caption"), line.indexOf("CommandLine"),
+                                    line.indexOf("KernelModeTime"), line.indexOf("UserModeTime")};
+                            for (int index = 1; index < lines.length; index ++) {
+                                line = (String)lines[index];
+                                if (StringUtils.isBlank(line)) {
+                                    continue;
+                                }
+                                String caption = line.substring(pos[0], pos[1]).trim(),
+                                        commandLine = line.substring(pos[1], pos[2]).trim();
+                                long kernelTime = Long.valueOf(line.substring(pos[2], pos[3]).trim()),
+                                        userTime = Long.valueOf(line.substring(pos[3]).trim());
+                                totalTime += kernelTime + userTime;
+                                if (caption.contains(identity) || commandLine.contains(identity)) {
+                                    myTime = kernelTime + userTime;
+                                }
                             }
-                        } while (!StringUtils.isBlank(line));
+                        }
+                        if (totalTime <= 0) {
+                            totalTime = 1;
+                        }
                         return (float) myTime / totalTime;
                     } catch (IOException ex) {
                         if (logger.isErrorEnabled()) {
@@ -168,10 +180,13 @@ public class SystemUtils {
                         Process process = Runtime.getRuntime().exec(command);
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                         List<String> segs = TypeUtils.csv2List(bufferedReader.readLine());
-                        String memoryStr = segs.get(4).replaceAll(",", "");
+                        String memoryStr = segs.get(4).replaceAll("[, \"]", "");
                         long memory = StringUtils.string2Size(memoryStr, 0);
                         long total = ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean())
                                 .getTotalPhysicalMemorySize();
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(String.format("Memory fetch, seg: %s, memory: %d, total: %d.", segs.get(4), memory, total));
+                        }
                         return (float) memory / total;
                     } catch (IOException ex) {
                         if (logger.isErrorEnabled()) {
