@@ -5,6 +5,7 @@ ext.versions = [
   spring	: '5.0.4.RELEASE',
   'spring-data-jpa'	: '2.0.5.RELEASE',
   'spring-mongodb'	: '2.0.5.RELEASE',
+  ehcache	: '2.10.3',
   'hibernate-entitymanager'	: '5.2.9.Final',
   'commons-logging'	: '1.2',
   'commons-dbcp2'	: '2.1.1',
@@ -56,10 +57,13 @@ ext.libs = [
   "javax-el-api"	: "javax.el:javax.el-api:${versions.'javax-el-api'}",
 
   "spring-context"	: "org.springframework:spring-context:${versions.spring}",
+  "spring-context-support"	: "org.springframework:spring-context-support:${versions.spring}",
   "spring-data-jpa"	: "org.springframework.data:spring-data-jpa:${versions.'spring-data-jpa'}",
   "spring-tx"		: "org.springframework:spring-tx:${versions.spring}",
   "spring-data-mongodb"	: "org.springframework.data:spring-data-mongodb:${versions.'spring-mongodb'}",
   "spring-test"		: "org.springframework:spring-test:${versions.'spring'}",
+
+  "ehcache"		: "net.sf.ehcache:ehcache:${versions.ehcache}",
 
   "hibernate-entitymanager"	: "org.hibernate:hibernate-entitymanager:${versions.'hibernate-entitymanager'}",
 
