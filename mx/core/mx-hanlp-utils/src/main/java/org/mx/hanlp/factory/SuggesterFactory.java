@@ -112,6 +112,13 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
     }
 
     /**
+     * 清除所有的推荐内容
+     */
+    public void clear() {
+        suggesters.forEach((type, suggester) -> suggester.clear());
+    }
+
+    /**
      * 推荐器工厂是否已经就绪
      *
      * @return 返回true表示就绪，可以提供服务；否则返回false。

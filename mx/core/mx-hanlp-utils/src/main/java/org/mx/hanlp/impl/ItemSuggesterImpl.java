@@ -75,6 +75,21 @@ public class ItemSuggesterImpl implements ItemSuggester {
     /**
      * {@inheritDoc}
      *
+     * @see ItemSuggester#clear()
+     */
+    @Override
+    public void clear() {
+        if (suggester != null) {
+            suggester.removeAllSentences();
+        }
+        if (fingerprints != null) {
+            fingerprints.clear();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see ItemSuggester#getTotal()
      */
     @Override

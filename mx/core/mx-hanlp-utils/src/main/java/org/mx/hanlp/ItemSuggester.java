@@ -11,28 +11,81 @@ import java.util.List;
  *         Date time 2018/4/16 下午4:40
  */
 public interface ItemSuggester {
+    /**
+     * 向推荐器中添加一条推荐条目
+     *
+     * @param suggestItem 推荐条目
+     */
     void addSuggestItem(SuggestItem suggestItem);
 
+    /**
+     * 清除推荐器中的所有条目
+     */
+    void clear();
+
+    /**
+     * 获取推荐器中条目总数
+     *
+     * @return 条目总数
+     */
     long getTotal();
 
+    /**
+     * 重新刷新并加载推荐条目，不会清除原来的题目，只会替换
+     *
+     * @return 本次加载条目数量
+     */
     long reload();
 
+    /**
+     * 关闭推荐器
+     */
     void close();
 
+    /**
+     * 获取推荐器类型
+     *
+     * @return 推荐器类型
+     */
     String getType();
 
+    /**
+     * 根据关键字获取推荐条目，也就是所谓的"推荐"，默认返回1条推荐。
+     *
+     * @param keyword 关键字
+     * @return 推荐的条目列表
+     */
     List<SuggestItem> suggest(String keyword);
 
+    /**
+     * 根据关键字获取推荐条目
+     *
+     * @param keyword 关键字
+     * @param size    推荐最多条目数
+     * @return 推荐的条目列表
+     */
     List<SuggestItem> suggest(String keyword, int size);
 
+    /**
+     * 推荐条目实体类
+     */
     class SuggestItem {
         public static final String DEFAULT_TYPE = "default";
         private String type = DEFAULT_TYPE, id = null, content = null;
 
+        /**
+         * 默认的构造函数
+         */
         private SuggestItem() {
             super();
         }
 
+        /**
+         * 默认的构造函数
+         *
+         * @param id      ID
+         * @param content 推荐内容
+         */
         private SuggestItem(String id, String content) {
             this();
             Assert.notNull(id, "The ID can not be null.");
@@ -41,6 +94,13 @@ public interface ItemSuggester {
             this.content = content;
         }
 
+        /**
+         * 默认的构造函数
+         *
+         * @param type    推荐器类型
+         * @param id      ID
+         * @param content 推荐内容
+         */
         private SuggestItem(String type, String id, String content) {
             this(id, content);
             if (type != null) {
@@ -48,34 +108,81 @@ public interface ItemSuggester {
             }
         }
 
+        /**
+         * 根据指定参数构造一个推荐条目对象，使用默认的推荐器类型
+         *
+         * @param id      ID
+         * @param content 推荐内容
+         * @return 推荐条目对象
+         * @see #valueOf(String, String, String)
+         * @see #DEFAULT_TYPE
+         */
         public static SuggestItem valueOf(String id, String content) {
             return new SuggestItem(id, content);
         }
 
+        /**
+         * 根据指定参数构造一个推荐条目对象
+         *
+         * @param type    推荐器类型
+         * @param id      ID
+         * @param content 推荐内容
+         * @return 推荐条目对象
+         */
         public static SuggestItem valueOf(String type, String id, String content) {
             return new SuggestItem(type, id, content);
         }
 
+        /**
+         * 获取推荐器类型
+         *
+         * @return 推荐器类型
+         */
         public String getType() {
             return type;
         }
 
+        /**
+         * 设置推荐器类型
+         *
+         * @param type 推荐器类型
+         */
         public void setType(String type) {
             this.type = type;
         }
 
+        /**
+         * 获取ID
+         *
+         * @return ID
+         */
         public String getId() {
             return id;
         }
 
+        /**
+         * 设置ID
+         *
+         * @param id ID
+         */
         public void setId(String id) {
             this.id = id;
         }
 
+        /**
+         * 获取推荐内容
+         *
+         * @return 推荐内容
+         */
         public String getContent() {
             return content;
         }
 
+        /**
+         * 设置推荐内容
+         *
+         * @param content 推荐内容
+         */
         public void setContent(String content) {
             this.content = content;
         }
