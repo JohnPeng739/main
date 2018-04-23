@@ -43,7 +43,8 @@ public class ItemSuggesterImpl implements ItemSuggester {
     /**
      * 默认的构造函数
      *
-     * @param type 推荐器类型
+     * @param type     推荐器类型
+     * @param provider 推荐内容提供器
      */
     public ItemSuggesterImpl(String type, SuggestContentProvider provider) {
         this();
