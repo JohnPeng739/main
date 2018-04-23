@@ -30,7 +30,9 @@ project(':mx-spring') {
     compile(
       project(':mx-utils'),
       libs.'spring-context-support',
-      libs.'ehcache'
+      libs.'ehcache',
+      libs.'spring-data-redis',
+      libs.'jedis'
     )
   }
 }
@@ -126,7 +128,7 @@ project(':mx-dal-elastic') {
 }
 
 project('mx-hanlp-utils') {
-  version = '1.0.1'
+  version = '1.0.2'
   description = 'utilities API for hanlp.'
 
   dependencies {

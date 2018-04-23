@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * 描述： 推荐工厂
@@ -26,6 +29,10 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(SuggesterFactory.class);
 
     private Map<String, ItemSuggester> suggesters = null;
+    private Map<String, SuggesterStat> stats = null;
+    private ExecutorService executor = null;
+    private List<Future<Long>> futures = null;
+    private Timer cleanTimer = null;
 
     @Autowired
     private Environment env = null;
@@ -36,6 +43,7 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
     public SuggesterFactory() {
         super();
         this.suggesters = new HashMap<>();
+        this.stats = new HashMap<>();
     }
 
     /**
@@ -62,12 +70,73 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
     }
 
     /**
+     * 获取推荐系统中的统计信息
+     *
+     * @return 统计信息列表
+     */
+    public Collection<SuggesterStat> getSuggesterStat() {
+        return stats.values();
+    }
+
+    /**
+     * 重新刷新并加载推荐数据
+     */
+    public void reloadSuggesters() {
+        if (executor != null) {
+            // 已经有加载任务了，忽略本次重载请求
+            return;
+        }
+        executor = Executors.newFixedThreadPool(suggesters.size());
+        futures = new ArrayList<>();
+        for (final String type : suggesters.keySet()) {
+            Future<Long> future = executor.submit(new Callable<Long>() {
+                @Override
+                public Long call() throws Exception {
+                    ItemSuggester suggester = suggesters.get(type);
+                    SuggesterStat stat = stats.get(type);
+                    stat.setLastStartTime(System.currentTimeMillis());
+                    stats.put(type, stat);
+                    long total = suggester.reload();
+                    stat.setLastFinishTime(System.currentTimeMillis());
+                    stat.setReloadTotal(total);
+                    stat.setItemTotal(suggester.getTotal());
+                    stats.put(type, stat);
+                    return total;
+                }
+            });
+            futures.add(future);
+        }
+        if (logger.isDebugEnabled()) {
+            logger.debug("Start the load task successfully.");
+        }
+    }
+
+    /**
+     * 推荐器工厂是否已经就绪
+     *
+     * @return 返回true表示就绪，可以提供服务；否则返回false。
+     */
+    public boolean ready() {
+        if (futures != null && !futures.isEmpty()) {
+            for (Future<Long> future : futures) {
+                if (!future.isDone()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @see DisposableBean#destroy()
      */
     @Override
     public void destroy() throws Exception {
+        if (executor != null) {
+            executor.shutdownNow();
+        }
         if (suggesters != null && !suggesters.isEmpty()) {
             for (ItemSuggester suggester : suggesters.values()) {
                 suggester.close();
@@ -106,11 +175,29 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
             }
             SuggestContentProvider provider = (SuggestContentProvider) Class.forName(clazzName).newInstance();
             provider.initEnvironment(env, String.format("suggester.%d.config", index));
-            ItemSuggester itemSuggester = new ItemSuggesterImpl(type);
-            provider.loadSuggestContent(itemSuggester);
+            ItemSuggester itemSuggester = new ItemSuggesterImpl(type, provider);
             suggesters.put(type, itemSuggester);
+            stats.put(type, new SuggesterStat(type));
             total++;
         }
+        // 启动清理定时器，启动后3秒开始，每隔30秒检测一次
+        cleanTimer = new Timer();
+        cleanTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (ready() && futures != null) {
+                    futures.clear();
+                    futures = null;
+                    executor.shutdownNow();
+                    executor = null;
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("All load task are finished.");
+                    }
+                }
+            }
+        }, 3000, 30000);
+        // 启动一次刷新任务
+        reloadSuggesters();
         if (logger.isInfoEnabled()) {
             logger.info(String.format("Initialize %d suggester successfully.", total));
         }

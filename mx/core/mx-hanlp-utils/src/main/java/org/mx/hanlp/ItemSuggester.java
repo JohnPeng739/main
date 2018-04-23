@@ -13,6 +13,10 @@ import java.util.List;
 public interface ItemSuggester {
     void addSuggestItem(SuggestItem suggestItem);
 
+    long getTotal();
+
+    long reload();
+
     void close();
 
     String getType();

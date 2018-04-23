@@ -7,6 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.DigestUtils;
 import org.mx.hanlp.ItemSuggester;
 import org.mx.hanlp.error.UserInterfaceHanlpErrorException;
+import org.mx.hanlp.factory.suggest.SuggestContentProvider;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class ItemSuggesterImpl implements ItemSuggester {
     private Map<String, String> fingerprints = null;
 
     private Suggester suggester = null;
+    private SuggestContentProvider provider = null;
 
     /**
      * 默认的构造函数
@@ -43,9 +45,10 @@ public class ItemSuggesterImpl implements ItemSuggester {
      *
      * @param type 推荐器类型
      */
-    public ItemSuggesterImpl(String type) {
+    public ItemSuggesterImpl(String type, SuggestContentProvider provider) {
         this();
         this.type = type;
+        this.provider = provider;
     }
 
     /**
@@ -67,6 +70,30 @@ public class ItemSuggesterImpl implements ItemSuggester {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Add a suggest item successfully, \n %s.", JSON.toJSONString(suggestItem)));
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ItemSuggester#getTotal()
+     */
+    @Override
+    public long getTotal() {
+        return fingerprints.size();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ItemSuggester#reload()
+     */
+    @Override
+    public long reload() {
+        long total = 0;
+        if (provider != null) {
+            total = provider.loadSuggestContent(this);
+        }
+        return total;
     }
 
     /**

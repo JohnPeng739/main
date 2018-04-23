@@ -51,7 +51,7 @@ public class JdbcProvider implements SuggestContentProvider {
      * @see SuggestContentProvider#loadSuggestContent(ItemSuggester)
      */
     @Override
-    public void loadSuggestContent(ItemSuggester itemSuggester) {
+    public long loadSuggestContent(ItemSuggester itemSuggester) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -72,6 +72,7 @@ public class JdbcProvider implements SuggestContentProvider {
                 }
                 throw new UserInterfaceHanlpErrorException(UserInterfaceHanlpErrorException.HanlpErrors.DB_MAPPING_ERROR);
             }
+            long total = 0;
             while (rs.next()) {
                 String id = rs.getString(idField);
                 if (StringUtils.isBlank(id)) {
@@ -85,7 +86,9 @@ public class JdbcProvider implements SuggestContentProvider {
                 }
                 itemSuggester.addSuggestItem(ItemSuggester.SuggestItem.valueOf(itemSuggester.getType(),
                         id, json.toJSONString()));
+                total++;
             }
+            return total;
         } catch (ClassNotFoundException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The JDBC driver[%s] not existed.", driver));

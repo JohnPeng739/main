@@ -22,6 +22,7 @@ public interface SuggestContentProvider {
      * 将配置的建议内容加载到指定的条目推荐器中
      *
      * @param itemSuggester 指定的条目推荐器
+     * @return 加载条目数量
      */
-    void loadSuggestContent(ItemSuggester itemSuggester);
+    long loadSuggestContent(ItemSuggester itemSuggester);
 }

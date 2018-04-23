@@ -67,9 +67,10 @@ public class CsvFileProvider implements SuggestContentProvider {
      * @see SuggestContentProvider#loadSuggestContent(ItemSuggester)
      */
     @Override
-    public void loadSuggestContent(ItemSuggester itemSuggester) {
+    public long loadSuggestContent(ItemSuggester itemSuggester) {
         try (BufferedReader bf = new BufferedReader(new InputStreamReader(new FileInputStream(path)))) {
             String line;
+            long total = 0;
             do {
                 line = bf.readLine();
                 if (StringUtils.isBlank(line)) {
@@ -85,11 +86,13 @@ public class CsvFileProvider implements SuggestContentProvider {
                 }
                 String id = segs.get(idFiled - 1), content = segs.get(contentField - 1);
                 itemSuggester.addSuggestItem(ItemSuggester.SuggestItem.valueOf(itemSuggester.getType(), id, content));
+                total ++;
             } while (true);
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Load the csv file[%s] into %s suggester successfully.", path,
                         itemSuggester.getType()));
             }
+            return total;
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Read csv file[%s] fail.", path));

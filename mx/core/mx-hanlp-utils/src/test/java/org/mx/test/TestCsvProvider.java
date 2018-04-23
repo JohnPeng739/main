@@ -58,6 +58,14 @@ public class TestCsvProvider {
         ItemSuggester itemSuggester = factory.getSuggester("expert from text");
         assertNotNull(itemSuggester);
 
+        while (!factory.ready()) {
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         List<ItemSuggester.SuggestItem> list = itemSuggester.suggest("发言");
         assertEquals(1, list.size());
         assertEquals("1", list.get(0).getId());
