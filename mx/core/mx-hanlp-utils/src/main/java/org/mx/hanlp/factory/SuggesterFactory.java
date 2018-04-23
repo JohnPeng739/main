@@ -174,14 +174,21 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
         for (int index = 1; index <= num; index++) {
             String type = env.getProperty(String.format("suggester.%d.type", index)),
                     clazzName = env.getProperty(String.format("suggester.%d.provider", index));
-            if (StringUtils.isBlank(type) || StringUtils.isBlank(clazzName)) {
+            if (StringUtils.isBlank(type)) {
                 if (logger.isWarnEnabled()) {
-                    logger.warn("The type or class's name maybe blank for the suggester.");
+                    logger.warn("The type is blank for the suggester, it will be ignored.");
                 }
                 continue;
             }
-            SuggestContentProvider provider = (SuggestContentProvider) Class.forName(clazzName).newInstance();
-            provider.initEnvironment(env, String.format("suggester.%d.config", index));
+            SuggestContentProvider provider = null;
+            if (StringUtils.isBlank(clazzName)) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("The class's name maybe blank for the suggester.");
+                }
+            } else {
+                provider = (SuggestContentProvider) Class.forName(clazzName).newInstance();
+                provider.initEnvironment(env, String.format("suggester.%d.config", index));
+            }
             ItemSuggester itemSuggester = new ItemSuggesterImpl(type, provider);
             suggesters.put(type, itemSuggester);
             stats.put(type, new SuggesterStat(type));
