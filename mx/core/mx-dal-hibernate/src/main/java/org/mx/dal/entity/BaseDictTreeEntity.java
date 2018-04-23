@@ -17,6 +17,7 @@ public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
 
     /**
      * {@inheritDoc}
+     *
      * @see BaseDictEntity#toString()
      */
     @Override
@@ -27,6 +28,7 @@ public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
 
     /**
      * {@inheritDoc}
+     *
      * @see BaseDictTree#getParentId()
      */
     @Override
@@ -36,6 +38,7 @@ public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
 
     /**
      * {@inheritDoc}
+     *
      * @see BaseDictTree#setParentId(String)
      */
     @Override
