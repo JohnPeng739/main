@@ -6,6 +6,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -20,23 +21,16 @@ import org.springframework.core.env.Environment;
 @PropertySource({
         "classpath:cache.properties"
 })
+@ComponentScan({
+        "org.mx.spring.cache"
+})
 public class SpringCacheConfig {
     @Autowired
-    private Environment env = null;
-
-    @Autowired
-    private ApplicationContext context = null;
-
-    @Bean(value = "cacheManagerFactory", initMethod = "init", destroyMethod = "destroy")
-    public CacheManagerFactory cacheManagerFactory() {
-        CacheManagerFactory factory = new CacheManagerFactory();
-        factory.setEnvironment(env);
-        return factory;
-    }
+    private CacheManagerFactory cacheManagerFactory = null;
 
     @Bean("cacheManager")
     @DependsOn("cacheManagerFactory")
     public CacheManager cacheManager() {
-        return context.getBean("cacheManagerFactory", CacheManagerFactory.class).getCacheManager();
+        return cacheManagerFactory.getCacheManager();
     }
 }

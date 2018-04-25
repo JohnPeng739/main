@@ -3,15 +3,20 @@ package org.mx.spring.cache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
+import org.mx.spring.cache.redis.RedisCache;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,42 +27,50 @@ import java.util.Set;
  * @author John.Peng
  *         Date time 2018/4/22 下午7:07
  */
-public class CacheManagerFactory {
+@Component("cacheManagerFactory")
+public class CacheManagerFactory implements InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(CacheManagerFactory.class);
 
+    @Autowired
     private Environment env = null;
+
+    @Autowired
+    private ApplicationContext context = null;
 
     private CacheManager cacheManager = null;
 
     private DisposableBean disposableBean = null;
 
-    public void setEnvironment(Environment env) {
-        this.env = env;
-    }
-
-    public void init() {
+    /**
+     * {@inheritDoc}
+     *
+     * @see InitializingBean#afterPropertiesSet()
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
         String type = env.getProperty("cache.type");
         switch (type) {
-            case "memcache":
-                // TODO memcache
-                break;
             case "ehcache":
                 createEhCacheManager();
                 break;
             case "redis":
-                // TODO redis
-                break;
-            case "jcache":
-                // TODO jcache
+                createRedisCacheManager();
                 break;
             case "internal":
+                createConcurrentMapCacheManager();
+                break;
             default:
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format("Unsupported type[%s], will create a internal cache.", type));
+                }
                 createConcurrentMapCacheManager();
                 break;
         }
     }
 
-    // 创建基于ConcurrentMap的缓存
+    /**
+     * 创建基于ConcurrentMap的缓存
+     */
     private void createConcurrentMapCacheManager() {
         String list = env.getProperty("cache.internal.list", "");
         String[] names = StringUtils.split(list);
@@ -70,7 +83,9 @@ public class CacheManagerFactory {
         cacheManager = simpleCacheManager;
     }
 
-    // 创建基于ehcache的缓存
+    /**
+     * 创建基于ehcache的缓存
+     */
     private void createEhCacheManager() {
         String location = env.getProperty("cache.ehcache.config", "ehcache.xml");
         EhCacheManagerFactoryBean factoryBean = new EhCacheManagerFactoryBean();
@@ -80,7 +95,33 @@ public class CacheManagerFactory {
         disposableBean = factoryBean;
     }
 
-    public void destroy() {
+    /**
+     * 创建基于redis的缓存
+     */
+    @SuppressWarnings("unchecked")
+    private void createRedisCacheManager() {
+        String list = env.getProperty("cache.redis.list", "");
+        String[] names = StringUtils.split(list);
+        Set<RedisCache> caches = new HashSet<>(names.length);
+        RedisTemplate<String, Object> redisTemplate = context.getBean(RedisTemplate.class);
+        for (String name : names) {
+            RedisCache redisCache = new RedisCache();
+            redisCache.setName(name);
+            redisCache.setRedisTemplate(redisTemplate);
+            caches.add(redisCache);
+        }
+        SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
+        simpleCacheManager.setCaches(caches);
+        cacheManager = simpleCacheManager;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DisposableBean#destroy()
+     */
+    @Override
+    public void destroy() throws Exception {
         if (disposableBean != null) {
             try {
                 disposableBean.destroy();
@@ -93,6 +134,11 @@ public class CacheManagerFactory {
         }
     }
 
+    /**
+     * 获取配置好的缓存管理器
+     *
+     * @return 缓存管理器
+     */
     public CacheManager getCacheManager() {
         return cacheManager;
     }

@@ -2,8 +2,11 @@ package org.mx.spring;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +14,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class InitializeTaskFactory {
+@Component("initializeTaskFactory")
+public class InitializeTaskFactory implements InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(InitializeTaskFactory.class);
-
     private static final String TASKS = "initializeTasks";
 
     private ExecutorService service = null;
@@ -21,7 +24,14 @@ public class InitializeTaskFactory {
     @Autowired
     private ApplicationContext context = null;
 
-    public void init() {
+    /**
+     * {@inheritDoc}
+     *
+     * @see InitializingBean#afterPropertiesSet()
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void afterPropertiesSet() throws Exception {
         if (context.containsBean(TASKS)) {
             List<Class<InitializeTask>> tasks = (List<Class<InitializeTask>>) context.getBean(TASKS, List.class);
             if (tasks != null && !tasks.isEmpty()) {
@@ -31,12 +41,9 @@ public class InitializeTaskFactory {
                     try {
                         final InitializeTask task = taskClass.newInstance();
                         if (task.isLongTimeTask()) {
-                            longTimes.add(new Callable<Void>() {
-                                @Override
-                                public Void call() throws Exception {
-                                    task.invokeTask();
-                                    return null;
-                                }
+                            longTimes.add(() -> {
+                                task.invokeTask();
+                                return null;
                             });
                         } else {
                             shortTimes.add(task);
@@ -49,12 +56,11 @@ public class InitializeTaskFactory {
                 });
                 try {
                     service = Executors.newCachedThreadPool();
-                    longTimes.add(new Callable<Void>() {
-                        @Override
-                        public Void call() throws Exception {
-                            shortTimes.forEach(task -> task.invokeTask());
-                            return null;
+                    longTimes.add(() -> {
+                        for (InitializeTask task : shortTimes) {
+                            task.invokeTask();
                         }
+                        return null;
                     });
                     service.invokeAll(longTimes);
                 } catch (InterruptedException ex) {
@@ -66,7 +72,13 @@ public class InitializeTaskFactory {
         }
     }
 
-    public void close() {
+    /**
+     * {@inheritDoc}
+     *
+     * @see DisposableBean#destroy()
+     */
+    @Override
+    public void destroy() throws Exception {
         if (service != null) {
             service.shutdownNow();
             service = null;

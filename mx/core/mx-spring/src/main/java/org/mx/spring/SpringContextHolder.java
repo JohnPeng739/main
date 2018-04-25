@@ -59,7 +59,6 @@ public class SpringContextHolder implements ApplicationContextAware {
     @SuppressWarnings("unchecked")
     public static <T> T getBean(Class<T> clazz) {
         checkApplicationContext();
-        @SuppressWarnings("rawtypes")
         Map beanMaps = applicationContext.getBeansOfType(clazz);
         if (beanMaps != null && !beanMaps.isEmpty()) {
             return (T) beanMaps.values().iterator().next();
