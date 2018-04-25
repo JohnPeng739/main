@@ -35,6 +35,8 @@ public class UserInterfaceSystemErrorException extends UserInterfaceException {
         FILE_NOT_EXISTED("指定的文件不存在，请联系开发人员。"),
         FILE_READ_ERROR("读取指定文件内容错误。"),
 
+        SPRING_CACHE_REDIS_TYPE_UNSUPPORTED("不支持的Redis缓存类型。"),
+
         SYSTEM_OTHER_FAIL("未知的系统错误。");
 
         public static final int BASE_ORDINAL = 0;
