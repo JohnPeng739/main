@@ -1,6 +1,5 @@
 package org.mx.spring.redis;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
