@@ -1,5 +1,6 @@
 package org.mx.spring.redis;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -39,25 +40,28 @@ public class MyRedisConnectionFactoryBean implements InitializingBean, Disposabl
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-        String redisType = env.getProperty("cache.redis.type");
-        RedisPoolConfig poolConfig = new RedisPoolConfig(env);
-        switch (redisType) {
-            case "standalone":
-                RedisStandaloneConfig standaloneConfig = new RedisStandaloneConfig(env);
-                connectionFactory = new JedisConnectionFactory(standaloneConfig.get());
-                break;
-            case "sentinel":
-                RedisSentinelConfig sentinelConfig = new RedisSentinelConfig(env);
-                connectionFactory = new JedisConnectionFactory(sentinelConfig.get(), poolConfig.get());
-                break;
-            case "cluster":
-                RedisClusterConfig clusterConfig = new RedisClusterConfig(env);
-                connectionFactory = new JedisConnectionFactory(clusterConfig.get(), poolConfig.get());
-            default:
-                throw new UserInterfaceSystemErrorException(
-                        UserInterfaceSystemErrorException.SystemErrors.SPRING_CACHE_REDIS_TYPE_UNSUPPORTED);
+        boolean enable = env.getProperty("redis.enable", Boolean.class, false);
+        if (enable) {
+            String redisType = env.getProperty("redis.type");
+            RedisPoolConfig poolConfig = new RedisPoolConfig(env);
+            switch (redisType) {
+                case "standalone":
+                    RedisStandaloneConfig standaloneConfig = new RedisStandaloneConfig(env);
+                    connectionFactory = new JedisConnectionFactory(standaloneConfig.get());
+                    break;
+                case "sentinel":
+                    RedisSentinelConfig sentinelConfig = new RedisSentinelConfig(env);
+                    connectionFactory = new JedisConnectionFactory(sentinelConfig.get(), poolConfig.get());
+                    break;
+                case "cluster":
+                    RedisClusterConfig clusterConfig = new RedisClusterConfig(env);
+                    connectionFactory = new JedisConnectionFactory(clusterConfig.get(), poolConfig.get());
+                default:
+                    throw new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SPRING_CACHE_REDIS_TYPE_UNSUPPORTED);
+            }
+            connectionFactory.afterPropertiesSet();
         }
-        connectionFactory.afterPropertiesSet();
     }
 
     /**
