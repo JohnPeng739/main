@@ -1,10 +1,10 @@
 package org.mx.kbm.entity;
 
 import org.mx.comps.rbac.dal.entity.Account;
+import org.mx.comps.rbac.dal.entity.AccountEntity;
 import org.mx.dal.entity.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 描述： 基于Hibernate JPA实现的分享知识条目实体类
@@ -13,13 +13,22 @@ import javax.persistence.Table;
  *         Date time 2018/4/27 下午4:19
  */
 @Entity
-@Table(name = "TB_KNODE_SHARED")
+@Table(name = "TB_KNODE_SHARED", indexes = {
+        @Index(name = "IDX_KNODE_SHARED_TIME", columnList = "startTime, endTime"),
+        @Index(name = "IDX_KNODE_SHARED_STATE", columnList = "state")
+})
 public class KnowledgeSharedNodeEntity extends BaseEntity implements KnowledgeSharedNode {
+    @ManyToOne(targetEntity = KnowledgeNodeEntity.class)
     private KnowledgeNode node;
+    @Column(name = "ACLS")
     private int acls = KnowledgeAcl.READ.getOrdinal();
+    @ManyToOne(targetEntity = AccountEntity.class)
     private Account beneficiary;
+    @Column(name = "START_TIME")
     private long startTime;
+    @Column(name = "END_TIME")
     private long endTime;
+    @Column(name = "SHARED_STATE")
     private SharedState state = SharedState.SHARED;
 
     /**

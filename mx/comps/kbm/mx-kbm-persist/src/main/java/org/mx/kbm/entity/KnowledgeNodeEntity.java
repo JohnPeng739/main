@@ -14,7 +14,9 @@ import java.util.Set;
  *         Date time 2018/4/27 下午3:49
  */
 @Entity
-@Table(name = "TB_KNODE")
+@Table(name = "TB_KNODE", indexes = {
+        @Index(name = "IDX_KNODE_TYPE", columnList = "type")
+})
 public class KnowledgeNodeEntity extends BaseEntity implements KnowledgeNode {
     @Column(name = "ATTACHMENT_TYPE")
     private AttachmentType type;

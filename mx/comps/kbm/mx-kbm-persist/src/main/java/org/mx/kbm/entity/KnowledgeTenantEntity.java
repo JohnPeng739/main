@@ -14,7 +14,9 @@ import java.util.Set;
  *         Date time 2018/4/27 下午3:23
  */
 @Entity
-@Table(name = "TB_KTENTANT")
+@Table(name = "TB_KTENTANT", indexes = {
+        @Index(name = "IDX_KTENANT_TYPE", columnList = "type")
+})
 public class KnowledgeTenantEntity extends BaseDictEntity implements KnowledgeTenant {
     @OneToMany
     private Set<Account> member; // 成员列表
