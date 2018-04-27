@@ -6,4 +6,5 @@ package org.mx.kbm.rest;
  * @author : John.Peng on 2018/3/26 下午2:04.
  */
 public class KnowledgeResource {
+    // TODO
 }

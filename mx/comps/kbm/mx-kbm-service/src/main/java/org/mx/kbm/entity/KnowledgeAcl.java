@@ -6,11 +6,11 @@ package org.mx.kbm.entity;
  * @author John.Peng
  *         Date time 2018/3/24 下午6:57
  */
-public enum KAcl {
+public enum KnowledgeAcl {
     /**
      * 读
      */
-    READ(),
+    READ(1, "READ"),
     /**
      * 写
      */
@@ -27,10 +27,7 @@ public enum KAcl {
     private int ordinal = 1;
     private String code = "READ";
 
-    KAcl() {
-    }
-
-    KAcl(int state, String code) {
+    KnowledgeAcl(int state, String code) {
         this.ordinal = state;
         this.code = code;
     }
