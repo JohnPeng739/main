@@ -36,9 +36,6 @@ public class UserInterfaceKmbErrorException extends UserInterfaceException {
         CATEGORY_NOT_FOUND("指定的分类目录不存在。"),
         CATEGORY_HAS_EXISTED("指定的分类目录已经存在"),
 
-        KTAG_NOT_FOUND("指定的标签不存在。"),
-        KTAG_HAS_EXISTED("指定标签已经存在。"),
-
         KMB_OTHER_FAIL("未知知识库操作错误。");
 
         public static final int BASE_ORDINAL = 1000;
