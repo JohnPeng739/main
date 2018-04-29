@@ -1,7 +1,5 @@
 package org.mx.kbm.entity;
 
-import org.mx.comps.rbac.dal.entity.Account;
-import org.mx.comps.rbac.dal.entity.AccountEntity;
 import org.mx.dal.entity.BaseDictEntity;
 
 import javax.persistence.*;
@@ -19,30 +17,30 @@ import java.util.Set;
 })
 public class KnowledgeTenantEntity extends BaseDictEntity implements KnowledgeTenant {
     @OneToMany
-    private Set<Account> member; // 成员列表
+    private Set<KnowledgeContact> members; // 成员列表
     @Column(name = "TENANT_TYPE")
-    private TenantType type; // 类型
-    @ManyToOne(targetEntity = AccountEntity.class)
-    private Account contact; // 联系人
+    private TenantType type; // KnowledgeContact
+    @ManyToOne(targetEntity = KnowledgeContact.class)
+    private KnowledgeContact contact; // 联系人
 
     /**
      * {@inheritDoc}
      *
-     * @see KnowledgeTenant#getMember()
+     * @see KnowledgeTenant#getMembers()
      */
     @Override
-    public Set<Account> getMember() {
-        return member;
+    public Set<KnowledgeContact> getMembers() {
+        return members;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see KnowledgeTenant#setMember(Set)
+     * @see KnowledgeTenant#setMembers(Set)
      */
     @Override
-    public void setMember(Set<Account> member) {
-        this.member = member;
+    public void setMembers(Set<KnowledgeContact> members) {
+        this.members = members;
     }
 
     /**
@@ -71,17 +69,17 @@ public class KnowledgeTenantEntity extends BaseDictEntity implements KnowledgeTe
      * @see KnowledgeTenant#getContact()
      */
     @Override
-    public Account getContact() {
+    public KnowledgeContact getContact() {
         return contact;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see KnowledgeTenant#setContact(Account)
+     * @see KnowledgeTenant#setContact(KnowledgeContact)
      */
     @Override
-    public void setContact(Account contact) {
+    public void setContact(KnowledgeContact contact) {
         this.contact = contact;
     }
 }

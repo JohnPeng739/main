@@ -1,13 +1,33 @@
 package org.mx.kbm.rest.vo;
 
+import org.mx.kbm.entity.KnowledgeContact;
+import org.mx.service.rest.vo.BaseVO;
+
 /**
  * 描述： 知识账户值对象类定义
  *
  * @author John.Peng
  *         Date time 2018/4/29 下午8:39
  */
-public class AccountVO {
-    private String id, code, name, password, mobile, email, address;
+public class ContactVO extends BaseVO {
+    private String id, accountId, code, name, mobile, email, address;
+
+    public static ContactVO transform(KnowledgeContact contact) {
+        if (contact == null) {
+            return null;
+        }
+        ContactVO contactVO = new ContactVO();
+        BaseVO.transform(contact, contactVO);
+        contactVO.setMobile(contact.getMobile());
+        contactVO.setEmail(contact.getEmail());
+        contactVO.setAddress(contact.getAddress());
+        if (contact.getAccount() != null) {
+            contactVO.setAccountId(contact.getAccount().getId());
+            contactVO.setCode(contact.getAccount().getCode());
+            contactVO.setName(contact.getAccount().getName());
+        }
+        return contactVO;
+    }
 
     public String getId() {
         return id;
@@ -15,6 +35,14 @@ public class AccountVO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getCode() {
@@ -31,14 +59,6 @@ public class AccountVO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getMobile() {

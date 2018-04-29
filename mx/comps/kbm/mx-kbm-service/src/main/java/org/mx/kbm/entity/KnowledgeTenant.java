@@ -17,14 +17,14 @@ public interface KnowledgeTenant extends BaseDict {
      *
      * @return 账户列表
      */
-    Set<Account> getMember();
+    Set<KnowledgeContact> getMembers();
 
     /**
      * 设置租户成员
      *
-     * @param member 账户列表
+     * @param members 账户列表
      */
-    void setMember(Set<Account> member);
+    void setMembers(Set<KnowledgeContact> members);
 
     /**
      * 获取租户类型
@@ -47,14 +47,14 @@ public interface KnowledgeTenant extends BaseDict {
      *
      * @return 管理员账户
      */
-    Account getContact();
+    KnowledgeContact getContact();
 
     /**
      * 设置租户管理员账户
      *
      * @param contact 管理员账户
      */
-    void setContact(Account contact);
+    void setContact(KnowledgeContact contact);
 
     enum TenantType {
         /**

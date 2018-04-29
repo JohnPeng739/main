@@ -9,12 +9,12 @@ import org.mx.error.UserInterfaceException;
  * @author John.Peng
  *         Date time 2018/3/24 下午9:35
  */
-public class UserInterfaceKmbErrorException extends UserInterfaceException {
+public class UserInterfaceKbmErrorException extends UserInterfaceException {
     /**
      * 默认的构造函数
      */
-    public UserInterfaceKmbErrorException() {
-        this(KmbErrors.KMB_OTHER_FAIL);
+    public UserInterfaceKbmErrorException() {
+        this(KbmErrors.OTHER_FAIL);
     }
 
     /**
@@ -22,21 +22,24 @@ public class UserInterfaceKmbErrorException extends UserInterfaceException {
      *
      * @param error 人机界面错误枚举
      */
-    public UserInterfaceKmbErrorException(KmbErrors error) {
+    public UserInterfaceKbmErrorException(KbmErrors error) {
         super(error.getErrorCode(), error.getErrorMessage());
     }
 
     /**
      * RBAC(基于角色的访问控制)操作错误枚举定义
      */
-    public enum KmbErrors implements UserInterfaceError {
+    public enum KbmErrors implements UserInterfaceError {
         TENANT_NOT_FOUND("指定的租户不存在。"),
         TENANT_HAS_EXISTED("指定的租户已经存在。"),
+
+        CONTACT_NOT_FOUND("指定的联系人不存在。"),
+        CONTACT_HAS_EXISTED("指定的联系人已经存在。"),
 
         CATEGORY_NOT_FOUND("指定的分类目录不存在。"),
         CATEGORY_HAS_EXISTED("指定的分类目录已经存在"),
 
-        KMB_OTHER_FAIL("未知知识库操作错误。");
+        OTHER_FAIL("未知知识库操作错误。");
 
         public static final int BASE_ORDINAL = 1000;
         private String errorMessage;
@@ -46,7 +49,7 @@ public class UserInterfaceKmbErrorException extends UserInterfaceException {
          *
          * @param errorMessage 错误信息
          */
-        private KmbErrors(String errorMessage) {
+        private KbmErrors(String errorMessage) {
             this.errorMessage = errorMessage;
         }
 
