@@ -29,6 +29,7 @@ public class PaginationDataVO<T> extends DataVO {
      * @param pagination 分页对象
      * @param data       数据
      */
+    @SuppressWarnings("unchecked")
     public PaginationDataVO(Pagination pagination, T data) {
         super(data);
         this.pagination = pagination;

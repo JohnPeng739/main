@@ -25,7 +25,7 @@ import java.util.List;
 @Component("generalAccessorElastic")
 public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
     @Autowired
-    protected ElasticUtil accessor = null;
+    private ElasticUtil accessor = null;
 
     private List<GeneralAccessor.ConditionTuple> validateCondition(boolean isValid) {
         List<GeneralAccessor.ConditionTuple> list = null;
@@ -72,6 +72,7 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
      * @see GeneralAccessor#list(Class, boolean)
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
         SearchResponse response = accessor.search(validateCondition(isValid), clazz, null);
         List<T> list = new ArrayList<>();
@@ -96,6 +97,7 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
      * @see GeneralAccessor#list(Pagination, Class, boolean)
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
         if (pagination == null) {
             pagination = new Pagination();
@@ -139,6 +141,7 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
      * @see ElasticAccessor#find(List, List)
      */
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, List<Class<? extends Base>> classes)
             throws UserInterfaceDalErrorException {
         SearchResponse response = accessor.search(tuples, classes, null);

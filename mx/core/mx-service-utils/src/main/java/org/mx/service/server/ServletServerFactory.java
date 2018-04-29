@@ -8,7 +8,6 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.mx.StringUtils;
 import org.mx.service.server.servlet.BaseHttpServlet;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -39,6 +37,7 @@ public class ServletServerFactory extends AbstractServerFactory {
      *
      * @see InitializingBean#afterPropertiesSet()
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void afterPropertiesSet() throws Exception {
         boolean enabled = env.getProperty("servlet.enabled", Boolean.class, true);
@@ -63,7 +62,7 @@ public class ServletServerFactory extends AbstractServerFactory {
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {
                     List<Class<?>> servletClasses = (List) this.context.getBean(classesDef, List.class);
-                    if (servletClasses != null && !servletClasses.isEmpty()) {
+                    if (!servletClasses.isEmpty()) {
                         servletClasses.forEach((clazz) -> {
                             BaseHttpServlet servlet = (BaseHttpServlet) this.context.getBean(clazz);
                             contextHandler.addServlet(new ServletHolder(servlet), servlet.getPath());
@@ -85,8 +84,6 @@ public class ServletServerFactory extends AbstractServerFactory {
                 if (logger.isDebugEnabled()) {
                     logger.debug("The channel is security by ssl.");
                 }
-            } else {
-                //
             }
             server.setStopAtShutdown(true);
             server.setStopTimeout(10);

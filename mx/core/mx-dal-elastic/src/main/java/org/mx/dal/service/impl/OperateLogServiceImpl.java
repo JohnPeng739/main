@@ -38,6 +38,16 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
     /**
      * {@inheritDoc}
      *
+     * @see OperateLogService#writeLog(OperateLog.OperateType, String)
+     */
+    @Override
+    public void writeLog(OperateLog.OperateType operateType, String content) throws UserInterfaceDalErrorException {
+        writeLog(null, null, operateType, content);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see OperateLogService#writeLog(String, String, String)
      */
     @Override
@@ -52,7 +62,7 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
      * @see AbstractOperateLogService#writeLog(String, String, OperateLog.OperateType, String, GeneralAccessor)
      */
     @Override
-    public void writeLog(String system, String module, OperateLog.OperateType type, String content) throws UserInterfaceDalErrorException {
+    public void writeLog(String system, String module, OperateLog.OperateType operateType, String content) throws UserInterfaceDalErrorException {
         // 如果没有设置system和module，就从sessionDataStore中获取。
         if (StringUtils.isBlank(system)) {
             system = sessionDataStore.getCurrentSystem();
@@ -60,6 +70,6 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
         if (StringUtils.isBlank(module)) {
             module = sessionDataStore.getCurrentModule();
         }
-        super.writeLog(system, module, type, content, accessor);
+        super.writeLog(system, module, operateType, content, accessor);
     }
 }

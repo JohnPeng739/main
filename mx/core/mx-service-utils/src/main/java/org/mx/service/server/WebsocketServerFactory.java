@@ -51,6 +51,7 @@ public class WebsocketServerFactory extends AbstractServerFactory {
      *
      * @see InitializingBean#afterPropertiesSet()
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void afterPropertiesSet() throws Exception {
         boolean enabled = env.getProperty("websocket.enabled", Boolean.class, true);
@@ -70,7 +71,7 @@ public class WebsocketServerFactory extends AbstractServerFactory {
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {
                     List<Class<?>> websocketClasses = (List) this.context.getBean(classesDef, List.class);
-                    if (websocketClasses != null && !websocketClasses.isEmpty()) {
+                    if (!websocketClasses.isEmpty()) {
                         websocketClasses.forEach((clazz) -> {
                             WsSessionListener listener = (WsSessionListener) context.getBean(clazz);
                             socketBeans.put(listener.getPath(), new SimpleWsObject(listener));

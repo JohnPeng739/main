@@ -23,9 +23,6 @@ import java.io.InputStreamReader;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.*;
 
-/**
- * Created by john on 2017/11/4.
- */
 public class TestServer {
     private AnnotationConfigApplicationContext context = null;
 
@@ -40,6 +37,7 @@ public class TestServer {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testHttpServer() {
         AbstractServerFactory factory = context.getBean(HttpServerFactory.class);
         assertNotNull(factory);

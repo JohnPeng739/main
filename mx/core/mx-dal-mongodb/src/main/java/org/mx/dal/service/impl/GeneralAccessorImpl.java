@@ -296,6 +296,7 @@ public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAc
      *
      * @see GeneralAccessor#save(Base)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T save(T t) {
         if (StringUtils.isBlank(t.getId())) {

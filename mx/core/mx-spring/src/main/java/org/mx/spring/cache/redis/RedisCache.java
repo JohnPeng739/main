@@ -7,7 +7,6 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.lang.Nullable;
 import org.springframework.util.SerializationUtils;
 
 import java.util.concurrent.Callable;
@@ -99,7 +98,7 @@ public class RedisCache implements Cache {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T get(Object key, @Nullable Class<T> type) {
+    public <T> T get(Object key, Class<T> type) {
         return (T) this.get(key).get();
     }
 

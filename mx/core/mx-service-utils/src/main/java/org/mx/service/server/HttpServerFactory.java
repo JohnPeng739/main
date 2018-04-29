@@ -39,6 +39,7 @@ public class HttpServerFactory extends AbstractServerFactory {
      *
      * @see InitializingBean#afterPropertiesSet()
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void afterPropertiesSet() throws Exception {
         boolean enabled = this.env.getProperty("restful.enabled", Boolean.class, true);
@@ -61,22 +62,20 @@ public class HttpServerFactory extends AbstractServerFactory {
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {
                     List<Class<?>> restfulClasses = (List) this.context.getBean(classesDef, List.class);
-                    if (restfulClasses != null && !restfulClasses.isEmpty()) {
-                        restfulClasses.forEach((clazz) -> {
-                            /**
-                             * 如果引入对象实例，将导致Provider接口警告，修改为注册类；
-                             * 然后将ApplicationContext手工注入
-                             */
-                            config.register(clazz);
-                        });
+                    if (!restfulClasses.isEmpty()) {
+                        /*
+                         * 如果引入对象实例，将导致Provider接口警告，修改为注册类；
+                         * 然后将ApplicationContext手工注入
+                         */
+                        restfulClasses.forEach(config::register);
                     }
                 }
             }
-            /**
+            /*
              * 为了使用Spring IoC注入，需要将ApplicationContext事先注入
              */
             config.property("contextConfig", context);
-            /**
+            /*
              * 消除了MessageBodyWriter not found for media type=application/json错误。
              */
             // config.property(ServerProperties.METAINF_SERVICES_LOOKUP_DISABLE, true);

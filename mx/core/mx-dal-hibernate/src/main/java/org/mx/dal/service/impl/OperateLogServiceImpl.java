@@ -44,6 +44,17 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
     /**
      * {@inheritDoc}
      *
+     * @see OperateLogService#writeLog(OperateLog.OperateType, String)
+     */
+    @Transactional
+    @Override
+    public void writeLog(OperateLog.OperateType operateType, String content) throws UserInterfaceDalErrorException {
+        writeLog(null, null, operateType, content);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see OperateLogService#writeLog(String, String, String)
      */
     @Transactional

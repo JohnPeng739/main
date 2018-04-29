@@ -22,6 +22,7 @@ public class EntityFactory {
      * @return 实体类
      * @throws ClassNotFoundException 实体类型没有定义
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Base> Class<T> getEntityClass(Class<T> clazz) throws ClassNotFoundException {
         String entityClassName = String.format("%sEntity", clazz.getName());
         Class<?> entityClass = Class.forName(entityClassName);

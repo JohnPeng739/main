@@ -30,6 +30,8 @@ public abstract class AbstractOperateLogService implements OperateLogService {
         log.setModule(module);
         if (operateType != null) {
             log.setOperateType(operateType);
+        } else {
+            log.setOperateType(OperateLog.OperateType.QUERY);
         }
         log.setContent(content);
         accessor.save(log);

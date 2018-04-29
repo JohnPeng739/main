@@ -40,7 +40,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 /**
@@ -233,7 +236,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      */
     @Override
     public SearchResponse search(List<GeneralAccessor.ConditionTuple> tuples, List<Class<? extends Base>> classes,
-                                                  Pagination pagination)
+                                 Pagination pagination)
             throws UserInterfaceDalErrorException {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         if (tuples == null || tuples.isEmpty()) {
@@ -249,7 +252,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
         }
         String[] indices;
         if (classes == null || classes.isEmpty()) {
-            indices = new String[] {"*"};
+            indices = new String[]{"*"};
         } else {
             indices = new String[classes.size()];
             for (int index = 0; index < classes.size(); index++) {
@@ -273,6 +276,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      *
      * @see ElasticUtil#getById(String, Class)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T getById(String id, Class<T> clazz) throws UserInterfaceDalErrorException {
         String index = getIndex(clazz);
@@ -280,7 +284,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
         try {
             GetResponse response = client.get(request);
             return response.isExists() ? JSON.parseObject(response.getSourceAsString(),
-                    (Class<T>)getIndexClass(request.index())) : null;
+                    (Class<T>) getIndexClass(request.index())) : null;
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Get data fail, index: %s, type: %s, id: %s.", index, index, id));
@@ -294,6 +298,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      *
      * @see ElasticUtil#index(Base)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T index(T t) throws UserInterfaceDalErrorException {
         try {
@@ -343,6 +348,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      *
      * @see ElasticUtil#remove(Base, boolean)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) throws UserInterfaceDalErrorException {
         if (logicRemove) {

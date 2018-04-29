@@ -64,8 +64,8 @@ public class ClassUtils {
      * @see #scanPackage(String, boolean, boolean, Consumer)
      */
     public static List<String> scanPackage(String packageName, boolean recurse, boolean ignoreInlineClass) {
-        final ArrayList<String> list = new ArrayList();
-        scanPackage(packageName, recurse, ignoreInlineClass, className -> list.add(className));
+        final ArrayList<String> list = new ArrayList<>();
+        scanPackage(packageName, recurse, ignoreInlineClass, list::add);
         return list;
     }
 
@@ -115,7 +115,7 @@ public class ClassUtils {
             }
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("Get url[%] resource fail.", packageName), ex);
+                logger.error(String.format("Get url[%s] resource fail.", packageName), ex);
             }
         }
     }
@@ -172,8 +172,8 @@ public class ClassUtils {
      */
     private static void scanPackageByJar(final String path, final boolean recurse, final boolean ignoreInlineClass,
                                          final Consumer<String> action) {
-        String[] jarInfo = path.split("!");
-        if (jarInfo != null && jarInfo.length == 2) {
+        String[] jarInfo = StringUtils.split("!");
+        if (jarInfo.length == 2) {
             String jarFile = jarInfo[0].substring(jarInfo[0].indexOf("/"));
             String packagePath = jarInfo[1].substring(1);
 
@@ -207,7 +207,7 @@ public class ClassUtils {
             }
         } else {
             if (logger.isWarnEnabled()) {
-                logger.warn(String.format("The path【%s] is not a valid jar file path.", new Object[]{path}));
+                logger.warn(String.format("The path【%s] is not a valid jar file path.", path));
             }
         }
     }

@@ -71,6 +71,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      * @see GeneralAccessor#list(Pagination, Class, boolean)
      */
     @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid)
             throws UserInterfaceDalErrorException {
@@ -125,6 +126,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      * @see GeneralAccessor#list(Class, boolean)
      */
     @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
         try {
@@ -167,8 +169,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
             }
-            T t = entityManager.find(clazz, id);
-            return t;
+            return entityManager.find(clazz, id);
         } catch (ClassNotFoundException ex) {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("Entity interface[%s] not be implemented.",
@@ -184,6 +185,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      * @see GeneralAccessor#find(List, Class)
      */
     @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz)
             throws UserInterfaceDalErrorException {
@@ -200,8 +202,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             }
             criteriaQuery.where(conditions.toArray(new Predicate[0]));
             Query query = entityManager.createQuery(criteriaQuery);
-            List<T> result = query.getResultList();
-            return result;
+            return query.getResultList();
         } catch (ClassNotFoundException ex) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
@@ -247,6 +248,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      * @see GeneralAccessor#save(Base)
      */
     @Transactional
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T save(T t) throws UserInterfaceDalErrorException {
         t.setUpdatedTime(new Date().getTime());
@@ -320,6 +322,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      * @see GeneralAccessor#remove(Base, boolean)
      */
     @Transactional()
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) throws UserInterfaceDalErrorException {
         T removeEntity = getById(t.getId(), (Class<T>) t.getClass());

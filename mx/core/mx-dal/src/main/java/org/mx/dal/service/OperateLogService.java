@@ -18,6 +18,16 @@ public interface OperateLogService {
      */
     void writeLog(String content) throws UserInterfaceDalErrorException;
 
+
+    /**
+     * 写入操作日志数据
+     *
+     * @param operateType 操作类型
+     * @param content     操作日志内容
+     * @throws UserInterfaceDalErrorException 写入过程中发生的异常
+     */
+    void writeLog(OperateLog.OperateType operateType, String content) throws UserInterfaceDalErrorException;
+
     /**
      * 写入操作日志数据
      *
