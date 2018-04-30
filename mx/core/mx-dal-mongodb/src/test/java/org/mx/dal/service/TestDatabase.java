@@ -12,6 +12,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class TestDatabase extends BaseTest {
+    @SuppressWarnings("unchecked")
     @Test
     public void testUserInterface() {
         GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
@@ -114,12 +115,12 @@ public class TestDatabase extends BaseTest {
             assertEquals(2, accessor.count(User.class, false));
             assertFalse(check.isValid());
 
-            List<User> list = ((GeneralAccessor) accessor).find(Arrays.asList(
+            List<User> list = accessor.find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("code", "john"),
                     new GeneralAccessor.ConditionTuple("valid", true)
             ), User.class);
             assertEquals(0, list.size());
-            list = ((GeneralAccessor) accessor).find(Arrays.asList(
+            list = accessor.find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("code", "josh"),
                     new GeneralAccessor.ConditionTuple("valid", true)
             ), User.class);
@@ -145,6 +146,7 @@ public class TestDatabase extends BaseTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testParentChildren() {
         GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
