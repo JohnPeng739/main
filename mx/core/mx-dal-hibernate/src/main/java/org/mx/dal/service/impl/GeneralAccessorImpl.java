@@ -7,6 +7,7 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
+import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
@@ -253,6 +254,14 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     public <T extends Base> T save(T t) throws UserInterfaceDalErrorException {
         t.setUpdatedTime(new Date().getTime());
         t.setOperator(sessionDataStore.getCurrentUserCode());
+        Class<T> clazz = (Class<T>) t.getClass();
+        if (t instanceof BaseDictTree) {
+            BaseDictTree parent = ((BaseDictTree) t).getParent();
+            if (!StringUtils.isBlank(((BaseDictTree) t).getParentId())) {
+                T p = getById(((BaseDictTree) t).getParentId(), clazz);
+                ((BaseDictTree) t).setParent((BaseDictTree) p);
+            }
+        }
         if (StringUtils.isBlank(t.getId())) {
             // 新增操作
             t.setId(null);
@@ -261,7 +270,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             entityManager.flush();
         } else {
             // 修改操作
-            T old = getById(t.getId(), (Class<T>) t.getClass());
+            T old = getById(t.getId(), clazz);
             if (old != null) {
                 t.setCreatedTime(old.getCreatedTime());
                 if (t instanceof BaseDict) {

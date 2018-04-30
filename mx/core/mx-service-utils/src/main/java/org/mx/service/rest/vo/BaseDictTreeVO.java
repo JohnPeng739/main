@@ -1,6 +1,11 @@
 package org.mx.service.rest.vo;
 
+import org.mx.dal.EntityFactory;
 import org.mx.dal.entity.BaseDictTree;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 基础的树状字典数据值对象
@@ -9,7 +14,8 @@ import org.mx.dal.entity.BaseDictTree;
  * @see BaseDictVO
  */
 public class BaseDictTreeVO extends BaseDictVO {
-    private String parentId;
+    private BaseDictTreeVO parent;
+    private List<BaseDictTreeVO> children;
 
     /**
      * 将树状字典对象转换为值对象
@@ -22,7 +28,22 @@ public class BaseDictTreeVO extends BaseDictVO {
             return;
         }
         BaseDictVO.transform(baseDictTree, baseDictTreeVO);
-        baseDictTreeVO.parentId = baseDictTree.getParentId();
+        BaseDictTree parent = baseDictTree.getParent();
+        if (parent != null) {
+            BaseDictTreeVO vo = new BaseDictTreeVO();
+            BaseDictTreeVO.transform(parent, vo);
+            baseDictTreeVO.setParent(vo);
+        }
+        Set<? extends BaseDictTree> children = baseDictTree.getChildren();
+        if (children != null && !children.isEmpty()) {
+            List<BaseDictTreeVO> vos = new ArrayList<>(children.size());
+            children.forEach(child -> {
+                BaseDictTreeVO vo = new BaseDictTreeVO();
+                BaseDictTreeVO.transform(child, vo);
+                vos.add(vo);
+            });
+            baseDictTreeVO.setChildren(vos);
+        }
     }
 
     /**
@@ -36,24 +57,28 @@ public class BaseDictTreeVO extends BaseDictVO {
             return;
         }
         BaseDictVO.transform(baseDictTreeVO, baseDictTree);
-        baseDictTree.setParentId(baseDictTreeVO.getParentId());
+        // 仅需要设置父级节点
+        BaseDictTreeVO vo = baseDictTreeVO.getParent();
+        if (vo != null) {
+            BaseDictTree parent = EntityFactory.createEntity(baseDictTree.getClass());
+            parent.setId(vo.getId());
+            baseDictTree.setParent(parent);
+        }
     }
 
-    /**
-     * 获取父级实体关键字ID
-     *
-     * @return 父级实体关键字
-     */
-    public String getParentId() {
-        return parentId;
+    public BaseDictTreeVO getParent() {
+        return parent;
     }
 
-    /**
-     * 设置父级实体关键字ID
-     *
-     * @param parentId 父级实体关键字
-     */
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public void setParent(BaseDictTreeVO parent) {
+        this.parent = parent;
+    }
+
+    public List<BaseDictTreeVO> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<BaseDictTreeVO> children) {
+        this.children = children;
     }
 }

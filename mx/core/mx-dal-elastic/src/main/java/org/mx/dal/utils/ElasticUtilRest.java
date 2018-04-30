@@ -192,7 +192,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
         }
     }
 
-    private String getIndex(Class<?> clazz) throws UserInterfaceDalErrorException {
+    private String getIndex(Class<?> clazz) {
         String name = clazz.getName();
         if (indexes.containsKey(name)) {
             return indexes.get(name);
@@ -201,7 +201,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
         }
     }
 
-    public Class<?> getIndexClass(String index) throws UserInterfaceDalErrorException {
+    public Class<?> getIndexClass(String index) {
         if (revIndexes.containsKey(index)) {
             String className = revIndexes.get(index);
             try {
@@ -278,7 +278,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> T getById(String id, Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> T getById(String id, Class<T> clazz) {
         String index = getIndex(clazz);
         GetRequest request = new GetRequest(index, index, id);
         try {
@@ -300,7 +300,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> T index(T t) throws UserInterfaceDalErrorException {
+    public <T extends Base> T index(T t) {
         try {
             Class<T> clazz = (Class<T>) t.getClass();
             boolean isNew;
@@ -350,7 +350,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> T remove(T t, boolean logicRemove) throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(T t, boolean logicRemove) {
         if (logicRemove) {
             // 逻辑删除
             t.setValid(false);

@@ -3,10 +3,9 @@ package org.mx.dal.entity;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Language;
 
 @Document
-public class UserEntity extends BaseDictTreeEntity implements User {
+public class UserEntity extends BaseDictTreeEntity<UserEntity> implements User {
     private String email;
     @TextIndexed
     private String address;

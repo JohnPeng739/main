@@ -1,24 +1,24 @@
 package org.mx.test.entity;
 
-import org.mx.dal.entity.BaseDict;
+import org.mx.dal.entity.BaseDictTree;
 
 /**
  * Created by john on 2017/10/6.
  */
-public interface User extends BaseDict {
-    void setEmail(String email);
-
-    void setAddress(String address);
-
-    void setPostCode(String postCode);
-
-    void setMobile(String mobile);
-
+public interface User extends BaseDictTree {
     String getEmail();
+
+    void setEmail(String email);
 
     String getAddress();
 
+    void setAddress(String address);
+
     String getPostCode();
 
+    void setPostCode(String postCode);
+
     String getMobile();
+
+    void setMobile(String mobile);
 }

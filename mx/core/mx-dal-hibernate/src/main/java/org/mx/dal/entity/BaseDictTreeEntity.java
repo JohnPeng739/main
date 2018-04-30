@@ -1,7 +1,7 @@
 package org.mx.dal.entity;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+import java.util.Set;
 
 /**
  * 基于Hibernate实现的基础树状字典实体
@@ -11,20 +11,13 @@ import javax.persistence.MappedSuperclass;
  * @see BaseDictTree
  */
 @MappedSuperclass
-public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
-    @Column(name = "PARENT_ID", length = 40)
-    private String parentId;
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see BaseDictEntity#toString()
-     */
-    @Override
-    public String toString() {
-        return super.toString() +
-                ", parentId='" + parentId + '\'';
-    }
+public class BaseDictTreeEntity<T extends BaseDictTree> extends BaseDictEntity implements BaseDictTree {
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "PARENT_ID")
+    private T parent;
+    @OneToMany(cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "PARENT_ID")
+    private Set<T> children;
 
     /**
      * {@inheritDoc}
@@ -33,16 +26,38 @@ public class BaseDictTreeEntity extends BaseDictEntity implements BaseDictTree {
      */
     @Override
     public String getParentId() {
-        return parentId;
+        BaseDictTree parent = getParent();
+        return parent == null ? null : parent.getId();
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BaseDictTree#setParentId(String)
+     * @see BaseDictTree#getParent()
      */
     @Override
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+    public BaseDictTree getParent() {
+        return parent;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseDictTree#setParent(BaseDictTree)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setParent(BaseDictTree parent) {
+        this.parent = (T) parent;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see BaseDictTree#getChildren()
+     */
+    @Override
+    public Set<? extends BaseDictTree> getChildren() {
+        return children;
     }
 }

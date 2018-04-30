@@ -1,6 +1,5 @@
 package org.mx.test.entity;
 
-import org.mx.StringUtils;
 import org.mx.dal.entity.BaseDictTreeEntity;
 
 import javax.persistence.Column;
@@ -12,10 +11,10 @@ import javax.persistence.Table;
  */
 @Entity(name = "User")
 @Table(name = "TB_USER")
-public class UserEntity extends BaseDictTreeEntity implements User {
+public class UserEntity extends BaseDictTreeEntity<UserEntity> implements User {
     @Column(name = "EMAIL", length = 50)
     private String email;
-    @Column(name = "ADDRESS", length = 255)
+    @Column(name = "ADDRESS")
     private String address;
     @Column(name = "POST_CODE", length = 20)
     private String postCode;
@@ -33,28 +32,13 @@ public class UserEntity extends BaseDictTreeEntity implements User {
     }
 
     @Override
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    @Override
-    public void setPostCode(String postCode) {
-        this.postCode = postCode;
-    }
-
-    @Override
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    @Override
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
@@ -63,12 +47,27 @@ public class UserEntity extends BaseDictTreeEntity implements User {
     }
 
     @Override
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Override
     public String getPostCode() {
         return postCode;
     }
 
     @Override
+    public void setPostCode(String postCode) {
+        this.postCode = postCode;
+    }
+
+    @Override
     public String getMobile() {
         return mobile;
+    }
+
+    @Override
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

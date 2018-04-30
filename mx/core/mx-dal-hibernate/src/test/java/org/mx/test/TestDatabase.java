@@ -9,6 +9,7 @@ import org.mx.error.UserInterfaceException;
 import org.mx.test.entity.User;
 import org.mx.test.entity.UserEntity;
 import org.mx.test.repository.UserRepository;
+import org.mx.test.service.UserService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -168,5 +169,80 @@ public class TestDatabase extends BaseTest {
 
         list = repository.getLikeEmail("hotmail");
         assertEquals(2, list.size());
+
+        List<User> removes = accessor.list(User.class);
+        for (User remove : removes) {
+            accessor.remove(remove, false);
+        }
+        assertEquals(0, accessor.count(User.class));
+    }
+
+    @Test
+    public void testParentChildren() {
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+                GeneralDictAccessor.class);
+        assertNotNull(accessor);
+        UserService userService = context.getBean(UserService.class);
+        assertNotNull(userService);
+
+        try {
+            User root = EntityFactory.createEntity(User.class);
+            root.setCode("root");
+            root.setName("root");
+            accessor.save(root);
+            root = userService.getUserById(root.getId());
+            assertNotNull(root);
+            assertNotNull(root.getId());
+            assertNull(root.getParent());
+            assertTrue(root.getChildren() == null || root.getChildren().isEmpty());
+
+            User item01 = EntityFactory.createEntity(User.class);
+            item01.setCode("item01");
+            item01.setName("item01");
+            item01.setParent(accessor.getById(root.getId(), User.class));
+            accessor.save(item01);
+            item01 = userService.getUserById(item01.getId());
+            assertNotNull(item01);
+            assertNotNull(item01.getId());
+            assertNotNull(item01.getParent());
+            assertTrue(item01.getChildren() == null || item01.getChildren().isEmpty());
+            User item02 = EntityFactory.createEntity(User.class);
+            item02.setCode("item02");
+            item02.setName("item02");
+            item02.setParent(accessor.getById(root.getId(), User.class));
+            accessor.save(item02);
+            item02 = userService.getUserById(item02.getId());
+            assertNotNull(item02);
+            assertNotNull(item02.getId());
+            assertNotNull(item02.getParent());
+            assertTrue(item02.getChildren() == null || item02.getChildren().isEmpty());
+            User checkRoot = userService.getUserById(root.getId());
+            assertNotNull(checkRoot);
+            assertNull(checkRoot.getParent());
+            assertEquals(2, checkRoot.getChildren().size());
+
+            User item0101 = EntityFactory.createEntity(User.class);
+            item0101.setCode("item0101");
+            item0101.setName("item0101");
+            item0101.setParent(item01);
+            accessor.save(item0101);
+            assertEquals(4, accessor.count(User.class));
+            checkRoot = userService.getUserById(root.getId());
+            assertNotNull(checkRoot);
+            assertNull(checkRoot.getParent());
+            assertEquals(2, checkRoot.getChildren().size());
+            User checkItem01 = userService.getUserByCode("item01");
+            assertNotNull(checkItem01);
+            assertNotNull(checkItem01.getParent());
+            assertEquals(root.getCode(), checkItem01.getParent().getCode());
+            assertEquals(root.getId(), checkItem01.getParentId());
+            assertEquals(1, checkItem01.getChildren().size());
+
+            accessor.remove(item0101, false);
+            accessor.remove(item02, false);
+            assertEquals(0, accessor.count(User.class));
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
     }
 }

@@ -1,5 +1,7 @@
 package org.mx.dal.entity;
 
+import java.util.Set;
+
 /**
  * 树状字典实体接口定义
  *
@@ -7,7 +9,7 @@ package org.mx.dal.entity;
  * @see BaseDict
  * @see Base
  */
-public interface BaseDictTree extends BaseDict {
+public interface BaseDictTree<T extends BaseDictTree> extends BaseDict {
     /**
      * 获取父级实体关键字ID
      *
@@ -16,9 +18,23 @@ public interface BaseDictTree extends BaseDict {
     String getParentId();
 
     /**
-     * 设置父级实体关键字ID
+     * 获取父级节点对象
      *
-     * @param parentId 父级实体关键字
+     * @return 父节点
      */
-    void setParentId(String parentId);
+    T getParent();
+
+    /**
+     * 设置父级节点对象
+     *
+     * @param parent 父节点
+     */
+    void setParent(T parent);
+
+    /**
+     * 获取子级节点列表
+     *
+     * @return 子节点列表
+     */
+    Set<T> getChildren();
 }

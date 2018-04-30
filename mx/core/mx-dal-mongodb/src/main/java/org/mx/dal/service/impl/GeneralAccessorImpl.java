@@ -7,6 +7,8 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
+import org.mx.dal.entity.BaseDictTree;
+import org.mx.dal.entity.BaseDictTreeEntity;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralTextSearchAccessor;
@@ -315,6 +317,14 @@ public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAc
         t.setUpdatedTime(new Date().getTime());
         t.setOperator(sessionDataStore.getCurrentUserCode());
         template.save(t);
+        if (t instanceof BaseDictTree) {
+            // 处理父级节点
+            BaseDictTree p = ((BaseDictTree) t).getParent();
+            if (p != null) {
+                p.getChildren().add(t);
+                template.save(p);
+            }
+        }
         t = template.findById(t.getId(), (Class<T>) t.getClass());
         return t;
     }

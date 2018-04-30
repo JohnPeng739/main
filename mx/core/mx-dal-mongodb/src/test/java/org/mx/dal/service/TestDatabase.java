@@ -144,4 +144,75 @@ public class TestDatabase extends BaseTest {
             fail(ex.getMessage());
         }
     }
+
+    @Test
+    public void testParentChildren() {
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+                GeneralDictAccessor.class);
+        assertNotNull(accessor);
+
+        try {
+            assertEquals(0, accessor.count(User.class));
+            User root = EntityFactory.createEntity(User.class);
+            root.setCode("root");
+            root.setName("root");
+            accessor.save(root);
+            root = accessor.getById(root.getId(), User.class);
+            assertNotNull(root);
+            assertNotNull(root.getId());
+            assertNull(root.getParent());
+            assertTrue(root.getChildren() == null || root.getChildren().isEmpty());
+
+            User item01 = EntityFactory.createEntity(User.class);
+            item01.setCode("item01");
+            item01.setName("item01");
+            item01.setParent(accessor.getById(root.getId(), User.class));
+            accessor.save(item01);
+            item01 = accessor.getById(item01.getId(), User.class);
+            assertNotNull(item01);
+            assertNotNull(item01.getId());
+            assertNotNull(item01.getParent());
+            assertTrue(item01.getChildren() == null || item01.getChildren().isEmpty());
+            User item02 = EntityFactory.createEntity(User.class);
+            item02.setCode("item02");
+            item02.setName("item02");
+            item02.setParent(accessor.getById(root.getId(), User.class));
+            accessor.save(item02);
+            item02 = accessor.getById(item02.getId(), User.class);
+            assertNotNull(item02);
+            assertNotNull(item02.getId());
+            assertNotNull(item02.getParent());
+            assertTrue(item02.getChildren() == null || item02.getChildren().isEmpty());
+            User checkRoot = accessor.getById(root.getId(), User.class);
+            assertNotNull(checkRoot);
+            assertNull(checkRoot.getParent());
+            assertEquals(2, checkRoot.getChildren().size());
+
+            User item0101 = EntityFactory.createEntity(User.class);
+            item0101.setCode("item0101");
+            item0101.setName("item0101");
+            item0101.setParent(item01);
+            accessor.save(item0101);
+            assertEquals(4, accessor.count(User.class));
+            checkRoot = accessor.getById(root.getId(), User.class);
+            assertNotNull(checkRoot);
+            assertNull(checkRoot.getParent());
+            assertEquals(2, checkRoot.getChildren().size());
+            User checkItem01 = accessor.getByCode("item01", User.class);
+            assertNotNull(checkItem01);
+            assertNotNull(checkItem01.getParent());
+            assertEquals(root.getCode(), checkItem01.getParent().getCode());
+            assertEquals(root.getId(), checkItem01.getParentId());
+            assertEquals(1, checkItem01.getChildren().size());
+
+            accessor.remove(item0101, false);
+            accessor.remove(item01, false);
+            accessor.remove(item02, false);
+            accessor.remove(root, false);
+            assertEquals(0, accessor.count(User.class));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            fail(ex.getMessage());
+        }
+    }
 }
