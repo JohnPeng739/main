@@ -23,6 +23,7 @@ public class BaseDictTreeVO extends BaseDictVO {
      * @param baseDictTree   树状字典对象
      * @param baseDictTreeVO 值对象
      */
+    @SuppressWarnings("unchecked")
     public static void transform(BaseDictTree baseDictTree, BaseDictTreeVO baseDictTreeVO) {
         if (baseDictTree == null || baseDictTreeVO == null) {
             return;
@@ -52,6 +53,7 @@ public class BaseDictTreeVO extends BaseDictVO {
      * @param baseDictTreeVO 值对象
      * @param baseDictTree   树状字典实体
      */
+    @SuppressWarnings("unchecked")
     public static void transform(BaseDictTreeVO baseDictTreeVO, BaseDictTree baseDictTree) {
         if (baseDictTree == null || baseDictTreeVO == null) {
             return;
