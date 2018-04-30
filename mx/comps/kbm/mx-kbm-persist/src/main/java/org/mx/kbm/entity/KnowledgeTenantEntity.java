@@ -16,7 +16,7 @@ import java.util.Set;
         @Index(name = "IDX_KTENANT_TYPE", columnList = "type")
 })
 public class KnowledgeTenantEntity extends BaseDictEntity implements KnowledgeTenant {
-    @OneToMany
+    @ManyToMany(targetEntity = KnowledgeContactEntity.class, cascade = {CascadeType.REFRESH})
     private Set<KnowledgeContact> members; // 成员列表
     @Column(name = "TENANT_TYPE")
     private TenantType type; // KnowledgeContact

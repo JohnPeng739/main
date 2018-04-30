@@ -18,6 +18,7 @@ project(':mx-kbm-service') {
       libs.'mx-service-utils',
       libs.'aspectj',
       libs.'mx-rbac-service',
+      libs.'mx-rbac-restful',
       libs.'mx-file-service'
     )
   }

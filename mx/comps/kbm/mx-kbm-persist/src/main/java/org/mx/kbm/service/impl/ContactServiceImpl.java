@@ -13,13 +13,17 @@ import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.kbm.entity.KnowledgeContact;
 import org.mx.kbm.entity.KnowledgeTenant;
 import org.mx.kbm.error.UserInterfaceKbmErrorException;
-import org.mx.kbm.respository.ContactRespository;
+import org.mx.kbm.respository.ContactRepository;
+import org.mx.kbm.respository.TenantRepository;
 import org.mx.kbm.service.ContactService;
+import org.mx.kbm.service.bean.ContactDetailsBean;
 import org.mx.kbm.service.bean.ContactRegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * 描述： 基于Hibernate实现的联系人服务类
@@ -39,7 +43,10 @@ public class ContactServiceImpl implements ContactService {
     private OperateLogService operateLogService = null;
 
     @Autowired
-    private ContactRespository contactRespository = null;
+    private ContactRepository contactRepository = null;
+
+    @Autowired
+    private TenantRepository tenantRepository = null;
 
     /**
      * {@inheritDoc}
@@ -49,7 +56,31 @@ public class ContactServiceImpl implements ContactService {
     @Transactional(readOnly = true)
     @Override
     public KnowledgeContact getContactByCode(String code) {
-        return contactRespository.findByCode(code);
+        return contactRepository.findByCode(code);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ContactService#getContactDetailsById(String)
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public ContactDetailsBean getContactDetailsById(String id) {
+        KnowledgeContact contact = dictAccessor.getById(id, KnowledgeContact.class);
+        if (contact == null) {
+            throw new UserInterfaceKbmErrorException(UserInterfaceKbmErrorException.KbmErrors.CONTACT_NOT_FOUND);
+        }
+        ContactDetailsBean contactDetailsBean = new ContactDetailsBean();
+        contactDetailsBean.setContact(contact);
+        KnowledgeTenant managed = tenantRepository.getManagedTenantByContactId(contact.getId());
+        contactDetailsBean.setManagedTenant(managed);
+        List<? extends KnowledgeTenant> belongs = tenantRepository.getBelonesTenantByContactId(contact.getId());
+        if (belongs != null && !belongs.isEmpty()) {
+            // 如果返回列表包含有效数据，返回第一个租户
+            contactDetailsBean.setBelongsTenant(belongs.get(0));
+        }
+        return contactDetailsBean;
     }
 
     /**

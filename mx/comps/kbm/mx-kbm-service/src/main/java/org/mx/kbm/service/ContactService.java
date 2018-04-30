@@ -1,6 +1,7 @@
 package org.mx.kbm.service;
 
 import org.mx.kbm.entity.KnowledgeContact;
+import org.mx.kbm.service.bean.ContactDetailsBean;
 import org.mx.kbm.service.bean.ContactRegisterRequest;
 
 /**
@@ -17,6 +18,14 @@ public interface ContactService {
      * @return 联系人对象，如果不存在，则返回null。
      */
     KnowledgeContact getContactByCode(String code);
+
+    /**
+     * 根据联系人ID获取联系人详细信息，包括租户信息。
+     *
+     * @param id 联系人ID
+     * @return 联系人详细信息对象，包括租户信息
+     */
+    ContactDetailsBean getContactDetailsById(String id);
 
     /**
      * 根据输入的联系人信息注册一个新的联系人账户

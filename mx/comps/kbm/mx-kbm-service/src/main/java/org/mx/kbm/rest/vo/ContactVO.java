@@ -10,7 +10,7 @@ import org.mx.service.rest.vo.BaseVO;
  *         Date time 2018/4/29 下午8:39
  */
 public class ContactVO extends BaseVO {
-    private String id, accountId, code, name, mobile, email, address;
+    private String accountId, code, name, mobile, email, address;
 
     public static ContactVO transform(KnowledgeContact contact) {
         if (contact == null) {
@@ -27,14 +27,6 @@ public class ContactVO extends BaseVO {
             contactVO.setName(contact.getAccount().getName());
         }
         return contactVO;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getAccountId() {
