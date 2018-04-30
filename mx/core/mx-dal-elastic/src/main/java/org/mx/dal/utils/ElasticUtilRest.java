@@ -32,6 +32,7 @@ import org.mx.dal.entity.BaseDict;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -243,7 +244,31 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
             builder.query(QueryBuilders.matchAllQuery());
         } else {
             BoolQueryBuilder query = QueryBuilders.boolQuery();
-            tuples.forEach(tuple -> query.must(QueryBuilders.termQuery(tuple.field, tuple.value)));
+            tuples.forEach(tuple -> {
+                switch (tuple.operate) {
+                    case EQ:
+                        query.must(QueryBuilders.termQuery(tuple.field, tuple.value));
+                        break;
+                    case LT:
+                        query.must(QueryBuilders.rangeQuery(tuple.field).lt(tuple.value));
+                        break;
+                    case GT:
+                        query.must(QueryBuilders.rangeQuery(tuple.field).gt(tuple.value));
+                        break;
+                    case LTE:
+                        query.must(QueryBuilders.rangeQuery(tuple.field).lte(tuple.value));
+                        break;
+                    case GTE:
+                        query.must(QueryBuilders.rangeQuery(tuple.field).gte(tuple.value));
+                        break;
+                    default:
+                        if (logger.isErrorEnabled()) {
+                            logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));
+                        }
+                        throw new UserInterfaceSystemErrorException(
+                                UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED_OPERATE);
+                }
+            });
             builder.query(query);
         }
         if (pagination != null) {

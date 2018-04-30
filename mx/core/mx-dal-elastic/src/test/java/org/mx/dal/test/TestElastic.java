@@ -109,6 +109,43 @@ public class TestElastic {
             assertNotNull(list);
             assertEquals(1, list.size());
 
+            list = accessor.find(Arrays.asList(
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.LT, 100),
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0)),
+                    UserEntity.class);
+            assertEquals(2, list.size());
+            list = accessor.find(Arrays.asList(
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.LT, 45),
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0)),
+                    UserEntity.class);
+            assertEquals(1, list.size());
+            list = accessor.find(Arrays.asList(
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.LTE, 45),
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.GTE, 17)),
+                    UserEntity.class);
+            assertEquals(2, list.size());
+            list = accessor.find(Arrays.asList(
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.LT, 45),
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.GT, 17)),
+                    UserEntity.class);
+            assertEquals(0, list.size());list = accessor.find(Arrays.asList(
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.LT, 100),
+                    new GeneralAccessor.ConditionTuple("age",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0),
+                    new GeneralAccessor.ConditionTuple("name",
+                            GeneralAccessor.ConditionTuple.ConditionOperate.EQ, "Joy")),
+                    UserEntity.class);
+            assertEquals(1, list.size());
+
             accessor.remove(user1);
             Thread.sleep(delay);
             assertEquals(1, accessor.count(UserEntity.class));

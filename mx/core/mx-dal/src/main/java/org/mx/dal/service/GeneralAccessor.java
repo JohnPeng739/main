@@ -17,7 +17,7 @@ public interface GeneralAccessor {
      * 对指定的实体类型进行计数，实体接口必须继承Base接口。
      *
      * @param clazz 实体接口类型
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param <T>   实现Base接口的泛型对象类型
      * @return 指定实体的数量
      * @throws UserInterfaceDalErrorException 计数过程中发生的异常
      */
@@ -26,9 +26,9 @@ public interface GeneralAccessor {
     /**
      * 对指定的实体类型进行计数，实体接口必须继承Base接口。
      *
-     * @param clazz 实体接口类型
-     * @param isValid              如果设置为true，仅返回有效的记录；否则对所有记录计数。
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param clazz   实体接口类型
+     * @param isValid 如果设置为true，仅返回有效的记录；否则对所有记录计数。
+     * @param <T>     实现Base接口的泛型对象类型
      * @return 指定实体的数量
      * @throws UserInterfaceDalErrorException 计数过程中发生的异常
      */
@@ -38,7 +38,7 @@ public interface GeneralAccessor {
      * 获取指定实体类型的数据集合，实体接口必须继承Base接口。
      *
      * @param clazz 实体接口类型
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param <T>   实现Base接口的泛型对象类型
      * @return 指定实体对象类别
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
@@ -47,9 +47,9 @@ public interface GeneralAccessor {
     /**
      * 获取指定实体类型的数据集合，实体接口必须继承Base接口。
      *
-     * @param clazz 实体接口类型
-     * @param isValid              如果设置为true，仅返回有效的记录；否则返回所有记录。
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param clazz   实体接口类型
+     * @param isValid 如果设置为true，仅返回有效的记录；否则返回所有记录。
+     * @param <T>     实现Base接口的泛型对象类型
      * @return 指定实体对象类别
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
@@ -58,9 +58,9 @@ public interface GeneralAccessor {
     /**
      * 根据分页信息获取指定实体类型的数据子集合，实体接口必须继承Base接口。
      *
-     * @param pagination           分页信息
-     * @param clazz 实体接口类型
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param pagination 分页信息
+     * @param clazz      实体接口类型
+     * @param <T>        实现Base接口的泛型对象类型
      * @return 指定实体对象集合
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
@@ -69,10 +69,10 @@ public interface GeneralAccessor {
     /**
      * 根据分页信息获取指定实体类型的数据子集合，实体接口必须继承Base接口。
      *
-     * @param pagination           分页信息
-     * @param clazz 实体接口类型
-     * @param isValid              如果设置为true，仅返回有效的记录；否则返回所有记录。
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param pagination 分页信息
+     * @param clazz      实体接口类型
+     * @param isValid    如果设置为true，仅返回有效的记录；否则返回所有记录。
+     * @param <T>        实现Base接口的泛型对象类型
      * @return 指定实体对象集合
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      */
@@ -81,9 +81,9 @@ public interface GeneralAccessor {
     /**
      * 根据实体ID和实体接口类型获取实体，实体接口必须继承Base接口。
      *
-     * @param id                   实体ID
+     * @param id    实体ID
      * @param clazz 实体接口类
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param <T>   实现Base接口的泛型对象类型
      * @return 实体，如果实体不存在，则返回null。
      * @throws UserInterfaceDalErrorException 获取实体过程中发生的异常
      */
@@ -92,9 +92,9 @@ public interface GeneralAccessor {
     /**
      * 根据指定字段的值获取数据记录集合，多个条件采用and组合。
      *
-     * @param tuples               条件元组（包括字段名和字段值）
-     * @param clazz 实体接口类
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param tuples 条件元组（包括字段名和字段值）
+     * @param clazz  实体接口类
+     * @param <T>    实现Base接口的泛型对象类型
      * @return 实体对象集合
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      * @see ConditionTuple
@@ -105,9 +105,9 @@ public interface GeneralAccessor {
     /**
      * 根据指定字段的值获取一条数据记录，多个条件采用and组合。
      *
-     * @param tuples               条件元组（包括字段名和字段值）
-     * @param clazz 实体接口类
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param tuples 条件元组（包括字段名和字段值）
+     * @param clazz  实体接口类
+     * @param <T>    实现Base接口的泛型对象类型
      * @return 实体对象，如果不存在则返回null
      * @throws UserInterfaceDalErrorException 获取过程中发生的异常
      * @see ConditionTuple
@@ -129,9 +129,9 @@ public interface GeneralAccessor {
     /**
      * 逻辑删除指定关键字ID的数据实体
      *
-     * @param id                   关键字ID
+     * @param id    关键字ID
      * @param clazz 实体接口类
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param <T>   实现Base接口的泛型对象类型
      * @return 删除的实体
      * @throws UserInterfaceDalErrorException 删除过程中发生的异常
      */
@@ -140,10 +140,10 @@ public interface GeneralAccessor {
     /**
      * 逻辑删除指定关键字ID的数据实体
      *
-     * @param id                   关键字ID
-     * @param clazz 实体接口类
-     * @param logicRemove          设置为true表示逻辑删除，否则物理删除。
-     * @param <T>                  实现Base接口的泛型对象类型
+     * @param id          关键字ID
+     * @param clazz       实体接口类
+     * @param logicRemove 设置为true表示逻辑删除，否则物理删除。
+     * @param <T>         实现Base接口的泛型对象类型
      * @return 删除的实体
      * @throws UserInterfaceDalErrorException 删除过程中发生的异常
      */
@@ -179,6 +179,7 @@ public interface GeneralAccessor {
      */
     class ConditionTuple {
         public String field;
+        public ConditionOperate operate = ConditionOperate.EQ;
         public Object value;
 
         /**
@@ -200,12 +201,49 @@ public interface GeneralAccessor {
             this.value = value;
         }
 
+        /**
+         * 默认的构造函数
+         *
+         * @param field   字段名
+         * @param operate 操作类型
+         * @param value   字段值
+         */
+        public ConditionTuple(String field, ConditionOperate operate, Object value) {
+            this();
+            this.field = field;
+            this.operate = operate;
+            this.value = value;
+        }
+
         @Override
         public String toString() {
             return "ConditionTuple{" +
                     "field='" + field + '\'' +
-                    ", value=" + value +
-                    '}';
+                    ", operate='" + operate + '\'' +
+                    ", value=" + value + '}';
+        }
+
+        public enum ConditionOperate {
+            /**
+             * 等于
+             */
+            EQ,
+            /**
+             * 大于
+             */
+            GT,
+            /**
+             * 小于
+             */
+            LT,
+            /**
+             * 大于等于
+             */
+            GTE,
+            /**
+             * 小于等于
+             */
+            LTE
         }
     }
 }
