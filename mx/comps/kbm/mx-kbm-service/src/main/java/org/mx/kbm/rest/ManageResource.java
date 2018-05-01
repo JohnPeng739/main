@@ -9,12 +9,11 @@ import org.mx.kbm.Constants;
 import org.mx.kbm.entity.KnowledgeContact;
 import org.mx.kbm.entity.KnowledgeTenant;
 import org.mx.kbm.error.UserInterfaceKbmErrorException;
-import org.mx.kbm.rest.vo.ContactDetailsVO;
-import org.mx.kbm.rest.vo.ContactVO;
-import org.mx.kbm.rest.vo.TenantRegisterRequestVO;
-import org.mx.kbm.rest.vo.TenantVO;
+import org.mx.kbm.rest.vo.*;
+import org.mx.kbm.service.CategoryService;
 import org.mx.kbm.service.ContactService;
 import org.mx.kbm.service.TenantService;
+import org.mx.kbm.service.bean.CategoryTreeBean;
 import org.mx.kbm.service.bean.ContactDetailsBean;
 import org.mx.kbm.service.bean.ContactRegisterRequest;
 import org.mx.kbm.service.bean.TenantRegisterRequest;
@@ -26,6 +25,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
+import java.util.List;
 
 /**
  * 描述： KBM基础数据Restful服务
@@ -48,6 +48,9 @@ public class ManageResource {
 
     @Autowired
     private ContactService contactService = null;
+
+    @Autowired
+    private CategoryService categoryService = null;
 
     public ManageResource() {
         super();
@@ -110,6 +113,24 @@ public class ManageResource {
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Fetch the contact's details information fail, id: %s.", contactId), ex);
+            }
+            return new DataVO<>(new UserInterfaceKbmErrorException(
+                    UserInterfaceKbmErrorException.KbmErrors.OTHER_FAIL));
+        }
+    }
+
+    @Path("categories")
+    @GET
+    @AuthenticateAround(returnValueClass = DataVO.class)
+    public DataVO<List<CategoryTreeVO>> getCategories(@QueryParam("rootCategoryId") String rootCategoryId) {
+        try {
+            List<CategoryTreeBean> categoryTreeBeans = categoryService.getCategoryByParentId(rootCategoryId);
+            return new DataVO<>(CategoryTreeVO.transform(categoryTreeBeans));
+        } catch (UserInterfaceException ex) {
+            return new DataVO<>(ex);
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Fetch the categories' details information fail, id: %s.", rootCategoryId), ex);
             }
             return new DataVO<>(new UserInterfaceKbmErrorException(
                     UserInterfaceKbmErrorException.KbmErrors.OTHER_FAIL));

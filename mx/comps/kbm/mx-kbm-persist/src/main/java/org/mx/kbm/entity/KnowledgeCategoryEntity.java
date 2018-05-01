@@ -12,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "TB_KCATEGORY")
-public class KnowledgeCategoryEntity extends BaseDictTreeEntity implements KnowledgeCategory {
+public class KnowledgeCategoryEntity extends BaseDictTreeEntity<KnowledgeCategoryEntity> implements KnowledgeCategory {
     @ManyToOne(targetEntity = KnowledgeTenantEntity.class, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "TENANT_ID")
     private KnowledgeTenant tenant;

@@ -12,7 +12,7 @@ import java.util.List;
  * @author John.Peng
  *         Date time 2018/4/30 下午12:31
  */
-public interface TenantRepository extends Repository<String, KnowledgeTenantEntity> {
+public interface TenantRepository extends Repository<KnowledgeTenantEntity, String> {
     /**
      * 根据指定的联系人ID，获取该联系人管理的租户对象
      *

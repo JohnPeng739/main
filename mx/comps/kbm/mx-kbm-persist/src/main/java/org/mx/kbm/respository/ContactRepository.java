@@ -10,7 +10,7 @@ import org.springframework.data.repository.Repository;
  * @author John.Peng
  *         Date time 2018/4/29 下午10:59
  */
-public interface ContactRepository extends Repository<String, KnowledgeContactEntity> {
+public interface ContactRepository extends Repository<KnowledgeContactEntity, String> {
     /**
      * 根据指定的联系人代码查找联系人实体对象
      *
