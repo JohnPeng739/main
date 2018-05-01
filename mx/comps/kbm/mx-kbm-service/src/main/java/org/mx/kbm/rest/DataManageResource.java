@@ -37,8 +37,8 @@ import java.util.List;
 @Path("/rest")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class ManageResource {
-    private static final Log logger = LogFactory.getLog(ManageResource.class);
+public class DataManageResource {
+    private static final Log logger = LogFactory.getLog(DataManageResource.class);
 
     @Autowired
     private SessionDataStore sessionDataStore = null;
@@ -52,7 +52,7 @@ public class ManageResource {
     @Autowired
     private CategoryService categoryService = null;
 
-    public ManageResource() {
+    public DataManageResource() {
         super();
         sessionDataStore.setCurrentSystem(Constants.SYSTEM);
         sessionDataStore.setCurrentModule(Constants.MODULE_MANAGE);
