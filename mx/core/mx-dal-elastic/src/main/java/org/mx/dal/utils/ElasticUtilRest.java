@@ -181,9 +181,9 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
 
         HttpHost[] elasticServers = new HttpHost[servers];
         for (int index = 1; index <= servers; index++) {
-            String protocol = env.getProperty("elastic.api.protocol", "http");
-            String server = env.getProperty("elastic.api.server", "localhost");
-            int port = env.getProperty("elastic.api.port", Integer.class, 9200);
+            String protocol = env.getProperty(String.format("elastic.servers.%d.protocol", index), "http");
+            String server = env.getProperty(String.format("elastic.servers.%d.server", index), "localhost");
+            int port = env.getProperty(String.format("elastic.servers.%d.port", index), Integer.class, 9200);
             elasticServers[index - 1] = new HttpHost(server, port, protocol);
         }
         client = new RestHighLevelClient(RestClient.builder(elasticServers));
