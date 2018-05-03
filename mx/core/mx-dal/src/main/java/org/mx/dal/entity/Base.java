@@ -1,11 +1,13 @@
 package org.mx.dal.entity;
 
+import java.io.Serializable;
+
 /**
  * 基础实体接口定义
  *
  * @author : john.peng date : 2017/8/13
  */
-public interface Base {
+public interface Base extends Serializable {
     /**
      * 获取关键字ID
      *
