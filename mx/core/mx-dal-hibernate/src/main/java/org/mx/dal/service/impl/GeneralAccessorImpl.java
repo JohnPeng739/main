@@ -84,8 +84,8 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 pagination = new Pagination();
             }
             pagination.setTotal((int) count(clazz, isValid));
-            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity %s " +
-                    "ORDER BY entity.createdTime DESC", clazz.getName(), isValid ? "WHERE entity.valid = TRUE" : ""));
+            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity %s ", clazz.getName(),
+                    isValid ? "WHERE entity.valid = TRUE" : ""));
             query.setFirstResult((pagination.getPage() - 1) * pagination.getSize());
             query.setMaxResults(pagination.getSize());
             List<T> result = query.getResultList();
@@ -134,8 +134,8 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
             }
-            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity %s " +
-                    "ORDER BY entity.createdTime DESC", clazz.getName(), isValid ? "WHERE entity.valid = TRUE" : ""));
+            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity %s ", clazz.getName(),
+                    isValid ? "WHERE entity.valid = TRUE" : ""));
             List<T> result = query.getResultList();
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("List %d %s entity[%s].", result.size(), isValid ? "valid" : "", clazz.getName()));
