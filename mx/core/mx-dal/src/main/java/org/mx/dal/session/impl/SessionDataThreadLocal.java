@@ -13,24 +13,9 @@ import org.springframework.stereotype.Component;
  */
 @Component("sessionDataThreadLocal")
 public class SessionDataThreadLocal implements SessionDataStore {
-    private static ThreadLocal<String> currentSystem = new ThreadLocal<String>() {
-        @Override
-        protected String initialValue() {
-            return "default";
-        }
-    };
-    private static ThreadLocal<String> currentModule = new ThreadLocal<String>() {
-        @Override
-        protected String initialValue() {
-            return "default";
-        }
-    };
-    private static ThreadLocal<String> currentUser = new ThreadLocal<String>() {
-        @Override
-        protected String initialValue() {
-            return "NA";
-        }
-    };
+    private static ThreadLocal<String> currentSystem = ThreadLocal.withInitial(() -> "default");
+    private static ThreadLocal<String> currentModule = ThreadLocal.withInitial(() -> "default");
+    private static ThreadLocal<String> currentUser = ThreadLocal.withInitial(() -> "NA");
 
     /**
      * {@inheritDoc}
