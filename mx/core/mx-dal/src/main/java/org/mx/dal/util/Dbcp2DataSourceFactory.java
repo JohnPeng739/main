@@ -17,7 +17,7 @@ public class Dbcp2DataSourceFactory {
     private static final Log logger = LogFactory.getLog(Dbcp2DataSourceFactory.class);
 
     private BasicDataSource pool = null;
-    private Environment env = null;
+    private Environment env;
 
     /**
      * 默认的构造函数
