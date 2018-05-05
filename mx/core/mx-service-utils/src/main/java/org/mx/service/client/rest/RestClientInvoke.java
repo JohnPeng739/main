@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 public class RestClientInvoke {
     private static final Log logger = LogFactory.getLog(RestClientInvoke.class);
 
-    private Client client = null;
+    private Client client;
 
     public RestClientInvoke() {
         super();

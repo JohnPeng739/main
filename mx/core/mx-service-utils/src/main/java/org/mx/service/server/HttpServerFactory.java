@@ -23,16 +23,21 @@ import java.util.List;
  * 描述： 基于Jetty的Http服务的工程类
  *
  * @author John.Peng
- *         Date time 2018/3/11 上午11:11
+ * Date time 2018/3/11 上午11:11
  */
 @Component("httpServerFactory")
 public class HttpServerFactory extends AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(HttpServerFactory.class);
 
+    private Environment env;
+    private ApplicationContext context;
+
     @Autowired
-    private Environment env = null;
-    @Autowired
-    private ApplicationContext context = null;
+    public HttpServerFactory(Environment env, ApplicationContext context) {
+        super();
+        this.env = env;
+        this.context = context;
+    }
 
     /**
      * {@inheritDoc}

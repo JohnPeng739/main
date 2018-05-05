@@ -31,12 +31,9 @@ import java.util.Map;
 public class WebsocketServerFactory extends AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(WebsocketServerFactory.class);
 
-    @Autowired
-    private Environment env = null;
-    @Autowired
-    private ApplicationContext context = null;
-
-    private Map<String, SimpleWsObject> socketBeans = null;
+    private Map<String, SimpleWsObject> socketBeans;
+    private Environment env;
+    private ApplicationContext context;
 
     /**
      * 默认的构造函数
@@ -44,6 +41,13 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     public WebsocketServerFactory() {
         super();
         this.socketBeans = new HashMap<>();
+    }
+
+    @Autowired
+    public WebsocketServerFactory(Environment env, ApplicationContext context) {
+        this();
+        this.env = env;
+        this.context = context;
     }
 
     /**

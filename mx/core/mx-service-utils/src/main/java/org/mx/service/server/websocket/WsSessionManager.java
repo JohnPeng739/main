@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentMap;
  * </pre>
  *
  * @author John.Peng
- *         Date time 2018/3/10 上午10:07
+ * Date time 2018/3/10 上午10:07
  */
 @Component("wsSessionManager")
 public class WsSessionManager implements InitializingBean, DisposableBean {
@@ -36,10 +36,8 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
     private static final String cleanCycleSecKey = "websocket.session.clean.cycleSec";
     private final Serializable setMutex = "Set task";
     private final int PONG_ERROR_CODE = 4001, BLOCK_ERROR_CODE = 4002;
-    @Autowired
-    private Environment env = null;
-    @Autowired
-    private ApplicationContext context = null;
+    private Environment env;
+    private ApplicationContext context;
     private Timer pingTimer = null, cleanTimer = null;
     private int pingCycleSec = 10, cleanCycleSec = 60;
 
@@ -57,6 +55,13 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
         this.pongs = new ConcurrentHashMap<>();
         this.rules = new HashSet<>();
         this.blocks = new HashSet<>();
+    }
+
+    @Autowired
+    public WsSessionManager(Environment env, ApplicationContext context) {
+        this();
+        this.env = env;
+        this.context = context;
     }
 
     /**
@@ -94,9 +99,7 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
      * @return 返回true表示阻止连接，否则返回false
      */
     private boolean block(Session session) {
-        Iterator<WsSessionFilterRule> iterator = rules.iterator();
-        while (iterator.hasNext()) {
-            WsSessionFilterRule rule = iterator.next();
+        for (WsSessionFilterRule rule : rules) {
             if (rule.filter(session)) {
                 // 只要有一个规则符合过滤条件，就阻止连接
                 blocks.add(TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress()));
@@ -239,7 +242,7 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
      * @see InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // 配置过滤规则
         if (env != null) {
             String filtersStr = env.getProperty("websocket.session.filter.rules");
@@ -274,7 +277,7 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
      * @see DisposableBean#destroy()
      */
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         // 清理ping定时任务
         if (pingTimer != null) {
             pingTimer.cancel();
@@ -287,7 +290,7 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
             cleanTimer = null;
         }
         // 销毁过滤规则
-        rules.forEach(rule -> rule.destroy());
+        rules.forEach(WsSessionFilterRule::destroy);
         rules.clear();
         rules = null;
         // 断开所有连接

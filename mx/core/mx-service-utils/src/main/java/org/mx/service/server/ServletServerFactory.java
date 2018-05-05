@@ -27,10 +27,15 @@ import java.util.List;
 public class ServletServerFactory extends AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(ServletServerFactory.class);
 
+    private Environment env;
+    private ApplicationContext context;
+
     @Autowired
-    private Environment env = null;
-    @Autowired
-    private ApplicationContext context = null;
+    public ServletServerFactory(Environment env, ApplicationContext context) {
+        super();
+        this.env = env;
+        this.context = context;
+    }
 
     /**
      * {@inheritDoc}

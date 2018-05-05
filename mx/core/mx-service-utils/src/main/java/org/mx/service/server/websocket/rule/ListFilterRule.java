@@ -30,8 +30,7 @@ import java.util.Set;
 public class ListFilterRule implements WsSessionFilterRule {
     private static final Log logger = LogFactory.getLog(ListFilterRule.class);
 
-    @Autowired
-    private Environment env = null;
+    private Environment env;
 
     private Set<byte[]> allows, blocks;
 
@@ -39,6 +38,12 @@ public class ListFilterRule implements WsSessionFilterRule {
         super();
         this.allows = new HashSet<>();
         this.blocks = new HashSet<>();
+    }
+
+    @Autowired
+    public ListFilterRule(Environment env) {
+        this();
+        this.env = env;
     }
 
     /**

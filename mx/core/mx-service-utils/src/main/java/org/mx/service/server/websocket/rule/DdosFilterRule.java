@@ -35,7 +35,6 @@ public class DdosFilterRule implements WsSessionFilterRule {
             maxConnectionsKey = "websocket.session.filter.rules.ddos.maxConnections";
     private final Serializable setMutex = "Set task";
 
-    @Autowired
     private Environment env = null;
 
     private WsSessionManager manager = null;
@@ -45,6 +44,12 @@ public class DdosFilterRule implements WsSessionFilterRule {
     public DdosFilterRule() {
         super();
         nodes = new ConcurrentHashMap<>();
+    }
+
+    @Autowired
+    public DdosFilterRule(Environment env) {
+        this();
+        this.env = env;
     }
 
     @Override

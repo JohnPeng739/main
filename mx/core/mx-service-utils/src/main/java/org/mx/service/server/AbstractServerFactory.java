@@ -39,7 +39,7 @@ public abstract class AbstractServerFactory implements InitializingBean, Disposa
      * @see DisposableBean#destroy()
      */
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (server != null) {
             try {
                 server.stop();
