@@ -1,6 +1,5 @@
 package org.mx.kbm.entity;
 
-import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.dal.entity.BaseDict;
 
 import java.util.Set;

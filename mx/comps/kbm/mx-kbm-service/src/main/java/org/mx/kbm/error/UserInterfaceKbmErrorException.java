@@ -39,6 +39,8 @@ public class UserInterfaceKbmErrorException extends UserInterfaceException {
         CATEGORY_NOT_FOUND("指定的分类目录不存在。"),
         CATEGORY_HAS_EXISTED("指定的分类目录已经存在"),
 
+        NODE_NOT_FOUND("指定的知识条目不存在。"),
+
         OTHER_FAIL("未知知识库操作错误。");
 
         public static final int BASE_ORDINAL = 1000;
@@ -49,7 +51,7 @@ public class UserInterfaceKbmErrorException extends UserInterfaceException {
          *
          * @param errorMessage 错误信息
          */
-        private KbmErrors(String errorMessage) {
+        KbmErrors(String errorMessage) {
             this.errorMessage = errorMessage;
         }
 

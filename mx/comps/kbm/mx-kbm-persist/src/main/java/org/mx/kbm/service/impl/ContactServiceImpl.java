@@ -29,24 +29,35 @@ import java.util.List;
  * 描述： 基于Hibernate实现的联系人服务类
  *
  * @author John.Peng
- *         Date time 2018/4/29 下午10:58
+ * Date time 2018/4/29 下午10:58
  */
 @Component("contactService")
 public class ContactServiceImpl implements ContactService {
     private static final Log logger = LogFactory.getLog(ContactServiceImpl.class);
 
-    @Autowired
-    @Qualifier("generalDictAccessorJpa")
-    private GeneralDictAccessor dictAccessor = null;
+    private GeneralDictAccessor dictAccessor;
+    private OperateLogService operateLogService;
+    private ContactRepository contactRepository;
+    private TenantRepository tenantRepository;
 
+    /**
+     * 默认的构造函数
+     *
+     * @param dictAccessor      字段类型实体操作器
+     * @param contactRepository 联系服务接口
+     * @param tenantRepository  租户服务接口
+     * @param operateLogService 操作日志服务接口
+     */
     @Autowired
-    private OperateLogService operateLogService = null;
-
-    @Autowired
-    private ContactRepository contactRepository = null;
-
-    @Autowired
-    private TenantRepository tenantRepository = null;
+    public ContactServiceImpl(@Qualifier("generalDictAccessorJpa") GeneralDictAccessor dictAccessor,
+                              ContactRepository contactRepository, TenantRepository tenantRepository,
+                              OperateLogService operateLogService) {
+        super();
+        this.dictAccessor = dictAccessor;
+        this.contactRepository = contactRepository;
+        this.tenantRepository = tenantRepository;
+        this.operateLogService = operateLogService;
+    }
 
     /**
      * {@inheritDoc}

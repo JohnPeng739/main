@@ -27,21 +27,31 @@ import java.util.Map;
  * 描述： 基于Hibernate JPA实现的知识分类服务类定义
  *
  * @author John.Peng
- *         Date time 2018/5/1 上午10:07
+ * Date time 2018/5/1 上午10:07
  */
 @Component("categoryService")
 public class CategoryServiceImpl implements CategoryService {
     private static final Log logger = LogFactory.getLog(CategoryServiceImpl.class);
 
-    @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralDictAccessor dictAccessor = null;
+    private GeneralDictAccessor dictAccessor;
+    private CategoryRepository categoryRepository;
+    private OperateLogService operateLogService;
 
+    /**
+     * 默认的构造函数
+     *
+     * @param dictAccessor       字段类型实体操作器
+     * @param categoryRepository 分类查询接口
+     * @param operateLogService  操作日志服务接口
+     */
     @Autowired
-    private CategoryRepository categoryRepository = null;
-
-    @Autowired
-    private OperateLogService operateLogService = null;
+    public CategoryServiceImpl(@Qualifier("generalDictAccessorJpa") GeneralDictAccessor dictAccessor,
+                               CategoryRepository categoryRepository, OperateLogService operateLogService) {
+        super();
+        this.dictAccessor = dictAccessor;
+        this.categoryRepository = categoryRepository;
+        this.operateLogService = operateLogService;
+    }
 
     /**
      * 采用迭代递归的方式将Entity对象转换为Bean对象

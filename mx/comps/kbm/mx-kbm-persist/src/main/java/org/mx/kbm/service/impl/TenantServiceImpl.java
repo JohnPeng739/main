@@ -23,21 +23,31 @@ import org.springframework.transaction.annotation.Transactional;
  * 描述： 知识租户服务实现类
  *
  * @author John.Peng
- *         Date time 2018/4/29 下午9:32
+ * Date time 2018/4/29 下午9:32
  */
 @Component("tenantService")
 public class TenantServiceImpl implements TenantService {
     private static final Log logger = LogFactory.getLog(TenantServiceImpl.class);
 
-    @Autowired
-    @Qualifier("generalDictAccessorJpa")
-    private GeneralDictAccessor dictAccessor = null;
+    private GeneralDictAccessor dictAccessor;
+    private OperateLogService operateLogService;
+    private ContactService contactService;
 
+    /**
+     * 默认的构造函数
+     *
+     * @param dictAccessor      字段类型实体操作器
+     * @param contactService    联系人服务接口
+     * @param operateLogService 操作日志服务接口
+     */
     @Autowired
-    private OperateLogService operateLogService = null;
-
-    @Autowired
-    private ContactService contactService = null;
+    public TenantServiceImpl(@Qualifier("generalDictAccessorJpa") GeneralDictAccessor dictAccessor,
+                             ContactService contactService, OperateLogService operateLogService) {
+        super();
+        this.dictAccessor = dictAccessor;
+        this.contactService = contactService;
+        this.operateLogService = operateLogService;
+    }
 
     /**
      * {@inheritDoc}

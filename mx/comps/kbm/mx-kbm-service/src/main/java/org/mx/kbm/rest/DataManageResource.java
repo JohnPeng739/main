@@ -31,7 +31,7 @@ import java.util.List;
  * 描述： KBM基础数据Restful服务
  *
  * @author John.Peng
- *         Date time 2018/3/26 下午2:05
+ * Date time 2018/3/26 下午2:05
  */
 @Component
 @Path("/rest")
@@ -40,22 +40,38 @@ import java.util.List;
 public class DataManageResource {
     private static final Log logger = LogFactory.getLog(DataManageResource.class);
 
-    @Autowired
-    private SessionDataStore sessionDataStore = null;
+    private SessionDataStore sessionDataStore;
+    private TenantService tenantService;
+    private ContactService contactService;
+    private CategoryService categoryService;
 
+    /**
+     * 默认的构造函数
+     *
+     * @param sessionDataStore 会话数据存储服务接口
+     * @param tenantService    租户服务接口
+     * @param contactService   联系人服务接口
+     * @param categoryService  分类服务接口
+     */
     @Autowired
-    private TenantService tenantService = null;
-
-    @Autowired
-    private ContactService contactService = null;
-
-    @Autowired
-    private CategoryService categoryService = null;
-
-    public DataManageResource() {
+    public DataManageResource(SessionDataStore sessionDataStore, TenantService tenantService,
+                              ContactService contactService, CategoryService categoryService) {
         super();
+        this.sessionDataStore = sessionDataStore;
+        this.tenantService = tenantService;
+        this.contactService = contactService;
+        this.categoryService = categoryService;
+    }
+
+    /**
+     * 设置本模块中的session data
+     *
+     * @param userCode 当前操作用户代码
+     */
+    private void setSessionData(String userCode) {
         sessionDataStore.setCurrentSystem(Constants.SYSTEM);
         sessionDataStore.setCurrentModule(Constants.MODULE_MANAGE);
+        sessionDataStore.setCurrentUserCode(userCode);
     }
 
     @Path("tenants/register")
@@ -64,7 +80,7 @@ public class DataManageResource {
     public DataVO<TenantVO> tenantRegister(@QueryParam("userCode") String userCode,
                                            TenantRegisterRequestVO registerRequestVO, @Context Request request) {
         try {
-            sessionDataStore.setCurrentUserCode(userCode);
+            setSessionData(userCode);
             TenantRegisterRequest registerRequest = registerRequestVO.get();
             KnowledgeTenant tenant = tenantService.register(registerRequest);
             sessionDataStore.removeCurrentUserCode();
@@ -86,7 +102,7 @@ public class DataManageResource {
     public DataVO<ContactVO> contactRegister(@QueryParam("userCode") String userCode,
                                              ContactRegisterRequest registerRequest, @Context Request request) {
         try {
-            sessionDataStore.setCurrentModule(userCode);
+            setSessionData(userCode);
             KnowledgeContact contact = contactService.register(registerRequest);
             sessionDataStore.removeCurrentUserCode();
             return new DataVO<>(ContactVO.transform(contact));
