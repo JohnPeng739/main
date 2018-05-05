@@ -8,13 +8,11 @@ import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.entity.BaseDictTree;
-import org.mx.dal.entity.BaseDictTreeEntity;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralTextSearchAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -41,12 +39,19 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorImpl.class);
 
-    @Autowired
-    protected MongoTemplate template = null;
+    protected MongoTemplate template;
+    private SessionDataStore sessionDataStore;
+
+    public GeneralAccessorImpl() {
+        super();
+    }
 
     @Autowired
-    @Qualifier("sessionDataThreadLocal")
-    private SessionDataStore sessionDataStore = null;
+    public GeneralAccessorImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
+        this();
+        this.template = template;
+        this.sessionDataStore = sessionDataStore;
+    }
 
     /**
      * {@inheritDoc}

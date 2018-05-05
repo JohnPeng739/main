@@ -4,18 +4,14 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.util.Assert;
-
-import java.net.UnknownHostException;
-
-/**
- * Created by john on 2017/10/8.
- */
 
 /**
  * 基于Mongodb的DAL实现的Java Configure定义
@@ -28,12 +24,6 @@ import java.net.UnknownHostException;
 @PropertySource("classpath:mongodb.properties")
 @ComponentScan({"org.mx.dal.service.impl"})
 public class DalMongodbConfig {
-    @Autowired
-    private Environment env = null;
-
-    @Autowired
-    private ApplicationContext context = null;
-
     /**
      * 默认的构造函数
      */
@@ -47,7 +37,7 @@ public class DalMongodbConfig {
      * @return 数据访问器
      */
     @Bean(name = "generalAccessor")
-    public GeneralAccessor generalAccessor() {
+    public GeneralAccessor generalAccessor(ApplicationContext context) {
         return context.getBean("generalAccessorMongodb", GeneralAccessor.class);
     }
 
@@ -57,7 +47,7 @@ public class DalMongodbConfig {
      * @return 数据访问器
      */
     @Bean(name = "generalDictAccessor")
-    public GeneralDictAccessor generalDictAccessor() {
+    public GeneralDictAccessor generalDictAccessor(ApplicationContext context) {
         return context.getBean("generalDictAccessorMongodb", GeneralDictAccessor.class);
     }
 
@@ -65,10 +55,9 @@ public class DalMongodbConfig {
      * 创建MongodDB客户端
      *
      * @return 客户端
-     * @throws UnknownHostException Mongodb服务器配置异常
      */
     @Bean(name = "mongoClient")
-    public MongoClient mongoClient() throws UnknownHostException {
+    public MongoClient mongoClient(Environment env) {
         String uri = env.getProperty("mongodb.uri");
         Assert.notNull(uri, "The Mongodb Uri not configured.");
         return new MongoClient(new MongoClientURI(uri));
@@ -78,15 +67,14 @@ public class DalMongodbConfig {
      * 创建MongoDB模版工具
      *
      * @return 模版工具
-     * @throws UnknownHostException Mongodb服务器配置异常
-     * @see #mongoClient()
+     * @see #mongoClient(Environment)
      */
     @Bean(name = "mongoTemplate")
-    public MongoTemplate mongoTemplate() throws UnknownHostException {
+    public MongoTemplate mongoTemplate(Environment env) {
         String database = env.getProperty("database");
         if (database == null || database.length() <= 0) {
             database = "database";
         }
-        return new MongoTemplate(mongoClient(), database);
+        return new MongoTemplate(mongoClient(env), database);
     }
 }

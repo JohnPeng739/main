@@ -22,13 +22,22 @@ import org.springframework.stereotype.Component;
 public class OperateLogServiceImpl extends AbstractOperateLogService implements OperateLogService {
     private static final Log logger = LogFactory.getLog(AbstractOperateLogService.class);
 
-    @Autowired
-    @Qualifier("generalAccessorMongodb")
-    private GeneralAccessor accessor = null;
+    private GeneralAccessor accessor;
+    private SessionDataStore sessionDataStore;
 
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor         mongodb操作器
+     * @param sessionDataStore 会话数据服务接口
+     */
     @Autowired
-    @Qualifier("sessionDataThreadLocal")
-    private SessionDataStore sessionDataStore = null;
+    public OperateLogServiceImpl(@Qualifier("generalAccessorMongodb") GeneralAccessor accessor,
+                                 SessionDataStore sessionDataStore) {
+        super();
+        this.accessor = accessor;
+        this.sessionDataStore = sessionDataStore;
+    }
 
     /**
      * {@inheritDoc}
