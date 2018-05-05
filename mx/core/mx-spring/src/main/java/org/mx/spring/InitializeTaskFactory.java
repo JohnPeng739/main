@@ -20,9 +20,18 @@ public class InitializeTaskFactory implements InitializingBean, DisposableBean {
     private static final String TASKS = "initializeTasks";
 
     private ExecutorService service = null;
-
-    @Autowired
     private ApplicationContext context = null;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param context Spring IoC容器上下文
+     */
+    @Autowired
+    public InitializeTaskFactory(ApplicationContext context) {
+        super();
+        this.context = context;
+    }
 
     /**
      * {@inheritDoc}

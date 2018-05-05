@@ -25,21 +25,30 @@ import java.util.Set;
  * 描述： 缓存管理器工厂类定义
  *
  * @author John.Peng
- *         Date time 2018/4/22 下午7:07
+ * Date time 2018/4/22 下午7:07
  */
 @Component("cacheManagerFactory")
 public class CacheManagerFactory implements InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(CacheManagerFactory.class);
 
-    @Autowired
-    private Environment env = null;
-
-    @Autowired
-    private ApplicationContext context = null;
+    private Environment env;
+    private ApplicationContext context;
 
     private CacheManager cacheManager = null;
-
     private DisposableBean disposableBean = null;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param context Spring IoC上下文
+     * @param env     Spring环境上下文
+     */
+    @Autowired
+    public CacheManagerFactory(ApplicationContext context, Environment env) {
+        super();
+        this.context = context;
+        this.env = env;
+    }
 
     /**
      * {@inheritDoc}

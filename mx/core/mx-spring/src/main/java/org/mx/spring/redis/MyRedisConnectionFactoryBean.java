@@ -13,14 +13,24 @@ import org.springframework.stereotype.Component;
  * 描述： Redis连接工厂类
  *
  * @author John.Peng
- *         Date time 2018/4/25 下午2:22
+ * Date time 2018/4/25 下午2:22
  */
 @Component("myRedisConnectionFactoryBean")
 public class MyRedisConnectionFactoryBean implements InitializingBean, DisposableBean {
-    @Autowired
-    private Environment env = null;
+    private Environment env;
 
     private JedisConnectionFactory connectionFactory = null;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param env Spring环境上下文
+     */
+    @Autowired
+    public MyRedisConnectionFactoryBean(Environment env) {
+        super();
+        this.env = env;
+    }
 
     /**
      * {@inheritDoc}
