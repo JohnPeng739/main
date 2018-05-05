@@ -51,20 +51,30 @@ import java.util.function.BiConsumer;
  * 描述： 采用Restful方式进行Elastic访问的实现类
  *
  * @author John.Peng
- *         Date time 2018/4/1 上午9:31
+ * Date time 2018/4/1 上午9:31
  */
 @Component("elasticUtilRest")
 public class ElasticUtilRest implements ElasticUtil, InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(ElasticUtilRest.class);
 
-    @Autowired
-    private Environment env = null;
-
-    @Autowired
-    private SessionDataStore sessionDataStore = null;
+    private Environment env;
+    private SessionDataStore sessionDataStore;
 
     private RestHighLevelClient client = null;
     private Map<String, String> indexes = new HashMap<>(), revIndexes = new HashMap<>();
+
+    /**
+     * 默认的构造函数
+     *
+     * @param env              Spring环境上下文
+     * @param sessionDataStore 会话数据服务接口
+     */
+    @Autowired
+    public ElasticUtilRest(Environment env, SessionDataStore sessionDataStore) {
+        super();
+        this.env = env;
+        this.sessionDataStore = sessionDataStore;
+    }
 
     /**
      * {@inheritDoc}
@@ -81,7 +91,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
         }
     }
 
-    private void scanElasticEntitiesAndInitialize() throws Exception {
+    private void scanElasticEntitiesAndInitialize() {
         String basePakcages = env.getProperty("elastic.entity.base");
         String[] packages = StringUtils.split(basePakcages, true, true);
         for (String p : packages) {
@@ -170,7 +180,7 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      * @see InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         int servers = env.getProperty("elastic.servers", Integer.class, 0);
         if (servers <= 0) {
             if (logger.isErrorEnabled()) {

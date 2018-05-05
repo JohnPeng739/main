@@ -20,12 +20,26 @@ import java.util.List;
  * 描述： 基于Elastic实现的数据基础操作（CRUD）
  *
  * @author John.Peng
- *         Date time 2018/4/1 上午8:56
+ * Date time 2018/4/1 上午8:56
  */
 @Component("generalAccessorElastic")
 public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
+    private ElasticUtil accessor;
+
+    public GeneralAccessorImpl() {
+        super();
+    }
+
+    /**
+     * 默认的构造函数
+     *
+     * @param elasticUtil ES工具
+     */
     @Autowired
-    private ElasticUtil accessor = null;
+    public GeneralAccessorImpl(ElasticUtil elasticUtil) {
+        this();
+        this.accessor = elasticUtil;
+    }
 
     private List<GeneralAccessor.ConditionTuple> validateCondition(boolean isValid) {
         List<GeneralAccessor.ConditionTuple> list = null;

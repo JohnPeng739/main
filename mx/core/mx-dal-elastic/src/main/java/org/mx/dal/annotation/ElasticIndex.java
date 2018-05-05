@@ -1,14 +1,12 @@
 package org.mx.dal.annotation;
 
-import org.springframework.core.annotation.AliasFor;
-
 import java.lang.annotation.*;
 
 /**
  * 描述： 定义指定的Entity是一个Elastic索引的注解
  *
  * @author John.Peng
- *         Date time 2018/4/5 上午7:38
+ * Date time 2018/4/5 上午7:38
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
