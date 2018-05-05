@@ -2,7 +2,6 @@ package org.mx.test;
 
 import org.junit.After;
 import org.junit.Before;
-import org.mx.dal.config.DalHibernateConfig;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.test.config.TestDalConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

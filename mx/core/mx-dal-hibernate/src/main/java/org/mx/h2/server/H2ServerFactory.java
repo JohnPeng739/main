@@ -18,7 +18,7 @@ import java.util.List;
 public class H2ServerFactory {
     private static final Log logger = LogFactory.getLog(H2ServerFactory.class);
 
-    private Environment env = null;
+    private Environment env;
 
     private Server tcpServer;
     private Server webServer;

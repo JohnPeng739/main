@@ -2,15 +2,12 @@ package org.mx.dal.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.util.Dbcp2DataSourceFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
@@ -19,8 +16,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -43,20 +38,7 @@ import java.util.Set;
 public class DalHibernateConfig implements TransactionManagementConfigurer {
     private static final Log logger = LogFactory.getLog(DalHibernateConfig.class);
 
-    @Autowired
-    private Environment env = null;
-
-    @Autowired
-    private ApplicationContext context = null;
-
-    private EntityManagerFactory entityManagerFactory = null;
-
-    /**
-     * 默认的构造函数
-     */
-    public DalHibernateConfig() {
-        super();
-    }
+    private PlatformTransactionManager transactionManager = null;
 
     /**
      * 创建一个通用的数据访问器
@@ -64,7 +46,7 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      * @return 数据访问器
      */
     @Bean(name = "generalAccessor")
-    public GeneralAccessor generalAccessor() {
+    public GeneralAccessor generalAccessor(ApplicationContext context) {
         return context.getBean("generalAccessorJpa", GeneralAccessor.class);
     }
 
@@ -74,15 +56,16 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      * @return 数据访问器
      */
     @Bean(name = "generalDictAccessor")
-    public GeneralDictAccessor generalDictAccessor() {
+    public GeneralDictAccessor generalDictAccessor(ApplicationContext context) {
         return context.getBean("generalDictAccessorJpa", GeneralDictAccessor.class);
     }
 
-    @Bean(name = "dataSourceFactory", initMethod = "init", destroyMethod = "close")
+
     /**
      * 创建JDBC数据源工厂
      */
-    public Dbcp2DataSourceFactory dataSourceFactory() {
+    @Bean(name = "dataSourceFactory", initMethod = "init", destroyMethod = "close")
+    public Dbcp2DataSourceFactory dataSourceFactory(Environment env) {
         Dbcp2DataSourceFactory factory = new Dbcp2DataSourceFactory(env);
         try {
             factory.init();
@@ -94,12 +77,13 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
         return factory;
     }
 
-    @Bean(name = "dataSource")
+
     /**
      * 从工厂中获取JDBC数据源
      */
-    public DataSource dataSource() {
-        return dataSourceFactory().getDataSource();
+    @Bean(name = "dataSource")
+    public DataSource dataSource(Environment env) {
+        return dataSourceFactory(env).getDataSource();
     }
 
     @Bean("jpaEntityPackagesDal")
@@ -115,7 +99,8 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      */
     @Bean("entityManagerFactory")
     @DependsOn({"dataSource"})
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(Environment env,
+                                                                           ApplicationContext context) {
         String database = env.getProperty("jpa.database", String.class, "H2");
         String databasePlatform = env.getProperty("jpa.databasePlatform", String.class,
                 "org.hibernate.dialect.H2Dialect");
@@ -147,9 +132,10 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      * @return 事务管理器
      */
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager(Environment env, ApplicationContext context) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactoryBean().getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactoryBean(env, context).getObject());
+        this.transactionManager = transactionManager;
         return transactionManager;
     }
 
@@ -160,6 +146,6 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
      */
     @Override
     public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return transactionManager();
+        return transactionManager;
     }
 }

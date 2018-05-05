@@ -23,12 +23,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class OperateLogServiceImpl extends AbstractOperateLogService implements OperateLogService {
     private static final Log logger = LogFactory.getLog(AbstractOperateLogService.class);
 
-    @Autowired
-    @Qualifier("generalAccessorJpa")
-    private GeneralAccessor accessor = null;
+    private GeneralAccessor accessor;
+    private SessionDataStore sessionDataStore;
 
     @Autowired
-    private SessionDataStore sessionDataStore = null;
+    public OperateLogServiceImpl(@Qualifier("generalAccessorJpa") GeneralAccessor accessor,
+                                 SessionDataStore sessionDataStore) {
+        super();
+        this.accessor = accessor;
+        this.sessionDataStore = sessionDataStore;
+    }
 
     /**
      * {@inheritDoc}

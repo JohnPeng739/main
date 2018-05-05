@@ -35,12 +35,24 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorImpl.class);
 
     @PersistenceContext
-    //@Autowired
     protected EntityManager entityManager = null;
 
+    protected SessionDataStore sessionDataStore;
+
+    public GeneralAccessorImpl() {
+        super();
+    }
+
+    /**
+     * 默认的构造函数
+     *
+     * @param sessionDataStore 会话数据服务接口
+     */
     @Autowired
-    @Qualifier("sessionDataThreadLocal")
-    protected SessionDataStore sessionDataStore = null;
+    public GeneralAccessorImpl(@Qualifier("sessionDataThreadLocal") SessionDataStore sessionDataStore) {
+        super();
+        this.sessionDataStore = sessionDataStore;
+    }
 
     /**
      * {@inheritDoc}
