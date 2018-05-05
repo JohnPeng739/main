@@ -13,7 +13,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -22,26 +21,27 @@ import java.util.concurrent.Future;
  * 描述： 推荐工厂
  *
  * @author John.Peng
- *         Date time 2018/4/16 下午5:25
+ * Date time 2018/4/16 下午5:25
  */
 @Component
 public class SuggesterFactory implements InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(SuggesterFactory.class);
 
-    private Map<String, ItemSuggester> suggesters = null;
-    private Map<String, SuggesterStat> stats = null;
+    private Map<String, ItemSuggester> suggesters;
+    private Map<String, SuggesterStat> stats;
     private ExecutorService executor = null;
     private List<Future<Long>> futures = null;
-    private Timer cleanTimer = null;
+    private Timer cleanTimer;
 
-    @Autowired
-    private Environment env = null;
+    private Environment env;
 
     /**
      * 默认的构造函数
      */
-    public SuggesterFactory() {
+    @Autowired
+    public SuggesterFactory(Environment env) {
         super();
+        this.env = env;
         this.suggesters = new HashMap<>();
         this.stats = new HashMap<>();
     }
@@ -89,20 +89,17 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
         executor = Executors.newFixedThreadPool(suggesters.size());
         futures = new ArrayList<>();
         for (final String type : suggesters.keySet()) {
-            Future<Long> future = executor.submit(new Callable<Long>() {
-                @Override
-                public Long call() throws Exception {
-                    ItemSuggester suggester = suggesters.get(type);
-                    SuggesterStat stat = stats.get(type);
-                    stat.setLastStartTime(System.currentTimeMillis());
-                    stats.put(type, stat);
-                    long total = suggester.reload();
-                    stat.setLastFinishTime(System.currentTimeMillis());
-                    stat.setReloadTotal(total);
-                    stat.setItemTotal(suggester.getTotal());
-                    stats.put(type, stat);
-                    return total;
-                }
+            Future<Long> future = executor.submit(() -> {
+                ItemSuggester suggester = suggesters.get(type);
+                SuggesterStat stat = stats.get(type);
+                stat.setLastStartTime(System.currentTimeMillis());
+                stats.put(type, stat);
+                long total = suggester.reload();
+                stat.setLastFinishTime(System.currentTimeMillis());
+                stat.setReloadTotal(total);
+                stat.setItemTotal(suggester.getTotal());
+                stats.put(type, stat);
+                return total;
             });
             futures.add(future);
         }
@@ -115,6 +112,11 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
      * 清除所有的推荐内容
      */
     public void clear() {
+        if (cleanTimer != null) {
+            cleanTimer.cancel();
+            cleanTimer.purge();
+            cleanTimer = null;
+        }
         suggesters.forEach((type, suggester) -> suggester.clear());
     }
 
@@ -140,7 +142,7 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
      * @see DisposableBean#destroy()
      */
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (executor != null) {
             executor.shutdownNow();
         }

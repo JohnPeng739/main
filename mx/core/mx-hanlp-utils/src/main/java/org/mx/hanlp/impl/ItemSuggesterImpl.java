@@ -19,7 +19,7 @@ import java.util.Map;
  * 描述： 基于HanLP实现的条目推荐
  *
  * @author John.Peng
- *         Date time 2018/4/16 下午4:49
+ * Date time 2018/4/16 下午4:49
  */
 public class ItemSuggesterImpl implements ItemSuggester {
     private static final Log logger = LogFactory.getLog(ItemSuggester.class);
@@ -160,8 +160,8 @@ public class ItemSuggesterImpl implements ItemSuggester {
             String id = fingerprints.get(DigestUtils.md5(content));
             if (id == null) {
                 if (logger.isWarnEnabled()) {
-                    logger.warn(String.format("The suggest item[id: %s, content: %s] not found, " +
-                            "the cache is out of sync.", id, content));
+                    logger.warn(String.format("The suggest item[content: %s] not found, " +
+                            "the cache is out of sync.", content));
                 }
             } else {
                 list.add(SuggestItem.valueOf(type, id, content));

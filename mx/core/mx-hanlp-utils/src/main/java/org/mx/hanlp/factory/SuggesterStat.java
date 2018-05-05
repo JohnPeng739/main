@@ -1,9 +1,10 @@
 package org.mx.hanlp.factory;
 
 /**
- * TODO 请输入类描述
+ * 描述： 推荐其状态信息类定义
  *
- * @author : John.Peng on 2018/4/23 下午6:23.
+ * @author john peng
+ * Date time 2018/5/5 下午11:02
  */
 public class SuggesterStat {
     private String suggesterType;
