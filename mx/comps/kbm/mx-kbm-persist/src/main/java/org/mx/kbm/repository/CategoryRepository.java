@@ -1,4 +1,4 @@
-package org.mx.kbm.respository;
+package org.mx.kbm.repository;
 
 import org.mx.kbm.entity.KnowledgeCategory;
 import org.mx.kbm.entity.KnowledgeCategoryEntity;

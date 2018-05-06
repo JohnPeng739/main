@@ -10,7 +10,7 @@ import org.mx.dal.service.OperateLogService;
 import org.mx.kbm.entity.KnowledgeCategory;
 import org.mx.kbm.entity.KnowledgeTenant;
 import org.mx.kbm.error.UserInterfaceKbmErrorException;
-import org.mx.kbm.respository.CategoryRepository;
+import org.mx.kbm.repository.CategoryRepository;
 import org.mx.kbm.service.CategoryService;
 import org.mx.kbm.service.bean.CategoryTreeBean;
 import org.springframework.beans.factory.annotation.Autowired;

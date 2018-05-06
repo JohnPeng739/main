@@ -1,4 +1,4 @@
-package org.mx.kbm.respository;
+package org.mx.kbm.repository;
 
 import org.mx.kbm.entity.KnowledgeContactEntity;
 import org.springframework.data.jpa.repository.Query;

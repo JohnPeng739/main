@@ -12,6 +12,7 @@ project(':mx-kbm-service') {
 
     dependencies {
         compile(
+                project(':mx-kbm-persist'),
                 libs.'mx-utils',
                 libs.'mx-spring',
                 libs.'mx-dal',
