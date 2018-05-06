@@ -14,7 +14,7 @@ public class BaseDictBean extends BaseBean implements BaseDict {
     /**
      * {@inheritDoc}
      *
-     * @see BaseDict#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {
