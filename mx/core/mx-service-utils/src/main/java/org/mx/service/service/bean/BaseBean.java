@@ -14,6 +14,22 @@ public class BaseBean implements Base {
     private boolean valid = true;
 
     /**
+     * 进行对象属性复制
+     *
+     * @param src 源对象
+     * @param tar 目标对象
+     */
+    public static void transform(Base src, Base tar) {
+        if (src != null && tar != null) {
+            tar.setCreatedTime(src.getCreatedTime());
+            tar.setId(src.getId());
+            tar.setOperator(src.getOperator());
+            tar.setUpdatedTime(src.getUpdatedTime());
+            tar.setValid(src.isValid());
+        }
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @see Object#toString()

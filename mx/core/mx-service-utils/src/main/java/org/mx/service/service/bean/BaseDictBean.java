@@ -12,6 +12,19 @@ public class BaseDictBean extends BaseBean implements BaseDict {
     private String code, name, desc;
 
     /**
+     * 数据对象属性复制
+     *
+     * @param src 源对象
+     * @param tar 目标对象
+     */
+    public static void transform(BaseDict src, BaseDict tar) {
+        BaseBean.transform(src, tar);
+        tar.setCode(src.getCode());
+        tar.setName(src.getName());
+        tar.setDesc(src.getDesc());
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @see Object#toString()
