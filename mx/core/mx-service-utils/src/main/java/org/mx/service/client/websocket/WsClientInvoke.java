@@ -196,6 +196,15 @@ public class WsClientInvoke {
     }
 
     /**
+     * 判断缓存是否为空
+     *
+     * @return 返回true表示为空，否则表示缓存中尚有数据
+     */
+    public boolean isBufferEmpty() {
+        return !client.hasBufferedData();
+    }
+
+    /**
      * 发生一个文本消息到Websocket服务器
      *
      * @param message 文本消息
