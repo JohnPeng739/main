@@ -20,6 +20,70 @@ public class TypeUtils {
     }
 
     /**
+     * 将字节数组转换为int数值
+     *
+     * @param bytes 字节数组，超出4字节以上的数据将被忽略
+     * @return int型数值
+     */
+    public static int byteArray2Int(byte[] bytes) {
+        if (bytes == null) {
+            return 0;
+        }
+        int i = 0;
+        for (int index = 0; index < Math.min(bytes.length, 4); index++) {
+            i <<= 8;
+            i |= (bytes[index] & 0xff);
+        }
+        return i;
+    }
+
+    /**
+     * 将字节数组转换为long型数值
+     *
+     * @param bytes 字节数组，超出8字节以上的数据将被忽略
+     * @return long型数值
+     */
+    public static long byteArray2Long(byte[] bytes) {
+        if (bytes == null) {
+            return 0;
+        }
+        long l = 0;
+        for (int index = 0; index < Math.min(bytes.length, 8); index++) {
+            l <<= 8;
+            l |= (bytes[index] & 0xff);
+        }
+        return l;
+    }
+
+    /**
+     * 将int型数值转换为字节数组
+     *
+     * @param i 数值
+     * @return 长度为4的字节数组
+     */
+    public static byte[] int2ByteArray(int i) {
+        byte[] bytes = new byte[4];
+        for (int index = 0; index < 4; index++) {
+            bytes[index] = (byte) ((i >> (32 - (index + 1) * 8)) & 0xff);
+        }
+        return bytes;
+    }
+
+    /**
+     * 将long型数值转换为字节数组
+     *
+     * @param l 数值
+     * @return 长度为8的字节数组
+     */
+    public static byte[] long2ByteArray(long l) {
+        byte[] bytes = new byte[8];
+        for (int index = 0; index < 8; index++) {
+            bytes[index] = (byte) ((l >> (64 - (index + 1) * 8)) & 0xff);
+        }
+        return bytes;
+    }
+
+    /**
      * 将字节数组转换为IPv4格式的字符串。
      *
      * @param bytes 字节数组

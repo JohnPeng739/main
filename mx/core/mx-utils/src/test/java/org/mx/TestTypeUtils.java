@@ -2,10 +2,36 @@ package org.mx;
 
 import org.junit.Test;
 
+import java.util.Random;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class TestTypeUtils {
+    @Test
+    public void testInt() {
+        Random random = new Random(System.currentTimeMillis());
+        for (int index = 0; index < 10; index ++) {
+            int i = random.nextInt();
+            byte[] bytes = TypeUtils.int2ByteArray(i);
+            assertEquals(4, bytes.length);
+            int check = TypeUtils.byteArray2Int(bytes);
+            assertEquals(i, check);
+        }
+    }
+
+    @Test
+    public void testLong() {
+        Random random = new Random(System.currentTimeMillis());
+        for (int index = 0; index < 10; index ++) {
+            long l =  random.nextLong();
+            byte[] bytes = TypeUtils.long2ByteArray(l);
+            assertEquals(8, bytes.length);
+            long check = TypeUtils.byteArray2Long(bytes);
+            assertEquals(l, check);
+        }
+    }
+
     @Test
     public void testIpv4() {
         assertEquals("NA", TypeUtils.byteArray2Ip(null));
