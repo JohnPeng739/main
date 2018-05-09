@@ -85,4 +85,73 @@ const round = function (value, digits) {
     }
 }
 
-export {ajax, logger, formatter, parser, createWsClient, timestamp, mixin, clone, cloneData, round, AjaxAxios, WsClient}
+const int2ByteArray = function (i) {
+    if (i > Math.pow(2, 32)) {
+        throw new Error('The number ' + i + ' bigger than int.')
+    }
+    let bytes = new Array(4)
+    for (let index = 0; index < 4; index++) {
+        bytes[index] = ((i >>> (32 - (index + 1) * 8)) & 0xff)
+    }
+    return bytes
+}
+
+const long2ByteArray = function (l) {
+    if (l > Math.pow(2, 64)) {
+        throw new Error('The number ' + l + ' bigger than long.')
+    }
+    let bytes = new Array(8)
+    let low = l & 0xffffffff
+    let up = (l / Math.pow(2, 32)) >>> 0
+    for (let index = 0; index < 4; index++) {
+        bytes[index] = ((low >>> (64 - (index + 1) * 8)) & 0xff)
+    }
+    for (let index = 0; index < 4; index++) {
+        bytes[index + 4] = ((up >>> (64 - (index + 1) * 8)) & 0xff)
+    }
+    return bytes
+}
+
+const byteArray2Int = function (bytes) {
+    if (bytes === null || bytes === undefined) {
+        return 0
+    }
+    let i = 0
+    for (let index = 0; index < Math.min(bytes.length, 4); index++) {
+        i = (((i << 8) >>> 0) | (bytes[index] & 0xff)) >>> 0
+    }
+    return i
+}
+
+const byteArray2Long = function (bytes) {
+    if (bytes === null || bytes === undefined) {
+        return 0
+    }
+    let low = 0
+    let up = 0
+    for (let index = 0; index < Math.min(bytes.length, 4); index++) {
+        low = (((low << 8) >>> 0) | (bytes[index] & 0xff)) >>> 0
+    }
+    for (let index = 4; index < Math.min(bytes.length, 8); index++) {
+        up = (((up << 8) >>> 0) | (bytes[index] & 0xff)) >>> 0
+    }
+    return low + (up * Math.pow(2, 32))
+}
+
+export {
+    ajax,
+    logger,
+    formatter,
+    parser,
+    createWsClient,
+    timestamp,
+    mixin,
+    clone,
+    cloneData,
+    round,
+    int2ByteArray,
+    long2ByteArray,
+    byteArray2Int,
+    byteArray2Long,
+    AjaxAxios,
+    WsClient}

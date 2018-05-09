@@ -1,4 +1,13 @@
-import {round, mixin, clone, cloneData} from '../../../src/index'
+import {
+    round,
+    mixin,
+    clone,
+    cloneData,
+    int2ByteArray,
+    byteArray2Int,
+    byteArray2Long,
+    long2ByteArray
+} from '../../../src/index'
 // import {round, mixin, clone} from '../../../dist/mx-app-utils.min'
 
 describe('test utils', () => {
@@ -126,5 +135,17 @@ describe('test utils', () => {
         expect(src.members[1].age).toBe(5)
         expect(tar.code).toBe(undefined)
         expect(tar.members).toBe(undefined)
+    })
+    it('test int & byte array transform', () => {
+        for (let i = 0; i < 30; i++) {
+            let num = Math.round(Math.random() * Math.pow(2, 32))
+            expect(byteArray2Int(int2ByteArray(num))).toBe(num)
+        }
+    })
+    it('test long & byte array transform', () => {
+        for (let l = 0; l < 30; l++) {
+            let num = Math.round(Math.random() * Math.pow(2, 64))
+            expect(byteArray2Long(long2ByteArray(num))).toBe(num)
+        }
     })
 })

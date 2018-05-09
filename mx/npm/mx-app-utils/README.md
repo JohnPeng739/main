@@ -1,6 +1,6 @@
 # mx-app-utils
 ====
-<h5>版本： V1.6.21</h5>
+<h5>版本： V1.6.22</h5>
 一个非常简单使用的面向HTML5的WEB开发的工具类模块。目前封装了:
 1. logger：LOG（debug、info、warn、error）
 2. ajax和AjaxAxios：使用axios的简单AJAX调用工具方法
@@ -29,6 +29,9 @@
 
 
 ## 修改历史
+**1.6.22**<br>
+1. 添加了int、long和字节数组之间的转换方法。
+
 **1.6.21**<br>
 1. 采用Class方式重构了基于axios的Ajax，新加了AjaxAxios类。
 2. 采用Class方式重构了WebSocket客户端，新加了WsClient类。
