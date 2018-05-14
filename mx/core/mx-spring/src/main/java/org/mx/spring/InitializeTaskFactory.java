@@ -2,6 +2,7 @@ package org.mx.spring;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.spring.task.TaskFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,17 +11,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Component("initializeTaskFactory")
 public class InitializeTaskFactory implements InitializingBean, DisposableBean {
     private static final Log logger = LogFactory.getLog(InitializeTaskFactory.class);
     private static final String TASKS = "initializeTasks";
 
-    private ExecutorService service = null;
-    private ApplicationContext context = null;
+    private TaskFactory taskFactory;
+    private ApplicationContext context;
 
     /**
      * 默认的构造函数
@@ -45,15 +43,12 @@ public class InitializeTaskFactory implements InitializingBean, DisposableBean {
             List<Class<InitializeTask>> tasks = (List<Class<InitializeTask>>) context.getBean(TASKS, List.class);
             if (tasks != null && !tasks.isEmpty()) {
                 List<InitializeTask> shortTimes = new ArrayList<>();
-                List<Callable<Void>> longTimes = new ArrayList<>();
+                List<InitializeTask> longTimes = new ArrayList<>();
                 tasks.forEach(taskClass -> {
                     try {
                         final InitializeTask task = taskClass.newInstance();
                         if (task.isLongTimeTask()) {
-                            longTimes.add(() -> {
-                                task.invokeTask();
-                                return null;
-                            });
+                            longTimes.add(task);
                         } else {
                             shortTimes.add(task);
                         }
@@ -63,20 +58,9 @@ public class InitializeTaskFactory implements InitializingBean, DisposableBean {
                         }
                     }
                 });
-                try {
-                    service = Executors.newCachedThreadPool();
-                    longTimes.add(() -> {
-                        for (InitializeTask task : shortTimes) {
-                            task.invokeTask();
-                        }
-                        return null;
-                    });
-                    service.invokeAll(longTimes);
-                } catch (InterruptedException ex) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error("Invoke task fail.", ex);
-                    }
-                }
+                taskFactory = new TaskFactory();
+                shortTimes.forEach(task -> taskFactory.addSerialTask(task));
+                longTimes.forEach(task -> taskFactory.addSingleAsyncTask(task));
             }
         }
     }
@@ -88,9 +72,8 @@ public class InitializeTaskFactory implements InitializingBean, DisposableBean {
      */
     @Override
     public void destroy() throws Exception {
-        if (service != null) {
-            service.shutdownNow();
-            service = null;
+        if (taskFactory != null) {
+            taskFactory.shutdown();
         }
     }
 }
