@@ -25,6 +25,9 @@ public class TaskFactory {
     private List<Task> scheduledTasks = new ArrayList<>();
     private Map<String, Task.ScheduledConfig> scheduledConfigs = new HashMap<>();
 
+    /**
+     * 默认的构造函数
+     */
     public TaskFactory() {
         super();
         singleExecutorService = Executors.newSingleThreadExecutor();
@@ -33,6 +36,12 @@ public class TaskFactory {
         scheduledExecutorService = Executors.newScheduledThreadPool(10);
     }
 
+    /**
+     * 添加一个串行执行任务
+     *
+     * @param task 任务
+     * @return 当前的任务工厂
+     */
     public TaskFactory addSerialTask(Task task) {
         if (task.isAsync()) {
             if (logger.isWarnEnabled()) {
@@ -51,6 +60,12 @@ public class TaskFactory {
         return this;
     }
 
+    /**
+     * 添加一个异步执行任务
+     *
+     * @param task 任务
+     * @return 当前的任务工厂
+     */
     public TaskFactory addSingleAsyncTask(Task task) {
         if (logger.isInfoEnabled()) {
             logger.info("Submit a async task.");
@@ -64,6 +79,14 @@ public class TaskFactory {
         return this;
     }
 
+    /**
+     * 添加一个可以被调度执行的任务，例如：设定延迟执行、周期性执行
+     *
+     * @param task   任务
+     * @param config 调度配置信息
+     * @return 当前的任务工厂
+     * @see Task.ScheduledConfig
+     */
     public TaskFactory addScheduledTask(Task task, Task.ScheduledConfig config) {
         if (logger.isInfoEnabled()) {
             logger.info("Submit a scheduled task.");
@@ -78,6 +101,11 @@ public class TaskFactory {
         return this;
     }
 
+    /**
+     * 执行一个任务
+     *
+     * @param task 任务
+     */
     private void runTask(Task task) {
         ((BaseTask) task).setStartTime(System.currentTimeMillis());
         ((BaseTask) task).setState(Task.TaskState.RUNNING);
@@ -86,11 +114,24 @@ public class TaskFactory {
         ((BaseTask) task).setFinishTime(System.currentTimeMillis());
     }
 
+    /**
+     * 调度一个任务
+     *
+     * @param task 任务
+     */
     private void schedule(Task task) {
         Task.ScheduledConfig config = scheduledConfigs.get(task.getName());
-        // TODO
+        if (config.isOnlyOne()) {
+            scheduledExecutorService.schedule(() -> runTask(task), config.getDelay(), config.getTimeUnit());
+        } else {
+            scheduledExecutorService.scheduleAtFixedRate(() -> runTask(task), config.getDelay(), config.getPeriod(),
+                    config.getTimeUnit());
+        }
     }
 
+    /**
+     * 关闭当前的任务工厂
+     */
     public void shutdown() {
         serialTasks.clear();
         asyncTasks.clear();
