@@ -56,8 +56,11 @@ public class CacheManagerFactory implements InitializingBean, DisposableBean {
      * @see InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         String type = env.getProperty("cache.type");
+        if (type == null) {
+            type = "";
+        }
         switch (type) {
             case "ehcache":
                 createEhCacheManager();
