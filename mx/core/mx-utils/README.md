@@ -43,3 +43,7 @@ if (!StringUtils.isBlank(str)) {
 }
 ```
 以上样例代码将把输入的字符串分解成三个元素：abc，123，456。
+
+*详细信息参见模块提供的Javadoc。*
+| org.mx.ClassUtils  | 面向类扫描的工具类，例如：指定的包下的类扫描，支持jar包和目录扫描 |内容
+| org.mx.ClassUtils  | 面向类扫描的工具类，例如：指定的包下的类扫描，支持jar包和目录扫描 |
