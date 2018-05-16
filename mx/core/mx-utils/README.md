@@ -43,3 +43,5 @@ if (!StringUtils.isBlank(str)) {
 }
 ```
 以上样例代码将把输入的字符串分解成三个元素：abc，123，456。
+
+*详细说明参阅本模块的Javadoc。*
