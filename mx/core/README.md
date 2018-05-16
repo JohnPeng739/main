@@ -14,7 +14,7 @@
 8. mx-dal-elastic
 
 ## mx-utils
-*[mx-utils](mx-utils/README.md)：面向Java应用的常用工具类项目*
+*[mx-utils](mx-utils)：面向Java应用的常用工具类项目*
 
 ## mx-spring
 
