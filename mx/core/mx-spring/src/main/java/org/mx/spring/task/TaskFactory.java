@@ -52,12 +52,24 @@ public class TaskFactory {
             logger.info("Submit a serial task.");
         }
         serialTasks.add(task);
-        singleExecutorService.submit(() -> runTask(task));
-        if (logger.isInfoEnabled()) {
-            logger.info(String.format("Submit a serial task successfully, name: %s, state: %s, start: %s.",
-                    task.getName(), task.getState(), DateUtils.get23Date(new Date(task.getStartTime()))));
-        }
         return this;
+    }
+
+    /**
+     * 开始运行所有加入的串行任务
+     */
+    public void runSerialTasks() {
+        if (serialTasks.isEmpty()) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("There has not any serial tasks.");
+            }
+            return;
+        }
+        singleExecutorService.submit(() -> serialTasks.forEach(this::runTask));
+        if (logger.isInfoEnabled()) {
+            logger.info(String.format("Submit a serial task successfully, total: %d.", serialTasks.size()));
+        }
+
     }
 
     /**

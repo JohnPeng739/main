@@ -35,7 +35,9 @@ Type等方面的工具类，以供选择使用，项目介绍如下：
 | org.mx.rate.* | 提供了面向数值类型的TopN计算框架，便于各种周期的速率计算。 |
 
 ## 使用技巧和样例
-*对于所有的Utils工具类，所有方法均提供静态访问方式，在引入本模块后可以直接调用。*例如：使用StringUtils工具类中的split方法对指定的字符串进行分割：
+- 调用常规的工具类<br>
+*对于所有的Utils工具类，所有方法均提供静态访问方式，在引入本模块后可以直接调用。*
+例如：使用StringUtils工具类中的split方法对指定的字符串进行分割：
 ```java
 String str = "abc,123 456";
 if (!StringUtils.isBlank(str)) {
@@ -44,4 +46,19 @@ if (!StringUtils.isBlank(str)) {
 ```
 以上样例代码将把输入的字符串分解成三个元素：abc，123，456。
 
+- 使用速率工具类
+```java
+// 创建一个整数型的速率计算工具，每秒输入一个数据，最多记录60个数据
+IntegerTopNRate topn = new IntegerTopNRate(60, 1);
+
+// 向工具中添加一个计数值：145
+topn.add(145);
+......
+
+// 获取截至当前时刻的平均速率：
+double rate = topn.getTotalRate();
+
+// 获取最近10秒的平均速率：
+double rate10 = topn.getTopNRate(10);
+```
 *详细说明参阅本模块的Javadoc。*
