@@ -5,8 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.spring.cache.redis.RedisCache;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -16,7 +14,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -27,8 +24,7 @@ import java.util.Set;
  * @author John.Peng
  * Date time 2018/4/22 下午7:07
  */
-@Component("cacheManagerFactory")
-public class CacheManagerFactory implements InitializingBean, DisposableBean {
+public class CacheManagerFactory {
     private static final Log logger = LogFactory.getLog(CacheManagerFactory.class);
 
     private Environment env;
@@ -43,7 +39,6 @@ public class CacheManagerFactory implements InitializingBean, DisposableBean {
      * @param context Spring IoC上下文
      * @param env     Spring环境上下文
      */
-    @Autowired
     public CacheManagerFactory(ApplicationContext context, Environment env) {
         super();
         this.context = context;
@@ -51,16 +46,10 @@ public class CacheManagerFactory implements InitializingBean, DisposableBean {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see InitializingBean#afterPropertiesSet()
+     * 初始化缓存工厂
      */
-    @Override
-    public void afterPropertiesSet() {
-        String type = env.getProperty("cache.type");
-        if (type == null) {
-            type = "";
-        }
+    public void init() {
+        String type = env.getProperty("cache.type", "");
         switch (type) {
             case "ehcache":
                 createEhCacheManager();
@@ -128,12 +117,9 @@ public class CacheManagerFactory implements InitializingBean, DisposableBean {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see DisposableBean#destroy()
+     * 销毁缓存工厂
      */
-    @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (disposableBean != null) {
             try {
                 disposableBean.destroy();

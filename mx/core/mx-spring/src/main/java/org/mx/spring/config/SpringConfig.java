@@ -1,7 +1,6 @@
 package org.mx.spring.config;
 
 import org.mx.spring.InitializeTaskFactory;
-import org.mx.spring.utils.SpringContextHolder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,8 +19,8 @@ public class SpringConfig {
      *
      * @return 初始化任务工厂
      */
-    @Bean
-    public InitializeTaskFactory initializeTaskFactory() {
-        return new InitializeTaskFactory(SpringContextHolder.getBean(ApplicationContext.class));
+    @Bean(name = "initializeTaskFactory", initMethod = "init", destroyMethod = "destroy")
+    public InitializeTaskFactory initializeTaskFactory(ApplicationContext context) {
+        return new InitializeTaskFactory(context);
     }
 }

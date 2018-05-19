@@ -1,13 +1,9 @@
 package org.mx.spring.redis;
 
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.stereotype.Component;
 
 /**
  * 描述： Redis连接工厂类
@@ -15,8 +11,7 @@ import org.springframework.stereotype.Component;
  * @author John.Peng
  * Date time 2018/4/25 下午2:22
  */
-@Component("myRedisConnectionFactoryBean")
-public class MyRedisConnectionFactoryBean implements InitializingBean, DisposableBean {
+public class MyRedisConnectionFactoryBean {
     private Environment env;
 
     private JedisConnectionFactory connectionFactory = null;
@@ -26,29 +21,22 @@ public class MyRedisConnectionFactoryBean implements InitializingBean, Disposabl
      *
      * @param env Spring环境上下文
      */
-    @Autowired
     public MyRedisConnectionFactoryBean(Environment env) {
         super();
         this.env = env;
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see DisposableBean#destroy()
+     * 销毁连接工厂Bean
      */
-    @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         connectionFactory.destroy();
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see InitializingBean#afterPropertiesSet()
+     * 初始化连接工厂Bean
      */
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    public void init() {
         boolean enable = env.getProperty("redis.enable", Boolean.class, false);
         if (enable) {
             String redisType = env.getProperty("redis.type");

@@ -7,12 +7,12 @@
 <dependency>
     <groupId>org.mx</groupId>
     <artifactId>mx-spring</artifactId>
-    <version>1.1.7</version>
+    <version>1.1.8</version>
 </dependency>
 ```
 *Gradle*
 ```gradle
-compile 'org.mx:mx-spring:1.1.7'
+compile 'org.mx:mx-spring:1.1.8'
 ```
 ## 工具类
 - org.mx.spring.utils.SpringContextHolder<br>
@@ -118,6 +118,45 @@ public InitializeTaskFactory initializeTaskFactory() {
 ```
 
 ## redis支持
+- 第一步：配置redis<br>
+要使用Redis，必须要设置一个名为`redis.properties`的配置文件，其中内容如：
+```properties
+redis.enable=false
+# 类型：standalone | sentinel | cluster
+redis.type=standalone
+redis.pool.maxIdle=300
+redis.pool.maxWaitMillis=3000
+redis.pool.testOnBorrow=true
+redis.standalone.host=localhost
+redis.standalone.port=6379
+redis.standalone.database=0
+redis.standalone.password=
+redis.sentinel.master=master
+redis.sentinel.database=0
+redis.sentinel.password=
+redis.sentinel.sentinelHostAndPorts[0]=localhost:23679
+redis.sentinel.sentinelHostAndPorts[1]=localhost:23680
+redis.cluster.maxRedirects=1
+redis.cluster.password=
+redis.cluster.clusterHostAndPorts[0]=localhost:23679
+redis.cluster.clusterHostAndPorts[1]=localhost:23680
+```
+*注意*：需要将`redis.enable`设置为true，并根据实际情况配置使用redis的类型，即`redis.type`配置项。
+- 第二步：引入Redis配置<br>
+`redis.properties`配置文件在`SpringRedisConfig`中被引入，如下所示：
+```java
+
+@PropertySource({
+        "classpath:redis.properties"
+})
+```
+因此需要在应用的Java Config类中引入`SpringRedisConfig`，如下所示：
+```java
+@Import({SpringRedisConfig.class})
+public class TestRedisConfig {
+}
+```
+然后在你的应用中就使用获取到RedisTemplate工具类来使用Redis了。
 
 ## 缓存
 

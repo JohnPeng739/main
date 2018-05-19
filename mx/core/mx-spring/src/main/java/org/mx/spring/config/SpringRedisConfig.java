@@ -2,8 +2,8 @@ package org.mx.spring.config;
 
 import org.mx.spring.redis.MyRedisConnectionFactoryBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -16,11 +16,25 @@ import org.springframework.data.redis.core.RedisTemplate;
 @PropertySource({
         "classpath:redis.properties"
 })
-@ComponentScan({
-        "org.mx.spring.redis"
-})
 public class SpringRedisConfig {
-    @Bean
+    /**
+     * 创建Redis连接工厂Bean
+     *
+     * @param env Spring上下文环境
+     * @return Redis连接工厂Bean
+     */
+    @Bean(name = "myRedisConnectionFactoryBean", initMethod = "init", destroyMethod = "destroy")
+    public MyRedisConnectionFactoryBean myRedisConnectionFactoryBean(Environment env) {
+        return new MyRedisConnectionFactoryBean(env);
+    }
+
+    /**
+     * 根据Redis连接工厂Bean创建RedisTemplate
+     *
+     * @param connectionFactoryBean Redis连接工厂Bean
+     * @return RedisTemplate
+     */
+    @Bean(name = "redisTemplate")
     public RedisTemplate<?, ?> redisTemplate(MyRedisConnectionFactoryBean connectionFactoryBean) {
         RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
         RedisConnectionFactory connectionFactory = connectionFactoryBean.getRedisConnectionFactory();
