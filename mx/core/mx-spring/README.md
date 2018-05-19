@@ -145,12 +145,41 @@ redis.cluster.clusterHostAndPorts[1]=localhost:23680
 - 第二步：引入Redis配置<br>
 `redis.properties`配置文件在`SpringRedisConfig`中被引入，如下所示：
 ```java
-
 @PropertySource({
         "classpath:redis.properties"
 })
+public class SpringRedisConfig {
+    /**
+     * 创建Redis连接工厂Bean
+     *
+     * @param env Spring上下文环境
+     * @return Redis连接工厂Bean
+     */
+    @Bean(name = "myRedisConnectionFactoryBean", initMethod = "init", destroyMethod = "destroy")
+    public MyRedisConnectionFactoryBean myRedisConnectionFactoryBean(Environment env) {
+        return new MyRedisConnectionFactoryBean(env);
+    }
+
+    /**
+     * 根据Redis连接工厂Bean创建RedisTemplate
+     *
+     * @param connectionFactoryBean Redis连接工厂Bean
+     * @return RedisTemplate
+     */
+    @Bean(name = "redisTemplate")
+    public RedisTemplate<?, ?> redisTemplate(MyRedisConnectionFactoryBean connectionFactoryBean) {
+        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
+        RedisConnectionFactory connectionFactory = connectionFactoryBean.getRedisConnectionFactory();
+        if (connectionFactory == null) {
+            throw new IllegalArgumentException("You maybe not config the redis connection.");
+        }
+        redisTemplate.setConnectionFactory(connectionFactoryBean.getRedisConnectionFactory());
+        return redisTemplate;
+    }
+}
 ```
-因此需要在应用的Java Config类中引入`SpringRedisConfig`，如下所示：
+- 最后一步：在应用配置类中引入`SpringRedisConfig`<br>
+需要在应用的Java Config类中引入`SpringRedisConfig`，如下所示：
 ```java
 @Import({SpringRedisConfig.class})
 public class TestRedisConfig {
@@ -159,5 +188,67 @@ public class TestRedisConfig {
 然后在你的应用中就使用获取到RedisTemplate工具类来使用Redis了。
 
 ## 缓存
+通过配置的方式可以支持：interal、ehcache、redis三种缓存。
+- 第一步：配置缓存配置文件<br>
+要使用缓存，必须配置`cache.properties`配置文件，其内容如下所示：
+```properties
+# 类型：internal | ehcache | redis
+cache.type=internal
+
+cache.internal.list=test1,test2
+
+cache.ehcache.config=ehcache.xml
+
+cache.redis.list=test1,test2
+```
+- 第二步：引入缓存配置<br>
+`cache.properties`配置文件在`SpringCacheConfig`中被引入，如下所示：
+```java
+@EnableCaching
+@PropertySource({
+        "classpath:cache.properties"
+})
+public class SpringCacheConfig {
+    /**
+     * 创建缓存管理器工厂
+     *
+     * @param context Spring IoC上下文
+     * @param env     Spring上下文环境
+     * @return 缓存管理器工厂
+     */
+    @Bean(value = "cacheManagerFactory", initMethod = "init", destroyMethod = "destroy")
+    public CacheManagerFactory cacheManagerFactory(ApplicationContext context, Environment env) {
+        return new CacheManagerFactory(context, env);
+    }
+
+    /**
+     * 传教缓存管理器
+     *
+     * @param cacheManagerFactory 缓存管理器工厂
+     * @return 缓存管理器
+     */
+    @Bean("cacheManager")
+    public CacheManager cacheManager(CacheManagerFactory cacheManagerFactory) {
+        return cacheManagerFactory.getCacheManager();
+    }
+}
+```
+- 最后一步：在应用配置类中引入`SpringCacheConfig`<br>
+需要在应用的Java Config类中引入`SpringCacheConfig`，如下所示：
+```java
+@Import({SpringCacheConfig.class})
+public class TestCacheConfig {
+}
+```
+如果需要使用基于redis的缓存，还必须引入`SpringRedisConfig`，如下所示：
+```java
+@Import({
+    SpringRedisConfig.class,
+    SpringCacheConfig.class
+})
+public class TestRedisCacheConfig {
+}
+```
+然后在你的应用中就使用`@Cachable`、`@CachePut`等注解来使用缓存功能了，是不是接近"零编码"呢？
 
 *详细说明参阅本模块的Javadoc。*
