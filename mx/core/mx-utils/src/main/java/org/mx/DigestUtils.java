@@ -94,7 +94,7 @@ public class DigestUtils {
             case "BASE64":
                 return Base64.getEncoder().encodeToString(input);
             case "HEX":
-                return StringUtils.byte2HexString(input);
+                return TypeUtils.byteArray2HexString(input);
             default:
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("The encode algorithm['%s'] not supported.", algorithm));

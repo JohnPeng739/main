@@ -181,7 +181,7 @@ public class SystemUtils {
                         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                         List<String> segs = TypeUtils.csv2List(bufferedReader.readLine());
                         String memoryStr = segs.get(4).replaceAll("[, \"]", "");
-                        long memory = StringUtils.string2Size(memoryStr, 0);
+                        long memory = TypeUtils.string2Size(memoryStr, 0);
                         long total = ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean())
                                 .getTotalPhysicalMemorySize();
                         if (logger.isDebugEnabled()) {

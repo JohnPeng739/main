@@ -47,7 +47,7 @@ public class UserInterfaceSystemErrorException extends UserInterfaceException {
          *
          * @param errorMessage 错误信息
          */
-        private SystemErrors(String errorMessage) {
+        SystemErrors(String errorMessage) {
             this.errorMessage = errorMessage;
         }
 

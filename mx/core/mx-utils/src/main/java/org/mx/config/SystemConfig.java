@@ -63,7 +63,7 @@ public class SystemConfig {
             throw new IOException("The file path and name is blank.");
         }
         ConfigFileMetaData meta = new ConfigFileMetaData(file);
-        InputStream in = null;
+        InputStream in;
         if (meta.isFromFile) {
             in = new FileInputStream(meta.file);
         } else {
@@ -137,9 +137,9 @@ public class SystemConfig {
      * @author : john.peng date : 2017/10/15
      */
     private class ConfigFileMetaData {
-        String file = null;
-        boolean isFromFile = true;
-        ConfigFileType type = null;
+        String file;
+        boolean isFromFile;
+        ConfigFileType type;
 
         /**
          * 默认的构造函数

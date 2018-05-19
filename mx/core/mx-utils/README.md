@@ -7,12 +7,12 @@
 <dependency>
     <groupId>org.mx</groupId>
     <artifactId>mx-utils</artifactId>
-    <version>2.1.17</version>
+    <version>2.1.18</version>
 </dependency>
 ```
 *Gradle*
 ```gradle
-compile 'org.mx:mx-utils:2.1.17'
+compile 'org.mx:mx-utils:2.1.18'
 ```
 ## 工具类
 目前，mx-utils模块中包括了面向：Class、Collections、Config、Date、Digest、File、Password、Random、String、System、

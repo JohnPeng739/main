@@ -31,10 +31,10 @@ public class LongTopNRate extends GeneralTopNRate<Long> {
     @Override
     protected Long add(Long t1, Long t2) {
         if (t1 == null) {
-            t1 = 0l;
+            t1 = 0L;
         }
         if (t2 == null) {
-            t2 = 0l;
+            t2 = 0L;
         }
         return t1 + t2;
     }
@@ -61,7 +61,7 @@ public class LongTopNRate extends GeneralTopNRate<Long> {
 	@Override
 	public Long getTotal() {
 		Long total = super.getTotal();
-		return total == null ?  0l : total;
+		return total == null ?  0 : total;
 	}
 
 }

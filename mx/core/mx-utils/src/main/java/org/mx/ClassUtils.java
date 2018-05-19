@@ -136,13 +136,13 @@ public class ClassUtils {
         try {
             Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                 @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
                     String file = dir.toString();
                     return recurse || packageName.equals(file.substring(root.length())) ? CONTINUE : SKIP_SUBTREE;
                 }
 
                 @Override
-                public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
                     String file = path.toString();
                     if (Files.isRegularFile(path) && file.endsWith(".class") && (!ignoreInlineClass || !file.contains("$"))) {
                         String classPath = file;

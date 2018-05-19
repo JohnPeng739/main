@@ -24,7 +24,7 @@ public class CollectionUtils {
      */
     public static <T> Set<T> add(Set<T> set, T value) {
         if (set == null) {
-            set = new HashSet<T>();
+            set = new HashSet<>();
         }
         if (value != null && !contain(set, value)) {
             set.add(value);

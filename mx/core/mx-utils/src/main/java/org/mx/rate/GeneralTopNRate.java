@@ -26,9 +26,7 @@ public abstract class GeneralTopNRate<T> {
     private static final Log logger = LogFactory.getLog(GeneralTopNRate.class);
 
     private long lastCleanTime = 0, startTime = 0;
-
-    private double scale = 1; // 每秒多少个单位，1表示每秒钟记录一个数字，最小位0.01，表示10ms一个数值。
-    private int N = 300, size = (int) (N / scale); // 最多能够支持到多少秒的数字
+    private int N = 300; // 最多能够支持到多少秒的数字
 
     private T total = null;
     private Map<Long, T> topNNumbers = null;
@@ -60,15 +58,14 @@ public abstract class GeneralTopNRate<T> {
     public GeneralTopNRate(int N, double scale) {
         super();
         this.N = N;
-        this.scale = scale;
-        if (this.scale <= 0) {
-            this.scale = 1;
+        if (scale <= 0) {
+            scale = 1;
         }
-        if (this.scale < 0.01) {
-            this.scale = 0.01;
+        if (scale < 0.01) {
+            scale = 0.01;
         }
-        this.size = (int) (this.N / this.scale);
-        this.topNNumbers = new HashMap<>(this.size);
+        int size = (int) (this.N / scale);
+        this.topNNumbers = new HashMap<>(size);
         this.startTime = System.currentTimeMillis();
         this.lastCleanTime = System.currentTimeMillis();
 
@@ -184,8 +181,8 @@ public abstract class GeneralTopNRate<T> {
         lastSeconds = Math.min(lastSeconds, last);
 
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("num=%d, total=%d, time=%d, start=%d, last=%d - %d.", lastSeconds, num,
-                    time, startTime, (time - startTime) / 1000, time - startTime));
+            logger.debug(String.format("num=%d, total=%s, time=%d, start=%d, last=%d - %d.", lastSeconds,
+                    num == null ? "" : num.toString(), time, startTime, (time - startTime) / 1000, time - startTime));
         }
         return getRate(num, lastSeconds);
     }

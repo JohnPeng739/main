@@ -1,5 +1,8 @@
 package org.mx;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +18,8 @@ import static java.nio.file.FileVisitResult.CONTINUE;
  * @author : john.peng date : 2017/10/15
  */
 public class FileUtils {
+    private static final Log logger = LogFactory.getLog(FileUtils.class);
+
     private FileUtils() {
         super();
     }
@@ -55,6 +60,9 @@ public class FileUtils {
                     return CONTINUE;
                 } else {
                     // directory iteration failed
+                    if (logger.isErrorEnabled()) {
+                        logger.error(String.format("Visit directory fail, path: %s.", dir.getFileName().toString()), ex);
+                    }
                     throw ex;
                 }
             }
@@ -65,26 +73,49 @@ public class FileUtils {
      * 删除指定的文件或目录，如果是目录，将会删除子目录及其包含的文件。
      *
      * @param file 待删除的文件或目录对象
-     * @throws IOException 删除过程中发生的异常
      * @deprecated 升级成Paths实现，未来版本可能删除此方法
      */
-    public static void deleteFile(File file) throws IOException {
+    public static void deleteFile(File file) {
+        if (file == null) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The file object is null.");
+            }
+            return;
+        }
         if (file.isDirectory()) {
             File[] files = file.listFiles();
+            if (files == null) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format("There has not any children in the path: %s.", file.getAbsolutePath()));
+                }
+                return;
+            }
             if (files.length > 0) {
                 for (File child : files) {
                     // 迭代处理子目录
                     deleteFile(child);
                     // 子目录处理完毕后，删除父目录
-                    file.delete();
+                    if (file.delete()) {
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(String.format("Delete path successfully, path: %s.", file.getAbsolutePath()));
+                        }
+                    }
                 }
             } else {
                 // 空目录，直接删除
-                file.delete();
+                if (file.delete()) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Delete path successfully, path: %s.", file.getAbsolutePath()));
+                    }
+                }
             }
         } else {
             // 文件，直接删除
-            file.delete();
+            if (file.delete()) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Delete path successfully, path: %s.", file.getAbsolutePath()));
+                }
+            }
         }
     }
 

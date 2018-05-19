@@ -75,10 +75,10 @@ public class ConfigUtils {
      * @param key          配置项名
      * @param defaultValue 默认值
      * @return 值
-     * @see #getIntValue(String, StringUtils.Radix, int)
+     * @see #getIntValue(String, TypeUtils.Radix, int)
      */
     public static int getIntValue(String key, int defaultValue) {
-        return getIntValue(key, StringUtils.Radix.Decimal, defaultValue);
+        return getIntValue(key, TypeUtils.Radix.Decimal, defaultValue);
     }
 
     /**
@@ -89,8 +89,8 @@ public class ConfigUtils {
      * @param defaultValue 默认值
      * @return 值
      */
-    public static int getIntValue(String key, StringUtils.Radix radix, int defaultValue) {
-        return StringUtils.string2Int(config.getValue(key), radix, defaultValue);
+    public static int getIntValue(String key, TypeUtils.Radix radix, int defaultValue) {
+        return TypeUtils.string2Int(config.getValue(key), radix, defaultValue);
     }
 
     /**
@@ -101,7 +101,7 @@ public class ConfigUtils {
      * @return 值
      */
     public static boolean getBooleanValue(String key, boolean defaultValue) {
-        return StringUtils.string2Boolean(config.getValue(key), defaultValue);
+        return TypeUtils.string2Boolean(config.getValue(key), defaultValue);
     }
 
     /**
@@ -125,10 +125,10 @@ public class ConfigUtils {
      * @param key          配置项名
      * @param defaultValue 默认值
      * @return 值
-     * @see #getLongValue(String, StringUtils.Radix, long)
+     * @see #getLongValue(String, TypeUtils.Radix, long)
      */
     public static long getLongValue(String key, long defaultValue) {
-        return getLongValue(key, StringUtils.Radix.Decimal, defaultValue);
+        return getLongValue(key, TypeUtils.Radix.Decimal, defaultValue);
     }
 
     /**
@@ -139,8 +139,8 @@ public class ConfigUtils {
      * @param defaultValue 默认值
      * @return 值
      */
-    public static long getLongValue(String key, StringUtils.Radix radix, long defaultValue) {
-        return StringUtils.string2Long(config.getValue(key), radix, defaultValue);
+    public static long getLongValue(String key, TypeUtils.Radix radix, long defaultValue) {
+        return TypeUtils.string2Long(config.getValue(key), radix, defaultValue);
     }
 
     /**
@@ -151,7 +151,7 @@ public class ConfigUtils {
      * @return 值
      */
     public static float getFloatValue(String key, float defaultValue) {
-        return StringUtils.string2Float(config.getValue(key), defaultValue);
+        return TypeUtils.string2Float(config.getValue(key), defaultValue);
     }
 
     /**
@@ -162,6 +162,6 @@ public class ConfigUtils {
      * @return 值
      */
     public static double getDoubleValue(String key, double defaultValue) {
-        return StringUtils.string2Double(config.getValue(key), defaultValue);
+        return TypeUtils.string2Double(config.getValue(key), defaultValue);
     }
 }

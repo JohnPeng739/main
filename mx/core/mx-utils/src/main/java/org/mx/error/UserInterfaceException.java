@@ -7,8 +7,8 @@ package org.mx.error;
  * @see UserInterfaceError
  */
 public class UserInterfaceException extends RuntimeException implements UserInterfaceError {
-    private int errorCode = 0;
-    private String errorMessage = null;
+    private int errorCode;
+    private String errorMessage;
 
     /**
      * 默认的构造函数
