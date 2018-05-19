@@ -7,7 +7,7 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.extensions.Frame;
 import org.eclipse.jetty.websocket.common.frames.PongFrame;
 import org.mx.TypeUtils;
-import org.mx.spring.SpringContextHolder;
+import org.mx.spring.utils.SpringContextHolder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.mx.spring;
+package org.mx.spring.utils;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

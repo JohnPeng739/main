@@ -3,17 +3,12 @@ package org.mx.spring;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.spring.task.TaskFactory;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component("initializeTaskFactory")
-public class InitializeTaskFactory implements InitializingBean, DisposableBean {
+public class InitializeTaskFactory {
     private static final Log logger = LogFactory.getLog(InitializeTaskFactory.class);
     private static final String TASKS = "initializeTasks";
 
@@ -25,23 +20,19 @@ public class InitializeTaskFactory implements InitializingBean, DisposableBean {
      *
      * @param context Spring IoC容器上下文
      */
-    @Autowired
     public InitializeTaskFactory(ApplicationContext context) {
         super();
         this.context = context;
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see InitializingBean#afterPropertiesSet()
+     * 初始化工厂
      */
     @SuppressWarnings("unchecked")
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    public void init() {
         if (context.containsBean(TASKS)) {
             List<Class<InitializeTask>> tasks = (List<Class<InitializeTask>>) context.getBean(TASKS, List.class);
-            if (tasks != null && !tasks.isEmpty()) {
+            if (!tasks.isEmpty()) {
                 List<InitializeTask> shortTimes = new ArrayList<>();
                 List<InitializeTask> longTimes = new ArrayList<>();
                 tasks.forEach(taskClass -> {
@@ -66,12 +57,9 @@ public class InitializeTaskFactory implements InitializingBean, DisposableBean {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see DisposableBean#destroy()
+     * 销毁工厂
      */
-    @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (taskFactory != null) {
             taskFactory.shutdown();
         }

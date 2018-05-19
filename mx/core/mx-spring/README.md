@@ -15,7 +15,7 @@
 compile 'org.mx:mx-spring:1.1.7'
 ```
 ## 工具类
-- org.mx.spring.SpringContextHolder<br>
+- org.mx.spring.utils.SpringContextHolder<br>
 基于Spring的`ApplicationContextAware`实现的全局静态的获取Spring IoC容器中Bean的工具类，便于在Spring IoC容器托管之外的应用代码获取并调用Spring IoC容器托管代码。<br>
 该工具本身是一个`@Component`，会自动载入到Spring IoC中，在需要的地方可以如下调用：
 ```java
@@ -103,7 +103,19 @@ public class TestTaskConfig {
     }
 }
 ```
-以上两步，就实现了一个应用初始化任务的工作。
+以上两步，就实现了一个应用初始化任务的工作。<br>
+*注意*：初始化应用初始化任务工厂的代码已经封装在`SpringConfig`中，如下所示：
+```java
+/**
+ * 创建初始化任务工厂
+ *
+ * @return 初始化任务工厂
+ */
+@Bean
+public InitializeTaskFactory initializeTaskFactory() {
+    return new InitializeTaskFactory(SpringContextHolder.getBean(ApplicationContext.class));
+}
+```
 
 ## redis支持
 
