@@ -17,6 +17,7 @@ public class SpringConfig {
     /**
      * 创建初始化任务工厂
      *
+     * @param context Spring IoC上下文
      * @return 初始化任务工厂
      */
     @Bean(name = "initializeTaskFactory", initMethod = "init", destroyMethod = "destroy")
