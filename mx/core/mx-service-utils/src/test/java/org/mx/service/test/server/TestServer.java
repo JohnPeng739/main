@@ -1,4 +1,4 @@
-package org.mx.service.server;
+package org.mx.service.test.server;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -14,7 +14,11 @@ import org.mx.service.client.rest.RestInvokeException;
 import org.mx.service.client.websocket.BaseWebsocketClientListener;
 import org.mx.service.client.websocket.WsClientInvoke;
 import org.mx.service.rest.vo.DataVO;
-import org.mx.service.server.config.TestConfig;
+import org.mx.service.server.AbstractServerFactory;
+import org.mx.service.server.HttpServerFactory;
+import org.mx.service.server.ServletServerFactory;
+import org.mx.service.server.WebsocketServerFactory;
+import org.mx.service.test.server.config.TestConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.BufferedReader;

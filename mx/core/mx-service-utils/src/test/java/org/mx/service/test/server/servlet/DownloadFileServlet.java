@@ -1,7 +1,8 @@
-package org.mx.service.server.servlet;
+package org.mx.service.test.server.servlet;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.service.server.servlet.BaseHttpServlet;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;

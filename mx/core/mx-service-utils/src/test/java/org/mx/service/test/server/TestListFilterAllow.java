@@ -1,26 +1,29 @@
-package org.mx.service.server;
+package org.mx.service.test.server;
 
 import org.eclipse.jetty.server.Server;
 import org.java_websocket.WebSocket;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mx.service.server.config.TestListFilterBlockConfig;
+import org.mx.service.server.AbstractServerFactory;
+import org.mx.service.server.WebsocketServerFactory;
+import org.mx.service.test.server.config.TestListFilterAllowConfig;
 import org.mx.service.client.websocket.BaseWebsocketClientListener;
 import org.mx.service.client.websocket.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.*;
 
 /**
  * Created by john on 2017/11/4.
  */
-public class TestListFilterBlock {
+public class TestListFilterAllow {
     private AnnotationConfigApplicationContext context = null;
 
     @Before
     public void before() {
-        context = new AnnotationConfigApplicationContext(TestListFilterBlockConfig.class);
+        context = new AnnotationConfigApplicationContext(TestListFilterAllowConfig.class);
     }
 
     @After
@@ -41,8 +44,15 @@ public class TestListFilterBlock {
             TestWebsocketListener listener = new TestWebsocketListener();
             invoke1.init("ws://localhost:9997/echo", listener, false);
             Thread.sleep(1000);
-            assertEquals(WebSocket.READYSTATE.CLOSED, invoke1.getState());
+            assertEquals(WebSocket.READYSTATE.OPEN, invoke1.getState());
+            assertThat(listener.textMsg, startsWith("Server is ok:"));
+            String msg = "hello, john";
+            invoke1.send(msg);
+            Thread.sleep(1000);
+            assertEquals(String.format("Server echo: %s.", msg), listener.textMsg);
             invoke1.close();
+            Thread.sleep(1000);
+            assertEquals(WebSocket.READYSTATE.CLOSED, invoke1.getState());
         } catch (Exception ex) {
             fail(ex.getMessage());
         }

@@ -29,9 +29,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.mx</groupId>
-            <artifactId>mx-utils</artifactId>
-            <version>2.1.17</version>
+            <!-- 根据模块的需要，引入响应的模块组件 -->
         </dependency>
     </dependencies>
 
@@ -40,11 +38,15 @@
 - 第二步<br>
 创建测试类：com.dscomm.test.TestApplication，其中的Java代码可能如：
 ```java
-public static void main(String[] args) {
-    String str = "abcd,ergh;1234 5678";
-    String[] segments = StringUtils.split(str);
-    for (String segment : segments) {
-        System.out.println(segment);
+package com.dscomm.test;
+
+public class TestApplication {
+    public static void main(String[] args) {
+        String str = "abcd,ergh;1234 5678";
+        String[] segments = StringUtils.split(str);
+        for (String segment : segments) {
+            System.out.println(segment);
+        }
     }
 }
 ```
@@ -63,16 +65,19 @@ ergh
 *[mx-spring](mx-spring)：面向Spring应用的常用工具类项目*
 
 ## mx-service-utils
-
+*[mx-service-utils](mx-service-utils)：基于Spring和Jetty提供的关于RESTful、Servlet、Websocket等微服务的框架项目*
 
 ## mx-hanlp-utils
-
+*[mx-hanlp-utils](mx-hanlp-utils)：基于Spring和HanLP提供基础的语义分析工具项目*
 
 ## mx-dal
+*[mx-dal](mx-dal)：高度抽象的DAL（Data Access Layer），目前对关系型数据库、MongoDB数据库、Elastic Search提供了统一接口抽象*
 
 ## mx-dal-hibernate
+*[mx-dal-hibernate](mx-dal-hibernate)：基于Hibernate JPA实现的mx-dal实现，可以对所有关系型数据进行支持*
 
 ## mx-dal-mongodb
+*[mx-dal-mongodb](mx-dal-mongodb)：基于Mongodb实现的mx-dal实现*
 
 ## mx-dal-elastic
-
+*[mx-dal-elastic](mx-dal-elastic)：基于Elastic Search RESTful实现的mx-dal实现*

@@ -1,4 +1,4 @@
-package org.mx.service.server.config;
+package org.mx.service.test.server.config;
 
 import org.springframework.context.annotation.*;
 

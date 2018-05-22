@@ -6,9 +6,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.mx.TypeUtils;
 import org.mx.service.server.websocket.WsSessionFilterRule;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.*;
@@ -28,7 +26,6 @@ import java.util.concurrent.ConcurrentMap;
  * @author John.Peng
  *         Date time 2018/3/10 下午7:46
  */
-@Component("ddosFilterRule")
 public class DdosFilterRule implements WsSessionFilterRule {
     private static final Log logger = LogFactory.getLog(DdosFilterRule.class);
     private static final String cycleSecKey = "websocket.session.filter.rules.ddos.cycleSec",
@@ -46,7 +43,6 @@ public class DdosFilterRule implements WsSessionFilterRule {
         nodes = new ConcurrentHashMap<>();
     }
 
-    @Autowired
     public DdosFilterRule(Environment env) {
         this();
         this.env = env;

@@ -1,4 +1,4 @@
-package org.mx.service.server.rest;
+package org.mx.service.test.server.rest;
 
 import org.mx.service.rest.vo.DataVO;
 import org.springframework.beans.factory.annotation.Autowired;

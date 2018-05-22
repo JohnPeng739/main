@@ -3,15 +3,13 @@ package org.mx.service.server;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.server.Server;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * 定义Jetty相关服务器的抽象工厂类。
  *
  * @author : john.peng created on date : 2017/11/4
  */
-public abstract class AbstractServerFactory implements InitializingBean, DisposableBean {
+public abstract class AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(AbstractServerFactory.class);
     private Server server = null;
 
@@ -34,11 +32,15 @@ public abstract class AbstractServerFactory implements InitializingBean, Disposa
     }
 
     /**
-     * {@inheritDoc}
+     * 初始化服务器工厂
      *
-     * @see DisposableBean#destroy()
+     * @throws Exception 初始化过程中发生的异常
      */
-    @Override
+    public abstract void init() throws Exception;
+
+    /**
+     * 销毁服务器工厂
+     */
     public void destroy() {
         if (server != null) {
             try {

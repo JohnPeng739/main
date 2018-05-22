@@ -1,11 +1,13 @@
-package org.mx.service.server;
+package org.mx.service.test.server;
 
 import org.eclipse.jetty.server.Server;
 import org.java_websocket.WebSocket;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mx.service.server.config.TestDdosFilterConfig;
+import org.mx.service.server.AbstractServerFactory;
+import org.mx.service.server.WebsocketServerFactory;
+import org.mx.service.test.server.config.TestDdosFilterConfig;
 import org.mx.service.client.websocket.BaseWebsocketClientListener;
 import org.mx.service.client.websocket.WsClientInvoke;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

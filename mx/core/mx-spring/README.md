@@ -249,6 +249,6 @@ public class TestCacheConfig {
 public class TestRedisCacheConfig {
 }
 ```
-然后在你的应用中就使用`@Cachable`、`@CachePut`等注解来使用缓存功能了，是不是接近"零编码"呢？
+然后在你的应用中就使用`@CacheConfig`、`@Cachable`、`@CachePut`、`@CacheEvict`等注解来使用缓存功能了，是不是接近"零编码"呢？
 
 *详细说明参阅本模块的Javadoc。*

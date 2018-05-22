@@ -1,7 +1,6 @@
-package org.mx.service.server;
+package org.mx.service.test.server;
 
-import org.mx.service.server.config.TestConfig;
-import org.mx.service.server.config.TestConfigSsl;
+import org.mx.service.test.server.config.TestConfigSsl;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**

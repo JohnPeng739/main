@@ -1,8 +1,9 @@
-package org.mx.service.server.config;
+package org.mx.service.test.server.config;
 
-import org.mx.service.server.rest.DemoRestResource;
-import org.mx.service.server.servlet.DownloadFileServlet;
-import org.mx.service.server.websocket.EchoWebsocket;
+import org.mx.service.server.config.ServerConfig;
+import org.mx.service.test.server.rest.DemoRestResource;
+import org.mx.service.test.server.servlet.DownloadFileServlet;
+import org.mx.service.test.server.websocket.EchoWebsocket;
 import org.springframework.context.annotation.*;
 
 import java.util.Arrays;
@@ -12,15 +13,9 @@ import java.util.List;
  * Created by john on 2017/11/4.
  */
 @Import(ServerConfig.class)
-@PropertySource({
-        "classpath:server.properties"
-})
-@ComponentScan({
-        "org.mx.service.server.rest",
-        "org.mx.service.server.servlet",
-        "org.mx.service.server.websocket"
-})
-public class TestConfig {
+@PropertySource({"classpath:server-ssl.properties"})
+@ComponentScan({"org.mx.service.server.rest", "org.mx.service.test.server.servlet", "org.mx.service.test.server.websocket"})
+public class TestConfigSsl {
     @Bean(name = "restfulClassesTest")
     public List<Class<?>> restfulClassesTest() {
         return Arrays.asList(DemoRestResource.class);

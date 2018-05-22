@@ -10,11 +10,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.mx.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.util.List;
@@ -25,14 +22,12 @@ import java.util.List;
  * @author John.Peng
  * Date time 2018/3/11 上午11:11
  */
-@Component("httpServerFactory")
 public class HttpServerFactory extends AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(HttpServerFactory.class);
 
     private Environment env;
     private ApplicationContext context;
 
-    @Autowired
     public HttpServerFactory(Environment env, ApplicationContext context) {
         super();
         this.env = env;
@@ -42,11 +37,10 @@ public class HttpServerFactory extends AbstractServerFactory {
     /**
      * {@inheritDoc}
      *
-     * @see InitializingBean#afterPropertiesSet()
+     * @see AbstractServerFactory#init()
      */
     @SuppressWarnings("unchecked")
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    public void init() throws Exception {
         boolean enabled = this.env.getProperty("restful.enabled", Boolean.class, true);
         if (!enabled) {
             // 显式配置enable为false，表示不进行初始化。

@@ -1,6 +1,5 @@
-package org.mx.service.server.config;
+package org.mx.service.test.server.config;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
@@ -9,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Import(TestConfig.class)
 @PropertySource({
-        "classpath:server-filter-ddos.properties"
+        "classpath:server-filter-list-blocks.properties"
 })
-public class TestDdosFilterConfig {
+public class TestListFilterBlockConfig {
 }

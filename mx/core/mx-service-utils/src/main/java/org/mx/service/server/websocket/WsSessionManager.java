@@ -5,12 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -29,13 +25,11 @@ import java.util.concurrent.ConcurrentMap;
  * @author John.Peng
  * Date time 2018/3/10 上午10:07
  */
-@Component("wsSessionManager")
-public class WsSessionManager implements InitializingBean, DisposableBean {
+public class WsSessionManager {
     private static final Log logger = LogFactory.getLog(WsSessionManager.class);
     private static final String pingCycleSecKey = "websocket.session.ping.cycleSec";
     private static final String cleanCycleSecKey = "websocket.session.clean.cycleSec";
     private final Serializable setMutex = "Set task";
-    private final int PONG_ERROR_CODE = 4001, BLOCK_ERROR_CODE = 4002;
     private Environment env;
     private ApplicationContext context;
     private Timer pingTimer = null, cleanTimer = null;
@@ -57,7 +51,12 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
         this.blocks = new HashSet<>();
     }
 
-    @Autowired
+    /**
+     * 默认的构造函数
+     *
+     * @param env     Spring IoC上下文环境
+     * @param context Spring IoC上下文
+     */
     public WsSessionManager(Environment env, ApplicationContext context) {
         this();
         this.env = env;
@@ -119,6 +118,7 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
      * @param session 会话
      */
     public void addSession(Session session) {
+        final int BLOCK_ERROR_CODE = 4002;
         if (session != null) {
             synchronized (setMutex) {
                 String connectKey = getConnectKey(session);
@@ -168,7 +168,13 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
     public void pong(String connectKey) {
         if (!StringUtils.isBlank(connectKey)) {
             synchronized (setMutex) {
-                pongs.compute(connectKey, (k, v) -> v.pong());
+                pongs.compute(connectKey, (k, v) -> {
+                    if (v != null) {
+                        return v.pong();
+                    } else {
+                        return null;
+                    }
+                });
             }
         }
     }
@@ -237,22 +243,17 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see InitializingBean#afterPropertiesSet()
+     * 初始化会话管理器
      */
-    @Override
-    public void afterPropertiesSet() {
+    public void init() {
         // 配置过滤规则
         if (env != null) {
             String filtersStr = env.getProperty("websocket.session.filter.rules");
             if (!StringUtils.isBlank(filtersStr)) {
                 for (String filterStr : StringUtils.split(filtersStr, ",", true, true)) {
                     WsSessionFilterRule rule = context.getBean(filterStr, WsSessionFilterRule.class);
-                    if (rule != null) {
-                        rule.init(this);
-                        rules.add(rule);
-                    }
+                    rule.init(this);
+                    rules.add(rule);
                 }
             }
         }
@@ -272,11 +273,8 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see DisposableBean#destroy()
+     * 销毁会话服务器
      */
-    @Override
     public void destroy() {
         // 清理ping定时任务
         if (pingTimer != null) {
@@ -310,6 +308,7 @@ public class WsSessionManager implements InitializingBean, DisposableBean {
     }
 
     private class CleanTask extends TimerTask {
+        private final int PONG_ERROR_CODE = 4001;
         /**
          * {@inheritDoc}
          *

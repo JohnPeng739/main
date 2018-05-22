@@ -1,8 +1,10 @@
-package org.mx.service.server.websocket;
+package org.mx.service.test.server.websocket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
+import org.mx.service.server.websocket.DefaultWsSessionMonitor;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -7,9 +7,7 @@ import org.mx.StringUtils;
 import org.mx.TypeUtils;
 import org.mx.service.server.websocket.WsSessionFilterRule;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +24,6 @@ import java.util.Set;
  * @author John.Peng
  *         Date time 2018/3/10 下午7:02
  */
-@Component("listFilterRule")
 public class ListFilterRule implements WsSessionFilterRule {
     private static final Log logger = LogFactory.getLog(ListFilterRule.class);
 
@@ -40,7 +37,6 @@ public class ListFilterRule implements WsSessionFilterRule {
         this.blocks = new HashSet<>();
     }
 
-    @Autowired
     public ListFilterRule(Environment env) {
         this();
         this.env = env;

@@ -11,11 +11,8 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
 import org.mx.service.server.websocket.SimpleWsObject;
 import org.mx.service.server.websocket.WsSessionListener;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -27,7 +24,6 @@ import java.util.Map;
  *
  * @author : john.peng created on date : 2017/11/4
  */
-@Component("websocketServerFactory")
 public class WebsocketServerFactory extends AbstractServerFactory {
     private static final Log logger = LogFactory.getLog(WebsocketServerFactory.class);
 
@@ -43,7 +39,12 @@ public class WebsocketServerFactory extends AbstractServerFactory {
         this.socketBeans = new HashMap<>();
     }
 
-    @Autowired
+    /**
+     * 默认的构造函数
+     *
+     * @param env     Spring IoC上下文环境
+     * @param context Spring IoC上下文
+     */
     public WebsocketServerFactory(Environment env, ApplicationContext context) {
         this();
         this.env = env;
@@ -53,11 +54,10 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     /**
      * {@inheritDoc}
      *
-     * @see InitializingBean#afterPropertiesSet()
+     * @see AbstractServerFactory#init()
      */
     @SuppressWarnings("unchecked")
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    public void init() throws Exception {
         boolean enabled = env.getProperty("websocket.enabled", Boolean.class, true);
         if (!enabled) {
             // 显式配置enable为false，表示不进行初始化。
@@ -101,6 +101,9 @@ public class WebsocketServerFactory extends AbstractServerFactory {
         }
     }
 
+    /**
+     * Websocket创建器
+     */
     public class MyWebsocketCreator implements WebSocketCreator {
         @Override
         public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
