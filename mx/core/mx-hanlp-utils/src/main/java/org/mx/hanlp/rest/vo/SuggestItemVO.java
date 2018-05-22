@@ -1,4 +1,4 @@
-package org.mx.test.rest.vo;
+package org.mx.hanlp.rest.vo;
 
 import org.mx.hanlp.ItemSuggester;
 

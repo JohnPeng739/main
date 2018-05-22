@@ -55,7 +55,7 @@ public class TestCsvProvider {
         SuggesterFactory factory = context.getBean(SuggesterFactory.class);
         assertNotNull(factory);
         assertNull(factory.getSuggester());
-        ItemSuggester itemSuggester = factory.getSuggester("expert from text");
+        ItemSuggester itemSuggester = factory.getSuggester("test");
         assertNotNull(itemSuggester);
 
         while (!factory.ready()) {

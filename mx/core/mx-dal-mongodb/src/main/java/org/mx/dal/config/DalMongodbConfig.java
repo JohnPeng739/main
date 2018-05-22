@@ -54,6 +54,7 @@ public class DalMongodbConfig {
     /**
      * 创建一个通用的数据访问器
      *
+     * @param context Spring IoC上下文
      * @return 数据访问器
      */
     @Bean(name = "generalAccessor")
@@ -64,6 +65,7 @@ public class DalMongodbConfig {
     /**
      * 创建一个通用的字典数据访问器
      *
+     * @param context Spring IoC上下文
      * @return 数据访问器
      */
     @Bean(name = "generalDictAccessor")
@@ -74,6 +76,7 @@ public class DalMongodbConfig {
     /**
      * 创建MongodDB客户端
      *
+     * @param env Spring IoC上下文环境
      * @return 客户端
      */
     @Bean(name = "mongoClient")
@@ -86,6 +89,7 @@ public class DalMongodbConfig {
     /**
      * 创建MongoDB模版工具
      *
+     * @param env Spring IoC上下文环境
      * @return 模版工具
      * @see #mongoClient(Environment)
      */

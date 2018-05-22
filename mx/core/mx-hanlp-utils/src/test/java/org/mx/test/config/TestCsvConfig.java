@@ -1,13 +1,14 @@
 package org.mx.test.config;
 
-import org.springframework.context.annotation.ComponentScan;
+import org.mx.hanlp.config.SuggesterConfig;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
+@Configuration
+@Import({SuggesterConfig.class})
 @PropertySource({
         "classpath:suggester-csv.properties"
-})
-@ComponentScan({
-        "org.mx.hanlp.factory"
 })
 public class TestCsvConfig {
 }

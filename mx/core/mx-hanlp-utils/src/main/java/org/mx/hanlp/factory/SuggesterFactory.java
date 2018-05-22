@@ -6,11 +6,7 @@ import org.mx.StringUtils;
 import org.mx.hanlp.ItemSuggester;
 import org.mx.hanlp.factory.suggest.SuggestContentProvider;
 import org.mx.hanlp.impl.ItemSuggesterImpl;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -23,8 +19,7 @@ import java.util.concurrent.Future;
  * @author John.Peng
  * Date time 2018/4/16 下午5:25
  */
-@Component
-public class SuggesterFactory implements InitializingBean, DisposableBean {
+public class SuggesterFactory {
     private static final Log logger = LogFactory.getLog(SuggesterFactory.class);
 
     private Map<String, ItemSuggester> suggesters;
@@ -38,7 +33,6 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
     /**
      * 默认的构造函数
      */
-    @Autowired
     public SuggesterFactory(Environment env) {
         super();
         this.env = env;
@@ -137,11 +131,8 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see DisposableBean#destroy()
+     * 销毁推荐工厂
      */
-    @Override
     public void destroy() {
         if (executor != null) {
             executor.shutdownNow();
@@ -159,12 +150,11 @@ public class SuggesterFactory implements InitializingBean, DisposableBean {
     }
 
     /**
-     * {@inheritDoc}
+     * 初始化推荐工厂
      *
-     * @see InitializingBean#afterPropertiesSet()
+     * @throws Exception 初始化过程中发生的异常
      */
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    public void init() throws Exception {
         int num = env.getProperty("suggester.num", Integer.class, 0);
         if (num <= 0) {
             if (logger.isWarnEnabled()) {

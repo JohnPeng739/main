@@ -1,4 +1,4 @@
-package org.mx.test.rest;
+package org.mx.hanlp.rest;
 
 import org.mx.SystemUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -7,9 +7,9 @@ import org.mx.hanlp.error.UserInterfaceHanlpErrorException;
 import org.mx.hanlp.factory.SuggesterFactory;
 import org.mx.hanlp.server.SuggesterServer;
 import org.mx.service.rest.vo.DataVO;
-import org.mx.test.rest.vo.ServerStatVO;
-import org.mx.test.rest.vo.SuggestItemVO;
-import org.mx.test.rest.vo.SuggestRequestVO;
+import org.mx.hanlp.rest.vo.ServerStatVO;
+import org.mx.hanlp.rest.vo.SuggestItemVO;
+import org.mx.hanlp.rest.vo.SuggestRequestVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package org.mx.test.rest.vo;
+package org.mx.hanlp.rest.vo;
 
 /**
  * 描述： 服务器统计量值对象定义

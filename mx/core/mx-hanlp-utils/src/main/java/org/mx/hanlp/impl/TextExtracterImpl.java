@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.hanlp.TextExtracter;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
  * @author John.Peng
  *         Date time 2018/4/21 下午2:52
  */
-@Component
 public class TextExtracterImpl implements TextExtracter {
     private static final Log logger = LogFactory.getLog(TextExtracterImpl.class);
 
