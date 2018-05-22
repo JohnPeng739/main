@@ -1,4 +1,4 @@
-package org.mx.dal.util;
+package org.mx.dbcp;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.logging.Log;

@@ -1,5 +1,5 @@
 plugins {
-  id 'com.jfrog.bintray' version '1.8.0'
+    id 'com.jfrog.bintray' version '1.8.0'
 }
 
 apply from: '../../dependencies.gradle'
@@ -7,137 +7,137 @@ apply from: '../../dependencies.gradle'
 apply from: '../../allprojects.gradle'
 
 project(':mx-utils') {
-  version = '2.1.18'
-  description = 'Many utility java class, such as : DateUtils, StringUtils, etc.'
+    version = '2.1.18'
+    description = 'Many utility java class, such as : DateUtils, StringUtils, etc.'
 
-  dependencies {
-    compile(
-      libs.'fastjson',
-      libs.'log4j-api',
-      libs.'log4j-core',
-      libs.'log4j-jcl',
-      libs.'log4j-slf4j-impl',
-      libs.'slf4j-api'
-    )
-  }
+    dependencies {
+        compile(
+                libs.'fastjson',
+                libs.'log4j-api',
+                libs.'log4j-core',
+                libs.'log4j-jcl',
+                libs.'log4j-slf4j-impl',
+                libs.'slf4j-api'
+        )
+    }
 }
 
 project(':mx-spring') {
-  version = '1.1.8'
-  description = 'Many utility based on spring, such as : SpringContextHolder, etc.'
+    version = '1.1.8'
+    description = 'Many utility based on spring, such as : SpringContextHolder, etc.'
 
-  dependencies {
-    compile(
-      project(':mx-utils'),
-      libs.'spring-context-support',
-      libs.'ehcache',
-      libs.'spring-data-redis',
-      libs.'jedis'
-    )
-  }
+    dependencies {
+        compile(
+                project(':mx-utils'),
+                libs.'spring-context-support',
+                libs.'ehcache',
+                libs.'spring-data-redis',
+                libs.'jedis'
+        )
+    }
 }
 
 project(':mx-dal') {
-  version = '1.3.5'
-  description = 'data access layer abstract classes and interfaces.'
+    version = '1.3.6'
+    description = 'data access layer abstract classes and interfaces.'
 
-  dependencies {
-    compile(
-      project(':mx-utils'),
-      project(':mx-spring'),
-      libs.'commons-dbcp2'
-    )
-  }
+    dependencies {
+        compile(
+                project(':mx-utils'),
+                project(':mx-spring'),
+                libs.'commons-dbcp2'
+        )
+    }
 }
 
 project(':mx-service-utils') {
-  version = '1.6.9'
-  description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
+    version = '1.6.9'
+    description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
-  dependencies {
-    compile(
-      project(':mx-utils'),
-      project(':mx-dal'),
-      project(':mx-spring'),
-      libs.'jersey-server',
-      libs.'jersey-media-jackson',
-      libs.'jersey-jetty-http',
-      libs.'jersey-jetty-servlet',
-      libs.'jersey-spring4',
-      libs.'jersey-hk2',
-      libs.'jetty-server',
-      libs.'jetty-servlet',
-      libs.'jetty-websocket'
-    )
-    compile(
-      libs.'httpclient',
-      libs.'java-websocket'
-    )
-  }
+    dependencies {
+        compile(
+                project(':mx-utils'),
+                project(':mx-dal'),
+                project(':mx-spring'),
+                libs.'jersey-server',
+                libs.'jersey-media-jackson',
+                libs.'jersey-jetty-http',
+                libs.'jersey-jetty-servlet',
+                libs.'jersey-spring4',
+                libs.'jersey-hk2',
+                libs.'jetty-server',
+                libs.'jetty-servlet',
+                libs.'jetty-websocket'
+        )
+        compile(
+                libs.'httpclient',
+                libs.'java-websocket'
+        )
+    }
 }
 
 project(':mx-dal-hibernate') {
-  version = '1.3.7'
-  description = 'Dal with hibernate JPA.'
+    version = '1.3.8'
+    description = 'Dal with hibernate JPA.'
 
-  dependencies {
-    compile(
-      project(':mx-dal'),
-      libs.'h2database',
-      libs.'commons-dbcp2',
-      libs.'spring-tx',
-      libs.'spring-data-jpa',
-      libs.'hibernate-entitymanager',
-      libs.'mysql'
-    )
-  }
+    dependencies {
+        compile(
+                project(':mx-dal'),
+                libs.'h2database',
+                libs.'commons-dbcp2',
+                libs.'spring-tx',
+                libs.'spring-data-jpa',
+                libs.'hibernate-entitymanager',
+                libs.'mysql'
+        )
+    }
 }
 
 project(':mx-dal-mongodb') {
-  version = '1.3.3'
-  description = 'dal with mongoldb.'
+    version = '1.3.4'
+    description = 'dal with mongoldb.'
 
-  dependencies {
-    compile(
-      project(':mx-dal'),
-      libs.'spring-data-mongodb'
-    )
-    testCompile(
-      libs.'mongodb-embed'
-    )
-  }
+    dependencies {
+        compile(
+                project(':mx-dal'),
+                libs.'spring-data-mongodb'
+        )
+        testCompile(
+                libs.'mongodb-embed'
+        )
+    }
 }
 
 project(':mx-dal-elastic') {
-  version = '1.1.4'
-  description = 'dal with elasticsearch.'
+    version = '1.1.5'
+    description = 'dal with elasticsearch.'
 
-  dependencies {
-    compile(
-      project(':mx-service-utils'),
-      project(':mx-dal'),
-      libs.'fastjson',
-      libs.'log4j-api',
-      libs.'log4j-core',
-      libs.'log4j-jcl',
-      libs.'log4j-slf4j-impl',
-      libs.'slf4j-api',
-      libs.'elasticsearch-rest'
-    )
-  }
+    dependencies {
+        compile(
+                project(':mx-service-utils'),
+                project(':mx-dal'),
+                libs.'fastjson',
+                libs.'log4j-api',
+                libs.'log4j-core',
+                libs.'log4j-jcl',
+                libs.'log4j-slf4j-impl',
+                libs.'slf4j-api',
+                libs.'elasticsearch-rest'
+        )
+    }
 }
 
 project('mx-hanlp-utils') {
-  version = '1.0.5'
-  description = 'utilities API for hanlp.'
+    version = '1.0.5'
+    description = 'utilities API for hanlp.'
 
-  dependencies {
-    compile(
-      project(':mx-spring'),
-      project(':mx-service-utils')
-    )
-    compile 'com.oracle:ojdbc6:11.2.0.4.0-atlassian-hosted'
-  }
+    dependencies {
+        compile(
+                project(':mx-spring'),
+                project(':mx-service-utils')
+        )
+        compile 'com.oracle:ojdbc6:11.2.0.4.0-atlassian-hosted'
+    }
 }
 
 apply from: '../../subproject.gradle'

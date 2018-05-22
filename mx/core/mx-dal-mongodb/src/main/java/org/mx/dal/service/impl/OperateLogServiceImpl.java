@@ -8,9 +8,6 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.OperateLogService;
 import org.mx.dal.session.SessionDataStore;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 
 /**
@@ -18,7 +15,6 @@ import org.springframework.stereotype.Component;
  *
  * @author : john.peng created on date : 2017/10/8
  */
-@Component("operateLogService")
 public class OperateLogServiceImpl extends AbstractOperateLogService implements OperateLogService {
     private static final Log logger = LogFactory.getLog(AbstractOperateLogService.class);
 
@@ -31,8 +27,7 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
      * @param accessor         mongodb操作器
      * @param sessionDataStore 会话数据服务接口
      */
-    @Autowired
-    public OperateLogServiceImpl(@Qualifier("generalAccessorMongodb") GeneralAccessor accessor,
+    public OperateLogServiceImpl(GeneralAccessor accessor,
                                  SessionDataStore sessionDataStore) {
         super();
         this.accessor = accessor;

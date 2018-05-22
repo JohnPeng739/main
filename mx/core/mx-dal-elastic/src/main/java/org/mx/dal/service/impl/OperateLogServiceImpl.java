@@ -5,9 +5,6 @@ import org.mx.dal.entity.OperateLog;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.OperateLogService;
 import org.mx.dal.session.SessionDataStore;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 /**
  * 描述： 基于Elastic实现的操作审计日志记录服务类
@@ -15,7 +12,6 @@ import org.springframework.stereotype.Component;
  * @author John.Peng
  * Date time 2018/4/1 上午9:10
  */
-@Component("operateLogServiceElastic")
 public class OperateLogServiceImpl extends AbstractOperateLogService implements OperateLogService {
     private GeneralAccessor accessor;
     private SessionDataStore sessionDataStore;
@@ -26,8 +22,7 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
      * @param accessor         ES工具
      * @param sessionDataStore 会话数据服务接口
      */
-    @Autowired
-    public OperateLogServiceImpl(@Qualifier("generalAccessorElastic") GeneralAccessor accessor,
+    public OperateLogServiceImpl(GeneralAccessor accessor,
                                  SessionDataStore sessionDataStore) {
         super();
         this.accessor = accessor;

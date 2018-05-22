@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.springframework.stereotype.Component;
+import org.mx.dal.session.SessionDataStore;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -19,9 +19,16 @@ import java.util.List;
  * @see GeneralAccessorImpl
  * @see GeneralDictAccessor
  */
-@Component("generalDictAccessorJpa")
 public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements GeneralDictAccessor {
     private static final Log logger = LogFactory.getLog(GeneralDictAccessorImpl.class);
+
+    public GeneralDictAccessorImpl() {
+        super();
+    }
+
+    public GeneralDictAccessorImpl(SessionDataStore sessionDataStore) {
+        super(sessionDataStore);
+    }
 
     /**
      * {@inheritDoc}

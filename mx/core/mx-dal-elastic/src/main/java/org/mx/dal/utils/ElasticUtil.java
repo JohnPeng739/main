@@ -12,9 +12,21 @@ import java.util.List;
  * 描述：访问Elastic的接口定义
  *
  * @author John.Peng
- *         Date time 2018/4/1 上午9:32
+ * Date time 2018/4/1 上午9:32
  */
 public interface ElasticUtil {
+    /**
+     * 销毁Elastic连接
+     *
+     * @throws Exception 销毁过程中发生的异常
+     */
+    void destroy() throws Exception;
+
+    /**
+     * 初始化Elastic连接
+     */
+    void init();
+
     /**
      * 获取指定索引对应的实体类名
      *

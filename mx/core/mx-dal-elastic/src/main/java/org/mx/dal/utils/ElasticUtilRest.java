@@ -33,11 +33,7 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -53,8 +49,7 @@ import java.util.function.BiConsumer;
  * @author John.Peng
  * Date time 2018/4/1 上午9:31
  */
-@Component("elasticUtilRest")
-public class ElasticUtilRest implements ElasticUtil, InitializingBean, DisposableBean {
+public class ElasticUtilRest implements ElasticUtil {
     private static final Log logger = LogFactory.getLog(ElasticUtilRest.class);
 
     private Environment env;
@@ -69,7 +64,6 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
      * @param env              Spring环境上下文
      * @param sessionDataStore 会话数据服务接口
      */
-    @Autowired
     public ElasticUtilRest(Environment env, SessionDataStore sessionDataStore) {
         super();
         this.env = env;
@@ -79,9 +73,8 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
     /**
      * {@inheritDoc}
      *
-     * @see DisposableBean#destroy()
+     * @see ElasticUtil#destroy()
      */
-    @Override
     public void destroy() throws Exception {
         if (client != null) {
             // CloseIndexRequest request = new CloseIndexRequest(this.index);
@@ -177,10 +170,9 @@ public class ElasticUtilRest implements ElasticUtil, InitializingBean, Disposabl
     /**
      * {@inheritDoc}
      *
-     * @see InitializingBean#afterPropertiesSet()
+     * @see ElasticUtil#init()
      */
-    @Override
-    public void afterPropertiesSet() {
+    public void init() {
         int servers = env.getProperty("elastic.servers", Integer.class, 0);
         if (servers <= 0) {
             if (logger.isErrorEnabled()) {

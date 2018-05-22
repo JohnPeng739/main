@@ -11,9 +11,7 @@ import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -30,7 +28,6 @@ import java.util.List;
  * @author : john.peng date : 2017/10/6
  * @see GeneralAccessor
  */
-@Component("generalAccessorJpa")
 public class GeneralAccessorImpl implements GeneralAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorImpl.class);
 
@@ -48,7 +45,6 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      *
      * @param sessionDataStore 会话数据服务接口
      */
-    @Autowired
     public GeneralAccessorImpl(@Qualifier("sessionDataThreadLocal") SessionDataStore sessionDataStore) {
         super();
         this.sessionDataStore = sessionDataStore;

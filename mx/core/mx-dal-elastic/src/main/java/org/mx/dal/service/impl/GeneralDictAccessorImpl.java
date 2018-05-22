@@ -3,7 +3,7 @@ package org.mx.dal.service.impl;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.springframework.stereotype.Component;
+import org.mx.dal.utils.ElasticUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,10 +12,18 @@ import java.util.List;
  * 描述： 基于Elastic实现的基础字典访问类
  *
  * @author John.Peng
- *         Date time 2018/4/1 上午9:20
+ * Date time 2018/4/1 上午9:20
  */
-@Component("generalDictAccessorElastic")
 public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements GeneralDictAccessor {
+    /**
+     * 默认的构造函数
+     *
+     * @param elasticUtil ES访问工具
+     */
+    public GeneralDictAccessorImpl(ElasticUtil elasticUtil) {
+        super(elasticUtil);
+    }
+
     /**
      * {@inheritDoc}
      *

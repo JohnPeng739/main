@@ -4,7 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.util.Dbcp2DataSourceFactory;
+import org.mx.dal.service.OperateLogService;
+import org.mx.dal.service.impl.GeneralAccessorImpl;
+import org.mx.dal.service.impl.GeneralDictAccessorImpl;
+import org.mx.dal.service.impl.OperateLogServiceImpl;
+import org.mx.dal.session.SessionDataStore;
+import org.mx.dbcp.Dbcp2DataSourceFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -33,12 +38,26 @@ import java.util.Set;
         "classpath:database.properties",
         "classpath:jpa.properties"
 })
-@ComponentScan({"org.mx.dal.service.impl"})
 @EnableTransactionManagement
 public class DalHibernateConfig implements TransactionManagementConfigurer {
     private static final Log logger = LogFactory.getLog(DalHibernateConfig.class);
 
     private PlatformTransactionManager transactionManager = null;
+
+    @Bean(name = "generalAccessorJpa")
+    public GeneralAccessor generalAccessorJpa(SessionDataStore sessionDataStore) {
+        return new GeneralAccessorImpl(sessionDataStore);
+    }
+
+    @Bean(name = "generalDictAccessorJpa")
+    public GeneralDictAccessor generalDictAccessorJpa(SessionDataStore sessionDataStore) {
+        return new GeneralDictAccessorImpl(sessionDataStore);
+    }
+
+    @Bean(name = "operateLogService")
+    public OperateLogService operateLogService(SessionDataStore sessionDataStore) {
+        return new OperateLogServiceImpl(generalAccessorJpa(sessionDataStore), sessionDataStore);
+    }
 
     /**
      * 创建一个通用的数据访问器

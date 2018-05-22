@@ -12,13 +12,11 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralTextSearchAccessor;
 import org.mx.dal.session.SessionDataStore;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.data.mongodb.core.query.TextQuery;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +33,6 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  * @see GeneralAccessor
  * @see GeneralTextSearchAccessor
  */
-@Component("generalAccessorMongodb")
 public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorImpl.class);
 
@@ -46,7 +43,6 @@ public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAc
         super();
     }
 
-    @Autowired
     public GeneralAccessorImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
         this();
         this.template = template;

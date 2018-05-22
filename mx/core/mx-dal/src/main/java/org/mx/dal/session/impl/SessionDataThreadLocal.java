@@ -2,7 +2,6 @@ package org.mx.dal.session.impl;
 
 import org.mx.StringUtils;
 import org.mx.dal.session.SessionDataStore;
-import org.springframework.stereotype.Component;
 
 /**
  * 采用线程局部变量方式实现的会话数据保存实现。
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
  * @author : john.peng date : 2017/9/10
  * @see SessionDataStore
  */
-@Component("sessionDataThreadLocal")
 public class SessionDataThreadLocal implements SessionDataStore {
     private static ThreadLocal<String> currentSystem = ThreadLocal.withInitial(() -> "default");
     private static ThreadLocal<String> currentModule = ThreadLocal.withInitial(() -> "default");

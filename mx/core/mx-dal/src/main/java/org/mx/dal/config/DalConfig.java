@@ -1,18 +1,24 @@
 package org.mx.dal.config;
 
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.mx.dal.session.SessionDataStore;
+import org.mx.dal.session.impl.SessionDataThreadLocal;
+import org.springframework.context.annotation.Bean;
 
 /**
  * DAL（数据访问层）Java Configure类
  * <p>
- * 扫描包：org.mx.dal.session.impl中的组件
- * 加载配置文件：classpath:database.properties
+ * 载入：org.mx.dal.session.impl中的组件
  *
  * @author : john.peng date : 2017/10/7
  */
-@ComponentScan({
-        "org.mx.dal.session.impl"
-})
 public class DalConfig {
+    /**
+     * 基于线程局部堆方式创建SessionDataStore
+     *
+     * @return SessionDataStore对象
+     */
+    @Bean(name = "sessionDataStore")
+    public SessionDataStore sessionDataThreadLocal() {
+        return new SessionDataThreadLocal();
+    }
 }

@@ -8,9 +8,6 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.OperateLogService;
 import org.mx.dal.session.SessionDataStore;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -19,16 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author : john.peng created on date : 2017/10/8
  */
-@Component("operateLogService")
 public class OperateLogServiceImpl extends AbstractOperateLogService implements OperateLogService {
     private static final Log logger = LogFactory.getLog(AbstractOperateLogService.class);
 
     private GeneralAccessor accessor;
     private SessionDataStore sessionDataStore;
 
-    @Autowired
-    public OperateLogServiceImpl(@Qualifier("generalAccessorJpa") GeneralAccessor accessor,
-                                 SessionDataStore sessionDataStore) {
+    public OperateLogServiceImpl(GeneralAccessor accessor, SessionDataStore sessionDataStore) {
         super();
         this.accessor = accessor;
         this.sessionDataStore = sessionDataStore;

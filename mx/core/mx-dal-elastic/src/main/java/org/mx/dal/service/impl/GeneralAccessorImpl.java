@@ -9,8 +9,6 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.ElasticAccessor;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.utils.ElasticUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,7 +20,6 @@ import java.util.List;
  * @author John.Peng
  * Date time 2018/4/1 上午8:56
  */
-@Component("generalAccessorElastic")
 public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
     private ElasticUtil accessor;
 
@@ -35,7 +32,6 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
      *
      * @param elasticUtil ES工具
      */
-    @Autowired
     public GeneralAccessorImpl(ElasticUtil elasticUtil) {
         this();
         this.accessor = elasticUtil;

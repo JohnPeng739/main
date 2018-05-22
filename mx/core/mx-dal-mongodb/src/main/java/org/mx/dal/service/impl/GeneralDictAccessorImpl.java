@@ -4,8 +4,9 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
+import org.mx.dal.session.SessionDataStore;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Component;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -16,8 +17,17 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  * @see GeneralAccessorImpl
  * @see GeneralDictAccessor
  */
-@Component("generalDictAccessorMongodb")
 public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements GeneralDictAccessor {
+    /**
+     * 默认的构造函数
+     *
+     * @param template         MongodbTemplate
+     * @param sessionDataStore 会话数据存储器
+     */
+    public GeneralDictAccessorImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
+        super(template, sessionDataStore);
+    }
+
     /**
      * {@inheritDoc}
      *
