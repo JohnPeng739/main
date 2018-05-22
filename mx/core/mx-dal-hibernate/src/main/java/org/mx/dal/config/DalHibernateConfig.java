@@ -62,6 +62,7 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     /**
      * 创建一个通用的数据访问器
      *
+     * @param context Spring IoC上下文
      * @return 数据访问器
      */
     @Bean(name = "generalAccessor")
@@ -72,6 +73,7 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     /**
      * 创建一个通用的字典数据访问器
      *
+     * @param context Spring IoC上下文
      * @return 数据访问器
      */
     @Bean(name = "generalDictAccessor")
@@ -82,6 +84,9 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
 
     /**
      * 创建JDBC数据源工厂
+     *
+     * @param env Spring IoC上下文环境
+     * @return DBCP数据源工厂
      */
     @Bean(name = "dataSourceFactory", initMethod = "init", destroyMethod = "close")
     public Dbcp2DataSourceFactory dataSourceFactory(Environment env) {
@@ -99,6 +104,9 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
 
     /**
      * 从工厂中获取JDBC数据源
+     *
+     * @param env Spring IoC上下文环境
+     * @return 数据源
      */
     @Bean(name = "dataSource")
     public DataSource dataSource(Environment env) {
@@ -114,6 +122,8 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     /**
      * 创建实体管理器工厂Bean
      *
+     * @param env     Spring IoC上下文环境
+     * @param context Spring IoC上下文
      * @return 实体管理器工厂Bean
      */
     @Bean("entityManagerFactory")
@@ -148,6 +158,8 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     /**
      * 创建事务管理器
      *
+     * @param env     Spring IoC上下文环境
+     * @param context Spring IoC上下文
      * @return 事务管理器
      */
     @Bean

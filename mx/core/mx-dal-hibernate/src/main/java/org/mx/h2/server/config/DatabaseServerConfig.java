@@ -16,6 +16,7 @@ public class DatabaseServerConfig {
     /**
      * 创建H2数据库服务器工厂
      *
+     * @param env Spring IoC上下文环境
      * @return 工厂
      */
     @Bean(name = "h2ServerFactory", initMethod = "init", destroyMethod = "close")
