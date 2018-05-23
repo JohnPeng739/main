@@ -29,7 +29,7 @@
 
     <dependencies>
         <dependency>
-            <!-- 根据模块的需要，引入响应的模块组件 -->
+            <!-- 根据模块的需要，引入相应的模块组件 -->
         </dependency>
     </dependencies>
 
