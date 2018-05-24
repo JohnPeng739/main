@@ -35,6 +35,7 @@
 
 </project>
 ```
+*注意*：所有jar包托管在jcenter中，请在Maven2的`settings.xml`或者项目的`pom.xml`中添加`https://jcenter.bintray.com/`，如果网络不支持https协议，也可以使用`http://jcenter.bintray.com/`。
 - 第二步<br>
 创建测试类：com.dscomm.test.TestApplication，其中的Java代码可能如：
 ```java

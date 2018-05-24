@@ -1,4 +1,4 @@
-# mx-utils模块
+# mx-dal模块
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat)](http://doge.mit-license.org)
 
 ## 安装和引用
