@@ -81,4 +81,4 @@ ergh
 *[mx-dal-mongodb](mx-dal-mongodb)：基于Mongodb实现的mx-dal实现*
 
 ## mx-dal-elastic
-*[mx-dal-elastic](mx-dal-elastic)：基于Elastic Search RESTful实现的mx-dal实现*
+*[mx-dal-elastic](mx-dal-elastic)：基于Elastic Search High Level RESTful实现的mx-dal实现*
