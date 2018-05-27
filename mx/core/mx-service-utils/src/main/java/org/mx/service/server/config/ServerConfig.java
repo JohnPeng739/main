@@ -1,5 +1,6 @@
 package org.mx.service.server.config;
 
+import org.mx.service.server.CommServerFactory;
 import org.mx.service.server.HttpServerFactory;
 import org.mx.service.server.ServletServerFactory;
 import org.mx.service.server.WebsocketServerFactory;
@@ -58,6 +59,18 @@ public class ServerConfig {
     @Bean(name = "wsSessionManager", initMethod = "init", destroyMethod = "destroy")
     public WsSessionManager wsSessionManager(Environment env, ApplicationContext context) {
         return new WsSessionManager(env, context);
+    }
+
+    /**
+     * 创建基于TCP/IP通信的服务器工厂
+     *
+     * @param env     Spring IoC上下文环境
+     * @param context Spring IoC上下文
+     * @return 通信服务器工厂
+     */
+    @Bean(name = "commServerFactory", initMethod = "init", destroyMethod = "destroy")
+    public CommServerFactory commServerFactory(Environment env, ApplicationContext context) {
+        return new CommServerFactory(env, context);
     }
 
     /**
