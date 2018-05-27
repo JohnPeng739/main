@@ -4,14 +4,14 @@
 *面向Java应用的常用模块*：为了提高Java项目的开发效率和质量，所有项目都可以应用本项目中的相关模块。
 
 本项目包括以下模块：
-1. mx-utils
-2. mx-spring
-3. mx-service-utils
-4. mx-hanlp-utils
-5. mx-dal
-6. mx-dal-hibernate
-7. mx-dal-mongodb
-8. mx-dal-elastic
+1. [mx-utils](mx-utils)：*面向Java应用的常用工具类项目*
+2. [mx-spring](mx-spring)：*面向Spring应用的常用工具类项目*
+3. [mx-service-utils](mx-service-utils)：*基于Spring和Jetty提供的关于RESTful、Servlet、Websocket等微服务的框架项目*
+4. [mx-hanlp-utils](mx-hanlp-utils)：*基于Spring和HanLP提供基础的语义分析工具项目*
+5. [mx-dal](mx-dal)：*高度抽象的DAL（Data Access Layer），目前对关系型数据库、MongoDB数据库、Elastic Search提供了统一接口抽象*
+6. [mx-dal-hibernate](mx-dal-hibernate)：*基于Hibernate JPA实现的mx-dal实现，可以对所有关系型数据进行支持*
+7. [mx-dal-mongodb](mx-dal-mongodb)：*基于Mongodb实现的mx-dal实现*
+8. [mx-dal-elastic](mx-dal-elastic)：*基于Elastic Search High Level RESTful实现的mx-dal实现*
 
 ## Hello world
 - 第一步<br>
@@ -58,27 +58,3 @@ ergh
 1234
 5678
 ```
-
-## mx-utils
-*[mx-utils](mx-utils)：面向Java应用的常用工具类项目*
-
-## mx-spring
-*[mx-spring](mx-spring)：面向Spring应用的常用工具类项目*
-
-## mx-service-utils
-*[mx-service-utils](mx-service-utils)：基于Spring和Jetty提供的关于RESTful、Servlet、Websocket等微服务的框架项目*
-
-## mx-hanlp-utils
-*[mx-hanlp-utils](mx-hanlp-utils)：基于Spring和HanLP提供基础的语义分析工具项目*
-
-## mx-dal
-*[mx-dal](mx-dal)：高度抽象的DAL（Data Access Layer），目前对关系型数据库、MongoDB数据库、Elastic Search提供了统一接口抽象*
-
-## mx-dal-hibernate
-*[mx-dal-hibernate](mx-dal-hibernate)：基于Hibernate JPA实现的mx-dal实现，可以对所有关系型数据进行支持*
-
-## mx-dal-mongodb
-*[mx-dal-mongodb](mx-dal-mongodb)：基于Mongodb实现的mx-dal实现*
-
-## mx-dal-elastic
-*[mx-dal-elastic](mx-dal-elastic)：基于Elastic Search High Level RESTful实现的mx-dal实现*
