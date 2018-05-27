@@ -14,6 +14,7 @@
 ```gradle
 compile 'org.mx:mx-dal-hibernate:1.3.8'
 ```
+
 ## Hello world
 
 ## 基于DBCP的数据库连接池

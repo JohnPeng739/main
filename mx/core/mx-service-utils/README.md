@@ -7,12 +7,12 @@
 <dependency>
     <groupId>org.mx</groupId>
     <artifactId>mx-service-utils</artifactId>
-    <version>1.6.9</version>
+    <version>1.7.0</version>
 </dependency>
 ```
 *Gradle*
 ```gradle
-compile 'org.mx:mx-service-utils:1.6.8'
+compile 'org.mx:mx-service-utils:1.7.0'
 ```
 
 ## Hello World
@@ -42,9 +42,9 @@ public class TestApplication {
 至此，你需要的服务器就以微服务的方式自动运行了。
 *友情提醒*：鉴于Java应用运行特点，所有微服务最适合运行的环境是Linux中的进程环境，可以将每个微服务配置成Linux下的后台Daemon进程进行自动运行；如果在Windows环境中，则要防止Java运行进程（往往是一个终端进程）被用户误关闭的风险！！
 
-## RESTful
+## RESTful server
 基于Jetty提供的HTTP服务器来实现RESTful服务。
-### server
+### Server
 要运行自定义的RESTful服务器，你需要修改CLASSPATH下的`server.properties`配置文件，如下所示：
 ```properties
 restful.enabled=true
@@ -90,9 +90,9 @@ public class TestConfig {
 1. 在Config中定义的Servlet Classes的name必须与server.properties配置文件中配置的名称一致。
 2. 所有注入的Servlet服务必须继承`BaseHttpServlet`。
 
-## Websocket
+## Websocket server
 基于Jetty提供的Websocket服务器来实现自定义的Websocket服务。
-### server
+### Server
 要运行自定义的Websocket服务器，你需要修改CLASSPATH下的`server.properties`配置文件，如下所示：
 ```properties
 websocket.enabled=true
@@ -117,5 +117,11 @@ public class TestConfig {
 ### client
 本模块还提供了面向Websocket服务的java客户端程序`org.mx.service.client.websocket.WsClientInvoke`，便于后端Java应用调用Websocket服务。
 具体使用方法参见Javadoc。
+
+## TCP/UDP server
+提供的tcp/udp通信服务器。
+### Server
+
+### Client
 
 *详细说明参阅本模块的Javadoc。*
