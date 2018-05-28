@@ -1,5 +1,6 @@
 package org.mx.hanlp.factory;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
@@ -78,8 +79,11 @@ public class SuggesterFactory {
      * 重新刷新并加载推荐数据
      */
     public void reloadSuggesters() {
-        if (executor != null) {
+        if (executor != null && !(executor.isShutdown() || executor.isTerminated())) {
             // 已经有加载任务了，忽略本次重载请求
+            if (logger.isWarnEnabled()) {
+                logger.warn("Any reload task is running, will be ignored.");
+            }
             return;
         }
         executor = Executors.newFixedThreadPool(suggesters.size());
@@ -95,6 +99,9 @@ public class SuggesterFactory {
                 stat.setReloadTotal(total);
                 stat.setItemTotal(suggester.getTotal());
                 stats.put(type, stat);
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("[%s] task finished, data: %s.", type, JSON.toJSONString(stat)));
+                }
                 return total;
             });
             futures.add(future);
@@ -114,6 +121,9 @@ public class SuggesterFactory {
             cleanTimer = null;
         }
         suggesters.forEach((type, suggester) -> suggester.clear());
+        if (logger.isDebugEnabled()) {
+            logger.debug("All suggester's data be cleared.");
+        }
     }
 
     /**
@@ -136,6 +146,10 @@ public class SuggesterFactory {
      * 销毁推荐工厂
      */
     public void destroy() {
+        if (cleanTimer != null) {
+            cleanTimer.cancel();
+            cleanTimer.purge();
+        }
         if (executor != null) {
             executor.shutdownNow();
         }
