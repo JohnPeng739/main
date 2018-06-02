@@ -11,7 +11,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -346,8 +345,10 @@ public class TcpCommServiceProvider extends CommServiceProvider {
         public void send(byte[] buffer) {
             try {
                 for (int offset = 0; offset < buffer.length; ) {
-                    socket.getOutputStream().write(
-                            Arrays.copyOfRange(buffer, offset, Math.min(offset + maxLength, buffer.length)));
+                    byte[] payload = new byte[Math.min(offset + maxLength, buffer.length)];
+                    System.arraycopy(buffer, offset, payload, 0, payload.length);
+                    // 对载荷封包，然后发送
+                    socket.getOutputStream().write(packetWrapper.getPacketData(payload));
                     if (offset + maxLength < buffer.length) {
                         offset += maxLength;
                     }
