@@ -101,31 +101,31 @@ public class UdpCommServiceProvider extends CommServiceProvider {
      * @see CommServiceProvider#send(String, int, byte[])
      */
     @Override
-    public void send(String ip, int port, byte[] buffer) {
-        if (StringUtils.isBlank(ip) || port <= 0 || buffer == null || buffer.length <= 0) {
+    public void send(String ip, int port, byte[] payload) {
+        if (StringUtils.isBlank(ip) || port <= 0 || payload == null || payload.length <= 0) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Send parameter invalid, to: %s:%d, length: %d", ip, port,
-                        buffer == null ? 0 : buffer.length));
+                        payload == null ? 0 : payload.length));
             }
             return;
         }
         SocketAddress socketAddress = new InetSocketAddress(ip, port);
         try {
-            for (int offset = 0; offset < buffer.length; ) {
-                int length = Math.min(offset + maxLength, buffer.length);
-                byte[] data = Arrays.copyOfRange(buffer, offset, length);
+            for (int offset = 0; offset < payload.length; ) {
+                int length = Math.min(offset + maxLength, payload.length);
+                byte[] data = Arrays.copyOfRange(payload, offset, length);
                 DatagramPacket sendPacket = new DatagramPacket(data, data.length, socketAddress);
                 socket.send(sendPacket);
-                if (offset + maxLength < buffer.length) {
+                if (offset + maxLength < payload.length) {
                     offset += maxLength;
                 }
             }
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Send data successfully, to: %s:%d, length: %d", ip, port, buffer.length));
+                logger.debug(String.format("Send data successfully, to: %s:%d, length: %d", ip, port, payload.length));
             }
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("Send data fail, to: %s:%d, length: %d.", ip, port, buffer.length), ex);
+                logger.error(String.format("Send data fail, to: %s:%d, length: %d.", ip, port, payload.length), ex);
             }
         }
     }
@@ -175,22 +175,36 @@ public class UdpCommServiceProvider extends CommServiceProvider {
             }
             try {
                 while (!needExit) {
-                    socket.receive(packet);
-                    ReceivedMessage receivedMessage = new ReceivedMessage();
-                    receivedMessage.setFromIp(TypeUtils.byteArray2Ip(packet.getAddress().getAddress()));
-                    receivedMessage.setFromPort(packet.getPort());
-                    receivedMessage.setLength(packet.getLength() - packet.getOffset());
-                    receivedMessage.setData(Arrays.copyOfRange(packet.getData(), packet.getOffset(),
-                            packet.getOffset() + packet.getLength()));
-                    if (receiver != null) {
-                        receiver.receiveMessage(receivedMessage);
+                    try {
+                        socket.receive(packet);
+                        ReceivedMessage receivedMessage = new ReceivedMessage();
+                        receivedMessage.setFromIp(TypeUtils.byteArray2Ip(packet.getAddress().getAddress()));
+                        receivedMessage.setFromPort(packet.getPort());
+                        receivedMessage.setLength(packet.getLength() - packet.getOffset());
+                        receivedMessage.setPayload(Arrays.copyOfRange(packet.getData(), packet.getOffset(),
+                                packet.getOffset() + packet.getLength()));
+                        if (receiver != null) {
+                            receiver.receiveMessage(receivedMessage);
+                        }
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(String.format("Receive a data packet, from: %s:%d, length: %d.",
+                                    receivedMessage.getFromIp(), receivedMessage.getFromPort(), receivedMessage.getLength()));
+                        }
+                        // 由于每次接收到数据后packet的长度将被实际长度填充，因此每次需要重置长度
+                        packet.setLength(length);
+                    } catch (SocketTimeoutException ex) {
+                        if (logger.isWarnEnabled()) {
+                            logger.warn("Receive UDP data timeout.", ex);
+                        }
                     }
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("Receive a data packet, from: %s:%d, length: %d.",
-                                receivedMessage.getFromIp(), receivedMessage.getFromPort(), receivedMessage.getLength()));
+                    try {
+                        // 释放CPU时间
+                        Thread.sleep(30);
+                    } catch (InterruptedException ex) {
+                        if (logger.isWarnEnabled()) {
+                            logger.warn("Sleep interrupted.", ex);
+                        }
                     }
-                    // 由于每次接收到数据后packet的长度将被实际长度填充，因此每次需要重置长度
-                    packet.setLength(length);
                 }
                 if (logger.isInfoEnabled()) {
                     logger.info("The receive task finished, will be closed.");

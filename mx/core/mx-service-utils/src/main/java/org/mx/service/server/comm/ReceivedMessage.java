@@ -10,7 +10,7 @@ public class ReceivedMessage {
     private String fromIp;
     private long offset = 0;
     private int fromPort, length;
-    private byte[] data;
+    private byte[] payload;
 
     /**
      * 获取数据来源IP
@@ -85,20 +85,20 @@ public class ReceivedMessage {
     }
 
     /**
-     * 获取接收到的数据
+     * 获取接收到的有效载荷
      *
-     * @return 二进制数据
+     * @return 二进制格式的载荷
      */
-    public byte[] getData() {
-        return data;
+    public byte[] getPayload() {
+        return payload;
     }
 
     /**
-     * 设置接收到的数据
+     * 设置接收到的有效载荷
      *
-     * @param data 二进制数据
+     * @param payload 二进制格式的载荷
      */
-    public void setData(byte[] data) {
-        this.data = data;
+    public void setPayload(byte[] payload) {
+        this.payload = payload;
     }
 }

@@ -115,10 +115,10 @@ public class TcpCommServiceProvider extends CommServiceProvider {
      * @see CommServiceProvider#send(String, int, byte[])
      */
     @Override
-    public void send(String ip, int port, byte[] buffer) {
+    public void send(String ip, int port, byte[] payload) {
         String key = String.format("%s:%d", ip, port);
         if (tcpConnections.containsKey(key)) {
-            tcpConnections.get(key).send(buffer);
+            tcpConnections.get(key).send(payload);
         } else {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The tcp connection[%s] not existed.", key));
@@ -229,16 +229,31 @@ public class TcpCommServiceProvider extends CommServiceProvider {
             try {
                 byte[] buffer = new byte[length];
                 while (!needExit) {
-                    int len = inputStream.read(buffer);
-                    if (len > 0) {
-                        ReceivedMessage receivedMessage = new ReceivedMessage();
-                        receivedMessage.setFromIp(fromIp);
-                        receivedMessage.setFromPort(fromPort);
-                        receivedMessage.setOffset(0);
-                        receivedMessage.setLength(len);
-                        receivedMessage.setData(Arrays.copyOfRange(buffer, 0, len));
-                        if (receiver != null) {
-                            receiver.receiveMessage(receivedMessage);
+                    try {
+                        int len = inputStream.read(buffer);
+                        if (len > 0) {
+                            //
+                            ReceivedMessage receivedMessage = new ReceivedMessage();
+                            receivedMessage.setFromIp(fromIp);
+                            receivedMessage.setFromPort(fromPort);
+                            receivedMessage.setOffset(0);
+                            receivedMessage.setLength(len);
+                            receivedMessage.setPayload(Arrays.copyOfRange(buffer, 0, len));
+                            if (receiver != null) {
+                                receiver.receiveMessage(receivedMessage);
+                            }
+                        }
+                    } catch (SocketTimeoutException ex) {
+                        if (logger.isWarnEnabled()) {
+                            logger.warn("Receive timeout.", ex);
+                        }
+                    }
+                    try {
+                        // 释放CPU时间
+                        Thread.sleep(30);
+                    } catch (InterruptedException ex) {
+                        if (logger.isWarnEnabled()) {
+                            logger.warn("Receiver sleep interrupted.", ex);
                         }
                     }
                 }

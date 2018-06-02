@@ -93,11 +93,11 @@ public abstract class CommServiceProvider {
     /**
      * 向指定目标发送二进制数据消息
      *
-     * @param ip     目标IP，IPv4或IPv6
-     * @param port   端口号
-     * @param buffer 二进制数据
+     * @param ip      目标IP，IPv4或IPv6
+     * @param port    端口号
+     * @param payload 二进制格式的载荷
      */
-    public abstract void send(String ip, int port, byte[] buffer);
+    public abstract void send(String ip, int port, byte[] payload);
 
     /**
      * 通信服务类型
