@@ -4,10 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.mx.service.server.comm.CommServiceProvider;
-import org.mx.service.server.comm.ReceiverListener;
-import org.mx.service.server.comm.TcpCommServiceProvider;
-import org.mx.service.server.comm.UdpCommServiceProvider;
+import org.mx.service.server.comm.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -39,6 +36,7 @@ public class CommServerFactory {
     /**
      * 初始化通信服务器工厂
      */
+    @SuppressWarnings("unchecked")
     public void init() {
         boolean tcpEnabled = env.getProperty("tcp.enabled", Boolean.class, false);
         if (tcpEnabled) {
@@ -46,6 +44,7 @@ public class CommServerFactory {
             int maxLength = env.getProperty("tcp.maxLength", Integer.class, 8 * 1024);
             int maxTimeout = env.getProperty("tcp.maxTimeout", Integer.class, 3000);
             String receiverName = env.getProperty("tcp.receiver");
+            Class<PacketWrapper> wrapperClass = env.getProperty("tcp.packet.wrapper", Class.class, DefaultPacketWrapper.class);
             if (port <= 0 || maxLength <= 0 || maxTimeout <= 0 || StringUtils.isBlank(receiverName)) {
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("Invalid tcp server parameter, port: %d, buffer length: %d, " +
@@ -54,12 +53,19 @@ public class CommServerFactory {
                 throw new UserInterfaceSystemErrorException(
                         UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
             }
-            tcpProvider = new TcpCommServiceProvider(port, maxLength, maxTimeout);
-            ReceiverListener receiver = context.getBean(receiverName, ReceiverListener.class);
-            tcpProvider.init(receiver);
-            if (logger.isInfoEnabled()) {
-                logger.info(String.format("Create a tcp server successfully, port: %d, buffer length: %d," +
-                        "timeout: %d, receiver: %s.", port, maxLength, maxTimeout, receiverName));
+            try {
+                PacketWrapper wrapper = wrapperClass.newInstance();
+                tcpProvider = new TcpCommServiceProvider(port, wrapper, maxLength, maxTimeout);
+                ReceiverListener receiver = context.getBean(receiverName, ReceiverListener.class);
+                tcpProvider.init(receiver);
+                if (logger.isInfoEnabled()) {
+                    logger.info(String.format("Create a tcp server successfully, port: %d, buffer length: %d," +
+                            "timeout: %d, receiver: %s.", port, maxLength, maxTimeout, receiverName));
+                }
+            } catch (InstantiationException | IllegalAccessException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("Instantiate the PacketWrapper[%s] fail.", wrapperClass.getName()), ex);
+                }
             }
         }
 

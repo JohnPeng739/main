@@ -32,16 +32,19 @@ public class TcpCommServiceProvider extends CommServiceProvider {
     private SocketAcceptTask acceptTask = null;
     private Map<String, TcpConnection> tcpConnections;
     private ReceiverListener receiver = null;
+    private PacketWrapper packetWrapper = null;
 
     /**
      * 默认的构造函数
      *
      * @param port    监听端口号
+     * @param wrapper 数据包 包装器
      * @param length  缓存最大长度
      * @param timeout 等待超时值，单位为毫秒
      */
-    public TcpCommServiceProvider(int port, int length, int timeout) {
+    public TcpCommServiceProvider(int port, PacketWrapper wrapper, int length, int timeout) {
         super(CommServiceType.TCP, port, length, timeout);
+        this.packetWrapper = wrapper;
         tcpConnections = new HashMap<>();
     }
 
@@ -227,21 +230,45 @@ public class TcpCommServiceProvider extends CommServiceProvider {
         @Override
         public void run() {
             try {
-                byte[] buffer = new byte[length];
+                byte[] cache = new byte[length], buffer = new byte[length];
+                int totalLength = 0, pos = 0;
                 while (!needExit) {
                     try {
                         int len = inputStream.read(buffer);
                         if (len > 0) {
-                            //
-                            ReceivedMessage receivedMessage = new ReceivedMessage();
-                            receivedMessage.setFromIp(fromIp);
-                            receivedMessage.setFromPort(fromPort);
-                            receivedMessage.setOffset(0);
-                            receivedMessage.setLength(len);
-                            receivedMessage.setPayload(Arrays.copyOfRange(buffer, 0, len));
-                            if (receiver != null) {
-                                receiver.receiveMessage(receivedMessage);
+                            if (len + totalLength > cache.length) {
+                                System.arraycopy(cache, len, cache, 0, totalLength - len);
+                                System.arraycopy(buffer, 0, cache, totalLength - len, len);
+                            } else {
+                                System.arraycopy(buffer, 0, cache, totalLength, len);
+                                totalLength += len;
                             }
+
+                            packetWrapper.setPacketData(cache);
+                            byte[] payload = packetWrapper.getPayload();
+                            if (payload != null) {
+                                // 找到了有效载荷
+                                ReceivedMessage receivedMessage = new ReceivedMessage();
+                                receivedMessage.setFromIp(fromIp);
+                                receivedMessage.setFromPort(fromPort);
+                                receivedMessage.setOffset(0);
+                                receivedMessage.setLength(len);
+                                receivedMessage.setPayload(payload);
+                                if (receiver != null) {
+                                    receiver.receiveMessage(receivedMessage);
+                                }
+                                pos += packetWrapper.getHeaderPosition() + payload.length;
+                                totalLength = totalLength - pos;
+                                System.arraycopy(cache, pos, cache, 0, totalLength);
+                            } else {
+                                // 没有找到载荷，但需要重新设置起点偏移
+                                pos = packetWrapper.getHeaderPosition();
+                                if (pos > 0) {
+                                    totalLength -= pos;
+                                    System.arraycopy(cache, pos, cache, 0, totalLength);
+                                }
+                            }
+                            pos = 0;
                         }
                     } catch (SocketTimeoutException ex) {
                         if (logger.isWarnEnabled()) {
