@@ -8,6 +8,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.zip.CRC32;
 
 /**
  * 数据摘要工具类
@@ -31,6 +32,21 @@ public class DigestUtils {
      */
     public static String uuid() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * 获取输入字节数组的32位CRC校验码
+     *
+     * @param bytes 字节数组
+     * @return 32位长度的CRC校验码
+     * @see CRC32
+     */
+    public static long crc32(byte[] bytes) {
+        CRC32 crc32 = new CRC32();
+        if (bytes != null) {
+            crc32.update(bytes);
+        }
+        return crc32.getValue();
     }
 
     /**
