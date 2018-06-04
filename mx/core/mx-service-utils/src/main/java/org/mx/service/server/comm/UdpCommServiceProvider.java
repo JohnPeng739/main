@@ -25,16 +25,19 @@ public class UdpCommServiceProvider extends CommServiceProvider {
     private DatagramSocket socket = null;
     private ExecutorService receiveExecutor = null;
     private ReceiveTask receiveTask = null;
+    private PacketWrapper wrapper;
 
     /**
      * 默认的构造函数
      *
      * @param port    监听端口号
+     * @param wrapper 数据包装器
      * @param length  缓存最大长度
      * @param timeout 等待超时值，单位为毫秒
      */
-    public UdpCommServiceProvider(int port, int length, int timeout) {
+    public UdpCommServiceProvider(int port, PacketWrapper wrapper, int length, int timeout) {
         super(CommServiceType.UDP, port, length, timeout);
+        this.wrapper = wrapper;
     }
 
     /**
@@ -114,6 +117,10 @@ public class UdpCommServiceProvider extends CommServiceProvider {
             for (int offset = 0; offset < payload.length; ) {
                 int length = Math.min(offset + maxLength, payload.length);
                 byte[] data = Arrays.copyOfRange(payload, offset, length);
+                if (wrapper != null) {
+                    // 如果设置了包装器，则对载荷进行包装
+                    data = wrapper.getPacketData(data);
+                }
                 DatagramPacket sendPacket = new DatagramPacket(data, data.length, socketAddress);
                 socket.send(sendPacket);
                 if (offset + maxLength < payload.length) {
@@ -181,8 +188,16 @@ public class UdpCommServiceProvider extends CommServiceProvider {
                         receivedMessage.setFromIp(TypeUtils.byteArray2Ip(packet.getAddress().getAddress()));
                         receivedMessage.setFromPort(packet.getPort());
                         receivedMessage.setLength(packet.getLength() - packet.getOffset());
-                        receivedMessage.setPayload(Arrays.copyOfRange(packet.getData(), packet.getOffset(),
-                                packet.getOffset() + packet.getLength()));
+                        byte[] data = Arrays.copyOfRange(packet.getData(), packet.getOffset(),
+                                packet.getOffset() + packet.getLength());
+                        if (wrapper != null) {
+                            // 如果设置了包装器，则对数据进行解包
+                            wrapper.setPacketData(data);
+                            receivedMessage.setPayload(wrapper.getPayload());
+                        } else {
+                            // 否则使用全部数据作为载荷
+                            receivedMessage.setPayload(data);
+                        }
                         if (receiver != null) {
                             receiver.receiveMessage(receivedMessage);
                         }

@@ -19,21 +19,21 @@ import java.util.concurrent.TimeUnit;
  */
 public class TcpConnection {
     private static final Log logger = LogFactory.getLog(TcpConnection.class);
-
+    protected ExecutorService executorService = null;
     private PacketWrapper packetWrapper;
     private Socket socket;
     private ReceiverListener receiver;
     private int maxLength;
     private ReceiveTask receiveTask = null;
-    protected ExecutorService executorService = null;
 
     /**
      * 默认的构造函数
      *
-     * @param wrapper 数据包装器
-     * @param socket  连接套接字
-     * @param length  缓存最大长度
-     * @param timeout 最大超时值
+     * @param wrapper  数据包装器
+     * @param socket   连接套接字
+     * @param receiver 数据接收监听器
+     * @param length   缓存最大长度
+     * @param timeout  最大超时值
      */
     public TcpConnection(PacketWrapper wrapper, Socket socket, ReceiverListener receiver, int length, int timeout) {
         super();

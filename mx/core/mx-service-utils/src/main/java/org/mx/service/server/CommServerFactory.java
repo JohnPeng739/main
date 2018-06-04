@@ -74,6 +74,7 @@ public class CommServerFactory {
             int port = env.getProperty("udp.port", Integer.class, 4000);
             int maxLength = env.getProperty("udp.maxLength", Integer.class, 8 * 1024);
             int maxTimeout = env.getProperty("udp.maxTimeout", Integer.class, 3000);
+            Class<PacketWrapper> wrapperClass = env.getProperty("udp.packet.wrapper", Class.class, DefaultPacketWrapper.class);
             String receiverName = env.getProperty("udp.receiver");
             if (port <= 0 || maxLength <= 0 || maxTimeout <= 0 || StringUtils.isBlank(receiverName)) {
                 if (logger.isErrorEnabled()) {
@@ -83,12 +84,19 @@ public class CommServerFactory {
                 throw new UserInterfaceSystemErrorException(
                         UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
             }
-            udpProvider = new UdpCommServiceProvider(port, maxLength, maxTimeout);
-            ReceiverListener receiver = context.getBean(receiverName, ReceiverListener.class);
-            udpProvider.init(receiver);
-            if (logger.isInfoEnabled()) {
-                logger.info(String.format("Create a udp server successfully, port: %d, buffer length: %d," +
-                        "timeout: %d, receiver: %s.", port, maxLength, maxTimeout, receiverName));
+            try {
+                PacketWrapper wrapper = wrapperClass.newInstance();
+                udpProvider = new UdpCommServiceProvider(port, wrapper, maxLength, maxTimeout);
+                ReceiverListener receiver = context.getBean(receiverName, ReceiverListener.class);
+                udpProvider.init(receiver);
+                if (logger.isInfoEnabled()) {
+                    logger.info(String.format("Create a udp server successfully, port: %d, buffer length: %d," +
+                            "timeout: %d, receiver: %s.", port, maxLength, maxTimeout, receiverName));
+                }
+            } catch (InstantiationException | IllegalAccessException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("Instantiate the PacketWrapper[%s] fail.", wrapperClass.getName()), ex);
+                }
             }
         }
 
