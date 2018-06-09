@@ -9,13 +9,18 @@ import org.java_websocket.WebSocket;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mx.service.client.comm.CommClientInvoke;
 import org.mx.service.client.rest.RestClientInvoke;
 import org.mx.service.client.rest.RestInvokeException;
 import org.mx.service.client.websocket.BaseWebsocketClientListener;
 import org.mx.service.client.websocket.WsClientInvoke;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.service.server.*;
+import org.mx.service.server.comm.CommServiceProvider;
+import org.mx.service.server.comm.DefaultPacketWrapper;
+import org.mx.service.server.comm.TcpCommServiceProvider;
 import org.mx.service.server.comm.UdpCommServiceProvider;
+import org.mx.service.test.server.comm.TestTcpReceiver;
 import org.mx.service.test.server.comm.TestUdpReceiver;
 import org.mx.service.test.server.config.TestConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -205,6 +210,42 @@ public class TestServer {
     }
 
     @Test
+    public void testTcpCommServer() {
+        CommServerFactory factory = context.getBean(CommServerFactory.class);
+        assertNotNull(factory);
+        TcpCommServiceProvider provider = factory.getTcpProvider();
+        assertNotNull(provider);
+        TestTcpReceiver tcpReceiver = context.getBean("tcpReceiver", TestTcpReceiver.class);
+        assertNotNull(tcpReceiver);
+        Integer port = context.getEnvironment().getProperty("tcp.port", Integer.class);
+        assertNotNull(port);
+        Integer length = context.getEnvironment().getProperty("udp.maxLength", Integer.class);
+        Integer timeout = context.getEnvironment().getProperty("udp.maxTimeout", Integer.class);
+
+        CommClientInvoke client = new CommClientInvoke(CommServiceProvider.CommServiceType.TCP, tcpReceiver,
+                new DefaultPacketWrapper(), "127.0.0.1", port, length, timeout);
+
+        try {
+            byte[] payload = "test message".getBytes();
+            client.send(payload);
+            Thread.sleep(20);
+            assertNotNull(tcpReceiver.getPayload());
+            assertArrayEquals(payload, tcpReceiver.getPayload());
+
+            // 在默认的包装器下，最大数据载荷为：length - 12
+            payload = "12345678901234567890123456789012345678".getBytes();
+            client.send(payload);
+            Thread.sleep(20);
+            assertNotNull(tcpReceiver.getPayload());
+            assertArrayEquals(payload, tcpReceiver.getPayload());
+            // TODO
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
     public void testUdpCommServer() {
         CommServerFactory factory = context.getBean(CommServerFactory.class);
         assertNotNull(factory);
@@ -213,25 +254,30 @@ public class TestServer {
         TestUdpReceiver udpReceiver = context.getBean("udpReceiver", TestUdpReceiver.class);
         assertNotNull(udpReceiver);
         Integer port = context.getEnvironment().getProperty("udp.port", Integer.class);
+        Integer length = context.getEnvironment().getProperty("udp.maxLength", Integer.class);
+        Integer timeout = context.getEnvironment().getProperty("udp.maxTimeout", Integer.class);
         assertNotNull(port);
+
+        CommClientInvoke client = new CommClientInvoke(CommServiceProvider.CommServiceType.UDP, udpReceiver,
+                new DefaultPacketWrapper(), "127.0.0.1", 3000, length, timeout);
 
         try {
             byte[] payload = "test message".getBytes();
-            provider.send("localhost", port, payload);
+            client.send(payload);
             Thread.sleep(50);
             assertNotNull(udpReceiver.getPayload());
             assertArrayEquals(payload, udpReceiver.getPayload());
 
             // 在默认的包装器下，最大数据载荷为：length - 12
             payload = "12345678901234567890123456789012345678".getBytes();
-            provider.send("localhost", port, payload);
+            client.send(payload);
             Thread.sleep(50);
             assertNotNull(udpReceiver.getPayload());
             assertArrayEquals(payload, udpReceiver.getPayload());
 
             try {
                 payload = "1234567890123456789012345678901234567890".getBytes();
-                provider.send("localhost", port, payload);
+                client.send(payload);
                 fail("here need exception.");
             } catch (Exception ex) {
                 // success
@@ -240,6 +286,7 @@ public class TestServer {
             ex.printStackTrace();
             fail(ex.getMessage());
         }
+        client.close();
     }
 
     private class TestWebsocketListener extends BaseWebsocketClientListener {

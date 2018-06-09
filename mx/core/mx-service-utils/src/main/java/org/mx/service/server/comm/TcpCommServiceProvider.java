@@ -157,11 +157,11 @@ public class TcpCommServiceProvider extends CommServiceProvider {
          * @see Runnable#run()
          */
         public void run() {
-            try {
-                while (!needExit) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Waiting for a new connection......");
-                    }
+            while (!needExit) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Waiting for a new connection......");
+                }
+                try {
                     Socket socket = serverSocket.accept();
                     String key = ipAndPort(socket.getInetAddress().getAddress(), socket.getPort());
                     TcpConnection tcpConnection = new TcpConnection(packetWrapper, socket, receiver, length, timeout);
@@ -169,20 +169,20 @@ public class TcpCommServiceProvider extends CommServiceProvider {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format("There has a new connection: %s.", key));
                     }
+                } catch (SocketTimeoutException ex) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn(String.format("Timeout: %d ms.", timeout), ex);
+                    }
+                    throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_SOCKET_ERROR);
+                } catch (IOException ex) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("Any IO exception.", ex);
+                    }
+                    throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
                 }
-                if (logger.isInfoEnabled()) {
-                    logger.info("Close the accept task successfully.");
-                }
-            } catch (SocketTimeoutException ex) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn(String.format("Timeout: %d ms.", timeout), ex);
-                }
-                throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_SOCKET_ERROR);
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Any IO exception.", ex);
-                }
-                throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
+            }
+            if (logger.isInfoEnabled()) {
+                logger.info("Close the accept task successfully.");
             }
         }
     }
