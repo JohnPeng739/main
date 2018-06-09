@@ -19,7 +19,8 @@ import java.util.List;
 @ComponentScan({
         "org.mx.service.test.server.rest",
         "org.mx.service.test.server.servlet",
-        "org.mx.service.test.server.websocket"
+        "org.mx.service.test.server.websocket",
+        "org.mx.service.test.server.comm"
 })
 public class TestConfig {
     @Bean(name = "restfulClassesTest")

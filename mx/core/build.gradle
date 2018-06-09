@@ -51,7 +51,7 @@ project(':mx-dal') {
 }
 
 project(':mx-service-utils') {
-    version = '1.7.0'
+    version = '1.6.9'
     description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
     dependencies {
@@ -128,7 +128,7 @@ project(':mx-dal-elastic') {
 }
 
 project('mx-hanlp-utils') {
-    version = '1.0.7'
+    version = '1.0.8'
     description = 'utilities API for hanlp.'
 
     dependencies {

@@ -115,7 +115,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
         SocketAddress socketAddress = new InetSocketAddress(ip, port);
         try {
             for (int offset = 0; offset < payload.length; ) {
-                int length = Math.min(offset + maxLength, payload.length);
+                int length = Math.min(offset + super.maxLength, payload.length);
                 byte[] data = Arrays.copyOfRange(payload, offset, length);
                 if (wrapper != null) {
                     // 如果设置了包装器，则对载荷进行包装
@@ -123,8 +123,10 @@ public class UdpCommServiceProvider extends CommServiceProvider {
                 }
                 DatagramPacket sendPacket = new DatagramPacket(data, data.length, socketAddress);
                 socket.send(sendPacket);
-                if (offset + maxLength < payload.length) {
-                    offset += maxLength;
+                if (offset + super.maxLength < payload.length) {
+                    offset += super.maxLength;
+                } else {
+                    break;
                 }
             }
             if (logger.isDebugEnabled()) {
@@ -134,6 +136,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Send data fail, to: %s:%d, length: %d.", ip, port, payload.length), ex);
             }
+            throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
         }
     }
 
@@ -180,55 +183,52 @@ public class UdpCommServiceProvider extends CommServiceProvider {
                 logger.info(String.format("Start wait for receive UDP data, port: %d, buffer length: %d.",
                         socket.getPort(), length));
             }
-            try {
-                while (!needExit) {
-                    try {
-                        socket.receive(packet);
-                        ReceivedMessage receivedMessage = new ReceivedMessage();
-                        receivedMessage.setFromIp(TypeUtils.byteArray2Ip(packet.getAddress().getAddress()));
-                        receivedMessage.setFromPort(packet.getPort());
-                        receivedMessage.setLength(packet.getLength() - packet.getOffset());
-                        byte[] data = Arrays.copyOfRange(packet.getData(), packet.getOffset(),
-                                packet.getOffset() + packet.getLength());
-                        if (wrapper != null) {
-                            // 如果设置了包装器，则对数据进行解包
-                            wrapper.setPacketData(data);
-                            receivedMessage.setPayload(wrapper.getPayload());
-                        } else {
-                            // 否则使用全部数据作为载荷
-                            receivedMessage.setPayload(data);
-                        }
-                        if (receiver != null) {
-                            receiver.receiveMessage(receivedMessage);
-                        }
-                        if (logger.isDebugEnabled()) {
-                            logger.debug(String.format("Receive a data packet, from: %s:%d, length: %d.",
-                                    receivedMessage.getFromIp(), receivedMessage.getFromPort(), receivedMessage.getLength()));
-                        }
-                        // 由于每次接收到数据后packet的长度将被实际长度填充，因此每次需要重置长度
-                        packet.setLength(length);
-                    } catch (SocketTimeoutException ex) {
-                        if (logger.isWarnEnabled()) {
-                            logger.warn("Receive UDP data timeout.", ex);
-                        }
+            while (!needExit) {
+                try {
+                    socket.receive(packet);
+                    ReceivedMessage receivedMessage = new ReceivedMessage();
+                    receivedMessage.setFromIp(TypeUtils.byteArray2Ip(packet.getAddress().getAddress()));
+                    receivedMessage.setFromPort(packet.getPort());
+                    receivedMessage.setLength(packet.getLength() - packet.getOffset());
+                    byte[] data = Arrays.copyOfRange(packet.getData(), packet.getOffset(),
+                            packet.getOffset() + packet.getLength());
+                    if (wrapper != null) {
+                        // 如果设置了包装器，则对数据进行解包
+                        wrapper.setPacketData(data);
+                        receivedMessage.setPayload(wrapper.getPayload());
+                    } else {
+                        // 否则使用全部数据作为载荷
+                        receivedMessage.setPayload(data);
                     }
-                    try {
-                        // 释放CPU时间
-                        Thread.sleep(30);
-                    } catch (InterruptedException ex) {
-                        if (logger.isWarnEnabled()) {
-                            logger.warn("Sleep interrupted.", ex);
-                        }
+                    if (receiver != null) {
+                        receiver.receiveMessage(receivedMessage);
+                    }
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Receive a data packet, from: %s:%d, length: %d.",
+                                receivedMessage.getFromIp(), receivedMessage.getFromPort(), receivedMessage.getLength()));
+                    }
+                    // 由于每次接收到数据后packet的长度将被实际长度填充，因此每次需要重置长度
+                    packet.setLength(length);
+                } catch (SocketTimeoutException ex) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn("Receive UDP data timeout.", ex);
+                    }
+                } catch (Exception ex) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("Any IO exception.", ex);
                     }
                 }
-                if (logger.isInfoEnabled()) {
-                    logger.info("The receive task finished, will be closed.");
+                try {
+                    // 释放CPU时间
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn("Sleep interrupted.", ex);
+                    }
                 }
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Any IO exception.", ex);
-                }
-                throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
+            }
+            if (logger.isInfoEnabled()) {
+                logger.info("The receive task finished, will be closed.");
             }
         }
     }

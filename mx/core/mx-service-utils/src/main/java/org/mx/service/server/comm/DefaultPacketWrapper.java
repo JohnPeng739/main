@@ -77,10 +77,10 @@ public class DefaultPacketWrapper extends PacketWrapper {
         }
         byte[] payload = new byte[length];
         pos += 4;
-        System.arraycopy(packetData, pos, packetData, 0, length);
+        System.arraycopy(packetData, pos, payload, 0, length);
         pos += length;
         System.arraycopy(packetData, pos, crcArr, 0, 4);
-        if (TypeUtils.byteArray2Int(crcArr) != DigestUtils.crc32(payload)) {
+        if (TypeUtils.byteArray2Long(crcArr) != DigestUtils.crc32(payload)) {
             // 数据校验不匹配，并需要对数据进行移位操作，避免下次再找到同样的同步字位置
             headerPos = found + 1;
             return;
