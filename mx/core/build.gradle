@@ -23,7 +23,7 @@ project(':mx-utils') {
 }
 
 project(':mx-spring') {
-    version = '1.1.8'
+    version = '1.1.9'
     description = 'Many utility based on spring, such as : SpringContextHolder, etc.'
 
     dependencies {

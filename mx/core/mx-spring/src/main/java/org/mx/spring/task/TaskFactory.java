@@ -37,6 +37,33 @@ public class TaskFactory {
     }
 
     /**
+     * 获取所有的串行任务
+     *
+     * @return 串行任务列表
+     */
+    public List<Task> getSerialTasks() {
+        return serialTasks;
+    }
+
+    /**
+     * 获取所有的单次异步任务
+     *
+     * @return 单次异步任务列表
+     */
+    public List<Task> getAsyncTasks() {
+        return asyncTasks;
+    }
+
+    /**
+     * 获取所有的可调度任务
+     *
+     * @return 可调度任务列表
+     */
+    public List<Task> getScheduledTasks() {
+        return scheduledTasks;
+    }
+
+    /**
      * 添加一个串行执行任务
      *
      * @param task 任务
@@ -65,11 +92,16 @@ public class TaskFactory {
             }
             return;
         }
-        singleExecutorService.submit(() -> serialTasks.forEach(this::runTask));
-        if (logger.isInfoEnabled()) {
-            logger.info(String.format("Submit a serial task successfully, total: %d.", serialTasks.size()));
+        try {
+            singleExecutorService.submit(() -> serialTasks.forEach(this::runTask)).get();
+            if (logger.isInfoEnabled()) {
+                logger.info(String.format("Submit a serial task successfully, total: %d.", serialTasks.size()));
+            }
+        } catch (InterruptedException | ExecutionException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Submit a serial task fail.", ex);
+            }
         }
-
     }
 
     /**
@@ -83,10 +115,16 @@ public class TaskFactory {
             logger.info("Submit a async task.");
         }
         asyncTasks.add(task);
-        asyncExecutorPoolService.submit(() -> runTask(task));
-        if (logger.isInfoEnabled()) {
-            logger.info(String.format("Submit a async task successfully, name: %s, state: %s, start: %s.",
-                    task.getName(), task.getState(), DateUtils.get23Date(new Date(task.getStartTime()))));
+        try {
+            asyncExecutorPoolService.submit(() -> runTask(task)).get();
+            if (logger.isInfoEnabled()) {
+                logger.info(String.format("Submit a async task successfully, name: %s, state: %s, start: %s.",
+                        task.getName(), task.getState(), DateUtils.get23Date(new Date(task.getStartTime()))));
+            }
+        } catch (InterruptedException | ExecutionException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Submit a async task fail.", ex);
+            }
         }
         return this;
     }
@@ -119,11 +157,25 @@ public class TaskFactory {
      * @param task 任务
      */
     private void runTask(Task task) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Start invoke the task[%s]......", task.getName()));
+        }
         ((BaseTask) task).setStartTime(System.currentTimeMillis());
         ((BaseTask) task).setState(Task.TaskState.RUNNING);
-        task.invoke();
-        ((BaseTask) task).setState(Task.TaskState.FINISHED);
-        ((BaseTask) task).setFinishTime(System.currentTimeMillis());
+        try {
+            task.invoke();
+            ((BaseTask) task).setState(Task.TaskState.FINISHED);
+            ((BaseTask) task).setFinishTime(System.currentTimeMillis());
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("The task[%s] invoke successfully.", task.getName()));
+            }
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Invoke the task[%s] fail.", task.getName()), ex);
+            }
+            ((BaseTask) task).setFinishTime(System.currentTimeMillis());
+            ((BaseTask) task).setState(Task.TaskState.ERROR);
+        }
     }
 
     /**

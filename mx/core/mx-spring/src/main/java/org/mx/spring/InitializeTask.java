@@ -6,6 +6,7 @@ import org.mx.spring.task.BaseTask;
  * 初始化任务抽象类
  *
  * @author : john.peng created on date : 2018/1/17
+ * @deprecated 在未来版本将被 {@link BaseTask} 取代。
  */
 public abstract class InitializeTask extends BaseTask {
     /**

@@ -8,6 +8,13 @@ import org.springframework.context.ApplicationContext;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 描述： 初始化任务工厂
+ *
+ * @author john peng
+ * Date time 2018/6/10 上午11:46
+ * @deprecated 在未来版本将被 {@link TaskFactory} 替代。
+ */
 public class InitializeTaskFactory {
     private static final Log logger = LogFactory.getLog(InitializeTaskFactory.class);
     private static final String TASKS = "initializeTasks";
