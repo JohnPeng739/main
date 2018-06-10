@@ -3,8 +3,10 @@ package org.mx.dal.service.impl;
 import com.alibaba.fastjson.JSON;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.search.SearchHit;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
+import org.mx.dal.entity.BaseEntity;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.ElasticAccessor;
 import org.mx.dal.service.GeneralAccessor;
@@ -82,12 +84,10 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
      * @see GeneralAccessor#list(Class, boolean)
      */
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
         SearchResponse response = accessor.search(validateCondition(isValid), clazz, null);
         List<T> list = new ArrayList<>();
-        response.getHits().forEach(hit -> list.add(JSON.parseObject(hit.getSourceAsString(),
-                (Class<T>) accessor.getIndexClass(hit.getIndex()))));
+        response.getHits().forEach(hit -> dowithRow(hit, list));
         return list;
     }
 
@@ -107,7 +107,6 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
      * @see GeneralAccessor#list(Pagination, Class, boolean)
      */
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
         if (pagination == null) {
             pagination = new Pagination();
@@ -116,8 +115,7 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
         if (response.status() == RestStatus.OK) {
             List<T> list = new ArrayList<>();
             pagination.setTotal((int) response.getHits().getTotalHits());
-            response.getHits().forEach(hit -> list.add(JSON.parseObject(hit.getSourceAsString(),
-                    (Class<T>) accessor.getIndexClass(hit.getIndex()))));
+            response.getHits().forEach(hit -> dowithRow(hit, list));
             return list;
         } else {
             return null;
@@ -151,14 +149,19 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
      * @see ElasticAccessor#find(List, List)
      */
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, List<Class<? extends Base>> classes)
             throws UserInterfaceDalErrorException {
         SearchResponse response = accessor.search(tuples, classes, null);
         List<T> list = new ArrayList<>();
-        response.getHits().forEach(hit -> list.add(JSON.parseObject(hit.getSourceAsString(),
-                (Class<T>) accessor.getIndexClass(hit.getIndex()))));
+        response.getHits().forEach(hit -> dowithRow(hit, list));
         return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Base> void dowithRow(SearchHit hit, List<T> list) {
+        T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) accessor.getIndexClass(hit.getIndex()));
+        ((BaseEntity)t).setScore(hit.getScore());
+        list.add(t);
     }
 
     /**

@@ -35,11 +35,11 @@ ext.versions = [
   'mx-utils'    	: '2.1.19',
   'mx-spring'		: '1.1.10',
   'mx-service-utils'	: '1.6.9',
-  'mx-hanlp-utils'	: '1.0.6',
+  'mx-hanlp-utils'	: '1.0.9',
   'mx-dal'      	: '1.3.6',
   'mx-dal-hibernate'    : '1.3.8',
   'mx-dal-mongodb'      : '1.3.4',
-  'mx-dal-elastic'	: '1.1.5',
+  'mx-dal-elastic'	: '1.1.6',
 
   'mx-rbac-service'		: '3.1.9',
   'mx-rbac-service-hibernate'	: '3.1.5',

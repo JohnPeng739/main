@@ -109,7 +109,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-dal-elastic') {
-    version = '1.1.5'
+    version = '1.1.6'
     description = 'dal with elasticsearch.'
 
     dependencies {
@@ -128,7 +128,7 @@ project(':mx-dal-elastic') {
 }
 
 project('mx-hanlp-utils') {
-    version = '1.0.8'
+    version = '1.0.9'
     description = 'utilities API for hanlp.'
 
     dependencies {

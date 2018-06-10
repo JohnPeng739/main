@@ -4,12 +4,13 @@ package org.mx.dal.entity;
  * 描述： 基于Elasticsearch实现的基础类实体
  *
  * @author John.Peng
- *         Date time 2018/4/1 上午8:41
+ * Date time 2018/4/1 上午8:41
  */
 public class BaseEntity implements Base {
     private String id, operator;
     private long createdTime, updatedTime;
     private boolean valid = true;
+    private float score = 0.0f;
 
     /**
      * {@inheritDoc}
@@ -109,5 +110,23 @@ public class BaseEntity implements Base {
     @Override
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    /**
+     * 获取Elastic的匹配分数
+     *
+     * @return 分数
+     */
+    public float getScore() {
+        return score;
+    }
+
+    /**
+     * 设置Elastic的匹配分数
+     *
+     * @param score 分数
+     */
+    public void setScore(float score) {
+        this.score = score;
     }
 }

@@ -4,7 +4,7 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.py.Pinyin;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.hanlp.suggest.Suggester;
+import com.hankcs.hanlp.suggest.SuggesterByScore;
 
 import java.util.List;
 
@@ -128,7 +128,7 @@ public class TestHanlp {
         }
         System.out.println();
 
-        Suggester suggester = new Suggester();
+        SuggesterByScore suggester = new SuggesterByScore();
         String[] titleArray =
                 (
                         "威廉王子发表演说 呼吁保护野生动物\n" +
@@ -143,8 +143,8 @@ public class TestHanlp {
             suggester.addSentence(title);
         }
 
-        System.out.println(suggester.suggest("讲演", 1));       // 语义
-        System.out.println(suggester.suggest("危机攻关", 1));   // 字符
-        System.out.println(suggester.suggest("wwy", 1));      // 拼音
+        System.out.println(suggester.suggest2("演讲", 3));       // 语义
+        System.out.println(suggester.suggest2("危机攻关", 4));   // 字符
+        System.out.println(suggester.suggest2("wwy", 5));      // 拼音
     }
 }
