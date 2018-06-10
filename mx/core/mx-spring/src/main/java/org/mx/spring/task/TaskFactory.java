@@ -93,11 +93,11 @@ public class TaskFactory {
             return;
         }
         try {
-            singleExecutorService.submit(() -> serialTasks.forEach(this::runTask)).get();
+            singleExecutorService.submit(() -> serialTasks.forEach(this::runTask));
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Submit a serial task successfully, total: %d.", serialTasks.size()));
             }
-        } catch (InterruptedException | ExecutionException ex) {
+        } catch (Exception ex) {
             if (logger.isWarnEnabled()) {
                 logger.warn("Submit a serial task fail.", ex);
             }
@@ -116,12 +116,12 @@ public class TaskFactory {
         }
         asyncTasks.add(task);
         try {
-            asyncExecutorPoolService.submit(() -> runTask(task)).get();
+            asyncExecutorPoolService.submit(() -> runTask(task));
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Submit a async task successfully, name: %s, state: %s, start: %s.",
                         task.getName(), task.getState(), DateUtils.get23Date(new Date(task.getStartTime()))));
             }
-        } catch (InterruptedException | ExecutionException ex) {
+        } catch (Exception ex) {
             if (logger.isWarnEnabled()) {
                 logger.warn("Submit a async task fail.", ex);
             }
