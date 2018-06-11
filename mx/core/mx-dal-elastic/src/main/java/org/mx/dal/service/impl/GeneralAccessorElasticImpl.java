@@ -6,7 +6,7 @@ import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
-import org.mx.dal.entity.BaseEntity;
+import org.mx.dal.entity.ElasticBaseEntity;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.ElasticAccessor;
 import org.mx.dal.service.GeneralAccessor;
@@ -22,10 +22,10 @@ import java.util.List;
  * @author John.Peng
  * Date time 2018/4/1 上午8:56
  */
-public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
+public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAccessor {
     private ElasticUtil accessor;
 
-    public GeneralAccessorImpl() {
+    public GeneralAccessorElasticImpl() {
         super();
     }
 
@@ -34,7 +34,7 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
      *
      * @param elasticUtil ES工具
      */
-    public GeneralAccessorImpl(ElasticUtil elasticUtil) {
+    public GeneralAccessorElasticImpl(ElasticUtil elasticUtil) {
         this();
         this.accessor = elasticUtil;
     }
@@ -160,7 +160,7 @@ public class GeneralAccessorImpl implements GeneralAccessor, ElasticAccessor {
     @SuppressWarnings("unchecked")
     private <T extends Base> void dowithRow(SearchHit hit, List<T> list) {
         T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) accessor.getIndexClass(hit.getIndex()));
-        ((BaseEntity)t).setScore(hit.getScore());
+        ((ElasticBaseEntity)t).setScore(hit.getScore());
         list.add(t);
     }
 

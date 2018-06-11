@@ -12,7 +12,7 @@ import org.mx.dal.session.SessionDataStore;
  * @author John.Peng
  * Date time 2018/4/1 上午9:10
  */
-public class OperateLogServiceImpl extends AbstractOperateLogService implements OperateLogService {
+public class OperateLogServiceElasticImpl extends AbstractOperateLogService implements OperateLogService {
     private GeneralAccessor accessor;
     private SessionDataStore sessionDataStore;
 
@@ -22,8 +22,8 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
      * @param accessor         ES工具
      * @param sessionDataStore 会话数据服务接口
      */
-    public OperateLogServiceImpl(GeneralAccessor accessor,
-                                 SessionDataStore sessionDataStore) {
+    public OperateLogServiceElasticImpl(GeneralAccessor accessor,
+                                        SessionDataStore sessionDataStore) {
         super();
         this.accessor = accessor;
         this.sessionDataStore = sessionDataStore;

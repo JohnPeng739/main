@@ -8,8 +8,8 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.entity.Base;
 import org.mx.dal.service.ElasticAccessor;
 import org.mx.dal.service.GeneralAccessor;
-import org.mx.dal.test.entity.AnimalEntity;
-import org.mx.dal.test.entity.UserEntity;
+import org.mx.dal.test.entity.AnimalEntityElastic;
+import org.mx.dal.test.entity.UserEntityElastic;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.Arrays;
@@ -38,25 +38,25 @@ public class TestElastic {
 
         try {
             long delay = 1000;
-            assertEquals(0, accessor.count(UserEntity.class));
+            assertEquals(0, accessor.count(UserEntityElastic.class));
 
-            UserEntity user1 = EntityFactory.createEntity(UserEntity.class);
+            UserEntityElastic user1 = EntityFactory.createEntity(UserEntityElastic.class);
             user1.setAge(45);
             user1.setCode("john");
             user1.setName("John Peng");
             user1.setDesc("我是一个正高级工程师。");
             assertNull(user1.getId());
-            UserEntity u1 = accessor.save(user1);
+            UserEntityElastic u1 = accessor.save(user1);
             Thread.sleep(delay);
             assertNotNull(u1);
             assertNotNull(user1.getId());
-            assertEquals(1, accessor.count(UserEntity.class));
-            assertEquals(1, accessor.count(UserEntity.class, true));
-            u1 = accessor.getById(user1.getId(), UserEntity.class);
+            assertEquals(1, accessor.count(UserEntityElastic.class));
+            assertEquals(1, accessor.count(UserEntityElastic.class, true));
+            u1 = accessor.getById(user1.getId(), UserEntityElastic.class);
             assertNotNull(u1);
             assertEquals(user1.getCode(), u1.getCode());
 
-            UserEntity user2 = EntityFactory.createEntity(UserEntity.class);
+            UserEntityElastic user2 = EntityFactory.createEntity(UserEntityElastic.class);
             user2.setId(DigestUtils.uuid());
             user2.setAge(16);
             user2.setCode("joy");
@@ -67,9 +67,9 @@ public class TestElastic {
             Thread.sleep(delay);
             assertNotNull(u1);
             assertNotNull(user2.getId());
-            assertEquals(2, accessor.count(UserEntity.class));
-            assertEquals(2, accessor.count(UserEntity.class, true));
-            u1 = accessor.getById(user2.getId(), UserEntity.class);
+            assertEquals(2, accessor.count(UserEntityElastic.class));
+            assertEquals(2, accessor.count(UserEntityElastic.class, true));
+            u1 = accessor.getById(user2.getId(), UserEntityElastic.class);
             assertNotNull(u1);
             assertEquals(user2.getCode(), u1.getCode());
 
@@ -77,35 +77,35 @@ public class TestElastic {
             u1.setDesc(u1.getDesc() + "I am a student.");
             accessor.save(u1);
             Thread.sleep(delay);
-            assertEquals(2, accessor.count(UserEntity.class));
-            assertEquals(2, accessor.count(UserEntity.class, true));
-            u1 = accessor.getById(user2.getId(), UserEntity.class);
+            assertEquals(2, accessor.count(UserEntityElastic.class));
+            assertEquals(2, accessor.count(UserEntityElastic.class, true));
+            u1 = accessor.getById(user2.getId(), UserEntityElastic.class);
             assertNotNull(u1);
             assertEquals(user2.getCode(), u1.getCode());
 
-            List<UserEntity> list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("code", "john")), UserEntity.class);
+            List<UserEntityElastic> list = accessor.find(Arrays.asList(
+                    new GeneralAccessor.ConditionTuple("code", "john")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("name", "Peng")), UserEntity.class);
+                    new GeneralAccessor.ConditionTuple("name", "Peng")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(2, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("name", "Joy")), UserEntity.class);
+                    new GeneralAccessor.ConditionTuple("name", "Joy")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("desc", "高级工程师")), UserEntity.class);
+                    new GeneralAccessor.ConditionTuple("desc", "高级工程师")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("desc", "student")), UserEntity.class);
+                    new GeneralAccessor.ConditionTuple("desc", "student")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("desc", "学生")), UserEntity.class);
+                    new GeneralAccessor.ConditionTuple("desc", "学生")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
 
@@ -114,28 +114,28 @@ public class TestElastic {
                             GeneralAccessor.ConditionTuple.ConditionOperate.LT, 100),
                     new GeneralAccessor.ConditionTuple("age",
                             GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0)),
-                    UserEntity.class);
+                    UserEntityElastic.class);
             assertEquals(2, list.size());
             list = accessor.find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("age",
                             GeneralAccessor.ConditionTuple.ConditionOperate.LT, 45),
                     new GeneralAccessor.ConditionTuple("age",
                             GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0)),
-                    UserEntity.class);
+                    UserEntityElastic.class);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("age",
                             GeneralAccessor.ConditionTuple.ConditionOperate.LTE, 45),
                     new GeneralAccessor.ConditionTuple("age",
                             GeneralAccessor.ConditionTuple.ConditionOperate.GTE, 17)),
-                    UserEntity.class);
+                    UserEntityElastic.class);
             assertEquals(2, list.size());
             list = accessor.find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("age",
                             GeneralAccessor.ConditionTuple.ConditionOperate.LT, 45),
                     new GeneralAccessor.ConditionTuple("age",
                             GeneralAccessor.ConditionTuple.ConditionOperate.GT, 17)),
-                    UserEntity.class);
+                    UserEntityElastic.class);
             assertEquals(0, list.size());list = accessor.find(Arrays.asList(
                     new GeneralAccessor.ConditionTuple("age",
                             GeneralAccessor.ConditionTuple.ConditionOperate.LT, 100),
@@ -143,19 +143,19 @@ public class TestElastic {
                             GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0),
                     new GeneralAccessor.ConditionTuple("name",
                             GeneralAccessor.ConditionTuple.ConditionOperate.EQ, "Joy")),
-                    UserEntity.class);
+                    UserEntityElastic.class);
             assertEquals(1, list.size());
 
             accessor.remove(user1);
             Thread.sleep(delay);
-            assertEquals(1, accessor.count(UserEntity.class));
-            assertEquals(1, accessor.count(UserEntity.class, true));
-            assertEquals(2, accessor.count(UserEntity.class, false));
+            assertEquals(1, accessor.count(UserEntityElastic.class));
+            assertEquals(1, accessor.count(UserEntityElastic.class, true));
+            assertEquals(2, accessor.count(UserEntityElastic.class, false));
 
             accessor.remove(user1, false);
             accessor.remove(user2, false);
             Thread.sleep(delay);
-            assertEquals(0, accessor.count(UserEntity.class));
+            assertEquals(0, accessor.count(UserEntityElastic.class));
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
@@ -168,62 +168,62 @@ public class TestElastic {
 
         try {
             long delay = 1000;
-            assertEquals(0, accessor.count(UserEntity.class));
-            assertEquals(0, accessor.count(AnimalEntity.class));
+            assertEquals(0, accessor.count(UserEntityElastic.class));
+            assertEquals(0, accessor.count(AnimalEntityElastic.class));
 
-            UserEntity user1 = EntityFactory.createEntity(UserEntity.class);
+            UserEntityElastic user1 = EntityFactory.createEntity(UserEntityElastic.class);
             user1.setAge(45);
             user1.setCode("john");
             user1.setName("John Peng");
             user1.setDesc("我是一个正高级工程师。");
             assertNull(user1.getId());
-            UserEntity u1 = accessor.save(user1);
+            UserEntityElastic u1 = accessor.save(user1);
             Thread.sleep(delay);
             assertNotNull(u1);
             assertNotNull(user1.getId());
-            assertEquals(1, accessor.count(UserEntity.class));
-            assertEquals(1, accessor.count(UserEntity.class, true));
-            u1 = accessor.getById(user1.getId(), UserEntity.class);
+            assertEquals(1, accessor.count(UserEntityElastic.class));
+            assertEquals(1, accessor.count(UserEntityElastic.class, true));
+            u1 = accessor.getById(user1.getId(), UserEntityElastic.class);
             assertNotNull(u1);
             assertEquals(user1.getCode(), u1.getCode());
 
-            List<UserEntity> list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("code", "john")), UserEntity.class);
+            List<UserEntityElastic> list = accessor.find(Arrays.asList(
+                    new GeneralAccessor.ConditionTuple("code", "john")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("name", "John")), UserEntity.class);
+                    new GeneralAccessor.ConditionTuple("name", "John")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("name", "Peng")), UserEntity.class);
+                    new GeneralAccessor.ConditionTuple("name", "Peng")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("desc", "高级工程师")), UserEntity.class);
+                    new GeneralAccessor.ConditionTuple("desc", "高级工程师")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
 
-            AnimalEntity animal1 = EntityFactory.createEntity(AnimalEntity.class);
+            AnimalEntityElastic animal1 = EntityFactory.createEntity(AnimalEntityElastic.class);
             animal1.setName("John is the owner of the tom cat.");
             accessor.save(animal1);
             Thread.sleep(delay);
-            assertEquals(1, accessor.count(AnimalEntity.class));
-            AnimalEntity a1 = accessor.getById(animal1.getId(), AnimalEntity.class);
+            assertEquals(1, accessor.count(AnimalEntityElastic.class));
+            AnimalEntityElastic a1 = accessor.getById(animal1.getId(), AnimalEntityElastic.class);
             assertNotNull(a1);
-            List<AnimalEntity> list1 = accessor.find(Collections.singletonList(
-                    new GeneralAccessor.ConditionTuple("name", "John")), AnimalEntity.class);
+            List<AnimalEntityElastic> list1 = accessor.find(Collections.singletonList(
+                    new GeneralAccessor.ConditionTuple("name", "John")), AnimalEntityElastic.class);
             assertNotNull(list1);
             assertEquals(1, list1.size());
             list1 = accessor.find(Collections.singletonList(
-                    new GeneralAccessor.ConditionTuple("name", "cat")), AnimalEntity.class);
+                    new GeneralAccessor.ConditionTuple("name", "cat")), AnimalEntityElastic.class);
             assertNotNull(list1);
             assertEquals(1, list1.size());
 
             List<GeneralAccessor.ConditionTuple> tuples = Collections.singletonList(
                     new GeneralAccessor.ConditionTuple("name", "John"));
             List<Base> list2 = ((ElasticAccessor) accessor).find(tuples,
-                    Arrays.asList(UserEntity.class, AnimalEntity.class));
+                    Arrays.asList(UserEntityElastic.class, AnimalEntityElastic.class));
             assertEquals(2, list2.size());
 
             accessor.remove(user1, false);

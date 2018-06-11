@@ -10,7 +10,7 @@ import org.mx.dal.annotation.ElasticIndex;
  *         Date time 2018/4/1 上午8:50
  */
 @ElasticIndex("operateLog")
-public class OperateLogEntity extends BaseEntity implements OperateLog {
+public class ElasticOperateLogEntity extends ElasticBaseEntity implements OperateLog {
     private String system, module;
     @ElasticField(analyzer = "hanlp")
     private String content;

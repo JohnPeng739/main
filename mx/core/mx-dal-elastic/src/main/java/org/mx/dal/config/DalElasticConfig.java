@@ -3,9 +3,9 @@ package org.mx.dal.config;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.OperateLogService;
-import org.mx.dal.service.impl.GeneralAccessorImpl;
-import org.mx.dal.service.impl.GeneralDictAccessorImpl;
-import org.mx.dal.service.impl.OperateLogServiceImpl;
+import org.mx.dal.service.impl.GeneralAccessorElasticImpl;
+import org.mx.dal.service.impl.GeneralDictAccessorElasticImpl;
+import org.mx.dal.service.impl.OperateLogServiceElasticImpl;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.dal.utils.ElasticUtil;
 import org.mx.dal.utils.ElasticUtilRest;
@@ -32,16 +32,16 @@ public class DalElasticConfig {
 
     @Bean(name = "generalAccessorElastic")
     public GeneralAccessor generalAccessorElastic(ElasticUtil elasticUtil) {
-        return new GeneralAccessorImpl(elasticUtil);
+        return new GeneralAccessorElasticImpl(elasticUtil);
     }
 
     @Bean(name = "generalDictAccessorElastic")
     public GeneralDictAccessor generalDictAccessorElastic(ElasticUtil elasticUtil) {
-        return new GeneralDictAccessorImpl(elasticUtil);
+        return new GeneralDictAccessorElasticImpl(elasticUtil);
     }
 
     @Bean(name = "operateLogServiceElastic")
     public OperateLogService operateLogServiceElastic(ElasticUtil elasticUtil, SessionDataStore sessionDataStore) {
-        return new OperateLogServiceImpl(generalAccessorElastic(elasticUtil), sessionDataStore);
+        return new OperateLogServiceElasticImpl(generalAccessorElastic(elasticUtil), sessionDataStore);
     }
 }

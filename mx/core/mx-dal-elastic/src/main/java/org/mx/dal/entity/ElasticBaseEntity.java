@@ -6,7 +6,7 @@ package org.mx.dal.entity;
  * @author John.Peng
  * Date time 2018/4/1 上午8:41
  */
-public class BaseEntity implements Base {
+public class ElasticBaseEntity implements Base {
     private String id, operator;
     private long createdTime, updatedTime;
     private boolean valid = true;

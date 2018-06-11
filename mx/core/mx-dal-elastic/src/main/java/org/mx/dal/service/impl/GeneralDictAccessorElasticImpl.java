@@ -14,13 +14,13 @@ import java.util.List;
  * @author John.Peng
  * Date time 2018/4/1 上午9:20
  */
-public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements GeneralDictAccessor {
+public class GeneralDictAccessorElasticImpl extends GeneralAccessorElasticImpl implements GeneralDictAccessor {
     /**
      * 默认的构造函数
      *
      * @param elasticUtil ES访问工具
      */
-    public GeneralDictAccessorImpl(ElasticUtil elasticUtil) {
+    public GeneralDictAccessorElasticImpl(ElasticUtil elasticUtil) {
         super(elasticUtil);
     }
 
