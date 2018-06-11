@@ -5,9 +5,9 @@ import com.mongodb.MongoClientURI;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.OperateLogService;
-import org.mx.dal.service.impl.GeneralAccessorImpl;
-import org.mx.dal.service.impl.GeneralDictAccessorImpl;
-import org.mx.dal.service.impl.OperateLogServiceImpl;
+import org.mx.dal.service.impl.GeneralAccessorMongoImpl;
+import org.mx.dal.service.impl.GeneralDictAccessorMongoImpl;
+import org.mx.dal.service.impl.OperateLogServiceMongoImpl;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -38,17 +38,17 @@ public class DalMongodbConfig {
 
     @Bean(name = "generalAccessorMongodb")
     public GeneralAccessor generalAccessorMongodb(MongoTemplate template, SessionDataStore sessionDataStore) {
-        return new GeneralAccessorImpl(template, sessionDataStore);
+        return new GeneralAccessorMongoImpl(template, sessionDataStore);
     }
 
     @Bean(name = "generalDictAccessorMongodb")
     public GeneralDictAccessor generalDictAccessorMongodb(MongoTemplate template, SessionDataStore sessionDataStore) {
-        return new GeneralDictAccessorImpl(template, sessionDataStore);
+        return new GeneralDictAccessorMongoImpl(template, sessionDataStore);
     }
 
     @Bean(name = "operateLogService")
     public OperateLogService operateLogServiceMongoDb(MongoTemplate template, SessionDataStore sessionDataStore) {
-        return new OperateLogServiceImpl(generalAccessorMongodb(template, sessionDataStore), sessionDataStore);
+        return new OperateLogServiceMongoImpl(generalAccessorMongodb(template, sessionDataStore), sessionDataStore);
     }
 
     /**

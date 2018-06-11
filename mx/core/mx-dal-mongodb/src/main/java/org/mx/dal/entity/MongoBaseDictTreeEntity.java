@@ -9,10 +9,10 @@ import java.util.Set;
  * 基于Mongodb实现的基础树状字典实体
  *
  * @author : john.peng date : 2017/10/8
- * @see BaseDictEntity
+ * @see MongoBaseDictEntity
  * @see BaseDictTree
  */
-public class BaseDictTreeEntity<T extends BaseDictTree> extends BaseDictEntity implements BaseDictTree {
+public class MongoBaseDictTreeEntity<T extends BaseDictTree> extends MongoBaseDictEntity implements BaseDictTree {
     @DBRef
     private T parent;
     @DBRef

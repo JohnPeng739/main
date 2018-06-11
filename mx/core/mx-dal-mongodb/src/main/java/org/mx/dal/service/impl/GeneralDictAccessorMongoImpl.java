@@ -14,17 +14,17 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  * 基于Mongodb实现的基础字典类实体访问实现类
  *
  * @author : john.peng date : 2017/10/8
- * @see GeneralAccessorImpl
+ * @see GeneralAccessorMongoImpl
  * @see GeneralDictAccessor
  */
-public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements GeneralDictAccessor {
+public class GeneralDictAccessorMongoImpl extends GeneralAccessorMongoImpl implements GeneralDictAccessor {
     /**
      * 默认的构造函数
      *
      * @param template         MongodbTemplate
      * @param sessionDataStore 会话数据存储器
      */
-    public GeneralDictAccessorImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
+    public GeneralDictAccessorMongoImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
         super(template, sessionDataStore);
     }
 

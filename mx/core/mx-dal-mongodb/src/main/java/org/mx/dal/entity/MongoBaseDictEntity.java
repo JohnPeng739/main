@@ -7,10 +7,10 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
  * 基于Mongodb实现的基础字典实体
  *
  * @author : john.peng date : 2017/10/8
- * @see BaseEntity
+ * @see MongoBaseEntity
  * @see BaseDict
  */
-public class BaseDictEntity extends BaseEntity implements BaseDict {
+public class MongoBaseDictEntity extends MongoBaseEntity implements BaseDict {
     @Indexed(unique = true)
     private String code;
     @TextIndexed
@@ -18,7 +18,7 @@ public class BaseDictEntity extends BaseEntity implements BaseDict {
 
     /**
      * {@inheritDoc}
-     * @see BaseEntity#toString()
+     * @see MongoBaseEntity#toString()
      */
     @Override
     public String toString() {

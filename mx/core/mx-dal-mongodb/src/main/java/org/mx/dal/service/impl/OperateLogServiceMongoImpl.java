@@ -15,7 +15,7 @@ import org.mx.dal.session.SessionDataStore;
  *
  * @author : john.peng created on date : 2017/10/8
  */
-public class OperateLogServiceImpl extends AbstractOperateLogService implements OperateLogService {
+public class OperateLogServiceMongoImpl extends AbstractOperateLogService implements OperateLogService {
     private static final Log logger = LogFactory.getLog(AbstractOperateLogService.class);
 
     private GeneralAccessor accessor;
@@ -27,8 +27,8 @@ public class OperateLogServiceImpl extends AbstractOperateLogService implements 
      * @param accessor         mongodb操作器
      * @param sessionDataStore 会话数据服务接口
      */
-    public OperateLogServiceImpl(GeneralAccessor accessor,
-                                 SessionDataStore sessionDataStore) {
+    public OperateLogServiceMongoImpl(GeneralAccessor accessor,
+                                      SessionDataStore sessionDataStore) {
         super();
         this.accessor = accessor;
         this.sessionDataStore = sessionDataStore;

@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
  * @author : john.peng date : 2017/10/8
  * @see Base
  */
-public class BaseEntity implements Base {
+public class MongoBaseEntity implements Base {
     @Id
     private String id;
     @Indexed
@@ -42,7 +42,7 @@ public class BaseEntity implements Base {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        BaseEntity that = (BaseEntity) o;
+        MongoBaseEntity that = (MongoBaseEntity) o;
         if (id != null ? !id.equals(that.id) : that.id != null) {
             return false;
         } else {

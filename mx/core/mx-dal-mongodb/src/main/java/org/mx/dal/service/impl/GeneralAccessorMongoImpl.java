@@ -33,17 +33,17 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  * @see GeneralAccessor
  * @see GeneralTextSearchAccessor
  */
-public class GeneralAccessorImpl implements GeneralAccessor, GeneralTextSearchAccessor {
-    private static final Log logger = LogFactory.getLog(GeneralAccessorImpl.class);
+public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSearchAccessor {
+    private static final Log logger = LogFactory.getLog(GeneralAccessorMongoImpl.class);
 
     protected MongoTemplate template;
     private SessionDataStore sessionDataStore;
 
-    public GeneralAccessorImpl() {
+    public GeneralAccessorMongoImpl() {
         super();
     }
 
-    public GeneralAccessorImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
+    public GeneralAccessorMongoImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
         this();
         this.template = template;
         this.sessionDataStore = sessionDataStore;

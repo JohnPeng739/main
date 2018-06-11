@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class UserEntity extends BaseDictTreeEntity<UserEntity> implements User {
+public class UserEntityMongo extends MongoBaseDictTreeEntity<UserEntityMongo> implements User {
     private String email;
     @TextIndexed
     private String address;
@@ -15,7 +15,7 @@ public class UserEntity extends BaseDictTreeEntity<UserEntity> implements User {
 
     @Override
     public String toString() {
-        return "UserEntity{" + super.toString() +
+        return "UserEntityMongo{" + super.toString() +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", postCode='" + postCode + '\'' +

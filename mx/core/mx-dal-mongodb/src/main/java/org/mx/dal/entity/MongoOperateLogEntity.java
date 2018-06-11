@@ -8,11 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * 基于Mongodb实现的操作日志实体
  *
  * @author : john.peng date : 2017/11/19
- * @see BaseEntity
+ * @see MongoBaseEntity
  * @see OperateLog
  */
 @Document(collection = "operateLog")
-public class OperateLogEntity extends BaseEntity implements OperateLog {
+public class MongoOperateLogEntity extends MongoBaseEntity implements OperateLog {
     @Indexed
     private String system, module;
     @Indexed
@@ -23,7 +23,7 @@ public class OperateLogEntity extends BaseEntity implements OperateLog {
     /**
      * {@inheritDoc}
      *
-     * @see BaseEntity#toString()
+     * @see MongoBaseEntity#toString()
      */
     @Override
     public String toString() {
