@@ -102,6 +102,7 @@ public class ClassUtils {
                         String root = path.substring(0, path.length() - packageName.length());
                         // update by lichunliang window得到的root前有一个"/" 20171124 start
                         if (System.getProperty("os.name").toUpperCase().contains("WINDOWS")) {
+                            path = path.substring(1);
                             root = root.substring(1);
                         }
                         // update by lichunliang window得到的root前有一个"/" 20171124 end
