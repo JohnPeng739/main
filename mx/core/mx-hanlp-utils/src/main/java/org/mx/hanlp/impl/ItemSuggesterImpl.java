@@ -1,7 +1,7 @@
 package org.mx.hanlp.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hankcs.hanlp.suggest.Suggester;
+import com.hankcs.hanlp.suggest.SuggesterByScore;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.DigestUtils;
@@ -28,7 +28,7 @@ public class ItemSuggesterImpl implements ItemSuggester {
     // fingerprint: id
     private Map<String, String> fingerprints = null;
 
-    private Suggester suggester = null;
+    private SuggesterByScore suggester = null;
     private SuggestContentProvider provider = null;
 
     /**
@@ -37,7 +37,7 @@ public class ItemSuggesterImpl implements ItemSuggester {
     public ItemSuggesterImpl() {
         super();
         this.fingerprints = new HashMap<>();
-        this.suggester = new Suggester();
+        this.suggester = new SuggesterByScore();
     }
 
     /**
@@ -155,16 +155,16 @@ public class ItemSuggesterImpl implements ItemSuggester {
     @Override
     public List<SuggestItem> suggest(String keyword, int size) {
         List<SuggestItem> list = new ArrayList<>();
-        List<String> contents = suggester.suggest(keyword, size);
-        for (String content : contents) {
-            String id = fingerprints.get(DigestUtils.md5(content));
+        List<SuggesterByScore.Hit> hits = suggester.suggest2(keyword, size);
+        for (SuggesterByScore.Hit hit : hits) {
+            String id = fingerprints.get(DigestUtils.md5(hit.getSentence()));
             if (id == null) {
                 if (logger.isWarnEnabled()) {
                     logger.warn(String.format("The suggest item[content: %s] not found, " +
-                            "the cache is out of sync.", content));
+                            "the cache is out of sync.", hit.getSentence()));
                 }
             } else {
-                list.add(SuggestItem.valueOf(type, id, content));
+                list.add(SuggestItem.valueOf(type, id, hit.getSentence(), hit.getScore()));
             }
         }
         return list;

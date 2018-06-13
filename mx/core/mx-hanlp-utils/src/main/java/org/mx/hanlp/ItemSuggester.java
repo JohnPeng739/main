@@ -8,7 +8,7 @@ import java.util.List;
  * 描述： 文本条目推荐操作接口
  *
  * @author John.Peng
- *         Date time 2018/4/16 下午4:40
+ * Date time 2018/4/16 下午4:40
  */
 public interface ItemSuggester {
     /**
@@ -72,6 +72,7 @@ public interface ItemSuggester {
     class SuggestItem {
         public static final String DEFAULT_TYPE = "default";
         private String type = DEFAULT_TYPE, id = null, content = null;
+        private double score = 0.0f;
 
         /**
          * 默认的构造函数
@@ -109,6 +110,23 @@ public interface ItemSuggester {
         }
 
         /**
+         * 默认的构造函数
+         *
+         * @param type    推荐器类型
+         * @param id      ID
+         * @param content 推荐内容
+         * @param score   推荐分数
+         */
+        private SuggestItem(String type, String id, String content, double score) {
+            this(id, content);
+            if (type != null) {
+                this.type = type;
+            }
+            this.score = score;
+        }
+
+
+        /**
          * 根据指定参数构造一个推荐条目对象，使用默认的推荐器类型
          *
          * @param id      ID
@@ -131,6 +149,19 @@ public interface ItemSuggester {
          */
         public static SuggestItem valueOf(String type, String id, String content) {
             return new SuggestItem(type, id, content);
+        }
+
+        /**
+         * 根据指定参数构造一个推荐条目对象
+         *
+         * @param type    推荐器类型
+         * @param id      ID
+         * @param content 推荐内容
+         * @param score   推荐分数
+         * @return 推荐条目对象
+         */
+        public static SuggestItem valueOf(String type, String id, String content, double score) {
+            return new SuggestItem(type, id, content, score);
         }
 
         /**
@@ -185,6 +216,15 @@ public interface ItemSuggester {
          */
         public void setContent(String content) {
             this.content = content;
+        }
+
+        /**
+         * 获取推荐分数
+         *
+         * @return 分数
+         */
+        public double getScore() {
+            return score;
         }
     }
 }
