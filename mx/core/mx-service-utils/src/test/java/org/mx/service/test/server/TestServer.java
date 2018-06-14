@@ -213,7 +213,7 @@ public class TestServer {
     public void testTcpCommServer() {
         CommServerFactory factory = context.getBean(CommServerFactory.class);
         assertNotNull(factory);
-        TcpCommServiceProvider provider = factory.getTcpProvider();
+        TcpCommServiceProvider provider = factory.getTcpProvider(9996);
         assertNotNull(provider);
         TestTcpReceiver tcpReceiver = context.getBean("tcpReceiver", TestTcpReceiver.class);
         assertNotNull(tcpReceiver);
@@ -249,13 +249,13 @@ public class TestServer {
     public void testUdpCommServer() {
         CommServerFactory factory = context.getBean(CommServerFactory.class);
         assertNotNull(factory);
-        UdpCommServiceProvider provider = factory.getUdpProvider();
+        UdpCommServiceProvider provider = factory.getUdpProvider(9995);
         assertNotNull(provider);
         TestUdpReceiver udpReceiver = context.getBean("udpReceiver", TestUdpReceiver.class);
         assertNotNull(udpReceiver);
-        Integer port = context.getEnvironment().getProperty("udp.port", Integer.class);
-        Integer length = context.getEnvironment().getProperty("udp.maxLength", Integer.class);
-        Integer timeout = context.getEnvironment().getProperty("udp.maxTimeout", Integer.class);
+        Integer port = context.getEnvironment().getProperty("udp.servers.1.port", Integer.class);
+        Integer length = context.getEnvironment().getProperty("udp.servers.1.maxLength", Integer.class);
+        Integer timeout = context.getEnvironment().getProperty("udp.servers.1.maxTimeout", Integer.class);
         assertNotNull(port);
 
         CommClientInvoke client = new CommClientInvoke(CommServiceProvider.CommServiceType.UDP, udpReceiver,
