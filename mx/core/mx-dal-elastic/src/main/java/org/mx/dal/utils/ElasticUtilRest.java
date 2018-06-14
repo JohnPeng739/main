@@ -248,8 +248,11 @@ public class ElasticUtilRest implements ElasticUtil {
             BoolQueryBuilder query = QueryBuilders.boolQuery();
             tuples.forEach(tuple -> {
                 switch (tuple.operate) {
-                    case EQ:
+                    case CONTAIN:
                         query.must(QueryBuilders.termQuery(tuple.field, tuple.value));
+                        break;
+                    case EQ:
+                        query.must(QueryBuilders.matchQuery(tuple.field, tuple.value));
                         break;
                     case LT:
                         query.must(QueryBuilders.rangeQuery(tuple.field).lt(tuple.value));

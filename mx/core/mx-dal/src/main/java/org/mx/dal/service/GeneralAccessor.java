@@ -179,8 +179,32 @@ public interface GeneralAccessor {
      */
     class ConditionTuple {
         public String field;
-        public ConditionOperate operate = ConditionOperate.EQ;
+        public ConditionOperate operate = ConditionOperate.CONTAIN;
         public Object value;
+
+        public static ConditionTuple contain(String field, Object value) {
+            return new ConditionTuple(field, ConditionOperate.CONTAIN, value);
+        }
+
+        public static ConditionTuple eq(String field, Object value) {
+            return new ConditionTuple(field, ConditionOperate.EQ, value);
+        }
+
+        public static ConditionTuple gt(String field, Object value) {
+            return new ConditionTuple(field, ConditionOperate.GT, value);
+        }
+
+        public static ConditionTuple lt(String field, Object value) {
+            return new ConditionTuple(field, ConditionOperate.LT, value);
+        }
+
+        public static ConditionTuple gte(String field, Object value) {
+            return new ConditionTuple(field, ConditionOperate.GTE, value);
+        }
+
+        public static ConditionTuple lte(String field, Object value) {
+            return new ConditionTuple(field, ConditionOperate.LTE, value);
+        }
 
         /**
          * 默认的构造函数
@@ -243,7 +267,11 @@ public interface GeneralAccessor {
             /**
              * 小于等于
              */
-            LTE
+            LTE,
+            /**
+             * 包含
+             */
+            CONTAIN
         }
     }
 }

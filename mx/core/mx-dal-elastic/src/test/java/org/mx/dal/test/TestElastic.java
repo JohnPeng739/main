@@ -59,7 +59,7 @@ public class TestElastic {
             UserEntityElastic user2 = EntityFactory.createEntity(UserEntityElastic.class);
             user2.setId(DigestUtils.uuid());
             user2.setAge(16);
-            user2.setCode("joy");
+            user2.setCode("彭明喜");
             user2.setName("Joy Peng");
             user2.setDesc("我是一个好学生。");
             assertNotNull(user2.getId());
@@ -84,67 +84,65 @@ public class TestElastic {
             assertEquals(user2.getCode(), u1.getCode());
 
             List<UserEntityElastic> list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("code", "john")), UserEntityElastic.class);
+                    GeneralAccessor.ConditionTuple.eq("code", "john")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("name", "Peng")), UserEntityElastic.class);
+                    GeneralAccessor.ConditionTuple.contain("name", "Peng")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(2, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("name", "Joy")), UserEntityElastic.class);
+                    GeneralAccessor.ConditionTuple.contain("name", "Joy")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("desc", "高级工程师")), UserEntityElastic.class);
+                    GeneralAccessor.ConditionTuple.contain("desc", "高级工程师")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("desc", "student")), UserEntityElastic.class);
+                    GeneralAccessor.ConditionTuple.contain("desc", "student")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("desc", "学生")), UserEntityElastic.class);
+                    GeneralAccessor.ConditionTuple.contain("desc", "学生")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
 
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.LT, 100),
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0)),
+                    GeneralAccessor.ConditionTuple.lt("age", 100),
+                    GeneralAccessor.ConditionTuple.gt("age", 0)),
                     UserEntityElastic.class);
             assertEquals(2, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.LT, 45),
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0)),
+                    GeneralAccessor.ConditionTuple.lt("age", 45),
+                    GeneralAccessor.ConditionTuple.gt("age", 0)),
                     UserEntityElastic.class);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.LTE, 45),
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.GTE, 17)),
+                    GeneralAccessor.ConditionTuple.lte("age", 45),
+                    GeneralAccessor.ConditionTuple.gte("age", 17)),
                     UserEntityElastic.class);
             assertEquals(2, list.size());
             list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.LT, 45),
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.GT, 17)),
+                    GeneralAccessor.ConditionTuple.lt("age", 45),
+                    GeneralAccessor.ConditionTuple.gt("age", 17)),
                     UserEntityElastic.class);
-            assertEquals(0, list.size());list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.LT, 100),
-                    new GeneralAccessor.ConditionTuple("age",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.GT, 0),
-                    new GeneralAccessor.ConditionTuple("name",
-                            GeneralAccessor.ConditionTuple.ConditionOperate.EQ, "Joy")),
+            assertEquals(0, list.size());
+            list = accessor.find(Arrays.asList(
+                    GeneralAccessor.ConditionTuple.eq("code", "彭明喜"),
+                    GeneralAccessor.ConditionTuple.lt("age", 100),
+                    GeneralAccessor.ConditionTuple.gt("age", 0),
+                    GeneralAccessor.ConditionTuple.contain("name", "Joy")),
                     UserEntityElastic.class);
             assertEquals(1, list.size());
+            list = accessor.find(Arrays.asList(
+                    GeneralAccessor.ConditionTuple.eq("code", "joy"),
+                    GeneralAccessor.ConditionTuple.lt("age", 100),
+                    GeneralAccessor.ConditionTuple.gt("age", 0),
+                    GeneralAccessor.ConditionTuple.contain("name", "Joy")),
+                    UserEntityElastic.class);
+            assertEquals(0, list.size());
 
             accessor.remove(user1);
             Thread.sleep(delay);
