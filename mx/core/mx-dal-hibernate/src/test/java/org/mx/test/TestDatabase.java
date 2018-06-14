@@ -24,6 +24,8 @@ public class TestDatabase extends BaseTest {
         assertNotNull(accessor);
 
         try {
+            accessor.clear(User.class);
+
             assertEquals(0, accessor.count(User.class));
             User user = EntityFactory.createEntity(User.class);
             user.setCode("john");
@@ -119,8 +121,7 @@ public class TestDatabase extends BaseTest {
             check = accessor.getByCode("josh", User.class);
             assertNotNull(check);
 
-            user = accessor.getByCode("josh", User.class);
-            accessor.remove(user, false);
+            accessor.clear(User.class);
             assertEquals(0, accessor.count(User.class));
         } catch (UserInterfaceException ex) {
             fail(ex.getMessage());

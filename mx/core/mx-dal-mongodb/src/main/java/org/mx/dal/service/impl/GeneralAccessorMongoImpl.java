@@ -81,7 +81,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      * @see GeneralAccessor#count(Class)
      */
     @Override
-    public <T extends Base> long count(Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> long count(Class<T> clazz) {
         return count(clazz, true);
     }
 
@@ -183,8 +183,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      * @see GeneralAccessor#find(List, Class)
      */
     @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz)
-            throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -328,6 +327,18 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         }
         t = template.findById(t.getId(), (Class<T>) t.getClass());
         return t;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#clear(Class)
+     */
+    @Override
+    public <T extends Base> void clear(Class<T> clazz) {
+        if (template.collectionExists(clazz)) {
+            template.dropCollection(clazz);
+        }
     }
 
     /**

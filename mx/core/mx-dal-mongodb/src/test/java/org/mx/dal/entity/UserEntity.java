@@ -4,8 +4,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
-public class UserEntityMongo extends MongoBaseDictTreeEntity<UserEntityMongo> implements User {
+@Document(collection = "user")
+public class UserEntity extends MongoBaseDictTreeEntity<UserEntity> implements User {
     private String email;
     @TextIndexed
     private String address;
@@ -15,7 +15,7 @@ public class UserEntityMongo extends MongoBaseDictTreeEntity<UserEntityMongo> im
 
     @Override
     public String toString() {
-        return "UserEntityMongo{" + super.toString() +
+        return "UserEntity{" + super.toString() +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", postCode='" + postCode + '\'' +

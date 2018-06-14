@@ -57,7 +57,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends Base> long count(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
+    public <T extends Base> long count(Class<T> clazz, boolean isValid) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -82,8 +82,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid)
-            throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -114,7 +113,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends Base> long count(Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> long count(Class<T> clazz) {
         return count(clazz, true);
     }
 
@@ -125,7 +124,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends Base> List<T> list(Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> list(Class<T> clazz) {
         return list(clazz, true);
     }
 
@@ -137,7 +136,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -161,8 +160,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz)
-            throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz) {
         return list(pagination, clazz, true);
     }
 
@@ -173,7 +171,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends Base> T getById(String id, Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> T getById(String id, Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -196,8 +194,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Transactional(readOnly = true)
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz)
-            throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -241,8 +238,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Transactional(readOnly = true)
     @Override
-    public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz)
-            throws UserInterfaceDalErrorException {
+    public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
         List<T> result = find(tuples, clazz);
         if (result != null && result.size() > 0) {
             return result.get(0);
@@ -259,7 +255,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Transactional
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> T save(T t) throws UserInterfaceDalErrorException {
+    public <T extends Base> T save(T t) {
         t.setUpdatedTime(new Date().getTime());
         t.setOperator(sessionDataStore.getCurrentUserCode());
         Class<T> clazz = (Class<T>) t.getClass();
@@ -298,11 +294,23 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     /**
      * {@inheritDoc}
      *
+     * @see GeneralAccessor#clear(Class)
+     */
+    @Transactional
+    @Override
+    public <T extends Base> void clear(Class<T> clazz) {
+        entityManager.clear();
+        entityManager.createQuery(String.format("DELETE %s", clazz.getName())).executeUpdate();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see GeneralAccessor#remove(String, Class)
      */
     @Transactional
     @Override
-    public <T extends Base> T remove(String id, Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(String id, Class<T> clazz) {
         return remove(id, clazz, true);
     }
 
@@ -313,8 +321,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Transactional
     @Override
-    public <T extends Base> T remove(String id, Class<T> clazz, boolean logicRemove)
-            throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(String id, Class<T> clazz, boolean logicRemove) {
         T t = getById(id, clazz);
         if (t == null) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_NOT_FOUND);
@@ -329,7 +336,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      */
     @Transactional()
     @Override
-    public <T extends Base> T remove(T t) throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(T t) {
         return remove(t, true);
     }
 
@@ -341,7 +348,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Transactional()
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> T remove(T t, boolean logicRemove) throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(T t, boolean logicRemove) {
         T removeEntity = getById(t.getId(), (Class<T>) t.getClass());
         if (logicRemove) {
             // 逻辑删除

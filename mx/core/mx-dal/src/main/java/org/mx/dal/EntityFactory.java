@@ -42,7 +42,7 @@ public class EntityFactory {
             tmpClass = tmpClass.getSuperclass();
         } while(tmpClass != null && !found);
         if (!found) {
-            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_CLASS_INVALID);
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INVALID_BASE);
         }
         return (Class<T>) entityClass;
     }

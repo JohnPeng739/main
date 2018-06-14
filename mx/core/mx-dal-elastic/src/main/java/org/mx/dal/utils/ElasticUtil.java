@@ -3,6 +3,7 @@ package org.mx.dal.utils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
+import org.mx.dal.entity.ElasticBaseEntity;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 
@@ -26,6 +27,20 @@ public interface ElasticUtil {
      * 初始化Elastic连接
      */
     void init();
+
+    /**
+     * 创建指定实体对应的ES索引
+     *
+     * @param clazz 实现了ElasticBaseEntity的实体类
+     */
+    void createIndex(Class<? extends ElasticBaseEntity> clazz);
+
+    /**
+     * 删除指定实体对应的ES索引
+     *
+     * @param clazz 实现了ElasticBaseEntity的实体类
+     */
+    void deleteIndex(Class<? extends ElasticBaseEntity> clazz);
 
     /**
      * 获取指定索引对应的实体类名

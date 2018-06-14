@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.open.OpenIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.get.GetRequest;
@@ -29,6 +30,7 @@ import org.mx.dal.annotation.ElasticField;
 import org.mx.dal.annotation.ElasticIndex;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
+import org.mx.dal.entity.ElasticBaseEntity;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
@@ -84,14 +86,15 @@ public class ElasticUtilRest implements ElasticUtil {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void scanElasticEntitiesAndInitialize() {
         String basePakcages = env.getProperty("elastic.entity.base");
         String[] packages = StringUtils.split(basePakcages, true, true);
         for (String p : packages) {
             ClassUtils.scanPackage(p, className -> {
                 try {
-                    Class<?> clazz = Class.forName(className);
-                    initializeIndex(clazz);
+                    Class<? extends ElasticBaseEntity> clazz = (Class<? extends ElasticBaseEntity>) Class.forName(className);
+                    createIndex(clazz);
                 } catch (Exception ex) {
                     if (logger.isWarnEnabled()) {
                         logger.warn(String.format("Initialize the index of the class[%s] fail.", className), ex);
@@ -116,7 +119,13 @@ public class ElasticUtilRest implements ElasticUtil {
         scanClassFields(clazz.getSuperclass(), action);
     }
 
-    private void initializeIndex(Class<?> clazz) throws Exception {
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#createIndex(Class)
+     */
+    @Override
+    public void createIndex(Class<? extends ElasticBaseEntity> clazz) {
         ElasticIndex annotationIndex = clazz.getAnnotation(ElasticIndex.class);
         if (annotationIndex != null) {
             // 是一个Elastic实体类，需要处理索引
@@ -154,16 +163,61 @@ public class ElasticUtilRest implements ElasticUtil {
                     mapping.put(index, new HashMap<>());
                     mapping.get(index).put("properties", properties);
                     request.mapping(index, mapping);
-                    client.indices().create(request);
+                    try {
+                        client.indices().create(request);
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(String.format("Create index[%s] successfully.", index));
+                        }
+                    } catch (IOException ex1) {
+                        if (logger.isErrorEnabled()) {
+                            logger.error(String.format("Create the index[%s] fail.", index), ex1);
+                        }
+                        throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_INDEX_FAIL);
+                    }
                 }
             } catch (IOException ex) {
                 if (logger.isWarnEnabled()) {
-                    logger.warn("Open index fail.", ex);
+                    logger.warn(String.format("Create index[%s] fail.", index), ex);
                 }
             }
             String className = clazz.getName();
             indexes.put(className, index);
             revIndexes.put(index, className);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#deleteIndex(Class)
+     */
+    @Override
+    public void deleteIndex(Class<? extends ElasticBaseEntity> clazz) {
+        ElasticIndex annotationIndex = clazz.getAnnotation(ElasticIndex.class);
+        if (annotationIndex != null) {
+            // 是一个Elastic实体类，需要处理索引
+            String index = annotationIndex.value();
+            if (StringUtils.isBlank(index)) {
+                index = clazz.getName();
+            }
+            // 删除Index
+            try {
+                OpenIndexRequest reqOpen = new OpenIndexRequest(index);
+                client.indices().open(reqOpen);
+                DeleteIndexRequest reqDelete = new DeleteIndexRequest(index);
+                client.indices().delete(reqDelete);
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Delete the index[%s] successfully.", index));
+                }
+            } catch (IOException ex) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format("Delete the index[%s] fail.", index), ex);
+                }
+            }
+            // 清理缓存
+            String className = clazz.getName();
+            indexes.remove(className);
+            revIndexes.remove(index);
         }
     }
 
@@ -213,7 +267,7 @@ public class ElasticUtilRest implements ElasticUtil {
                 if (logger.isWarnEnabled()) {
                     logger.error(String.format("The class[%s] not existed.", className), ex);
                 }
-                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_CLASS_INVALID);
+                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INVALID_BASE);
             }
         } else {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INDEX_NOT_FOUND);

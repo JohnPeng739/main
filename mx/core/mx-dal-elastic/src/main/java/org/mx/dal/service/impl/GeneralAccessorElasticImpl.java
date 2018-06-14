@@ -1,6 +1,8 @@
 package org.mx.dal.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
@@ -23,11 +25,9 @@ import java.util.List;
  * Date time 2018/4/1 上午8:56
  */
 public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAccessor {
-    private ElasticUtil accessor;
+    private static final Log logger = LogFactory.getLog(GeneralAccessorElasticImpl.class);
 
-    public GeneralAccessorElasticImpl() {
-        super();
-    }
+    private ElasticUtil accessor;
 
     /**
      * 默认的构造函数
@@ -35,7 +35,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @param elasticUtil ES工具
      */
     public GeneralAccessorElasticImpl(ElasticUtil elasticUtil) {
-        this();
+        super();
         this.accessor = elasticUtil;
     }
 
@@ -53,7 +53,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#count(Class)
      */
     @Override
-    public <T extends Base> long count(Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> long count(Class<T> clazz) {
         return count(clazz, true);
     }
 
@@ -63,7 +63,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#count(Class, boolean)
      */
     @Override
-    public <T extends Base> long count(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
+    public <T extends Base> long count(Class<T> clazz, boolean isValid) {
         SearchResponse response = accessor.search(validateCondition(isValid), clazz, null);
         return response.getHits().getTotalHits();
     }
@@ -74,7 +74,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#list(Class)
      */
     @Override
-    public <T extends Base> List<T> list(Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> list(Class<T> clazz) {
         return list(clazz, true);
     }
 
@@ -84,7 +84,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#list(Class, boolean)
      */
     @Override
-    public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) {
         SearchResponse response = accessor.search(validateCondition(isValid), clazz, null);
         List<T> list = new ArrayList<>();
         response.getHits().forEach(hit -> dowithRow(hit, list));
@@ -97,7 +97,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#list(Pagination, Class)
      */
     @Override
-    public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz) {
         return list(pagination, clazz, true);
     }
 
@@ -107,7 +107,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#list(Pagination, Class, boolean)
      */
     @Override
-    public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) {
         if (pagination == null) {
             pagination = new Pagination();
         }
@@ -128,7 +128,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#getById(String, Class)
      */
     @Override
-    public <T extends Base> T getById(String id, Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> T getById(String id, Class<T> clazz) {
         return accessor.getById(id, clazz);
     }
 
@@ -138,8 +138,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#find(List, Class)
      */
     @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz)
-            throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
         return find(tuples, Collections.singletonList(clazz));
     }
 
@@ -149,8 +148,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see ElasticAccessor#find(List, List)
      */
     @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, List<Class<? extends Base>> classes)
-            throws UserInterfaceDalErrorException {
+    public <T extends Base> List<T> find(List<ConditionTuple> tuples, List<Class<? extends Base>> classes) {
         SearchResponse response = accessor.search(tuples, classes, null);
         List<T> list = new ArrayList<>();
         response.getHits().forEach(hit -> dowithRow(hit, list));
@@ -160,7 +158,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     @SuppressWarnings("unchecked")
     private <T extends Base> void dowithRow(SearchHit hit, List<T> list) {
         T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) accessor.getIndexClass(hit.getIndex()));
-        ((ElasticBaseEntity)t).setScore(hit.getScore());
+        ((ElasticBaseEntity) t).setScore(hit.getScore());
         list.add(t);
     }
 
@@ -170,7 +168,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#findOne(List, Class)
      */
     @Override
-    public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
         List<T> result = find(tuples, clazz);
         if (result != null && result.size() > 0) {
             return result.get(0);
@@ -185,8 +183,26 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#save(Base)
      */
     @Override
-    public <T extends Base> T save(T t) throws UserInterfaceDalErrorException {
+    public <T extends Base> T save(T t) {
         return accessor.index(t);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#clear(Class)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends Base> void clear(Class<T> clazz) {
+        if (ElasticBaseEntity.class.isAssignableFrom(clazz)) {
+            accessor.deleteIndex((Class<? extends ElasticBaseEntity>) clazz);
+        } else {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The class[%s] not extends from ElasticBaseEntity.", clazz.getName()));
+            }
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INDEX_INVALID_BASE);
+        }
     }
 
     /**
@@ -195,7 +211,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#remove(String, Class)
      */
     @Override
-    public <T extends Base> T remove(String id, Class<T> clazz) throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(String id, Class<T> clazz) {
         return remove(id, clazz, true);
     }
 
@@ -205,7 +221,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#remove(String, Class, boolean)
      */
     @Override
-    public <T extends Base> T remove(String id, Class<T> clazz, boolean logicRemove) throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(String id, Class<T> clazz, boolean logicRemove) {
         T t = getById(id, clazz);
         if (t == null) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_NOT_FOUND);
@@ -219,7 +235,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#remove(Base)
      */
     @Override
-    public <T extends Base> T remove(T t) throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(T t) {
         return remove(t, true);
     }
 
@@ -229,7 +245,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      * @see GeneralAccessor#remove(Base, boolean)
      */
     @Override
-    public <T extends Base> T remove(T t, boolean logicRemove) throws UserInterfaceDalErrorException {
+    public <T extends Base> T remove(T t, boolean logicRemove) {
         return accessor.remove(t, logicRemove);
     }
 }

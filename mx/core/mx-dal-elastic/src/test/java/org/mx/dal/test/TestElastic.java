@@ -157,6 +157,8 @@ public class TestElastic {
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
+        accessor.clear(UserEntityElastic.class);
+        accessor.clear(AnimalEntityElastic.class);
     }
 
     @Test
