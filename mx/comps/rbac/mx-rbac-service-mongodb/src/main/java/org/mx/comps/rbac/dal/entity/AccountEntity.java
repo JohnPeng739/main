@@ -1,11 +1,9 @@
 package org.mx.comps.rbac.dal.entity;
 
-import org.mx.StringUtils;
-import org.mx.dal.entity.BaseDictEntity;
+import org.mx.dal.entity.MongoBaseDictEntity;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +13,7 @@ import java.util.Set;
  * @author : john.peng created on date : 2017/11/4
  */
 @Document(collection = "account")
-public class AccountEntity extends BaseDictEntity implements Account {
+public class AccountEntity extends MongoBaseDictEntity implements Account {
     private String password;
     @DBRef
     private User owner;

@@ -21,17 +21,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(AccountManageServiceCommonImpl.class);
 
+    private GeneralDictAccessor accessor;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor 字典类型数据实体访问器
+     */
     @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralDictAccessor accessor = null;
+    public AccountManageServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor accessor) {
+        super();
+        this.accessor = accessor;
+    }
 
     /**
      * {@inheritDoc}
+     *
      * @see AccountManageServiceCommonImpl#save(Account)
      */
     @Override
     protected Account save(Account account) {
-        return accessor.save(account, false);
+        return accessor.save(account);
     }
 
     /**

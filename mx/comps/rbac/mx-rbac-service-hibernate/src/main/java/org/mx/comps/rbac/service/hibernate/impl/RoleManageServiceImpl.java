@@ -20,17 +20,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoleManageServiceImpl extends RoleManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(RoleManageServiceCommonImpl.class);
 
+    private GeneralDictAccessor accessor;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor 字典类型数据实体访问器
+     */
     @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralDictAccessor accessor = null;
+    public RoleManageServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor accessor) {
+        super();
+        this.accessor = accessor;
+    }
 
     /**
      * {@inheritDoc}
+     *
      * @see RoleManageServiceCommonImpl#save(Role)
      */
     @Override
     protected Role save(Role role) {
-        return accessor.save(role, false);
+        return accessor.save(role);
     }
 
     /**

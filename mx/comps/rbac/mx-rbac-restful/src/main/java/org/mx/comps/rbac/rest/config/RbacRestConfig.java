@@ -3,9 +3,8 @@ package org.mx.comps.rbac.rest.config;
 import org.mx.comps.rbac.rest.*;
 import org.mx.comps.rbac.rest.tasks.InitializeAdminAccountTask;
 import org.mx.service.server.config.ServerConfig;
-import org.mx.spring.InitializeTask;
 import org.mx.spring.config.SpringConfig;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mx.spring.task.TaskFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 
@@ -31,8 +30,10 @@ public class RbacRestConfig {
                 DepartmentManageResource.class, PrivilegeManageResource.class, AccreditManageResource.class);
     }
 
-    @Bean(name = "initializeTasks")
-    public List<Class<? extends InitializeTask>> initialiseTasks() {
-        return Arrays.asList(InitializeAdminAccountTask.class);
+    @Bean("initializeTaskFactory")
+    public TaskFactory initializeTaskFactory(ApplicationContext context) {
+        TaskFactory taskFactory = new TaskFactory();
+        taskFactory.addSerialTask(new InitializeAdminAccountTask()).runSerialTasks();
+        return taskFactory;
     }
 }

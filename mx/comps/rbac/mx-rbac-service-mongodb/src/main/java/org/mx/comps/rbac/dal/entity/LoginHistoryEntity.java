@@ -1,6 +1,6 @@
 package org.mx.comps.rbac.dal.entity;
 
-import org.mx.dal.entity.BaseEntity;
+import org.mx.dal.entity.MongoBaseEntity;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @author : john.peng created on date : 2017/11/12
  */
 @Document(collection = "loginHistory")
-public class LoginHistoryEntity extends BaseEntity implements LoginHistory {
+public class LoginHistoryEntity extends MongoBaseEntity implements LoginHistory {
     @DBRef
     private Account account;
     private String token;

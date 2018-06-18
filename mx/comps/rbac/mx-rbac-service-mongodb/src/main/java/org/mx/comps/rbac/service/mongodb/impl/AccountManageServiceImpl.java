@@ -25,12 +25,22 @@ import java.util.Set;
 public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(AccountManageServiceCommonImpl.class);
 
+    private GeneralDictAccessor accessor;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor 字典数据实体访问器
+     */
     @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralDictAccessor accessor = null;
+    public AccountManageServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor accessor) {
+        super();
+        this.accessor = accessor;
+    }
 
     /**
      * {@inheritDoc}
+     *
      * @see AccountManageServiceCommonImpl#save(Account)
      */
     @Override
@@ -39,20 +49,18 @@ public class AccountManageServiceImpl extends AccountManageServiceCommonImpl {
         if (!StringUtils.isBlank(account.getId())) {
             oldRoles.addAll(accessor.getById(account.getId(), Account.class).getRoles());
         }
-        account = accessor.save(account, false);
+        account = accessor.save(account);
         Set<Role> roles = account.getRoles();
         for (Role role : roles) {
-            if (oldRoles.contains(role)) {
-                oldRoles.remove(role);
-                continue;
-            } else {
+            if (!oldRoles.contains(role)) {
                 role.getAccounts().add(account);
-                accessor.save(role, false);
+                accessor.save(role);
             }
+            oldRoles.remove(role);
         }
         for (Role role : oldRoles) {
-            role.getAccounts().remove(role);
-            accessor.save(role, false);
+            role.getAccounts().remove(account);
+            accessor.save(role);
         }
         return account;
     }

@@ -1,6 +1,6 @@
 package org.mx.comps.rbac.dal.entity;
 
-import org.mx.dal.entity.BaseEntity;
+import org.mx.dal.entity.MongoBaseEntity;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -14,7 +14,7 @@ import java.util.Date;
  * @author : john.peng created on date : 2017/12/12
  */
 @Document(collection = "user")
-public class UserEntity extends BaseEntity implements User {
+public class UserEntity extends MongoBaseEntity implements User {
     private String firstName, middleName, lastName;
     @TextIndexed
     private String desc;

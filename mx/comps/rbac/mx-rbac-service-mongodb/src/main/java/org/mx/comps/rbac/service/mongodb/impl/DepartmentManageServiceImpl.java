@@ -24,9 +24,18 @@ import java.util.Set;
 public class DepartmentManageServiceImpl extends DepartmentManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(DepartmentManageServiceCommonImpl.class);
 
+    private GeneralDictAccessor accessor;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor 字典数据实体访问器
+     */
     @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralDictAccessor accessor = null;
+    public DepartmentManageServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor accessor) {
+        super();
+        this.accessor = accessor;
+    }
 
     /**
      * {@inheritDoc}
@@ -39,22 +48,21 @@ public class DepartmentManageServiceImpl extends DepartmentManageServiceCommonIm
         if (!StringUtils.isBlank(department.getId())) {
             oldEmployees.addAll(accessor.getById(department.getId(), Department.class).getEmployees());
         }
-        department = accessor.save(department, false);
+        department = accessor.save(department);
         Set<User> employees = department.getEmployees();
         for (User user : employees) {
             if (oldEmployees.contains(user)) {
                 oldEmployees.remove(user);
-                continue;
             } else {
                 user.setDepartment(department);
-                accessor.save(user, false);
+                accessor.save(user);
             }
         }
         for (User user : oldEmployees) {
             if (department.equals(user.getDepartment())) {
                 // 如果用户原来的部门是当前部门，则应该将其部门清空。
                 user.setDepartment(null);
-                accessor.save(user, false);
+                accessor.save(user);
             }
         }
         return department;

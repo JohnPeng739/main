@@ -19,7 +19,6 @@ import org.mx.dal.service.OperateLogService;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -115,11 +114,6 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
                 logger.error(ex);
             }
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
-        } catch (NoSuchAlgorithmException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-            throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_DIGEST_PASSWORD_FAIL);
         }
     }
 
@@ -134,24 +128,17 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         if (account == null) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND);
         }
-        try {
-            if (account.getPassword().equals(DigestUtils.md5(oldPassword))) {
-                // the old password is matched.
-                account.setPassword(DigestUtils.md5(newPassword));
-                account = this.save(account);
-                if (operateLogService != null) {
-                    operateLogService.writeLog(String.format("修改账户[code=%s, name=%s]的密码成功。",
-                            account.getCode(), account.getName()));
-                }
-                return account;
-            } else {
-                throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_PASSWORD_NOT_MATCHED);
+        if (account.getPassword().equals(DigestUtils.md5(oldPassword))) {
+            // the old password is matched.
+            account.setPassword(DigestUtils.md5(newPassword));
+            account = this.save(account);
+            if (operateLogService != null) {
+                operateLogService.writeLog(String.format("修改账户[code=%s, name=%s]的密码成功。",
+                        account.getCode(), account.getName()));
             }
-        } catch (NoSuchAlgorithmException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-            throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_DIGEST_PASSWORD_FAIL);
+            return account;
+        } else {
+            throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_PASSWORD_NOT_MATCHED);
         }
     }
 
@@ -186,15 +173,8 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         if (account == null) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND);
         }
-        try {
-            if (!DigestUtils.md5(password).equals(account.getPassword())) {
-                throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_PASSWORD_NOT_MATCHED);
-            }
-        } catch (NoSuchAlgorithmException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(ex);
-            }
-            throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED_OPERATE);
+        if (!DigestUtils.md5(password).equals(account.getPassword())) {
+            throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_PASSWORD_NOT_MATCHED);
         }
         List<GeneralAccessor.ConditionTuple> tuples = Arrays.asList(new GeneralAccessor.ConditionTuple("account", account),
                 new GeneralAccessor.ConditionTuple("online", true));
@@ -224,7 +204,7 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         loginHistory.setOnline(true);
         // 设置令牌
         loginHistory.setToken(jwtService.sign(account.getCode()));
-        loginHistory = accessor.save(loginHistory, false);
+        loginHistory = accessor.save(loginHistory);
         if (operateLogService != null) {
             operateLogService.writeLog(String.format("账户[code=%s, name=%s]登录系统成功。",
                     account.getCode(), account.getName()));
@@ -256,7 +236,7 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
             LoginHistory loginHistory = loginHistories.get(0);
             loginHistory.setLogoutTime(new Date().getTime());
             loginHistory.setOnline(false);
-            loginHistory = accessor.save(loginHistory, false);
+            loginHistory = accessor.save(loginHistory);
             if (operateLogService != null) {
                 operateLogService.writeLog(String.format("账户[code=%s, name=%s]登出系统成功。",
                         account.getCode(), account.getName()));

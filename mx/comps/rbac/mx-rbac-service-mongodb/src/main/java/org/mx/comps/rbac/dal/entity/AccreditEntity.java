@@ -1,6 +1,6 @@
 package org.mx.comps.rbac.dal.entity;
 
-import org.mx.dal.entity.BaseEntity;
+import org.mx.dal.entity.MongoBaseEntity;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -16,7 +16,7 @@ import java.util.Set;
  * @author : john.peng created on date : 2017/11/4
  */
 @Document(collection = "accredit")
-public class AccreditEntity extends BaseEntity implements Accredit {
+public class AccreditEntity extends MongoBaseEntity implements Accredit {
     @DBRef
     private Account src;
     @DBRef

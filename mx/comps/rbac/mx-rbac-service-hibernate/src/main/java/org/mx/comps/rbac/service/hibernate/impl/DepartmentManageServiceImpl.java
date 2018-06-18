@@ -20,17 +20,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class DepartmentManageServiceImpl extends DepartmentManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(DepartmentManageServiceCommonImpl.class);
 
+    private GeneralDictAccessor accessor;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor 字典类型数据实体访问器
+     */
     @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralDictAccessor accessor = null;
+    public DepartmentManageServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor accessor) {
+        super();
+        this.accessor = accessor;
+    }
 
     /**
      * {@inheritDoc}
+     *
      * @see DepartmentManageServiceCommonImpl#save(Department)
      */
     @Override
     protected Department save(Department department) {
-        return accessor.save(department, false);
+        return accessor.save(department);
     }
 
     /**

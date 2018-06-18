@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 基于Hibernate JPA实现的授权管理服务实现。
@@ -20,17 +21,27 @@ import java.util.List;
  */
 @Component("accreditManageServiceHibernate")
 public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
+    private GeneralAccessor accessor;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor 数据实体访问器
+     */
     @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralAccessor accessor = null;
+    public AccreditManageServiceImpl(@Qualifier("generalDictAccessor") GeneralAccessor accessor) {
+        super();
+        this.accessor = accessor;
+    }
 
     /**
      * {@inheritDoc}
+     *
      * @see AccreditManageServiceCommonImpl#save(Accredit)
      */
     @Override
     protected Accredit save(Accredit accredit) {
-        return accessor.save(accredit, false);
+        return accessor.save(accredit);
     }
 
     /**
@@ -44,34 +55,21 @@ public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
         conditions.add(new GeneralAccessor.ConditionTuple("src.id", accreditInfo.getSrcAccountId()));
         conditions.add(new GeneralAccessor.ConditionTuple("tar.id", accreditInfo.getTarAccountId()));
         conditions.add(new GeneralAccessor.ConditionTuple("valid", true));
-        List<Accredit> list = accessor.find(conditions, Accredit.class);
-        List<Accredit> accredits = new ArrayList<>();
-        if (list != null && !list.isEmpty()) {
-            list.forEach(accredit -> {
-                if (!accredit.isClosed()) {
-                    accredits.add(accredit);
-                }
-            });
-        }
+        List<Accredit> accredits = accessor.find(conditions, Accredit.class)
+                .stream()
+                .filter(accredit -> !accredit.isClosed())
+                .collect(Collectors.toList());
         if (accredits.isEmpty()) {
             return false;
         }
         for (Accredit accredit : accredits) {
-            if (!accredit.isClosed()) {
-                for (String roleId : accreditInfo.getRoleIds()) {
-                    boolean found = false;
-                    for (Role role : accredit.getRoles()) {
-                        if (roleId.equals(role.getId())) {
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        return false;
-                    }
+            for (Role role : accredit.getRoles()) {
+                if (accreditInfo.getRoleIds().contains(role.getId())) {
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     /**

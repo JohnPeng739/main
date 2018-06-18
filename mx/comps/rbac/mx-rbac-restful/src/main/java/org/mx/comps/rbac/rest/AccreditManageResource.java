@@ -86,7 +86,7 @@ public class AccreditManageResource {
     @Path("accredits/{id}")
     @GET
     @AuthenticateAround(returnValueClass = DataVO.class)
-    public DataVO<AccreditVO> getAccredit(@QueryParam("id") String id) {
+    public DataVO<AccreditVO> getAccredit(@PathParam("id") String id) {
         if (StringUtils.isBlank(id)) {
             return new DataVO<>(new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM));
         }

@@ -9,12 +9,12 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.hibernate.TestLogicalTransactService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.error.UserInterfaceDalErrorException;
-import org.mx.dal.service.impl.GeneralDictEntityAccessorImpl;
+import org.mx.dal.service.impl.GeneralDictAccessorImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component("testLogicalTransactService")
-public class TestLogicalTransactServiceImpl extends GeneralDictEntityAccessorImpl implements TestLogicalTransactService {
+public class TestLogicalTransactServiceImpl extends GeneralDictAccessorImpl implements TestLogicalTransactService {
     private static final Log logger = LogFactory.getLog(TestLogicalTransactServiceImpl.class);
 
     @Transactional
@@ -26,7 +26,7 @@ public class TestLogicalTransactServiceImpl extends GeneralDictEntityAccessorImp
     }
 
     @Transactional
-    private void saveUser() {
+    void saveUser() {
         User user = EntityFactory.createEntity(User.class);
         user.setFirstName("john");
         user.setLastName("peng");
@@ -37,7 +37,7 @@ public class TestLogicalTransactServiceImpl extends GeneralDictEntityAccessorImp
     }
 
     @Transactional
-    private void saveAccount() throws UserInterfaceRbacErrorException {
+    void saveAccount() throws UserInterfaceRbacErrorException {
         Account account = EntityFactory.createEntity(Account.class);
         account.setCode("account");
         account.setName("account");

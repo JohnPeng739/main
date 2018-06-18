@@ -22,9 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserManageServiceImpl extends UserManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(UserManageServiceCommonImpl.class);
 
+    private GeneralDictAccessor accessor;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor 字典类型数据实体访问器
+     */
     @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralDictAccessor accessor = null;
+    public UserManageServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor accessor) {
+        super();
+        this.accessor = accessor;
+    }
 
     /**
      * {@inheritDoc}
@@ -45,7 +54,7 @@ public class UserManageServiceImpl extends UserManageServiceCommonImpl {
      */
     @Override
     protected User save(User user) {
-        return accessor.save(user, false);
+        return accessor.save(user);
     }
 
     /**

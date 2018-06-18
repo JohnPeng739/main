@@ -3,15 +3,15 @@ package org.mx.comps.rbac.rest.tasks;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.DigestUtils;
+import org.mx.StringUtils;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.session.SessionDataStore;
-import org.mx.spring.InitializeTask;
-import org.mx.spring.SpringContextHolder;
+import org.mx.spring.task.BaseTask;
+import org.mx.spring.utils.SpringContextHolder;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +20,7 @@ import java.util.Set;
  *
  * @author : john.peng created on date : 2018/1/17
  */
-public class InitializeAdminAccountTask extends InitializeTask {
+public class InitializeAdminAccountTask extends BaseTask {
     private static final Log logger = LogFactory.getLog(InitializeAdminAccountTask.class);
 
     /**
@@ -35,10 +35,10 @@ public class InitializeAdminAccountTask extends InitializeTask {
      * <p>
      * 初始化系统数据的任务，包括：admin、user、guest角色，以及admin、guest账户。
      *
-     * @see InitializeTask#invokeTask()
+     * @see BaseTask#invoke()
      */
     @Override
-    public void invokeTask() {
+    public void invoke() {
         GeneralDictAccessor accessor = SpringContextHolder.getBean("generalDictAccessor", GeneralDictAccessor.class);
         SessionDataStore sessionDataStore = SpringContextHolder.getBean(SessionDataStore.class);
         sessionDataStore.setCurrentUserCode("system");
@@ -94,12 +94,12 @@ public class InitializeAdminAccountTask extends InitializeTask {
                                String... roleCode) {
         Set<Role> roles = new HashSet<>();
         if (roleCode != null && roleCode.length > 0) {
-            for (int index = 0; index < roleCode.length; index++) {
-                Role role = accessor.getByCode(roleCode[index], Role.class);
+            for (String rc : roleCode) {
+                Role role = accessor.getByCode(rc, Role.class);
                 if (role == null) {
-                    if (logger.isErrorEnabled())
-                        logger.error(String.format("The role for %s is not existed.", roleCode));
-                    return;
+                    if (logger.isErrorEnabled()) {
+                        logger.error(String.format("The role for %s is not existed.", StringUtils.merge(roleCode)));
+                    }
                 }
                 roles.add(role);
             }
@@ -109,22 +109,16 @@ public class InitializeAdminAccountTask extends InitializeTask {
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("The account for %s not exist, will create it.", code));
             }
-            try {
-                admin = EntityFactory.createEntity(Account.class);
-                admin.setCode(code);
-                admin.setName(name);
-                admin.setPassword(DigestUtils.md5(password));
-                admin.setRoles(roles);
-                admin.setDesc(desc);
-                admin.setValid(true);
-                accessor.save(admin);
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Create the %s account successfully.", code));
-                }
-            } catch (NoSuchAlgorithmException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(String.format("Create the %s account fail.", code), ex);
-                }
+            admin = EntityFactory.createEntity(Account.class);
+            admin.setCode(code);
+            admin.setName(name);
+            admin.setPassword(DigestUtils.md5(password));
+            admin.setRoles(roles);
+            admin.setDesc(desc);
+            admin.setValid(true);
+            accessor.save(admin);
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Create the %s account successfully.", code));
             }
         } else {
             if (logger.isInfoEnabled()) {

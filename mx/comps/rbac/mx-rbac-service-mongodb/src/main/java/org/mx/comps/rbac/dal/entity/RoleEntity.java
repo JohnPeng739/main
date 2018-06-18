@@ -1,6 +1,6 @@
 package org.mx.comps.rbac.dal.entity;
 
-import org.mx.dal.entity.BaseDictEntity;
+import org.mx.dal.entity.MongoBaseDictEntity;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * @author : john.peng created on date : 2017/12/12
  */
 @Document(collection = "role")
-public class RoleEntity extends BaseDictEntity implements Role {
+public class RoleEntity extends MongoBaseDictEntity implements Role {
     // 由Account对象维护，这里延迟加载
     @DBRef(lazy = true)
     private Set<Account> accounts;

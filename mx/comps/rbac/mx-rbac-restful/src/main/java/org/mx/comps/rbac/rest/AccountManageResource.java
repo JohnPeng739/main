@@ -17,6 +17,7 @@ import org.mx.service.rest.vo.DataVO;
 import org.mx.service.rest.vo.PaginationDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -25,21 +26,27 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+@Component
 @Path("/rest")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class AccountManageResource {
     private static final Log logger = LogFactory.getLog(AccountManageResource.class);
 
-    @Autowired
-    @Qualifier("generalAccessor")
-    private GeneralAccessor accessor = null;
+    private GeneralAccessor accessor;
+
+    private AccountManageService accountManageService;
+
+    private SessionDataStore sessionDataStore;
 
     @Autowired
-    private AccountManageService accountManageService = null;
-
-    @Autowired
-    private SessionDataStore sessionDataStore = null;
+    public AccountManageResource(@Qualifier("generalAccessor") GeneralAccessor accessor,
+                                 AccountManageService accountManageService, SessionDataStore sessionDataStore) {
+        super();
+        this.accessor = accessor;
+        this.accountManageService = accountManageService;
+        this.sessionDataStore = sessionDataStore;
+    }
 
     @Path("logs")
     @GET
@@ -48,7 +55,7 @@ public class AccountManageResource {
         try {
             List<OperateLog> logs = accessor.list(OperateLog.class);
             List<OperateLogVO> vos = OperateLogVO.transform(logs);
-            return new DataVO(vos);
+            return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
         } catch (Exception ex) {
@@ -71,7 +78,7 @@ public class AccountManageResource {
         try {
             List<OperateLog> logs = accessor.list(pagination, OperateLog.class);
             List<OperateLogVO> vos = OperateLogVO.transform(logs);
-            return new PaginationDataVO(pagination, vos);
+            return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {
@@ -91,7 +98,7 @@ public class AccountManageResource {
         try {
             List<LoginHistory> histories = accessor.list(LoginHistory.class);
             List<LoginHistoryVO> vos = LoginHistoryVO.transform(histories);
-            return new DataVO(vos);
+            return new DataVO<>(vos);
         } catch (UserInterfaceException ex) {
             return new DataVO<>(ex);
         } catch (Exception ex) {
@@ -114,7 +121,7 @@ public class AccountManageResource {
         try {
             List<LoginHistory> histories = accessor.list(pagination, LoginHistory.class);
             List<LoginHistoryVO> vos = LoginHistoryVO.transform(histories);
-            return new PaginationDataVO(pagination, vos);
+            return new PaginationDataVO<>(pagination, vos);
         } catch (UserInterfaceException ex) {
             return new PaginationDataVO<>(ex);
         } catch (Exception ex) {

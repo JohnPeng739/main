@@ -25,9 +25,18 @@ import java.util.Set;
 public class RoleManageServiceImpl extends RoleManageServiceCommonImpl {
     private static final Log logger = LogFactory.getLog(RoleManageServiceCommonImpl.class);
 
+    private GeneralDictAccessor accessor;
+
+    /**
+     * 默认的构造函数
+     *
+     * @param accessor 字典数据实体访问器
+     */
     @Autowired
-    @Qualifier("generalDictAccessor")
-    private GeneralDictAccessor accessor = null;
+    public RoleManageServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor accessor) {
+        super();
+        this.accessor = accessor;
+    }
 
     /**
      * {@inheritDoc}
@@ -43,34 +52,32 @@ public class RoleManageServiceImpl extends RoleManageServiceCommonImpl {
             oldPrivileges.addAll(checked.getPrivileges());
             oldAccounts.addAll(checked.getAccounts());
         }
-        accessor.save(role, false);
+        accessor.save(role);
         Set<Privilege> privileges = role.getPrivileges();
         Set<Account> accounts = role.getAccounts();
         for (Privilege privilege : privileges) {
             if (oldPrivileges.contains(privilege)) {
                 oldPrivileges.remove(privilege);
-                continue;
             } else {
                 privilege.getRoles().add(role);
-                accessor.save(privilege, false);
+                accessor.save(privilege);
             }
         }
         for (Privilege privilege : oldPrivileges) {
             privilege.getRoles().remove(role);
-            accessor.save(privilege, false);
+            accessor.save(privilege);
         }
         for (Account account : accounts) {
             if (oldAccounts.contains(account)) {
                 oldAccounts.remove(account);
-                continue;
             } else {
                 account.getRoles().add(role);
-                accessor.save(account, false);
+                accessor.save(account);
             }
         }
         for (Account account : oldAccounts) {
             account.getRoles().remove(role);
-            accessor.save(account, false);
+            accessor.save(account);
         }
         return role;
     }
