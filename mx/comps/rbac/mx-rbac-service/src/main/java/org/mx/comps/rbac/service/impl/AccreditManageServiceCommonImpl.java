@@ -41,7 +41,7 @@ public abstract class AccreditManageServiceCommonImpl implements AccreditManageS
      * @param accreditInfo 授权信息对象
      * @return 如果已经存在，则返回true；否则返回false。
      */
-    protected abstract boolean hasSameAccredit(AccreditInfo accreditInfo);
+    public abstract boolean hasSameAccredit(AccreditInfo accreditInfo);
 
     /**
      * {@inheritDoc}

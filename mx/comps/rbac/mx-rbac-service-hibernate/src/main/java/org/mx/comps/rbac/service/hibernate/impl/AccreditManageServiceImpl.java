@@ -50,7 +50,7 @@ public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
      * @see AccreditManageServiceCommonImpl#hasSameAccredit(AccreditInfo)
      */
     @Override
-    protected boolean hasSameAccredit(AccreditInfo accreditInfo) {
+    public boolean hasSameAccredit(AccreditInfo accreditInfo) {
         List<GeneralAccessor.ConditionTuple> conditions = new ArrayList<>();
         conditions.add(new GeneralAccessor.ConditionTuple("src.id", accreditInfo.getSrcAccountId()));
         conditions.add(new GeneralAccessor.ConditionTuple("tar.id", accreditInfo.getTarAccountId()));
