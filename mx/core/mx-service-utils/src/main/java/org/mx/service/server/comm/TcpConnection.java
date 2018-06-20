@@ -29,13 +29,15 @@ public class TcpConnection {
     /**
      * 默认的构造函数
      *
-     * @param wrapper  数据包装器
-     * @param socket   连接套接字
-     * @param receiver 数据接收监听器
-     * @param length   缓存最大长度
-     * @param timeout  最大超时值
+     * @param wrapper   数据包装器
+     * @param socket    连接套接字
+     * @param receiver  数据接收监听器
+     * @param length    缓存最大长度
+     * @param timeout   最大超时值
+     * @param localPort 本地监听端口号
      */
-    public TcpConnection(PacketWrapper wrapper, Socket socket, ReceiverListener receiver, int length, int timeout) {
+    public TcpConnection(PacketWrapper wrapper, Socket socket, ReceiverListener receiver, int length, int timeout,
+                         int localPort) {
         super();
         this.packetWrapper = wrapper;
         this.socket = socket;
@@ -55,7 +57,7 @@ public class TcpConnection {
             String fromIp = TypeUtils.byteArray2Ip(socket.getInetAddress().getAddress());
             int fromPort = socket.getPort();
             executorService = Executors.newSingleThreadExecutor();
-            executorService.submit(new ReceiveTask(fromIp, fromPort, socket.getInputStream(), maxLength));
+            executorService.submit(new ReceiveTask(fromIp, fromPort, socket.getInputStream(), maxLength, localPort));
             if (logger.isDebugEnabled()) {
                 logger.debug("Initialize a new receive task successfully.");
             }
@@ -77,7 +79,7 @@ public class TcpConnection {
                 byte[] payload = new byte[Math.min(offset + maxLength, buffer.length)];
                 System.arraycopy(buffer, offset, payload, 0, payload.length);
                 // 对载荷封包，然后发送
-                socket.getOutputStream().write(packetWrapper.getPacketData(payload));
+                socket.getOutputStream().write(packetWrapper.packetPayload(payload));
                 if (offset + maxLength < buffer.length) {
                     offset += maxLength;
                 }
@@ -125,7 +127,7 @@ public class TcpConnection {
     protected class ReceiveTask implements Runnable {
         private boolean needExit = false;
         private InputStream inputStream;
-        private int length, fromPort;
+        private int length, fromPort, localPort;
         private String fromIp;
 
         /**
@@ -135,13 +137,15 @@ public class TcpConnection {
          * @param fromPort    来源端口号
          * @param inputStream 套接字的输入流
          * @param maxLength   缓存最大长度
+         * @param localPort   本地监听端口号
          */
-        public ReceiveTask(String fromIp, int fromPort, InputStream inputStream, int maxLength) {
+        public ReceiveTask(String fromIp, int fromPort, InputStream inputStream, int maxLength, int localPort) {
             super();
             this.fromIp = fromIp;
             this.fromPort = fromPort;
             this.inputStream = inputStream;
             this.length = maxLength;
+            this.localPort = localPort;
         }
 
         /**
@@ -178,6 +182,7 @@ public class TcpConnection {
                                 ReceivedMessage receivedMessage = new ReceivedMessage();
                                 receivedMessage.setFromIp(fromIp);
                                 receivedMessage.setFromPort(fromPort);
+                                receivedMessage.setLocalPort(localPort);
                                 receivedMessage.setOffset(0);
                                 receivedMessage.setLength(len);
                                 receivedMessage.setPayload(payload);

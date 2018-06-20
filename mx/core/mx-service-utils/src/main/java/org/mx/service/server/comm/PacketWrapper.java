@@ -7,6 +7,8 @@ package org.mx.service.server.comm;
  * Date time 2018/6/2 下午8:26
  */
 public abstract class PacketWrapper {
+    protected byte[] payload;
+
     /**
      * 获取发现的包装数据头偏移量
      *
@@ -26,7 +28,9 @@ public abstract class PacketWrapper {
      *
      * @return 有效数据载荷，如果没有发现有效载荷，返回null
      */
-    public abstract byte[] getPayload();
+    public byte[] getPayload() {
+        return payload;
+    }
 
     /**
      * 获取指定数据载荷的包装数据
@@ -34,5 +38,5 @@ public abstract class PacketWrapper {
      * @param payload 有效数据载荷
      * @return 包装数据
      */
-    public abstract byte[] getPacketData(byte[] payload);
+    public abstract byte[] packetPayload(byte[] payload);
 }

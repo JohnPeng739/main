@@ -91,7 +91,7 @@ public class CommClientInvoke {
     private TcpConnection initTcpConnection(ReceiverListener receiver, PacketWrapper wrapper, int length, int timeout) {
         try {
             Socket socket = new Socket(ip, port);
-            return new TcpConnection(wrapper, socket, receiver, length, timeout);
+            return new TcpConnection(wrapper, socket, receiver, length, timeout, this.port);
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Create a socket[%s:%d] fail.", ip, port), ex);

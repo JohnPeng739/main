@@ -56,7 +56,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
             receiveExecutor = Executors.newSingleThreadExecutor();
             final byte[] buffer = new byte[super.maxLength];
             final DatagramPacket receivePacket = new DatagramPacket(buffer, super.maxLength);
-            receiveTask = new ReceiveTask(socket, super.maxLength, receiver);
+            receiveTask = new ReceiveTask(socket, super.maxLength, super.port, receiver);
             receiveExecutor.submit(receiveTask);
         } catch (SocketException ex) {
             if (logger.isErrorEnabled()) {
@@ -119,7 +119,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
                 byte[] data = Arrays.copyOfRange(payload, offset, length);
                 if (wrapper != null) {
                     // 如果设置了包装器，则对载荷进行包装
-                    data = wrapper.getPacketData(data);
+                    data = wrapper.packetPayload(data);
                 }
                 DatagramPacket sendPacket = new DatagramPacket(data, data.length, socketAddress);
                 socket.send(sendPacket);
@@ -145,7 +145,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
      */
     private class ReceiveTask implements Runnable {
         private DatagramSocket socket;
-        private int length;
+        private int length, localPort;
         private boolean needExit = false;
         private ReceiverListener receiver;
 
@@ -154,12 +154,14 @@ public class UdpCommServiceProvider extends CommServiceProvider {
          *
          * @param socket    UDP套接字
          * @param maxLength 缓存最大长度
+         * @param localPort 本地监听端口号
          * @param receiver  接收到消息后的消费者
          */
-        public ReceiveTask(DatagramSocket socket, int maxLength, ReceiverListener receiver) {
+        public ReceiveTask(DatagramSocket socket, int maxLength, int localPort, ReceiverListener receiver) {
             super();
             this.socket = socket;
             this.length = maxLength;
+            this.localPort = localPort;
             this.receiver = receiver;
         }
 
@@ -189,6 +191,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
                     ReceivedMessage receivedMessage = new ReceivedMessage();
                     receivedMessage.setFromIp(TypeUtils.byteArray2Ip(packet.getAddress().getAddress()));
                     receivedMessage.setFromPort(packet.getPort());
+                    receivedMessage.setLocalPort(localPort);
                     receivedMessage.setLength(packet.getLength() - packet.getOffset());
                     byte[] data = Arrays.copyOfRange(packet.getData(), packet.getOffset(),
                             packet.getOffset() + packet.getLength());

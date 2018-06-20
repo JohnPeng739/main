@@ -9,7 +9,7 @@ package org.mx.service.server.comm;
 public class ReceivedMessage {
     private String fromIp;
     private long offset = 0;
-    private int fromPort, length;
+    private int fromPort, localPort, length;
     private byte[] payload;
 
     /**
@@ -64,6 +64,24 @@ public class ReceivedMessage {
      */
     public void setFromPort(int fromPort) {
         this.fromPort = fromPort;
+    }
+
+    /**
+     * 获取本地监听端口号
+     *
+     * @return 端口号
+     */
+    public int getLocalPort() {
+        return localPort;
+    }
+
+    /**
+     * 设置本地监听端口
+     *
+     * @param localPort 端口号
+     */
+    public void setLocalPort(int localPort) {
+        this.localPort = localPort;
     }
 
     /**

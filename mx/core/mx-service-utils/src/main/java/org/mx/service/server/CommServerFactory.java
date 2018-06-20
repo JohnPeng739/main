@@ -4,10 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.mx.service.server.comm.PacketWrapper;
-import org.mx.service.server.comm.ReceiverListener;
-import org.mx.service.server.comm.TcpCommServiceProvider;
-import org.mx.service.server.comm.UdpCommServiceProvider;
+import org.mx.service.server.comm.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -50,18 +47,22 @@ public class CommServerFactory {
                 3000);
         String receiverName = env.getProperty(String.format("tcp.servers.%d.receiver", index));
         String wrapperClassName = env.getProperty(String.format("tcp.servers.%d.packet.wrapper", index));
-        if (port <= 0 || maxLength <= 0 || maxTimeout <= 0 || StringUtils.isBlank(receiverName)
-                || StringUtils.isBlank(wrapperClassName)) {
+        if (port <= 0 || maxLength <= 0 || maxTimeout <= 0 || StringUtils.isBlank(receiverName)) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Invalid tcp server parameter, port: %d, buffer length: %d, " +
-                                "timeout: %d, receiver name: %s, wrapper class: %s.", port, maxLength, maxTimeout,
+                                "timeout: %d, receiver name: %s", port, maxLength, maxTimeout,
                         receiverName, wrapperClassName));
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
         }
         try {
-            PacketWrapper wrapper = (PacketWrapper) Class.forName(wrapperClassName).newInstance();
+            PacketWrapper wrapper;
+            if (StringUtils.isBlank(wrapperClassName)) {
+                wrapper = new SimplePacketWrapper();
+            } else {
+                wrapper = (PacketWrapper) Class.forName(wrapperClassName).newInstance();
+            }
             TcpCommServiceProvider tcpProvider = new TcpCommServiceProvider(port, wrapper, maxLength, maxTimeout);
             ReceiverListener receiver = context.getBean(receiverName, ReceiverListener.class);
             tcpProvider.init(receiver);
@@ -83,18 +84,22 @@ public class CommServerFactory {
         int maxTimeout = env.getProperty(String.format("udp.servers.%d.maxTimeout", index), Integer.class, 3000);
         String wrapperClassName = env.getProperty(String.format("udp.servers.%d.packet.wrapper", index));
         String receiverName = env.getProperty(String.format("udp.servers.%d.receiver", index));
-        if (port <= 0 || maxLength <= 0 || maxTimeout <= 0 || StringUtils.isBlank(receiverName)
-                || StringUtils.isBlank(wrapperClassName)) {
+        if (port <= 0 || maxLength <= 0 || maxTimeout <= 0 || StringUtils.isBlank(receiverName)) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Invalid udp server parameter, port: %d, buffer length: %d, " +
-                                "timeout: %d, receiver name: %s, wrapper class: %s.", port, maxLength, maxTimeout,
-                        receiverName, wrapperClassName));
+                                "timeout: %d, receiver name: %s.", port, maxLength, maxTimeout,
+                        receiverName));
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
         }
         try {
-            PacketWrapper wrapper = (PacketWrapper) Class.forName(wrapperClassName).newInstance();
+            PacketWrapper wrapper;
+            if (StringUtils.isBlank(wrapperClassName)) {
+                wrapper = new SimplePacketWrapper();
+            } else {
+                wrapper = (PacketWrapper) Class.forName(wrapperClassName).newInstance();
+            }
             UdpCommServiceProvider udpProvider = new UdpCommServiceProvider(port, wrapper, maxLength, maxTimeout);
             ReceiverListener receiver = context.getBean(receiverName, ReceiverListener.class);
             udpProvider.init(receiver);

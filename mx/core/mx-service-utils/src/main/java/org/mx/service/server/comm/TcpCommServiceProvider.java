@@ -56,7 +56,7 @@ public class TcpCommServiceProvider extends CommServiceProvider {
             serverSocket.setSoTimeout(super.maxTimeout);
             serverSocket.setReceiveBufferSize(super.maxLength);
             executorService = Executors.newSingleThreadExecutor();
-            executorService.submit(new SocketAcceptTask(super.maxLength, super.maxTimeout));
+            executorService.submit(new SocketAcceptTask(super.port, super.maxLength, super.maxTimeout));
             if (logger.isInfoEnabled()) {
                 logger.info("Initialize the TCP server successfully.");
             }
@@ -130,16 +130,18 @@ public class TcpCommServiceProvider extends CommServiceProvider {
      */
     private class SocketAcceptTask implements Runnable {
         private boolean needExit = false;
-        private int length, timeout;
+        private int length, timeout, localPort;
 
         /**
          * 默认的构造函数
          *
+         * @param localPort  本地监听端口号
          * @param maxLength  缓存最大长度
          * @param maxTimeout 最大超时值
          */
-        public SocketAcceptTask(int maxLength, int maxTimeout) {
+        public SocketAcceptTask(int localPort, int maxLength, int maxTimeout) {
             super();
+            this.localPort = localPort;
             this.length = maxLength;
             this.timeout = maxTimeout;
         }
@@ -164,7 +166,7 @@ public class TcpCommServiceProvider extends CommServiceProvider {
                 try {
                     Socket socket = serverSocket.accept();
                     String key = ipAndPort(socket.getInetAddress().getAddress(), socket.getPort());
-                    TcpConnection tcpConnection = new TcpConnection(packetWrapper, socket, receiver, length, timeout);
+                    TcpConnection tcpConnection = new TcpConnection(packetWrapper, socket, receiver, length, timeout, localPort);
                     tcpConnections.put(key, tcpConnection);
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format("There has a new connection: %s.", key));

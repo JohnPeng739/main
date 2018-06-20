@@ -14,7 +14,7 @@ import org.mx.TypeUtils;
 public class DefaultPacketWrapper extends PacketWrapper {
     private static final Log logger = LogFactory.getLog(DefaultPacketWrapper.class);
 
-    private byte[] syncWords = {0x0, 0xf, 0x0, 0xf}, packetData = null, payload = null;
+    private byte[] syncWords = {0x0, 0xf, 0x0, 0xf}, packetData = null;
     private int headerPos = -1;
 
     /**
@@ -60,7 +60,7 @@ public class DefaultPacketWrapper extends PacketWrapper {
     @Override
     public void setPacketData(byte[] packetData) {
         this.headerPos = -1;
-        this.payload = null;
+        super.payload = null;
         this.packetData = packetData;
         int found = findSyncWord();
         if (found == -1) {
@@ -87,27 +87,16 @@ public class DefaultPacketWrapper extends PacketWrapper {
         }
         // 条件全部满足，有效载荷返回
         headerPos = found + syncWords.length + 4;
-        this.payload = payload;
+        super.payload = payload;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see PacketWrapper#getPayload()
+     * @see PacketWrapper#packetPayload(byte[])
      */
     @Override
-    public byte[] getPayload() {
-        return payload;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see PacketWrapper#getPacketData(byte[])
-     */
-    @Override
-    public byte[] getPacketData(byte[] payload) {
+    public byte[] packetPayload(byte[] payload) {
         if (payload == null) {
             return null;
         }
