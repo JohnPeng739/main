@@ -2,10 +2,14 @@ package org.mx.service.server;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jetty.server.Server;
+import org.apache.http.HttpVersion;
+import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
+import org.eclipse.jetty.util.thread.ScheduledExecutorScheduler;
+import org.glassfish.jersey.jetty.JettyHttpContainer;
 import org.glassfish.jersey.jetty.JettyHttpContainerProvider;
+import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
@@ -13,7 +17,6 @@ import org.mx.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -80,27 +83,50 @@ public class HttpServerFactory extends AbstractServerFactory {
             // config.property(ServerProperties.METAINF_SERVICES_LOOKUP_DISABLE, true);
             boolean security = this.env.getProperty("restful.security", Boolean.class, false);
             int port = this.env.getProperty("restful.port", Integer.class, 9999);
-            Server server;
+            int threads = this.env.getProperty("restful.threads", Integer.class, 300);
+            QueuedThreadPool threadPool = new QueuedThreadPool(threads);
+            Server server = new Server(threadPool);
+            server.addBean(new ScheduledExecutorScheduler());
+            HttpConfiguration httpConfiguration = new HttpConfiguration();
+            httpConfiguration.setOutputBufferSize(this.env.getProperty("restful.outputSize", Integer.class, 32768));
+            httpConfiguration.setRequestHeaderSize(this.env.getProperty("restful.requestHeaderSize", Integer.class, 8192));
+            httpConfiguration.setResponseHeaderSize(this.env.getProperty("restful.responseHeaderSize", Integer.class, 8192));
+            httpConfiguration.setSendServerVersion(true);
+            httpConfiguration.setSendDateHeader(false);
+            JettyHttpContainer container = ContainerFactory.createContainer(JettyHttpContainer.class, config);
+            server.setHandler(container);
             String uri;
             if (security) {
-                uri = String.format("https://localhost:%d/", port);
-                URI baseUri = new URI(uri);
+                httpConfiguration.setSecureScheme("https");
+                httpConfiguration.setSecurePort(port);
+                httpConfiguration.addCustomizer(new SecureRequestCustomizer());
+
                 String keystorePath = env.getProperty("restful.keystore", "./keystore");
                 SslContextFactory sslContextFactory = new SslContextFactory();
                 sslContextFactory.setKeyStorePath(keystorePath);
                 sslContextFactory.setKeyStorePassword("OBF:1j8x1iup1kfv1j9t1nl91fia1fek1nip1j591kcj1irx1j65");
                 sslContextFactory.setKeyManagerPassword("OBF:1k8a1lmp18jj18cg18ce18jj1lj11k5w");
-                server = JettyHttpContainerFactory.createServer(baseUri, sslContextFactory, config);
+
+                ServerConnector https = new ServerConnector(server,
+                        new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.toString()),
+                        new HttpConnectionFactory(httpConfiguration));
+                https.setPort(port);
+                server.addConnector(https);
             } else {
-                uri = String.format("http://localhost:%d/", port);
-                URI baseUri = new URI(uri);
-                server = JettyHttpContainerFactory.createServer(baseUri, config);
+                ServerConnector http = new ServerConnector(server,
+                        new HttpConnectionFactory(httpConfiguration));
+                http.setPort(port);
+                http.setIdleTimeout(30000);
+                server.addConnector(http);
             }
+            server.setDumpAfterStart(false);
+            server.setDumpBeforeStop(false);
             server.setStopAtShutdown(true);
             server.setStopTimeout(10);
+            server.start();
             super.setServer(server);
             if (logger.isInfoEnabled()) {
-                logger.info(String.format("Start HttpServer success, listen base uri: %s.", uri));
+                logger.info(String.format("Start HttpServer success, listen : %d, security: %s.", port, security));
             }
         }
     }

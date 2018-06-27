@@ -88,6 +88,8 @@ public class WebsocketServerFactory extends AbstractServerFactory {
             server.setHandler(new WebSocketHandler() {
                 @Override
                 public void configure(WebSocketServletFactory factory) {
+                    factory.getPolicy().setIdleTimeout(10000);
+                    // TODO 设置额外的Websocket参数，如：缓冲大小等
                     factory.setCreator(new MyWebsocketCreator());
                 }
             });

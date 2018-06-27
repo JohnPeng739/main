@@ -86,8 +86,8 @@ public class ServletServerFactory extends AbstractServerFactory {
             }
             server.setStopAtShutdown(true);
             server.setStopTimeout(10);
-            super.setServer(server);
             server.start();
+            super.setServer(server);
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Start ServletServer success, listen port: %d.", port));
             }

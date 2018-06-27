@@ -9,6 +9,7 @@ import org.java_websocket.WebSocket;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mx.StringUtils;
 import org.mx.service.client.comm.CommClientInvoke;
 import org.mx.service.client.rest.RestClientInvoke;
 import org.mx.service.client.rest.RestInvokeException;
@@ -59,9 +60,11 @@ public class TestServer {
             assertNotNull(str);
             assertEquals("match the response data.", "get data.", str.getData());
 
-            String data = "hello world";
-            str = invoke.post("http://localhost:9999/service/post", data, DataVO.class);
+            String data = StringUtils.repeat(65535000, "a");
+            System.out.println(data.length());
+            str = invoke.post("http://192.168.0.248:9999/service/post", data, DataVO.class);
             assertNotNull(str);
+            System.out.println(str.getData().length());
             assertEquals("match the response data.", String.format("post data: %s.", data), str.getData());
 
             data = "hello world";
