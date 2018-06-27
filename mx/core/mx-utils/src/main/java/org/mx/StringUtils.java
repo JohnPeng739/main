@@ -262,6 +262,27 @@ public class StringUtils {
     }
 
     /**
+     * 使用指定的字符串重复生成指定长度的字符串
+     *
+     * @param length 长度
+     * @param str    待重复的字符串
+     * @return 生成的重复字符串
+     */
+    public static String repeat(int length, String str) {
+        if (length <= 0) {
+            return "";
+        }
+        if (isBlank(str)) {
+            str = " ";
+        }
+        StringBuffer sb = new StringBuffer(length + str.length());
+        for (int index = 0; index < length / str.length() + 1; index ++) {
+            sb.append(str);
+        }
+        return sb.substring(0, length);
+    }
+
+    /**
      * 使用默认的分割符对输入的字符进行分割，同时对分割的项去除空字符和忽略空字符
      *
      * @param s 待分割的字符串

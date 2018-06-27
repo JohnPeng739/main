@@ -1,8 +1,8 @@
 package org.mx;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestStringUtils {
 
@@ -15,5 +15,22 @@ public class TestStringUtils {
 		for (int index =0; index < src.length; index ++) {
 			assertEquals(tar[index], StringUtils.truncate(src[index], 5));
 		}
+	}
+
+	@Test
+	public void testRepeat() {
+		assertEquals("", StringUtils.repeat(0, null));
+		assertEquals(" ", StringUtils.repeat(1, null));
+		assertEquals(" ", StringUtils.repeat(1, " "));
+		assertEquals(",", StringUtils.repeat(1, ",1a"));
+		assertEquals("  ", StringUtils.repeat(2, null));
+		assertEquals("  ", StringUtils.repeat(2, " "));
+		assertEquals(",1", StringUtils.repeat(2, ",1a"));
+		assertEquals("   ", StringUtils.repeat(3, null));
+		assertEquals("   ", StringUtils.repeat(3, " "));
+		assertEquals(",1a", StringUtils.repeat(3, ",1a"));
+		assertEquals("       ", StringUtils.repeat(7, null));
+		assertEquals("       ", StringUtils.repeat(7, " "));
+		assertEquals(",1a,1a,", StringUtils.repeat(7, ",1a"));
 	}
 }
