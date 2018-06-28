@@ -287,7 +287,8 @@ public class ElasticUtilRest implements ElasticUtil {
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc} <br>
+     * 在没有传入分页对象的情况下，最多返回前1000条记录。
      *
      * @see ElasticUtil#search(List, Class, Pagination)
      */
@@ -333,6 +334,9 @@ public class ElasticUtilRest implements ElasticUtil {
         if (pagination != null) {
             builder.from((pagination.getPage() - 1) * pagination.getSize());
             builder.size(pagination.getSize());
+        } else {
+            // 默认不分页的情况下，返回前1000条记录
+            builder.size(1000);
         }
         String[] indices;
         if (classes == null || classes.isEmpty()) {

@@ -32,6 +32,40 @@ public class TestElastic {
     }
 
     @Test
+    public void testAnyItemsQuery() {
+        GeneralAccessor accessor = context.getBean("generalAccessorElastic", GeneralAccessor.class);
+        assertNotNull(accessor);
+
+        try {
+            long delay = 1000;
+            assertEquals(0, accessor.count(UserEntityElastic.class));
+
+            for (int i = 0; i < 100; i ++) {
+                UserEntityElastic user1 = EntityFactory.createEntity(UserEntityElastic.class);
+                user1.setAge(i);
+                user1.setCode("john " + i);
+                user1.setName("John Peng " + i);
+                user1.setDesc("我是一个正高级工程师。");
+                assertNull(user1.getId());
+                UserEntityElastic u1 = accessor.save(user1);
+            }
+            Thread.sleep(3000);
+            List<UserEntityElastic> list = accessor.find(Arrays.asList(
+                    GeneralAccessor.ConditionTuple.contain("desc", "我")
+            ), UserEntityElastic.class);
+            assertEquals(100, list.size());
+            list = accessor.find(Arrays.asList(
+                    GeneralAccessor.ConditionTuple.contain("desc", "高级工程师")
+            ), UserEntityElastic.class);
+            assertEquals(100, list.size());
+            accessor.clear(UserEntityElastic.class);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            fail("fail");
+        }
+    }
+
+    @Test
     public void test() {
         GeneralAccessor accessor = context.getBean("generalAccessorElastic", GeneralAccessor.class);
         assertNotNull(accessor);

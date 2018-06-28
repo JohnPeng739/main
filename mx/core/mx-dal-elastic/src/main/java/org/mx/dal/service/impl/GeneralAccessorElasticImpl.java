@@ -143,7 +143,8 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc} <br>
+     * 如果预计记录数超过1000，则推荐使用带分页条件的查询 {@link ElasticUtil#search(List, Class, Pagination)}。否则只返回前1000条记录。
      *
      * @see ElasticAccessor#find(List, List)
      */
@@ -151,7 +152,9 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, List<Class<? extends Base>> classes) {
         SearchResponse response = accessor.search(tuples, classes, null);
         List<T> list = new ArrayList<>();
-        response.getHits().forEach(hit -> dowithRow(hit, list));
+        if (response.status() == RestStatus.OK) {
+            response.getHits().forEach(hit -> dowithRow(hit, list));
+        }
         return list;
     }
 
