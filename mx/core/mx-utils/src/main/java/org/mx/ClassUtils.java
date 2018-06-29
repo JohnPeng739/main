@@ -173,7 +173,7 @@ public class ClassUtils {
      */
     private static void scanPackageByJar(final String path, final boolean recurse, final boolean ignoreInlineClass,
                                          final Consumer<String> action) {
-        String[] jarInfo = StringUtils.split("!");
+        String[] jarInfo = StringUtils.split(path, "!", true, true);
         if (jarInfo.length == 2) {
             String jarFile = jarInfo[0].substring(jarInfo[0].indexOf("/"));
             String packagePath = jarInfo[1].substring(1);
@@ -208,7 +208,7 @@ public class ClassUtils {
             }
         } else {
             if (logger.isWarnEnabled()) {
-                logger.warn(String.format("The path【%s] is not a valid jar file path.", path));
+                logger.warn(String.format("The path[%s] is not a valid jar file path.", path));
             }
         }
     }
