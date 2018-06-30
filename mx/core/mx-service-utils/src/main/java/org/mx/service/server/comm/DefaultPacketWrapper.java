@@ -45,6 +45,16 @@ public class DefaultPacketWrapper extends PacketWrapper {
     /**
      * {@inheritDoc}
      *
+     * @see PacketWrapper#getExtraLength()
+     */
+    @Override
+    public int getExtraLength() {
+        return 12;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see PacketWrapper#getHeaderPosition()
      */
     @Override

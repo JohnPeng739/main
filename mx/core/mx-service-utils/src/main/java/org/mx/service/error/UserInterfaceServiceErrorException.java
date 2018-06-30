@@ -33,6 +33,7 @@ public class UserInterfaceServiceErrorException extends UserInterfaceException {
         COMM_SOCKET_ERROR("SOCKET通信错误。"),
         COMM_UNSUPPORTED_TYPE("不支持的通信类型。"),
         COMM_INITIALIZE_ERROR("通信服务初始化错误。"),
+        COMM_DATA_TOO_MORE("传输数据超出设置大小。"),
 
         SERVICE_OTHER_FAIL("其他服务访问错误。");
         public static final int BASE_ORDINAL = 60;

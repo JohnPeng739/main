@@ -7,7 +7,6 @@ import org.eclipse.jetty.websocket.api.annotations.*;
 import org.eclipse.jetty.websocket.api.extensions.Frame;
 import org.eclipse.jetty.websocket.common.frames.PongFrame;
 import org.mx.TypeUtils;
-import org.mx.spring.utils.SpringContextHolder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class SimpleWsObject {
         if (logger.isInfoEnabled()) {
             logger.info(String.format("On connect: %s.", connectKey));
         }
-        WsSessionManager manager = SpringContextHolder.getBean(WsSessionManager.class);
+        WsSessionManager manager = WsSessionManager.getManager();
         if (manager != null) {
             manager.addSession(session);
         }
@@ -63,7 +62,7 @@ public class SimpleWsObject {
         if (logger.isInfoEnabled()) {
             logger.info(String.format("On connect: %s.", connectKey));
         }
-        WsSessionManager manager = SpringContextHolder.getBean(WsSessionManager.class);
+        WsSessionManager manager = WsSessionManager.getManager();
         if (manager != null) {
             manager.removeSession(session);
         }
@@ -87,7 +86,7 @@ public class SimpleWsObject {
     public final void onFrame(Session session, Frame frame) {
         String connectKey = getConnectKey(session);
         if (frame instanceof PongFrame) {
-            WsSessionManager manager = SpringContextHolder.getBean(WsSessionManager.class);
+            WsSessionManager manager = WsSessionManager.getManager();
             if (manager != null) {
                 manager.pong(connectKey);
             }

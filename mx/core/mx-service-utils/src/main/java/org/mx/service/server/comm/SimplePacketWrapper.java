@@ -10,6 +10,16 @@ public class SimplePacketWrapper extends PacketWrapper {
     /**
      * {@inheritDoc}
      *
+     * @see PacketWrapper#getExtraLength()
+     */
+    @Override
+    public int getExtraLength() {
+        return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see PacketWrapper#getHeaderPosition()
      */
     @Override

@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.service.server.websocket.DefaultWsSessionMonitor;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -18,12 +17,12 @@ public class EchoWebsocket extends DefaultWsSessionMonitor {
     private static final Log logger = LogFactory.getLog(EchoWebsocket.class);
     private final CountDownLatch closeLatch;
 
-    @Autowired
-    private WsSessionManager manager = null;
+    private WsSessionManager manager;
 
     public EchoWebsocket() {
         super("/echo");
         closeLatch = new CountDownLatch(1);
+        manager = WsSessionManager.getManager();
     }
 
     public boolean awaitClose(int duration, TimeUnit unit) throws InterruptedException {

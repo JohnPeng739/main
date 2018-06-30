@@ -29,21 +29,22 @@ public class WsSessionManager {
     private static final Log logger = LogFactory.getLog(WsSessionManager.class);
     private static final String pingCycleSecKey = "websocket.session.ping.cycleSec";
     private static final String cleanCycleSecKey = "websocket.session.clean.cycleSec";
+
+    private static WsSessionManager manager = null;
+
     private final Serializable setMutex = "Set task";
-    private Environment env;
-    private ApplicationContext context;
     private Timer pingTimer = null, cleanTimer = null;
     private int pingCycleSec = 10, cleanCycleSec = 60;
 
-    private ConcurrentMap<String, Session> sessions = null;
-    private ConcurrentMap<String, PingPongTime> pongs = null;
-    private Set<WsSessionFilterRule> rules = null;
-    private Set<String> blocks = null;
+    private ConcurrentMap<String, Session> sessions;
+    private ConcurrentMap<String, PingPongTime> pongs;
+    private Set<WsSessionFilterRule> rules;
+    private Set<String> blocks;
 
     /**
      * 默认的构造函数
      */
-    public WsSessionManager() {
+    private WsSessionManager() {
         super();
         this.sessions = new ConcurrentHashMap<>();
         this.pongs = new ConcurrentHashMap<>();
@@ -52,15 +53,15 @@ public class WsSessionManager {
     }
 
     /**
-     * 默认的构造函数
+     * 获取Websocket会话管理器，单例
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @return Websocket会话管理器
      */
-    public WsSessionManager(Environment env, ApplicationContext context) {
-        this();
-        this.env = env;
-        this.context = context;
+    public static WsSessionManager getManager() {
+        if (manager == null) {
+            manager = new WsSessionManager();
+        }
+        return manager;
     }
 
     /**
@@ -244,8 +245,11 @@ public class WsSessionManager {
 
     /**
      * 初始化会话管理器
+     *
+     * @param env     Spring IoC上下文文件
+     * @param context Spring IoC上下文
      */
-    public void init() {
+    public void init(Environment env, ApplicationContext context) {
         // 配置过滤规则
         if (env != null) {
             String filtersStr = env.getProperty("websocket.session.filter.rules");
@@ -309,6 +313,7 @@ public class WsSessionManager {
 
     private class CleanTask extends TimerTask {
         private final int PONG_ERROR_CODE = 4001;
+
         /**
          * {@inheritDoc}
          *

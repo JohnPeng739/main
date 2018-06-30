@@ -47,7 +47,7 @@ public class CommServerFactory {
                 3000);
         String receiverName = env.getProperty(String.format("tcp.servers.%d.receiver", index));
         String wrapperClassName = env.getProperty(String.format("tcp.servers.%d.packet.wrapper", index));
-        if (port <= 0 || maxLength <= 0 || maxTimeout <= 0 || StringUtils.isBlank(receiverName)) {
+        if (port <= 0 || maxLength <= 0 || (maxTimeout <= 0 && maxTimeout != -1) || StringUtils.isBlank(receiverName)) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Invalid tcp server parameter, port: %d, buffer length: %d, " +
                                 "timeout: %d, receiver name: %s", port, maxLength, maxTimeout,
@@ -84,7 +84,7 @@ public class CommServerFactory {
         int maxTimeout = env.getProperty(String.format("udp.servers.%d.maxTimeout", index), Integer.class, 3000);
         String wrapperClassName = env.getProperty(String.format("udp.servers.%d.packet.wrapper", index));
         String receiverName = env.getProperty(String.format("udp.servers.%d.receiver", index));
-        if (port <= 0 || maxLength <= 0 || maxTimeout <= 0 || StringUtils.isBlank(receiverName)) {
+        if (port <= 0 || maxLength <= 0 || (maxTimeout <= 0 && maxTimeout != -1) || StringUtils.isBlank(receiverName)) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Invalid udp server parameter, port: %d, buffer length: %d, " +
                                 "timeout: %d, receiver name: %s.", port, maxLength, maxTimeout,

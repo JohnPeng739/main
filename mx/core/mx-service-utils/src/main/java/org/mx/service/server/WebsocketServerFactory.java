@@ -11,6 +11,7 @@ import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
 import org.mx.service.server.websocket.SimpleWsObject;
 import org.mx.service.server.websocket.WsSessionListener;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
@@ -71,6 +72,8 @@ public class WebsocketServerFactory extends AbstractServerFactory {
                 logger.warn(String.format("You not define [%s], will not ", websocketClassesStr));
             }
         } else {
+            // 初始化Websocket会话管理器
+            WsSessionManager.getManager().init(env, context);
             String[] classesDefs = websocketServiceClassesDef.split(",");
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {

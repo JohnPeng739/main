@@ -49,9 +49,12 @@ public class UdpCommServiceProvider extends CommServiceProvider {
     public void init(ReceiverListener receiver) {
         try {
             socket = new DatagramSocket(super.port);
-            socket.setSoTimeout(super.maxTimeout);
-            socket.setReceiveBufferSize(super.maxLength);
-            socket.setSendBufferSize(super.maxLength);
+            if (super.maxTimeout > 0) {
+                socket.setSoTimeout(super.maxTimeout);
+            }
+            // 额外添加10个字节作为余量
+            socket.setReceiveBufferSize(super.maxLength + wrapper.getExtraLength() + 10);
+            socket.setSendBufferSize(super.maxLength + wrapper.getExtraLength() + 10);
             // 启动接收线程
             receiveExecutor = Executors.newSingleThreadExecutor();
             final byte[] buffer = new byte[super.maxLength];
@@ -112,31 +115,23 @@ public class UdpCommServiceProvider extends CommServiceProvider {
             }
             return;
         }
-        SocketAddress socketAddress = new InetSocketAddress(ip, port);
-        try {
-            for (int offset = 0; offset < payload.length; ) {
-                int length = Math.min(offset + super.maxLength, payload.length);
-                byte[] data = Arrays.copyOfRange(payload, offset, length);
-                if (wrapper != null) {
-                    // 如果设置了包装器，则对载荷进行包装
-                    data = wrapper.packetPayload(data);
-                }
-                DatagramPacket sendPacket = new DatagramPacket(data, data.length, socketAddress);
+        if (payload.length <= super.maxLength) {
+            if (wrapper != null) {
+                // 如果设置了包装器，则对载荷进行包装
+                payload = wrapper.packetPayload(payload);
+            }
+            try {
+                SocketAddress socketAddress = new InetSocketAddress(ip, port);
+                DatagramPacket sendPacket = new DatagramPacket(payload, payload.length, socketAddress);
                 socket.send(sendPacket);
-                if (offset + super.maxLength < payload.length) {
-                    offset += super.maxLength;
-                } else {
-                    break;
+            } catch (IOException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("Send data fail, to: %s:%d, length: %d.", ip, port, payload.length), ex);
                 }
+                throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Send data successfully, to: %s:%d, length: %d", ip, port, payload.length));
-            }
-        } catch (IOException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("Send data fail, to: %s:%d, length: %d.", ip, port, payload.length), ex);
-            }
-            throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
+        } else {
+            throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_DATA_TOO_MORE);
         }
     }
 
@@ -179,16 +174,19 @@ public class UdpCommServiceProvider extends CommServiceProvider {
          */
         @Override
         public void run() {
-            final byte[] buffer = new byte[length];
+            final byte[] buffer = new byte[length + wrapper.getExtraLength() + 10];
             final DatagramPacket packet = new DatagramPacket(buffer, length);
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Start wait for receive UDP data, port: %d, buffer length: %d.",
-                        socket.getPort(), length));
+                        socket.getLocalPort(), length));
             }
             while (!needExit) {
                 try {
                     socket.receive(packet);
-                    ReceivedMessage receivedMessage = new ReceivedMessage();
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("***RECV***, length: %d, data length: %d.", packet.getLength(), packet.getData().length));
+                    }
+                     ReceivedMessage receivedMessage = new ReceivedMessage();
                     receivedMessage.setFromIp(TypeUtils.byteArray2Ip(packet.getAddress().getAddress()));
                     receivedMessage.setFromPort(packet.getPort());
                     receivedMessage.setLocalPort(localPort);
@@ -211,7 +209,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
                                 receivedMessage.getFromIp(), receivedMessage.getFromPort(), receivedMessage.getLength()));
                     }
                     // 由于每次接收到数据后packet的长度将被实际长度填充，因此每次需要重置长度
-                    packet.setLength(length);
+                    packet.setLength(length + wrapper.getExtraLength() + 10);
                 } catch (SocketTimeoutException ex) {
                     if (logger.isWarnEnabled()) {
                         logger.warn("Receive UDP data timeout.", ex);

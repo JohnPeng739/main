@@ -10,6 +10,13 @@ public abstract class PacketWrapper {
     protected byte[] payload;
 
     /**
+     * 获取包装器额外需要的数据长度
+     *
+     * @return 长度
+     */
+    public abstract int getExtraLength();
+
+    /**
      * 获取发现的包装数据头偏移量
      *
      * @return 偏移量，如果没有发现包装数据帧，返回-1。

@@ -43,10 +43,13 @@ public class TcpConnection {
         this.socket = socket;
         this.receiver = receiver;
         try {
-            this.socket.setSoTimeout(timeout);
+            if (timeout > 0) {
+                this.socket.setSoTimeout(timeout);
+            }
             this.maxLength = length;
-            this.socket.setReceiveBufferSize(length);
-            this.socket.setSendBufferSize(length);
+            // 额外添加10个字节作为余量
+            this.socket.setReceiveBufferSize(length + wrapper.getExtraLength() + 10);
+            this.socket.setSendBufferSize(length + wrapper.getExtraLength() + 10);
         } catch (SocketException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Max length: %d, Timeout: %d ms.", length, timeout), ex);
@@ -71,24 +74,32 @@ public class TcpConnection {
     /**
      * 使用本TCP连接发送数据
      *
-     * @param buffer 待发送的数据
+     * @param payload 待发送的数据
      */
-    public void send(byte[] buffer) {
-        try {
-            for (int offset = 0; offset < buffer.length; ) {
-                byte[] payload = new byte[Math.min(offset + maxLength, buffer.length)];
-                System.arraycopy(buffer, offset, payload, 0, payload.length);
-                // 对载荷封包，然后发送
-                socket.getOutputStream().write(packetWrapper.packetPayload(payload));
-                if (offset + maxLength < buffer.length) {
-                    offset += maxLength;
+    public void send(byte[] payload) {
+        if (payload.length <= maxLength) {
+            if (packetWrapper != null) {
+                // 如果设置了包装器，则对载荷进行包装
+                payload = packetWrapper.packetPayload(payload);
+            }
+            try {
+                socket.getOutputStream().write(payload);
+                socket.getOutputStream().flush();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Send successfully, to: %s:%d, length: %d.",
+                            TypeUtils.byteArray2Ip(socket.getInetAddress().getAddress()), socket.getPort(),
+                            payload.length));
                 }
+            } catch (IOException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("Send data fail, to: %s:%d, length: %d.",
+                            TypeUtils.byteArray2Ip(socket.getInetAddress().getAddress()), socket.getPort(),
+                            payload.length), ex);
+                }
+                throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
             }
-        } catch (IOException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Any IO exception.", ex);
-            }
-            throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
+        } else {
+            throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_DATA_TOO_MORE);
         }
     }
 
@@ -160,65 +171,69 @@ public class TcpConnection {
          */
         @Override
         public void run() {
-            try {
-                byte[] cache = new byte[length], buffer = new byte[length];
-                int totalLength = 0, pos = 0;
-                while (!needExit) {
-                    try {
-                        int len = inputStream.read(buffer);
-                        if (len > 0) {
-                            if (len + totalLength > cache.length) {
-                                System.arraycopy(cache, len, cache, 0, totalLength - len);
-                                System.arraycopy(buffer, 0, cache, totalLength - len, len);
-                            } else {
-                                System.arraycopy(buffer, 0, cache, totalLength, len);
-                                totalLength += len;
-                            }
+            byte[] cache = new byte[length], buffer = new byte[length];
+            int totalLength = 0, pos = 0;
+            while (!needExit) {
+                try {
+                    System.out.println("********************");
+                    int len = inputStream.read(buffer);
+                    System.out.println("--------------------");
+                    if (len > 0) {
+                        if (len + totalLength > cache.length) {
+                            System.arraycopy(cache, len, cache, 0, totalLength - len);
+                            System.arraycopy(buffer, 0, cache, totalLength - len, len);
+                        } else {
+                            System.arraycopy(buffer, 0, cache, totalLength, len);
+                            totalLength += len;
+                        }
 
-                            packetWrapper.setPacketData(cache);
-                            byte[] payload = packetWrapper.getPayload();
-                            if (payload != null) {
-                                // 找到了有效载荷
-                                ReceivedMessage receivedMessage = new ReceivedMessage();
-                                receivedMessage.setFromIp(fromIp);
-                                receivedMessage.setFromPort(fromPort);
-                                receivedMessage.setLocalPort(localPort);
-                                receivedMessage.setOffset(0);
-                                receivedMessage.setLength(len);
-                                receivedMessage.setPayload(payload);
-                                if (receiver != null) {
-                                    receiver.receiveMessage(receivedMessage);
-                                }
-                                pos += packetWrapper.getHeaderPosition() + payload.length;
-                                totalLength = totalLength - pos;
-                                System.arraycopy(cache, pos, cache, 0, totalLength);
-                            } else {
-                                // 没有找到载荷，但需要重新设置起点偏移
-                                pos = packetWrapper.getHeaderPosition();
-                                if (pos > 0) {
-                                    totalLength -= pos;
-                                    System.arraycopy(cache, pos, cache, 0, totalLength);
-                                }
+                        packetWrapper.setPacketData(cache);
+                        byte[] payload = packetWrapper.getPayload();
+                        if (payload != null) {
+                            // 找到了有效载荷
+                            ReceivedMessage receivedMessage = new ReceivedMessage();
+                            receivedMessage.setFromIp(fromIp);
+                            receivedMessage.setFromPort(fromPort);
+                            receivedMessage.setLocalPort(localPort);
+                            receivedMessage.setOffset(0);
+                            receivedMessage.setLength(len);
+                            receivedMessage.setPayload(payload);
+                            if (receiver != null) {
+                                receiver.receiveMessage(receivedMessage);
                             }
-                            pos = 0;
+                            pos += packetWrapper.getHeaderPosition() + payload.length;
+                            totalLength = totalLength - pos;
+                            System.arraycopy(cache, pos, cache, 0, totalLength);
+                            if (logger.isDebugEnabled()) {
+                                logger.debug(String.format("Receive data, from: %s:%d, length: %d.", receivedMessage.getFromIp(),
+                                        receivedMessage.getFromPort(), receivedMessage.getLength()));
+                            }
+                        } else {
+                            // 没有找到载荷，但需要重新设置起点偏移
+                            pos = packetWrapper.getHeaderPosition();
+                            if (pos > 0) {
+                                totalLength -= pos;
+                                System.arraycopy(cache, pos, cache, 0, totalLength);
+                            }
                         }
-                    } catch (SocketTimeoutException ex) {
-                        if (logger.isWarnEnabled()) {
-                            logger.warn("Receive timeout.", ex);
-                        }
+                        pos = 0;
                     }
-                    try {
-                        // 释放CPU时间
-                        Thread.sleep(30);
-                    } catch (InterruptedException ex) {
-                        if (logger.isWarnEnabled()) {
-                            logger.warn("Receiver sleep interrupted.", ex);
-                        }
+                } catch (SocketTimeoutException ex) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn("Receive timeout.", ex);
+                    }
+                } catch (IOException ex) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("Any IO exception.", ex);
                     }
                 }
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Any IO exception.", ex);
+                try {
+                    // 释放CPU时间
+                    Thread.sleep(30);
+                } catch (InterruptedException ex) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn("Receiver sleep interrupted.", ex);
+                    }
                 }
             }
         }

@@ -53,7 +53,9 @@ public class TcpCommServiceProvider extends CommServiceProvider {
         this.receiver = receiver;
         try {
             serverSocket = new ServerSocket(super.port);
-            serverSocket.setSoTimeout(super.maxTimeout);
+            if (super.maxTimeout > 0) {
+                serverSocket.setSoTimeout(super.maxTimeout);
+            }
             serverSocket.setReceiveBufferSize(super.maxLength);
             executorService = Executors.newSingleThreadExecutor();
             executorService.submit(new SocketAcceptTask(super.port, super.maxLength, super.maxTimeout));
