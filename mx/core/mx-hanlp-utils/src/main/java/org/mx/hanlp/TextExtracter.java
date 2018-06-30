@@ -6,7 +6,8 @@ import java.util.List;
  * 描述： 关键字提取接口定义
  *
  * @author John.Peng
- *         Date time 2018/4/21 下午2:50
+ * Date time 2018/4/21 下午2:50
+ * @deprecated 本接口及其相关实现可以被 {@link org.mx.hanlp.utils.HanlpUtils} 取代，未来版本可能会被删除。
  */
 public interface TextExtracter {
     /**

@@ -128,7 +128,7 @@ project(':mx-dal-elastic') {
 }
 
 project('mx-hanlp-utils') {
-    version = '1.0.10'
+    version = '1.0.11'
     description = 'utilities API for hanlp.'
 
     dependencies {

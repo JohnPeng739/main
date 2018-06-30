@@ -1,19 +1,18 @@
 package org.mx.hanlp.impl;
 
-import com.hankcs.hanlp.HanLP;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.StringUtils;
 import org.mx.hanlp.TextExtracter;
+import org.mx.hanlp.utils.HanlpUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 描述： 基于HanLP的关键字提取器实现
  *
  * @author John.Peng
- *         Date time 2018/4/21 下午2:52
+ * Date time 2018/4/21 下午2:52
+ * @deprecated 本接口及其相关实现可以被 {@link org.mx.hanlp.utils.HanlpUtils} 取代，未来版本可能会被删除。
  */
 public class TextExtracterImpl implements TextExtracter {
     private static final Log logger = LogFactory.getLog(TextExtracterImpl.class);
@@ -35,17 +34,7 @@ public class TextExtracterImpl implements TextExtracter {
      */
     @Override
     public List<String> keywords(String content, int size) {
-        if (StringUtils.isBlank(content)) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("The content is blank.");
-            }
-            return null;
-        }
-        List<String> list = HanLP.extractKeyword(content, size);
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-        return list.stream().filter(keyword -> keyword.length() >= 2).collect(Collectors.toList());
+        return HanlpUtils.keywords(content, size);
     }
 
     /**
@@ -65,12 +54,6 @@ public class TextExtracterImpl implements TextExtracter {
      */
     @Override
     public String summary(String content, int maxLength) {
-        if (StringUtils.isBlank(content)) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("The content is blank.");
-            }
-            return null;
-        }
-        return HanLP.getSummary(content, maxLength);
+        return HanlpUtils.summary(content, maxLength);
     }
 }
