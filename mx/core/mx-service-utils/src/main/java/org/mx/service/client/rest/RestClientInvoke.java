@@ -2,7 +2,11 @@ package org.mx.service.client.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -18,6 +22,7 @@ import javax.ws.rs.core.Response;
 public class RestClientInvoke {
     private static final Log logger = LogFactory.getLog(RestClientInvoke.class);
 
+    private SslContextFactory sslContextFactory;
     private Client client;
 
     public RestClientInvoke() {
@@ -25,10 +30,44 @@ public class RestClientInvoke {
         client = ClientBuilder.newClient();
     }
 
+    public RestClientInvoke(String keystorePath) {
+        super();
+        try {
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String s, SSLSession sslSession) {
+                    return true;
+                }
+            });
+            ClientBuilder builder = ClientBuilder.newBuilder();
+            sslContextFactory = new SslContextFactory();
+            sslContextFactory.setKeyStorePath(keystorePath);
+            sslContextFactory.setKeyStorePassword("OBF:1j8x1iup1kfv1j9t1nl91fia1fek1nip1j591kcj1irx1j65");
+            sslContextFactory.setKeyManagerPassword("OBF:1k8a1lmp18jj18cg18ce18jj1lj11k5w");
+            sslContextFactory.start();
+            builder.sslContext(sslContextFactory.getSslContext());
+            client = builder.build();
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Start the SSL context factory fail, keystore path: %s.", keystorePath));
+            }
+        }
+    }
+
     public void close() {
         if (client != null) {
             client.close();
             client = null;
+        }
+        if (sslContextFactory != null) {
+            try {
+                sslContextFactory.stop();
+            } catch (Exception ex) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Stop the SSL context factory fail.");
+                }
+            }
+            sslContextFactory = null;
         }
     }
 
