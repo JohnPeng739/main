@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.util.Assert;
@@ -26,7 +25,6 @@ import org.springframework.util.Assert;
  * @author : john.peng date : 2017/10/8
  */
 @Import({DalConfig.class})
-@PropertySource("classpath:mongodb.properties")
 @ComponentScan({"org.mx.dal.service.impl"})
 public class DalMongodbConfig {
     /**
@@ -34,6 +32,35 @@ public class DalMongodbConfig {
      */
     public DalMongodbConfig() {
         super();
+    }
+
+    /**
+     * 创建MongodDB客户端
+     *
+     * @param env Spring IoC上下文环境
+     * @return 客户端
+     */
+    @Bean(name = "mongoClient")
+    public MongoClient mongoClient(Environment env) {
+        String uri = env.getProperty("mongodb.uri");
+        Assert.notNull(uri, "The Mongodb Uri not configured.");
+        return new MongoClient(new MongoClientURI(uri));
+    }
+
+    /**
+     * 创建MongoDB模版工具
+     *
+     * @param env Spring IoC上下文环境
+     * @return 模版工具
+     * @see #mongoClient(Environment)
+     */
+    @Bean(name = "mongoTemplate")
+    public MongoTemplate mongoTemplate(Environment env) {
+        String database = env.getProperty("database");
+        if (database == null || database.length() <= 0) {
+            database = "database";
+        }
+        return new MongoTemplate(mongoClient(env), database);
     }
 
     @Bean(name = "generalAccessorMongodb")
@@ -71,34 +98,5 @@ public class DalMongodbConfig {
     @Bean(name = "generalDictAccessor")
     public GeneralDictAccessor generalDictAccessor(ApplicationContext context) {
         return context.getBean("generalDictAccessorMongodb", GeneralDictAccessor.class);
-    }
-
-    /**
-     * 创建MongodDB客户端
-     *
-     * @param env Spring IoC上下文环境
-     * @return 客户端
-     */
-    @Bean(name = "mongoClient")
-    public MongoClient mongoClient(Environment env) {
-        String uri = env.getProperty("mongodb.uri");
-        Assert.notNull(uri, "The Mongodb Uri not configured.");
-        return new MongoClient(new MongoClientURI(uri));
-    }
-
-    /**
-     * 创建MongoDB模版工具
-     *
-     * @param env Spring IoC上下文环境
-     * @return 模版工具
-     * @see #mongoClient(Environment)
-     */
-    @Bean(name = "mongoTemplate")
-    public MongoTemplate mongoTemplate(Environment env) {
-        String database = env.getProperty("database");
-        if (database == null || database.length() <= 0) {
-            database = "database";
-        }
-        return new MongoTemplate(mongoClient(env), database);
     }
 }

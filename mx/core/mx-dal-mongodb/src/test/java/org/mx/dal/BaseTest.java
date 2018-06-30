@@ -10,7 +10,7 @@ import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import org.junit.After;
 import org.junit.Before;
-import org.mx.dal.config.DalMongodbConfig;
+import org.mx.dal.config.TestDalMongodbConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import static org.junit.Assert.fail;
@@ -27,7 +27,7 @@ public class BaseTest {
                     .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
             mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
             mongod = mongodExecutable.start();
-            context = new AnnotationConfigApplicationContext(DalMongodbConfig.class);
+            context = new AnnotationConfigApplicationContext(TestDalMongodbConfig.class);
         } catch (Exception ex) {
             ex.printStackTrace();
             fail(ex.getMessage());
