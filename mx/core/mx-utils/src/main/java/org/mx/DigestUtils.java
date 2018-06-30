@@ -4,8 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.error.UserInterfaceSystemErrorException;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import javax.net.ssl.*;
+import java.io.*;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.UUID;
 import java.util.zip.CRC32;
@@ -121,6 +124,87 @@ public class DigestUtils {
     }
 
     /**
+     * 命令行方式将指定HTTPs证书导入到指定的Keystore中
+     *
+     * @param keystorePath Keystore库文件路径
+     * @param password     访问Keystore库的密码
+     * @param host         HTTPs主机
+     * @param port         HTTPs端口
+     */
+    public static void importCert2Keystore(String keystorePath, String password, String host, int port) {
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            FileInputStream fin = new FileInputStream(new File(keystorePath));
+            keyStore.load(fin, password.toCharArray());
+            fin.close();
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(
+                    TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+            X509TrustManager x509TrustManager = (X509TrustManager) trustManagerFactory.getTrustManagers()[0];
+            SavingTrustManager savingTrustManager = new SavingTrustManager(x509TrustManager);
+            sslContext.init(null, new TrustManager[]{savingTrustManager}, null);
+            SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+            SSLSocket sslSocket = (SSLSocket) sslSocketFactory.createSocket(host, port);
+            sslSocket.setSoTimeout(10000);
+            try {
+                sslSocket.startHandshake();
+                sslSocket.close();
+                System.out.println("The certificate is already trusted.");
+                return;
+            } catch (Exception ex) {
+                System.out.println("The certificate is not be trusted.");
+            }
+            X509Certificate[] chain = savingTrustManager.chain;
+            if (chain == null) {
+                System.out.println("Could not obtain server certificate chain.");
+                return;
+            }
+            MessageDigest sha1 = MessageDigest.getInstance("SHA1");
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            int index = 1;
+            for (X509Certificate cert : chain) {
+                System.out.println(String.format("Cert %d, subject: %s, issuer: %s.", index++, cert.getSubjectDN(),
+                        cert.getIssuerDN()));
+                sha1.update(cert.getEncoded());
+                md5.update(cert.getEncoded());
+            }
+            System.out.println("Select a certificate for import: [1]");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            while (true) {
+                String line = reader.readLine().trim();
+                try {
+                    index = Integer.parseInt(line);
+                    X509Certificate cert = chain[index];
+                    keyStore.setCertificateEntry(host, cert);
+                    FileOutputStream fout = new FileOutputStream(keystorePath);
+                    keyStore.store(fout, password.toCharArray());
+                    fout.flush();
+                    fout.close();
+                    System.out.println(String.format("Import certificate successfully, subject: %s, issuer: %s.",
+                            chain[index].getSubjectDN(), chain[index].getIssuerDN()));
+                    return;
+                } catch (NumberFormatException ex) {
+                    System.out.println(String.format("The number[%s] format invalid.", line));
+                    ex.printStackTrace();
+                }
+            }
+        } catch (KeyStoreException ex) {
+            System.out.println(String.format("Keystore[%s] operate fail.", keystorePath));
+            ex.printStackTrace();
+        } catch (FileNotFoundException ex) {
+            System.out.println(String.format("The file[%s] not found.", keystorePath));
+            ex.printStackTrace();
+        } catch (NoSuchAlgorithmException | IOException | CertificateException ex) {
+            System.out.println(String.format("Load keystore[%s] fail.", keystorePath));
+            ex.printStackTrace();
+        } catch (KeyManagementException ex) {
+            System.out.println("Init the SSL context fail.");
+            ex.printStackTrace();
+        }
+    }
+
+    /**
      * 采用MD5算法进行摘要，并进行Base64编码
      *
      * @param src 待摘要的字符串
@@ -151,5 +235,29 @@ public class DigestUtils {
      */
     public static String sha256(String src) {
         return digest("SHA-256", "BASE64", src);
+    }
+
+    private static class SavingTrustManager implements X509TrustManager {
+        private final X509TrustManager tm;
+        private X509Certificate[] chain;
+
+        SavingTrustManager(X509TrustManager tm) {
+            this.tm = tm;
+        }
+
+        public X509Certificate[] getAcceptedIssuers() {
+            throw new UnsupportedOperationException();
+        }
+
+        public void checkClientTrusted(X509Certificate[] chain, String authType)
+                throws CertificateException {
+            throw new UnsupportedOperationException();
+        }
+
+        public void checkServerTrusted(X509Certificate[] chain, String authType)
+                throws CertificateException {
+            this.chain = chain;
+            tm.checkServerTrusted(chain, authType);
+        }
     }
 }
