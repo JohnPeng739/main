@@ -1,6 +1,6 @@
-package org.mx.h2.server;
+package org.mx.test;
 
-import org.mx.h2.server.config.DatabaseServerConfig;
+import org.mx.test.config.TestH2ServerConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 public class H2ServerApplication {
     public static void main(String[] args) throws Exception {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DatabaseServerConfig.class);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(TestH2ServerConfig.class);
         System.out.println("Press any key to close...");
         System.in.read();
         context.close();

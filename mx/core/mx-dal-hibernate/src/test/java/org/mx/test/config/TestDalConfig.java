@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author : john.peng created on date : 2017/12/03
  */
 @Configuration
+@PropertySource({
+        "classpath:database.properties",
+        "classpath:jpa.properties"
+})
 @EnableTransactionManagement
 @Import(DalHibernateConfig.class)
 @ComponentScan({

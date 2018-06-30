@@ -11,7 +11,10 @@ import org.mx.dal.service.impl.OperateLogServiceImpl;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.dbcp.Dbcp2DataSourceFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -32,55 +35,12 @@ import java.util.Set;
  * @author : john.peng date : 2017/10/7
  * @see DalConfig
  */
-@Configuration
 @Import(DalConfig.class)
-@PropertySource({
-        "classpath:database.properties",
-        "classpath:jpa.properties"
-})
 @EnableTransactionManagement
 public class DalHibernateConfig implements TransactionManagementConfigurer {
     private static final Log logger = LogFactory.getLog(DalHibernateConfig.class);
 
     private PlatformTransactionManager transactionManager = null;
-
-    @Bean(name = "generalAccessorJpa")
-    public GeneralAccessor generalAccessorJpa(SessionDataStore sessionDataStore) {
-        return new GeneralAccessorImpl(sessionDataStore);
-    }
-
-    @Bean(name = "generalDictAccessorJpa")
-    public GeneralDictAccessor generalDictAccessorJpa(SessionDataStore sessionDataStore) {
-        return new GeneralDictAccessorImpl(sessionDataStore);
-    }
-
-    @Bean(name = "operateLogService")
-    public OperateLogService operateLogService(SessionDataStore sessionDataStore) {
-        return new OperateLogServiceImpl(generalAccessorJpa(sessionDataStore), sessionDataStore);
-    }
-
-    /**
-     * 创建一个通用的数据访问器
-     *
-     * @param context Spring IoC上下文
-     * @return 数据访问器
-     */
-    @Bean(name = "generalAccessor")
-    public GeneralAccessor generalAccessor(ApplicationContext context) {
-        return context.getBean("generalAccessorJpa", GeneralAccessor.class);
-    }
-
-    /**
-     * 创建一个通用的字典数据访问器
-     *
-     * @param context Spring IoC上下文
-     * @return 数据访问器
-     */
-    @Bean(name = "generalDictAccessor")
-    public GeneralDictAccessor generalDictAccessor(ApplicationContext context) {
-        return context.getBean("generalDictAccessorJpa", GeneralDictAccessor.class);
-    }
-
 
     /**
      * 创建JDBC数据源工厂
@@ -100,7 +60,6 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
         }
         return factory;
     }
-
 
     /**
      * 从工厂中获取JDBC数据源
@@ -168,6 +127,43 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
         transactionManager.setEntityManagerFactory(entityManagerFactoryBean(env, context).getObject());
         this.transactionManager = transactionManager;
         return transactionManager;
+    }
+
+    @Bean(name = "generalAccessorJpa")
+    public GeneralAccessor generalAccessorJpa(SessionDataStore sessionDataStore) {
+        return new GeneralAccessorImpl(sessionDataStore);
+    }
+
+    @Bean(name = "generalDictAccessorJpa")
+    public GeneralDictAccessor generalDictAccessorJpa(SessionDataStore sessionDataStore) {
+        return new GeneralDictAccessorImpl(sessionDataStore);
+    }
+
+    @Bean(name = "operateLogService")
+    public OperateLogService operateLogService(SessionDataStore sessionDataStore) {
+        return new OperateLogServiceImpl(generalAccessorJpa(sessionDataStore), sessionDataStore);
+    }
+
+    /**
+     * 创建一个通用的数据访问器
+     *
+     * @param context Spring IoC上下文
+     * @return 数据访问器
+     */
+    @Bean(name = "generalAccessor")
+    public GeneralAccessor generalAccessor(ApplicationContext context) {
+        return context.getBean("generalAccessorJpa", GeneralAccessor.class);
+    }
+
+    /**
+     * 创建一个通用的字典数据访问器
+     *
+     * @param context Spring IoC上下文
+     * @return 数据访问器
+     */
+    @Bean(name = "generalDictAccessor")
+    public GeneralDictAccessor generalDictAccessor(ApplicationContext context) {
+        return context.getBean("generalDictAccessorJpa", GeneralDictAccessor.class);
     }
 
     /**
