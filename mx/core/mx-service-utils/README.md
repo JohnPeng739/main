@@ -55,6 +55,10 @@ restful.service.classes=restfulClassesTest
 提醒：`restful.service.classes`可以同时配置多个服务集，名称之间用半角逗号分割。
 同时，你还需要在你的应用Config文件中（如前例中的TestConfig），将你自己实现的RESTful Resource注入到Spring IoC容器，如下所示：
 ```java
+@Configuration
+@PropertySource({
+    "classpath:server.properties"
+})
 public class TestConfig {
     @Bean("restfulClassesTest")
     public List<Class<?>> restfulClassesTest() {
@@ -79,6 +83,10 @@ servlet.service.classes=servletClassesTest
 提醒：`servlet.service.classes`可以同时配置多个服务集，名称之间用半角逗号分割。
 同时，你还需要在你的应用Config文件中（如前例中的TestConfig），Servlet注入到Spring IoC容器，如下所示：
 ```java
+@Configuration
+@PropertySource({
+    "classpath:server.properties"
+})
 public class TestConfig {
     @Bean("servletClassesTest")
     public List<Class<?>> servletClassesTest() {
@@ -104,6 +112,10 @@ websocket.service.classes=websocketClassesTest
 提醒：`websocket.service.classes`可以同时配置多个服务集，名称之间用半角逗号分割。
 同时，你还需要在你的应用Config文件中（如前例中的TestConfig），将你自己实现的Websocket注入到Spring IoC容器，如下所示：
 ```java
+@Configuration
+@PropertySource({
+    "classpath:server.properties"
+})
 public class TestConfig {
     @Bean("websocketClassesTest")
     public List<Class<?>> restfulClassesTest() {

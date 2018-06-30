@@ -143,45 +143,20 @@ redis.cluster.clusterHostAndPorts[1]=localhost:23680
 ```
 *注意*：需要将`redis.enable`设置为true，并根据实际情况配置使用redis的类型，即`redis.type`配置项。
 - 第二步：引入Redis配置<br>
-`redis.properties`配置文件在`SpringRedisConfig`中被引入，如下所示：
+`redis.properties`配置文件需要在应用创建的配置文件中被引入，如下所示：
 ```java
+@Configuration
 @PropertySource({
         "classpath:redis.properties"
 })
-public class SpringRedisConfig {
-    /**
-     * 创建Redis连接工厂Bean
-     *
-     * @param env Spring上下文环境
-     * @return Redis连接工厂Bean
-     */
-    @Bean(name = "myRedisConnectionFactoryBean", initMethod = "init", destroyMethod = "destroy")
-    public MyRedisConnectionFactoryBean myRedisConnectionFactoryBean(Environment env) {
-        return new MyRedisConnectionFactoryBean(env);
-    }
-
-    /**
-     * 根据Redis连接工厂Bean创建RedisTemplate
-     *
-     * @param connectionFactoryBean Redis连接工厂Bean
-     * @return RedisTemplate
-     */
-    @Bean(name = "redisTemplate")
-    public RedisTemplate<?, ?> redisTemplate(MyRedisConnectionFactoryBean connectionFactoryBean) {
-        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
-        RedisConnectionFactory connectionFactory = connectionFactoryBean.getRedisConnectionFactory();
-        if (connectionFactory == null) {
-            throw new IllegalArgumentException("You maybe not config the redis connection.");
-        }
-        redisTemplate.setConnectionFactory(connectionFactoryBean.getRedisConnectionFactory());
-        return redisTemplate;
-    }
+public class YourApplicationConfig {
+    // TODO 你的应用配置代码
 }
 ```
 - 最后一步：在应用配置类中引入`SpringRedisConfig`<br>
 需要在应用的Java Config类中引入`SpringRedisConfig`，如下所示：
 ```java
-@Import({SpringRedisConfig.class})
+@Import({YourApplicationConfig.class})
 public class TestRedisConfig {
 }
 ```
@@ -202,35 +177,14 @@ cache.ehcache.config=ehcache.xml
 cache.redis.list=test1,test2
 ```
 - 第二步：引入缓存配置<br>
-`cache.properties`配置文件在`SpringCacheConfig`中被引入，如下所示：
+`cache.properties`配置文件在应用创建的配置文件中被引入，如下所示：
 ```java
-@EnableCaching
+@Configuration
 @PropertySource({
         "classpath:cache.properties"
 })
-public class SpringCacheConfig {
-    /**
-     * 创建缓存管理器工厂
-     *
-     * @param context Spring IoC上下文
-     * @param env     Spring上下文环境
-     * @return 缓存管理器工厂
-     */
-    @Bean(value = "cacheManagerFactory", initMethod = "init", destroyMethod = "destroy")
-    public CacheManagerFactory cacheManagerFactory(ApplicationContext context, Environment env) {
-        return new CacheManagerFactory(context, env);
-    }
-
-    /**
-     * 传教缓存管理器
-     *
-     * @param cacheManagerFactory 缓存管理器工厂
-     * @return 缓存管理器
-     */
-    @Bean("cacheManager")
-    public CacheManager cacheManager(CacheManagerFactory cacheManagerFactory) {
-        return cacheManagerFactory.getCacheManager();
-    }
+public class YourApplicationConfig {
+    // TODO 你的应用配置代码
 }
 ```
 - 最后一步：在应用配置类中引入`SpringCacheConfig`<br>
