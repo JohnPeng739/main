@@ -2,7 +2,6 @@ package org.mx.spring.config;
 
 import org.mx.spring.redis.MyRedisConnectionFactoryBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -13,9 +12,6 @@ import org.springframework.data.redis.core.RedisTemplate;
  * @author John.Peng
  * Date time 2018/4/25 下午2:39
  */
-@PropertySource({
-        "classpath:redis.properties"
-})
 public class SpringRedisConfig {
     /**
      * 创建Redis连接工厂Bean

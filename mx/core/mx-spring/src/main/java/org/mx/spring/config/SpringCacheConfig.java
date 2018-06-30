@@ -5,7 +5,6 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 /**
@@ -15,9 +14,6 @@ import org.springframework.core.env.Environment;
  * Date time 2018/4/22 下午7:02
  */
 @EnableCaching
-@PropertySource({
-        "classpath:cache.properties"
-})
 public class SpringCacheConfig {
     /**
      * 创建缓存管理器工厂

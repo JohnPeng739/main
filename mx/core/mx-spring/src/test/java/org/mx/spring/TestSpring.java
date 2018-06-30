@@ -3,7 +3,7 @@ package org.mx.spring;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mx.spring.config.SpringConfig;
+import org.mx.spring.config.TestSpringConfig;
 import org.mx.spring.utils.SpringContextHolder;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -15,7 +15,7 @@ public class TestSpring {
 
     @Before
     public void before() {
-        context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        context = new AnnotationConfigApplicationContext(TestSpringConfig.class);
     }
 
     @After
