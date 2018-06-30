@@ -11,7 +11,6 @@ import org.mx.dal.utils.ElasticUtil;
 import org.mx.dal.utils.ElasticUtilRest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 /**
@@ -21,9 +20,6 @@ import org.springframework.core.env.Environment;
  * Date time 2018/4/1 上午8:40
  */
 @Import(DalConfig.class)
-@PropertySource({
-        "classpath:elastic.properties"
-})
 public class DalElasticConfig {
     @Bean(name = "elasticUtilRest", initMethod = "init", destroyMethod = "destroy")
     public ElasticUtil elasticUtilRest(Environment env, SessionDataStore sessionDataStore) {
