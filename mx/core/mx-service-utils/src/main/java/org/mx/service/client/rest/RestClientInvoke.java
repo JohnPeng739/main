@@ -4,9 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -31,14 +29,15 @@ public class RestClientInvoke {
     }
 
     public RestClientInvoke(String keystorePath) {
+        this(keystorePath, true);
+    }
+
+    public RestClientInvoke(String keystorePath, boolean ignoreHostnameVerify) {
         super();
         try {
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String s, SSLSession sslSession) {
-                    return true;
-                }
-            });
+            if (ignoreHostnameVerify) {
+                HttpsURLConnection.setDefaultHostnameVerifier((s, sslSession) -> true);
+            }
             ClientBuilder builder = ClientBuilder.newBuilder();
             sslContextFactory = new SslContextFactory();
             sslContextFactory.setKeyStorePath(keystorePath);
