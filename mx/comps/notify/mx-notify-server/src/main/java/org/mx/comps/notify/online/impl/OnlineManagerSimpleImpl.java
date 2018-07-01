@@ -39,6 +39,8 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
 
     /**
      * 默认的构造函数
+     *
+     * @param env Spring IoC上下文环境
      */
     @Autowired
     public OnlineManagerSimpleImpl(Environment env) {
