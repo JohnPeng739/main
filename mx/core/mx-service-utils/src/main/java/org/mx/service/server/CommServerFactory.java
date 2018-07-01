@@ -24,6 +24,7 @@ public class CommServerFactory {
     private ApplicationContext context;
     private Map<Integer, TcpCommServiceProvider> tcpProviders;
     private Map<Integer, UdpCommServiceProvider> udpProviders;
+    private boolean tcpEnabled = false, udpEnabled = false;
 
     /**
      * 默认的构造函数
@@ -120,7 +121,7 @@ public class CommServerFactory {
      */
     @SuppressWarnings("unchecked")
     public void init() {
-        boolean tcpEnabled = env.getProperty("tcp.enabled", Boolean.class, false);
+        tcpEnabled = env.getProperty("tcp.enabled", Boolean.class, false);
         int tcpNum = env.getProperty("tcp.servers.num", Integer.class, 0);
         if (tcpEnabled && tcpNum > 0) {
             for (int index = 1; index <= tcpNum; index++) {
@@ -128,7 +129,7 @@ public class CommServerFactory {
             }
         }
 
-        boolean udpEnabled = env.getProperty("udp.enabled", Boolean.class, false);
+        udpEnabled = env.getProperty("udp.enabled", Boolean.class, false);
         int udpNum = env.getProperty("udp.servers.num", Integer.class, 0);
         if (udpEnabled && udpNum > 0) {
             for (int index = 1; index <= udpNum; index++) {
@@ -147,11 +148,17 @@ public class CommServerFactory {
      * 销毁通信服务器工厂
      */
     public void destroy() {
-        tcpProviders.forEach((k, v) -> v.close());
-        udpProviders.forEach((k, v) -> v.close());
-        if (logger.isInfoEnabled()) {
-            logger.info(String.format("Close the %d TCP providers and the %d UDP provider successfully.",
-                    tcpProviders.size(), udpProviders.size()));
+        if (tcpEnabled) {
+            tcpProviders.forEach((k, v) -> v.close());
+        }
+        if (udpEnabled) {
+            udpProviders.forEach((k, v) -> v.close());
+        }
+        if (tcpEnabled || udpEnabled) {
+            if (logger.isInfoEnabled()) {
+                logger.info(String.format("Close the %d TCP providers and the %d UDP provider successfully.",
+                        tcpProviders.size(), udpProviders.size()));
+            }
         }
     }
 

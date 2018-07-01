@@ -15,7 +15,9 @@ import java.util.List;
  */
 @PropertySource({"classpath:server-https.properties"})
 @Import(ServerConfig.class)
-@ComponentScan({"org.mx.service.server.rest", "org.mx.service.test.server.servlet", "org.mx.service.test.server.websocket"})
+@ComponentScan({
+        "org.mx.service.test.server.rest"
+})
 public class TestHttpsConfig {
     @Bean(name = "restfulClassesTest")
     public List<Class<?>> restfulClassesTest() {

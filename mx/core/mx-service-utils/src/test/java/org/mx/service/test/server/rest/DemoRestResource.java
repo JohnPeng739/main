@@ -22,7 +22,7 @@ public class DemoRestResource {
     @Path("get")
     @GET
     public DataVO<String> get() {
-        System.out.println(env.getProperty("websocket.port"));
+        System.out.println(env.getProperty("restful.port"));
         return new DataVO<>("get data.");
     }
 

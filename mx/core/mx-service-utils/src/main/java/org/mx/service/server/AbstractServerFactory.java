@@ -46,9 +46,12 @@ public abstract class AbstractServerFactory {
             try {
                 server.stop();
                 server.destroy();
+                if (logger.isInfoEnabled()) {
+                    logger.info("Close the server successfully.");
+                }
             } catch (Exception ex) {
                 if (logger.isErrorEnabled()) {
-                    logger.error(ex);
+                    logger.error("Close the server fail.", ex);
                 }
             }
         }

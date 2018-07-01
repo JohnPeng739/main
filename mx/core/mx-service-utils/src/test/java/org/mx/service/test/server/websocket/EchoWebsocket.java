@@ -41,7 +41,7 @@ public class EchoWebsocket extends DefaultWsSessionMonitor {
             }
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("After connect has any exception.", ex);
             }
         }
     }
@@ -58,7 +58,7 @@ public class EchoWebsocket extends DefaultWsSessionMonitor {
             }
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Send any text fail.", ex);
             }
         }
     }
