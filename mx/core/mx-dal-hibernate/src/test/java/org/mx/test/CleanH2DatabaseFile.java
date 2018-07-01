@@ -20,7 +20,7 @@ public class CleanH2DatabaseFile {
             FileUtils.deleteFile(Paths.get(System.getProperty("user.dir"), String.format("%s.mv.db", path)));
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
-                logger.error(ex);
+                logger.error("Clean the h2 database file fail.", ex);
             }
         }
     }
