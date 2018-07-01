@@ -26,7 +26,7 @@ public class UnregistryCommand extends BaseCommand {
     public class RegistryData {
         private String deviceId;
 
-        public RegistryData(String deviceId) {
+        RegistryData(String deviceId) {
             super();
             this.deviceId = deviceId;
         }

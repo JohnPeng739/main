@@ -6,9 +6,7 @@ import org.mx.TypeUtils;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.comps.notify.processor.NotifyProcessor;
-import org.mx.spring.SpringContextHolder;
-
-import java.io.InputStream;
+import org.mx.spring.utils.SpringContextHolder;
 
 /**
  * 通知命令处理器，收到本命令后，将命令中的数据直接P2P地发送到指定范围的注册设备上。<br>

@@ -6,7 +6,7 @@ import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.comps.notify.processor.MessageProcessorChain;
-import org.mx.spring.SpringContextHolder;
+import org.mx.spring.utils.SpringContextHolder;
 
 /**
  * 终端心跳命令处理器，收到本命令后，系统将更新终端信息，并回复终端响应信息。<br>

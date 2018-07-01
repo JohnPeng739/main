@@ -6,7 +6,7 @@ import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.comps.notify.processor.MessageProcessorChain;
-import org.mx.spring.SpringContextHolder;
+import org.mx.spring.utils.SpringContextHolder;
 
 /**
  * 注册终端命令处理器，收到本命令后，将设备注册到在线设备管理器中。<br>

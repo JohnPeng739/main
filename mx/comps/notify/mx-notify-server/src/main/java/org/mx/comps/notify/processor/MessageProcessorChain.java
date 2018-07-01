@@ -25,14 +25,13 @@ public class MessageProcessorChain {
     public static final String TYPE_SYSTEM = "system";
     public static final String TYPE_USER = "user";
     private static final Log logger = LogFactory.getLog(MessageProcessorChain.class);
-    @Autowired
-    private WsSessionManager manager = null;
 
-    private Set<MessageProcessor> processors = null;
+    private Set<MessageProcessor> processors;
 
     /**
      * 默认的构造函数
      */
+    @Autowired
     public MessageProcessorChain() {
         super();
         this.processors = new HashSet<>();
@@ -72,7 +71,7 @@ public class MessageProcessorChain {
             }
             return;
         }
-        Session session = manager.getSession(connectKey);
+        Session session = WsSessionManager.getManager().getSession(connectKey);
         if (session == null) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The session[%s] not existed.", connectKey));
@@ -104,7 +103,7 @@ public class MessageProcessorChain {
             }
             return;
         }
-        Session session = manager.getSession(connectKey);
+        Session session = WsSessionManager.getManager().getSession(connectKey);
         if (session == null) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The session[%s] not existed.", connectKey));

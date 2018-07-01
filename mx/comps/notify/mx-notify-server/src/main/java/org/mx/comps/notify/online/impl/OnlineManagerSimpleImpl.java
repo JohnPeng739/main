@@ -7,7 +7,6 @@ import org.mx.StringUtils;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.mx.spring.SpringContextHolder;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,20 +31,20 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     private static final Log logger = LogFactory.getLog(OnlineManagerSimpleImpl.class);
 
     private final Serializable onlineDeviceMutex = "ONLINE_DEVICE";
-    private final String deviceIdleTimeoutSecKey = "websocket.notify.device.idleTimeoutSecs";
     private ConcurrentMap<String, OnlineDevice> onlineDevices = null;
     private Timer cleanTimer = null;
     private int deviceIdleTimeoutSecs = 60;
 
-    @Autowired
-    private Environment env = null;
+    private Environment env;
 
     /**
      * 默认的构造函数
      */
-    public OnlineManagerSimpleImpl() {
+    @Autowired
+    public OnlineManagerSimpleImpl(Environment env) {
         super();
         this.onlineDevices = new ConcurrentHashMap<>();
+        this.env = env;
     }
 
     /**
@@ -62,9 +61,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
             }
             return stream.collect(Collectors.toSet());
         } else {
-            Set<OnlineDevice> set = new HashSet<>();
-            set.addAll(onlineDevices.values());
-            return set;
+            return new HashSet<>(onlineDevices.values());
         }
     }
 
@@ -74,9 +71,10 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
      * @see InitializingBean#afterPropertiesSet()
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (env != null) {
-            deviceIdleTimeoutSecs = env.getProperty(deviceIdleTimeoutSecKey, Integer.class, 60);
+            deviceIdleTimeoutSecs = env.getProperty("websocket.notify.device.idleTimeoutSecs",
+                    Integer.class, 60);
         }
         cleanTimer = new Timer();
         cleanTimer.scheduleAtFixedRate(new CleanTask(), 5000, deviceIdleTimeoutSecs * 1000 / 3);
@@ -88,7 +86,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
      * @see DisposableBean#destroy()
      */
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (cleanTimer != null) {
             cleanTimer.cancel();
             cleanTimer.purge();
@@ -189,7 +187,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     @Override
     public Session getConnectionSession(String connectKey) {
         if (!StringUtils.isBlank(connectKey)) {
-            WsSessionManager sessionManager = SpringContextHolder.getBean(WsSessionManager.class);
+            WsSessionManager sessionManager = WsSessionManager.getManager();
             if (sessionManager != null) {
                 return sessionManager.getSession(connectKey);
             } else {
@@ -205,7 +203,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
      * 根据心跳时间来清除无效的连接设备
      */
     private void cleanInvalidDevices() {
-        WsSessionManager sessionManager = SpringContextHolder.getBean(WsSessionManager.class);
+        WsSessionManager sessionManager = WsSessionManager.getManager();
         synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
             Set<String> invalid = new HashSet<>();
             onlineDevices.forEach((k, v) -> {

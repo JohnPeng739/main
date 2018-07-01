@@ -1,14 +1,13 @@
 package org.mx.comps.notify.processor.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.comps.notify.processor.MessageProcessorChain;
-import org.mx.spring.SpringContextHolder;
+import org.mx.spring.utils.SpringContextHolder;
 
 /**
  * 注销终端命令处理器，收到本命令后将终端从在线终端管理器中进行注销。<br>
@@ -39,9 +38,8 @@ import org.mx.spring.SpringContextHolder;
  * @author : john.peng created on date : 2018/1/5
  */
 public class UnregistryCommandProcessor extends DeviceCommandProcessor {
-    private static final Log logger = LogFactory.getLog(UnregistryCommandProcessor.class);
-
     public static final String COMMAND = "unregistry";
+    private static final Log logger = LogFactory.getLog(UnregistryCommandProcessor.class);
 
     /**
      * {@inheritDoc}

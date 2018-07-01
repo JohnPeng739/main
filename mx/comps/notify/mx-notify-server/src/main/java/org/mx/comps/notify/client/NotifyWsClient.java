@@ -106,7 +106,7 @@ public class NotifyWsClient {
      */
     public <T> void notify(String src, String deviceId, NotifyBean.TarType tarType, String tar, long expiredTime,
                            T notify) {
-        NotifyCommand<T> command = new NotifyCommand<T>(src, deviceId, tarType, tar, expiredTime, notify);
+        NotifyCommand<T> command = new NotifyCommand<>(src, deviceId, tarType, tar, expiredTime, notify);
         invoke.send(JSON.toJSONString(command));
     }
 

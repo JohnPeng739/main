@@ -19,11 +19,12 @@ import org.springframework.stereotype.Component;
 public final class NotificationWebsocket extends DefaultWsSessionMonitor {
     private static final Log logger = LogFactory.getLog(NotificationWebsocket.class);
 
-    @Autowired
-    private MessageProcessorChain processorChain = null;
+    private MessageProcessorChain processorChain;
 
-    public NotificationWebsocket() {
+    @Autowired
+    public NotificationWebsocket(MessageProcessorChain processorChain) {
         super("/notify");
+        this.processorChain = processorChain;
     }
 
     /**

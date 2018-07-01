@@ -5,10 +5,9 @@ import org.mx.comps.notify.websocket.NotificationWebsocket;
 import org.mx.service.server.config.ServerConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ public class NotificationServerConfig {
      */
     @Bean(name = "restfulClassesNotify")
     public List<Class<?>> restfulClassesNotify() {
-        return Arrays.asList(NotifyServerResource.class);
+        return Collections.singletonList(NotifyServerResource.class);
     }
 
     /**
@@ -41,6 +40,6 @@ public class NotificationServerConfig {
      */
     @Bean(name = "websocketClassesNotify")
     public List<Class<?>> websocketClassesNotify() {
-        return Arrays.asList(NotificationWebsocket.class);
+        return Collections.singletonList(NotificationWebsocket.class);
     }
 }

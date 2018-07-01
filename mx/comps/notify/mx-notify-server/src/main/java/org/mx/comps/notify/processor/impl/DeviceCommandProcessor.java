@@ -10,7 +10,7 @@ import org.mx.TypeUtils;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.mx.spring.SpringContextHolder;
+import org.mx.spring.utils.SpringContextHolder;
 
 import java.io.IOException;
 

@@ -34,11 +34,16 @@ import java.util.function.Predicate;
 public class NotifyServerResource {
     private static final Log logger = LogFactory.getLog(NotifyServerResource.class);
 
-    @Autowired
-    private NotifyProcessor notifyProcessor = null;
+    private NotifyProcessor notifyProcessor;
+
+    private OnlineManager onlineManager;
 
     @Autowired
-    private OnlineManager onlineManager = null;
+    public NotifyServerResource(NotifyProcessor notifyProcessor, OnlineManager onlineManager) {
+        super();
+        this.notifyProcessor = notifyProcessor;
+        this.onlineManager = onlineManager;
+    }
 
     /**
      * 推送通知
@@ -51,6 +56,9 @@ public class NotifyServerResource {
     public DataVO<Boolean> sendNotify(String notifyCommand) {
         JSONObject json = JSON.parseObject(notifyCommand);
         notifyProcessor.notifyProcess(json);
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Send notify successfully, command: %s.", notifyCommand));
+        }
         return new DataVO<>(true);
     }
 
@@ -78,8 +86,7 @@ public class NotifyServerResource {
             filters.add(onlineDevice -> onlineDevice.getRegistryTime() <= early);
         }
         Set<OnlineDevice> set = onlineManager.getOnlineDevices(filters);
-        List<OnlineDevice> list = new ArrayList<>();
-        list.addAll(set);
+        List<OnlineDevice> list = new ArrayList<>(set);
         // 按照注册时间排序
         list.sort((od1, od2) -> (int) (od1.getRegistryTime() - od2.getRegistryTime()));
         return new DataVO<>(OnlineDeviceVO.transform(list));
@@ -114,8 +121,7 @@ public class NotifyServerResource {
         if (pagination == null) {
             pagination = new Pagination();
         }
-        List<OnlineDevice> list = new ArrayList<>();
-        list.addAll(set);
+        List<OnlineDevice> list = new ArrayList<>(set);
         // 按照注册时间排序
         list.sort((od1, od2) -> (int) (od1.getRegistryTime() - od2.getRegistryTime()));
         pagination.setTotal(set.size());

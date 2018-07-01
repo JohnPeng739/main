@@ -25,14 +25,16 @@ import java.util.*;
 public class NotifyProcessor {
     private static final Log logger = LogFactory.getLog(NotifyProcessor.class);
 
-    @Autowired
-    private OnlineManager onlineManager = null;
+    private OnlineManager onlineManager;
+
+    private NotifyProcessListener listener;
 
     @Autowired
-    private WsSessionManager sessionManager = null;
-
-    @Autowired
-    private NotifyProcessListener listener = null;
+    public NotifyProcessor(OnlineManager onlineManager, NotifyProcessListener listener) {
+        super();
+        this.onlineManager = onlineManager;
+        this.listener = listener;
+    }
 
     /**
      * 获取本机推送会话集合
@@ -59,9 +61,9 @@ public class NotifyProcessor {
                 set.maybeCluster = !set.invalidDevices.isEmpty();
                 return set;
             case "IPs":
-                List<String> ips = Arrays.asList(StringUtils.split(tar, ",", true, true));
+                String[] segs = StringUtils.split(tar, ",", true, true);
                 sessions = onlineManager.getConnectionSessions(onlineDevice -> {
-                    for (String ip : ips) {
+                    for (String ip : segs) {
                         if (onlineDevice.getConnectKey().startsWith(ip)) {
                             return true;
                         }
@@ -104,7 +106,7 @@ public class NotifyProcessor {
      * @param message 推送消息对象
      * @return 推送无错误返回true，否则返回false。
      */
-    protected boolean notifyPush(TarSessionSet set, JSONObject message) {
+    private boolean notifyPush(TarSessionSet set, JSONObject message) {
         // 这里仅实现本地推送，如果需要集群通知，需要另外实现
         Set<Session> sessions = set.sessions;
         boolean success = true;
@@ -117,7 +119,7 @@ public class NotifyProcessor {
                 session.getRemote().sendString(text);
             } catch (IOException ex) {
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("Push notify fail, message: %s."), ex);
+                    logger.error(String.format("Push notify fail, message: %s.", message), ex);
                 }
                 success = false;
             }
@@ -156,9 +158,10 @@ public class NotifyProcessor {
         boolean success = notifyPush(set, json);
         if (success) {
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Push notify success, num: %d.", set.sessions.size()));
+                logger.debug(String.format("Push notify success, num: %d.", set != null ? set.sessions.size() : 0));
             }
         }
+        WsSessionManager sessionManager = WsSessionManager.getManager();
         if (sessionManager != null) {
             String connectKey = data.getString("connectKey");
             if (!StringUtils.isBlank(connectKey)) {
@@ -199,8 +202,8 @@ public class NotifyProcessor {
 
     // 内部描述推送信息的类定义
     public class TarSessionSet {
-        protected boolean maybeCluster = false;
-        protected Set<String> invalidDevices = new HashSet<>();
-        protected Set<Session> sessions = new HashSet<>();
+        boolean maybeCluster = false;
+        Set<String> invalidDevices = new HashSet<>();
+        Set<Session> sessions = new HashSet<>();
     }
 }

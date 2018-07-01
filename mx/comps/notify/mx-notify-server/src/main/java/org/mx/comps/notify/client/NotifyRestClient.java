@@ -44,6 +44,7 @@ public class NotifyRestClient {
      * @param <T>    泛型定义
      * @return 发送成功返回true，否则返回false
      */
+    @SuppressWarnings("unchecked")
     public <T extends NotifyBean> boolean sendNotify(T notify) {
         if (StringUtils.isBlank(url)) {
             if (logger.isErrorEnabled()) {
