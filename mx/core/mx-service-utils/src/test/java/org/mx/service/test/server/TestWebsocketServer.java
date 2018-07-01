@@ -30,6 +30,11 @@ public class TestWebsocketServer {
 
     @Test
     public void testWebsocketServer() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex){
+            // do nothing
+        }
         AbstractServerFactory factory = context.getBean(WebsocketServerFactory.class);
         assertNotNull(factory);
         Server server = factory.getServer();
@@ -39,19 +44,21 @@ public class TestWebsocketServer {
         WsClientInvoke invoke = new WsClientInvoke();
         TestWebsocketListener listener = new TestWebsocketListener();
         try {
-            invoke.init("ws://localhost:9997/echo", listener, false);
-            Thread.sleep(3000);
+            invoke.init(String.format("ws://localhost:%d/echo",
+                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
+                    listener, false);
+            Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.OPEN, invoke.getState());
             assertThat(listener.textMsg, startsWith("Server is ok:"));
             String msg = "hello, john";
             invoke.send(msg);
-            Thread.sleep(3000);
+            Thread.sleep(1000);
             assertEquals(String.format("Server echo: %s.", msg), listener.textMsg);
             invoke.send(msg.getBytes());
-            Thread.sleep(3000);
+            Thread.sleep(1000);
             assertEquals(msg, new String(listener.binaryMsg));
             invoke.close();
-            Thread.sleep(3000);
+            Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.CLOSED, invoke.getState());
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -68,6 +75,11 @@ public class TestWebsocketServer {
 
     @Test
     public void testWebsocketServerReconnect() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex){
+            // do nothing
+        }
         AbstractServerFactory factory = context.getBean(WebsocketServerFactory.class);
         assertNotNull(factory);
         Server server = factory.getServer();
@@ -77,7 +89,9 @@ public class TestWebsocketServer {
         WsClientInvoke invoke = new WsClientInvoke();
         TestWebsocketListener listener = new TestWebsocketListener();
         try {
-            invoke.init("ws://localhost:9997/echo", listener, true);
+            invoke.init(String.format("ws://localhost:%d/echo",
+                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
+                    listener, true);
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.OPEN, invoke.getState());
             assertThat(listener.textMsg, startsWith("Server is ok:"));
@@ -102,6 +116,11 @@ public class TestWebsocketServer {
 
     @Test
     public void testAnyConnectWebsocket() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex){
+            // do nothing
+        }
         AbstractServerFactory factory = context.getBean(WebsocketServerFactory.class);
         assertNotNull(factory);
         Server server = factory.getServer();
@@ -112,8 +131,12 @@ public class TestWebsocketServer {
             WsClientInvoke invoke1 = new WsClientInvoke();
             WsClientInvoke invoke2 = new WsClientInvoke();
             TestWebsocketListener listener = new TestWebsocketListener();
-            invoke1.init("ws://localhost:9997/echo", listener);
-            invoke2.init("ws://localhost:9997/echo", listener);
+            invoke1.init(String.format("ws://localhost:%d/echo",
+                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
+                    listener);
+            invoke2.init(String.format("ws://localhost:%d/echo",
+                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
+                    listener);
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.OPEN, invoke1.getState());
             assertEquals(WebSocket.READYSTATE.OPEN, invoke2.getState());

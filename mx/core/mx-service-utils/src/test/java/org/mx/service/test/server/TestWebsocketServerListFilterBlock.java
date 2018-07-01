@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 /**
  * Created by john on 2017/11/4.
  */
-public class TestListFilterBlock {
+public class TestWebsocketServerListFilterBlock {
     private AnnotationConfigApplicationContext context = null;
 
     @Before
@@ -41,7 +41,9 @@ public class TestListFilterBlock {
             // test websocket client
             WsClientInvoke invoke1 = new WsClientInvoke();
             TestWebsocketListener listener = new TestWebsocketListener();
-            invoke1.init("ws://localhost:9997/echo", listener, false);
+            invoke1.init(String.format("ws://localhost:%d/echo",
+                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
+                    listener, false);
             Thread.sleep(1000);
             assertEquals(WebSocket.READYSTATE.CLOSED, invoke1.getState());
             invoke1.close();

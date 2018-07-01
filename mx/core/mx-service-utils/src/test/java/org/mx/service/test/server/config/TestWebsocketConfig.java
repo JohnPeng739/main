@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * Created by john on 2017/11/4.
  */
-@Configuration
 @PropertySource({"classpath:server-websocket.properties"})
 @Import(ServerConfig.class)
 @ComponentScan({

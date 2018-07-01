@@ -165,6 +165,9 @@ public class TcpCommServiceProvider extends CommServiceProvider {
                 if (logger.isDebugEnabled()) {
                     logger.debug("Waiting for a new connection......");
                 }
+                if (serverSocket.isClosed()) {
+                    break;
+                }
                 try {
                     Socket socket = serverSocket.accept();
                     String key = ipAndPort(socket.getInetAddress().getAddress(), socket.getPort());
@@ -177,12 +180,10 @@ public class TcpCommServiceProvider extends CommServiceProvider {
                     if (logger.isWarnEnabled()) {
                         logger.warn(String.format("Timeout: %d ms.", timeout), ex);
                     }
-                    throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_SOCKET_ERROR);
                 } catch (IOException ex) {
                     if (logger.isErrorEnabled()) {
                         logger.error("Any IO exception.", ex);
                     }
-                    throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_IO_ERROR);
                 }
             }
             if (logger.isInfoEnabled()) {

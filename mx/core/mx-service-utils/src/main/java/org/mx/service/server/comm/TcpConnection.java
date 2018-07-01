@@ -64,7 +64,7 @@ public class TcpConnection {
             if (logger.isDebugEnabled()) {
                 logger.debug("Initialize a new receive task successfully.");
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error("Any IO exception.", ex);
             }
@@ -77,7 +77,7 @@ public class TcpConnection {
      * @param payload 待发送的数据
      */
     public void send(byte[] payload) {
-        if (payload.length <= maxLength) {
+        if (payload.length + packetWrapper.getExtraLength() <= maxLength) {
             if (packetWrapper != null) {
                 // 如果设置了包装器，则对载荷进行包装
                 payload = packetWrapper.packetPayload(payload);
@@ -174,10 +174,11 @@ public class TcpConnection {
             byte[] cache = new byte[length], buffer = new byte[length];
             int totalLength = 0, pos = 0;
             while (!needExit) {
+                if (socket.isClosed()) {
+                    break;
+                }
                 try {
-                    System.out.println("********************");
                     int len = inputStream.read(buffer);
-                    System.out.println("--------------------");
                     if (len > 0) {
                         if (len + totalLength > cache.length) {
                             System.arraycopy(cache, len, cache, 0, totalLength - len);
@@ -202,14 +203,16 @@ public class TcpConnection {
                                 receiver.receiveMessage(receivedMessage);
                             }
                             pos += packetWrapper.getHeaderPosition() + payload.length;
-                            totalLength = totalLength - pos;
-                            System.arraycopy(cache, pos, cache, 0, totalLength);
+                            totalLength = totalLength - packetWrapper.getExtraLength() - packetWrapper.getPayload().length;
+                            if (totalLength > 0) {
+                                System.arraycopy(cache, pos, cache, 0, totalLength);
+                            }
                             if (logger.isDebugEnabled()) {
                                 logger.debug(String.format("Receive data, from: %s:%d, length: %d.", receivedMessage.getFromIp(),
                                         receivedMessage.getFromPort(), receivedMessage.getLength()));
                             }
                         } else {
-                            // 没有找到载荷，但需要重新设置起点偏移
+                            // 没有找到载荷，但需要将找到的头数据忽略，重新移动缓存数据
                             pos = packetWrapper.getHeaderPosition();
                             if (pos > 0) {
                                 totalLength -= pos;

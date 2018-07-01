@@ -13,8 +13,8 @@ import java.util.List;
 /**
  * Created by john on 2017/11/4.
  */
-@Import(ServerConfig.class)
 @PropertySource({"classpath:server-https.properties"})
+@Import(ServerConfig.class)
 @ComponentScan({"org.mx.service.server.rest", "org.mx.service.test.server.servlet", "org.mx.service.test.server.websocket"})
 public class TestHttpsConfig {
     @Bean(name = "restfulClassesTest")

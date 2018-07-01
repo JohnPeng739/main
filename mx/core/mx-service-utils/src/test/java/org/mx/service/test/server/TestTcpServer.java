@@ -47,22 +47,22 @@ public class TestTcpServer {
             Thread.sleep(1000);
             byte[] payload = "test message".getBytes();
             client.send(payload);
-            Thread.sleep(3000);
+            Thread.sleep(1000);
             assertNotNull(tcpReceiver.getPayload());
             assertArrayEquals(payload, tcpReceiver.getPayload());
 
             // 在默认的包装器下，最大数据载荷为：length - 12
             payload = "123456789012345678901234567890123456".getBytes();
             client.send(payload);
-            Thread.sleep(5000);
+            Thread.sleep(1000);
             assertNotNull(tcpReceiver.getPayload());
             assertArrayEquals(payload, tcpReceiver.getPayload());
 
             try {
                 payload = "12345678901234567890123456789012345678901234567890".getBytes();
                 client.send(payload);
-                Thread.sleep(1200);
-                System.out.println(new String(tcpReceiver.getPayload()));
+                Thread.sleep(1000);
+                fail("Here need a exception.");
             } catch (Exception ex) {
                 // success
             }
