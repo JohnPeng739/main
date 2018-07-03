@@ -9,6 +9,7 @@ import org.mx.dal.annotation.ElasticField;
  *         Date time 2018/4/1 上午8:45
  */
 public class ElasticBaseDictEntity extends ElasticBaseEntity implements BaseDict {
+    @ElasticField(type = "keyword")
     private String code;
     @ElasticField(analyzer = "hanlp")
     private  String name;

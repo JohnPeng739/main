@@ -1,5 +1,7 @@
 package org.mx.dal.entity;
 
+import org.mx.dal.annotation.ElasticField;
+
 /**
  * 描述： 基于Elasticsearch实现的基础类实体
  *
@@ -7,9 +9,13 @@ package org.mx.dal.entity;
  * Date time 2018/4/1 上午8:41
  */
 public class ElasticBaseEntity implements Base {
+    @ElasticField(type = "keyword")
     private String id, operator;
+    @ElasticField(type = "long")
     private long createdTime, updatedTime;
+    @ElasticField(type = "boolean")
     private boolean valid = true;
+
     private float score = 0.0f;
 
     /**

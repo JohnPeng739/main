@@ -40,7 +40,7 @@ public class TestElastic {
             long delay = 1000;
             assertEquals(0, accessor.count(UserEntityElastic.class));
 
-            for (int i = 0; i < 100; i ++) {
+            for (int i = 0; i < 100; i++) {
                 UserEntityElastic user1 = EntityFactory.createEntity(UserEntityElastic.class);
                 user1.setAge(i);
                 user1.setCode("john " + i);
@@ -119,6 +119,14 @@ public class TestElastic {
 
             List<UserEntityElastic> list = accessor.find(Arrays.asList(
                     GeneralAccessor.ConditionTuple.eq("code", "john")), UserEntityElastic.class);
+            assertNotNull(list);
+            assertEquals(1, list.size());
+            list = accessor.find(Arrays.asList(
+                    GeneralAccessor.ConditionTuple.eq("code", "彭明")), UserEntityElastic.class);
+            assertNotNull(list);
+            assertEquals(0, list.size());
+            list = accessor.find(Arrays.asList(
+                    GeneralAccessor.ConditionTuple.eq("code", "彭明喜")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(Arrays.asList(
