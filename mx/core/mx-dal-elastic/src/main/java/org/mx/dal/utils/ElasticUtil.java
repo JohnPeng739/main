@@ -30,6 +30,7 @@ public interface ElasticUtil {
      * 创建指定实体对应的ES索引
      *
      * @param clazz 实现了ElasticBaseEntity的实体类
+     * @param <T>   泛型定义
      */
     <T extends Base> void createIndex(Class<T> clazz);
 
@@ -37,6 +38,7 @@ public interface ElasticUtil {
      * 删除指定实体对应的ES索引
      *
      * @param clazz 实现了ElasticBaseEntity的实体类
+     * @param <T>   泛型定义
      */
     <T extends Base> void deleteIndex(Class<T> clazz);
 
@@ -54,7 +56,7 @@ public interface ElasticUtil {
      * @param group      条件组
      * @param clazz      对应的实体类，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
      * @param pagination 分页对象
-     * @param <T>        范型定义
+     * @param <T>        泛型定义
      * @return 查询响应对象
      */
     <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
@@ -66,6 +68,7 @@ public interface ElasticUtil {
      * @param group      条件组
      * @param classes    对应的实体类集合，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
      * @param pagination 分页对象
+     * @param <T>        泛型定义
      * @return 查询响应对象
      */
     <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes,
@@ -76,7 +79,7 @@ public interface ElasticUtil {
      *
      * @param id    关键字ID
      * @param clazz 实体类，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
-     * @param <T>   范型定义
+     * @param <T>   泛型定义
      * @return 如果不存在，则返回null。
      */
     <T extends Base> T getById(String id, Class<T> clazz);
@@ -85,7 +88,7 @@ public interface ElasticUtil {
      * 索引指定的实体对象
      *
      * @param t   实体对象，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
-     * @param <T> 范型定义
+     * @param <T> 泛型定义
      * @return 索引成功后的实体对象
      */
     <T extends Base> T index(T t);
@@ -94,7 +97,7 @@ public interface ElasticUtil {
      * 索引指定的实体对象列表
      *
      * @param ts  实体对象列表，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
-     * @param <T> 范型定义
+     * @param <T> 泛型定义
      * @return 索引成功后的实体对象列表
      */
     <T extends Base> List<T> index(List<T> ts);
@@ -104,7 +107,7 @@ public interface ElasticUtil {
      *
      * @param t           实体对象，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
      * @param logicRemove 设置为true表示逻辑删除，否则物理删除
-     * @param <T>         范型定义
+     * @param <T>         泛型定义
      * @return 删除成功后的实体对象
      */
     <T extends Base> T remove(T t, boolean logicRemove);

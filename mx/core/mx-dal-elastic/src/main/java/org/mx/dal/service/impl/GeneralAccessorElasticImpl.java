@@ -206,7 +206,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#save(List<Base>)
+     * @see GeneralAccessor#save(List)
      */
     @Override
     public <T extends Base> List<T> save(List<T> ts) {
