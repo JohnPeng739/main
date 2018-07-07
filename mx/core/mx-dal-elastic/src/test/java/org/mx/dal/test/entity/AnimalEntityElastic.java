@@ -6,7 +6,7 @@ import org.mx.dal.entity.ElasticBaseEntity;
 
 @ElasticIndex("animal")
 public class AnimalEntityElastic extends ElasticBaseEntity {
-    @ElasticField(analyzer = "hanlp")
+    @ElasticField(type = "text", analyzer = "hanlp")
     private String name;
 
     public String getName() {

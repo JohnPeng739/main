@@ -5,9 +5,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
 import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.open.OpenIndexRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
@@ -19,6 +21,7 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -125,7 +128,7 @@ public class ElasticUtilRest implements ElasticUtil {
      * @see ElasticUtil#createIndex(Class)
      */
     @Override
-    public void createIndex(Class<? extends ElasticBaseEntity> clazz) {
+    public <T extends Base> void createIndex(Class<T> clazz) {
         ElasticIndex annotationIndex = clazz.getAnnotation(ElasticIndex.class);
         if (annotationIndex != null) {
             // 是一个Elastic实体类，需要处理索引
@@ -143,6 +146,8 @@ public class ElasticUtilRest implements ElasticUtil {
                 fieldProperties.put("type", type);
                 if (!StringUtils.isBlank(anaylyzer)) {
                     fieldProperties.put("analyzer", anaylyzer);
+                    // 为了预防可能配置了分词器，却忘记配置正确的类型，自动更正为"text"类型。
+                    fieldProperties.put("type", "text");
                 }
                 properties.put(name, fieldProperties);
             });
@@ -192,7 +197,7 @@ public class ElasticUtilRest implements ElasticUtil {
      * @see ElasticUtil#deleteIndex(Class)
      */
     @Override
-    public void deleteIndex(Class<? extends ElasticBaseEntity> clazz) {
+    public <T extends Base> void deleteIndex(Class<T> clazz) {
         ElasticIndex annotationIndex = clazz.getAnnotation(ElasticIndex.class);
         if (annotationIndex != null) {
             // 是一个Elastic实体类，需要处理索引
@@ -277,59 +282,122 @@ public class ElasticUtilRest implements ElasticUtil {
     /**
      * {@inheritDoc}
      *
-     * @see ElasticUtil#search(List, Class, Pagination)
+     * @see ElasticUtil#search(org.mx.dal.service.GeneralAccessor.ConditionGroup, Class, Pagination)
      */
     @Override
-    public <T extends Base> SearchResponse search(List<GeneralAccessor.ConditionTuple> tuples, Class<T> clazz,
+    public <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
                                                   Pagination pagination)
             throws UserInterfaceDalErrorException {
-        return search(tuples, Collections.singletonList(clazz), pagination);
+        return search(group, Collections.singletonList(clazz), pagination);
+    }
+
+    /**
+     * 对条件组创建查询
+     *
+     * @param group 条件组
+     * @return 查询
+     */
+    private BoolQueryBuilder createQueryGroupBuilder(GeneralAccessor.ConditionGroup group) {
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        if (group.getItems().size() == 1) {
+            return boolQueryBuilder.must(createQueryBuilder(group.getOperateType(),
+                    (GeneralAccessor.ConditionTuple) group.getItems().get(0)));
+        } else {
+            for (GeneralAccessor.ConditionGroup subGroup : group.getItems()) {
+                QueryBuilder subQueryBuilder = createQueryGroupBuilder(subGroup);
+                if (group.getOperateType() == GeneralAccessor.ConditionGroup.OperateType.AND) {
+                    boolQueryBuilder.must(subQueryBuilder);
+                } else {
+                    boolQueryBuilder.should(subQueryBuilder);
+                }
+            }
+            return boolQueryBuilder;
+        }
+    }
+
+    /**
+     * 对条件创建查询
+     *
+     * @param operateType 连接类型
+     * @param tuple       条件
+     * @return 查询
+     */
+    private QueryBuilder createQueryBuilder(GeneralAccessor.ConditionGroup.OperateType operateType,
+                                            GeneralAccessor.ConditionTuple tuple) {
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        if (operateType == GeneralAccessor.ConditionGroup.OperateType.AND) {
+            switch (tuple.operate) {
+                case CONTAIN:
+                    queryBuilder.must(QueryBuilders.termQuery(tuple.field, tuple.value));
+                    break;
+                case EQ:
+                    queryBuilder.must(QueryBuilders.matchQuery(tuple.field, tuple.value));
+                    break;
+                case LT:
+                    queryBuilder.must(QueryBuilders.rangeQuery(tuple.field).lt(tuple.value));
+                    break;
+                case GT:
+                    queryBuilder.must(QueryBuilders.rangeQuery(tuple.field).gt(tuple.value));
+                    break;
+                case LTE:
+                    queryBuilder.must(QueryBuilders.rangeQuery(tuple.field).lte(tuple.value));
+                    break;
+                case GTE:
+                    queryBuilder.must(QueryBuilders.rangeQuery(tuple.field).gte(tuple.value));
+                    break;
+                default:
+                    if (logger.isErrorEnabled()) {
+                        logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));
+                    }
+                    throw new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED_OPERATE);
+            }
+        } else {
+            switch (tuple.operate) {
+                case CONTAIN:
+                    queryBuilder.should(QueryBuilders.termQuery(tuple.field, tuple.value));
+                    break;
+                case EQ:
+                    queryBuilder.should(QueryBuilders.matchQuery(tuple.field, tuple.value));
+                    break;
+                case LT:
+                    queryBuilder.should(QueryBuilders.rangeQuery(tuple.field).lt(tuple.value));
+                    break;
+                case GT:
+                    queryBuilder.should(QueryBuilders.rangeQuery(tuple.field).gt(tuple.value));
+                    break;
+                case LTE:
+                    queryBuilder.should(QueryBuilders.rangeQuery(tuple.field).lte(tuple.value));
+                    break;
+                case GTE:
+                    queryBuilder.should(QueryBuilders.rangeQuery(tuple.field).gte(tuple.value));
+                    break;
+                default:
+                    if (logger.isErrorEnabled()) {
+                        logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));
+                    }
+                    throw new UserInterfaceSystemErrorException(
+                            UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED_OPERATE);
+            }
+        }
+        return queryBuilder;
     }
 
     /**
      * {@inheritDoc} <br>
      * 在没有传入分页对象的情况下，最多返回前1000条记录。
      *
-     * @see ElasticUtil#search(List, Class, Pagination)
+     * @see ElasticUtil#search(org.mx.dal.service.GeneralAccessor.ConditionGroup, Class, Pagination)
      */
     @Override
-    public SearchResponse search(List<GeneralAccessor.ConditionTuple> tuples, List<Class<? extends Base>> classes,
-                                 Pagination pagination)
+    public <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes,
+                                                  Pagination pagination)
             throws UserInterfaceDalErrorException {
         SearchSourceBuilder builder = new SearchSourceBuilder();
-        if (tuples == null || tuples.isEmpty()) {
+        if (group == null || group.getItems().isEmpty()) {
             builder.query(QueryBuilders.matchAllQuery());
         } else {
-            BoolQueryBuilder query = QueryBuilders.boolQuery();
-            tuples.forEach(tuple -> {
-                switch (tuple.operate) {
-                    case CONTAIN:
-                        query.must(QueryBuilders.termQuery(tuple.field, tuple.value));
-                        break;
-                    case EQ:
-                        query.must(QueryBuilders.matchQuery(tuple.field, tuple.value));
-                        break;
-                    case LT:
-                        query.must(QueryBuilders.rangeQuery(tuple.field).lt(tuple.value));
-                        break;
-                    case GT:
-                        query.must(QueryBuilders.rangeQuery(tuple.field).gt(tuple.value));
-                        break;
-                    case LTE:
-                        query.must(QueryBuilders.rangeQuery(tuple.field).lte(tuple.value));
-                        break;
-                    case GTE:
-                        query.must(QueryBuilders.rangeQuery(tuple.field).gte(tuple.value));
-                        break;
-                    default:
-                        if (logger.isErrorEnabled()) {
-                            logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));
-                        }
-                        throw new UserInterfaceSystemErrorException(
-                                UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED_OPERATE);
-                }
-            });
-            builder.query(query);
+            builder.query(createQueryGroupBuilder(group));
         }
         if (pagination != null) {
             builder.from((pagination.getPage() - 1) * pagination.getSize());
@@ -382,6 +450,49 @@ public class ElasticUtilRest implements ElasticUtil {
     }
 
     /**
+     * 将指定实体转化为Elastic Rest请求
+     *
+     * @param t   实体对象
+     * @param <T> 实体泛型
+     * @return Elastic REST请求
+     */
+    @SuppressWarnings("unchecked")
+    private <T extends Base> DocWriteRequest createRequest(T t) {
+        Class<T> clazz = (Class<T>) t.getClass();
+        boolean isNew;
+        if (StringUtils.isBlank(t.getId())) {
+            // 新数据
+            t.setId(DigestUtils.uuid());
+            t.setCreatedTime(System.currentTimeMillis());
+            isNew = true;
+        } else {
+            T check = getById(t.getId(), clazz);
+            if (check != null) {
+                // 修改数据
+                t.setCreatedTime(check.getCreatedTime());
+                if (check instanceof BaseDict) {
+                    ((BaseDict) t).setCode(((BaseDict) check).getCode());
+                }
+                isNew = false;
+            } else {
+                isNew = true;
+            }
+        }
+        t.setUpdatedTime(System.currentTimeMillis());
+        t.setOperator(sessionDataStore.getCurrentUserCode());
+        String index = getIndex(clazz);
+        if (isNew) {
+            IndexRequest request = new IndexRequest(index, index, t.getId());
+            request.source(JSON.toJSONString(t), XContentType.JSON);
+            return request;
+        } else {
+            UpdateRequest request = new UpdateRequest(index, index, t.getId());
+            request.doc(JSON.toJSONString(t), XContentType.JSON);
+            return request;
+        }
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @see ElasticUtil#index(Base)
@@ -389,38 +500,18 @@ public class ElasticUtilRest implements ElasticUtil {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T index(T t) {
-        try {
-            Class<T> clazz = (Class<T>) t.getClass();
-            boolean isNew;
-            if (StringUtils.isBlank(t.getId())) {
-                // 新数据
-                t.setId(DigestUtils.uuid());
-                t.setCreatedTime(System.currentTimeMillis());
-                isNew = true;
-            } else {
-                T check = getById(t.getId(), clazz);
-                if (check != null) {
-                    // 修改数据
-                    t.setCreatedTime(check.getCreatedTime());
-                    if (check instanceof BaseDict) {
-                        ((BaseDict) t).setCode(((BaseDict) check).getCode());
-                    }
-                    isNew = false;
-                } else {
-                    isNew = true;
-                }
+        if (t == null) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The entity is null.");
             }
-            t.setUpdatedTime(System.currentTimeMillis());
-            t.setOperator(sessionDataStore.getCurrentUserCode());
-            String index = getIndex(clazz);
-            if (isNew) {
-                IndexRequest request = new IndexRequest(index, index, t.getId());
-                request.source(JSON.toJSONString(t), XContentType.JSON);
-                client.index(request);
+            return t;
+        }
+        try {
+            DocWriteRequest request = createRequest(t);
+            if (request instanceof IndexRequest) {
+                client.index((IndexRequest) request);
             } else {
-                UpdateRequest request = new UpdateRequest(index, index, t.getId());
-                request.doc(JSON.toJSONString(t), XContentType.JSON);
-                client.update(request);
+                client.update((UpdateRequest) request);
             }
             return getById(t.getId(), (Class<T>) t.getClass());
         } catch (IOException ex) {
@@ -429,6 +520,35 @@ public class ElasticUtilRest implements ElasticUtil {
             }
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#index(List)
+     */
+    @Override
+    public <T extends Base> List<T> index(List<T> ts) {
+        if (ts == null || ts.isEmpty()) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The entity's list is null or empty.");
+            }
+            return ts;
+        }
+        BulkRequest bulkRequest = new BulkRequest();
+        for (T t : ts) {
+            DocWriteRequest request = createRequest(t);
+            bulkRequest.add(request);
+        }
+        try {
+            client.bulk(bulkRequest);
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Bulk save entities fail, total: %d.", ts.size()), ex);
+            }
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_INDEX_FAIL);
+        }
+        return ts;
     }
 
     /**

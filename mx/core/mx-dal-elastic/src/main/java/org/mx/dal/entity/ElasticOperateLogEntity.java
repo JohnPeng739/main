@@ -7,13 +7,15 @@ import org.mx.dal.annotation.ElasticIndex;
  * 描述： 基于Elastic实现的操作审计日志实体
  *
  * @author John.Peng
- *         Date time 2018/4/1 上午8:50
+ * Date time 2018/4/1 上午8:50
  */
 @ElasticIndex("operateLog")
 public class ElasticOperateLogEntity extends ElasticBaseEntity implements OperateLog {
+    @ElasticField
     private String system, module;
-    @ElasticField(analyzer = "hanlp")
+    @ElasticField(type = "text", analyzer = "hanlp")
     private String content;
+    @ElasticField
     private OperateType operateType = OperateType.QUERY;
 
     /**

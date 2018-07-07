@@ -9,7 +9,7 @@ import org.mx.dal.annotation.ElasticField;
  * Date time 2018/4/1 上午8:41
  */
 public class ElasticBaseEntity implements Base {
-    @ElasticField(type = "keyword")
+    @ElasticField
     private String id, operator;
     @ElasticField(type = "long")
     private long createdTime, updatedTime;

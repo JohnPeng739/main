@@ -27,7 +27,7 @@ import java.util.List;
 public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorElasticImpl.class);
 
-    private ElasticUtil accessor;
+    private ElasticUtil elasticUtil;
 
     /**
      * 默认的构造函数
@@ -36,15 +36,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     public GeneralAccessorElasticImpl(ElasticUtil elasticUtil) {
         super();
-        this.accessor = elasticUtil;
-    }
-
-    private List<GeneralAccessor.ConditionTuple> validateCondition(boolean isValid) {
-        List<GeneralAccessor.ConditionTuple> list = null;
-        if (isValid) {
-            list = Collections.singletonList(new GeneralAccessor.ConditionTuple("valid", true));
-        }
-        return list;
+        this.elasticUtil = elasticUtil;
     }
 
     /**
@@ -64,7 +56,9 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> long count(Class<T> clazz, boolean isValid) {
-        SearchResponse response = accessor.search(validateCondition(isValid), clazz, null);
+        SearchResponse response = elasticUtil.search(
+                isValid ? ConditionGroup.and(ConditionTuple.eq("valid", true)) : null,
+                clazz, null);
         return response.getHits().getTotalHits();
     }
 
@@ -85,10 +79,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) {
-        SearchResponse response = accessor.search(validateCondition(isValid), clazz, null);
-        List<T> list = new ArrayList<>();
-        response.getHits().forEach(hit -> dowithRow(hit, list));
-        return list;
+        return list(null, clazz, isValid);
     }
 
     /**
@@ -111,15 +102,9 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
         if (pagination == null) {
             pagination = new Pagination();
         }
-        SearchResponse response = accessor.search(validateCondition(isValid), clazz, pagination);
-        if (response.status() == RestStatus.OK) {
-            List<T> list = new ArrayList<>();
-            pagination.setTotal((int) response.getHits().getTotalHits());
-            response.getHits().forEach(hit -> dowithRow(hit, list));
-            return list;
-        } else {
-            return null;
-        }
+        return find(
+                isValid ? ConditionGroup.and(ConditionTuple.eq("valid", true)) : null,
+                Collections.singletonList(clazz), pagination);
     }
 
     /**
@@ -129,7 +114,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> T getById(String id, Class<T> clazz) {
-        return accessor.getById(id, clazz);
+        return elasticUtil.getById(id, clazz);
     }
 
     /**
@@ -139,18 +124,34 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
-        return find(tuples, Collections.singletonList(clazz));
+        ConditionGroup group = ConditionGroup.and();
+        for (ConditionTuple tuple : tuples) {
+            group.add(tuple);
+        }
+        return find(group, Collections.singletonList(clazz), null);
     }
 
     /**
-     * {@inheritDoc} <br>
-     * 如果预计记录数超过1000，则推荐使用带分页条件的查询 {@link ElasticUtil#search(List, Class, Pagination)}。否则只返回前1000条记录。
+     * {@inheritDoc}
      *
-     * @see ElasticAccessor#find(List, List)
+     * @see GeneralAccessor#find(org.mx.dal.service.GeneralAccessor.ConditionGroup, Class)
      */
     @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, List<Class<? extends Base>> classes) {
-        SearchResponse response = accessor.search(tuples, classes, null);
+    public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
+        return find(group, Collections.singletonList(clazz), null);
+    }
+
+    /**
+     * 根据条件组进行分页查询
+     *
+     * @param group      条件组
+     * @param classes    实体类定义列表
+     * @param pagination 分页对象
+     * @param <T>        实体泛型
+     * @return 符合条件的实体列表
+     */
+    public <T extends Base> List<T> find(ConditionGroup group, List<Class<? extends Base>> classes, Pagination pagination) {
+        SearchResponse response = elasticUtil.search(group, classes, pagination);
         List<T> list = new ArrayList<>();
         if (response.status() == RestStatus.OK) {
             response.getHits().forEach(hit -> dowithRow(hit, list));
@@ -158,9 +159,21 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
         return list;
     }
 
+    /**
+     * {@inheritDoc} <br>
+     * 如果预计记录数超过1000，则推荐使用带分页条件的查询 {@link ElasticUtil#search(org.mx.dal.service.GeneralAccessor.ConditionGroup, Class, Pagination)}。否则只返回前1000条记录。
+     *
+     * @see ElasticAccessor#find(GeneralAccessor.ConditionGroup, List)
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Base> List<T> find(ConditionGroup group, List<Class<? extends Base>> classes) {
+        return find(group, classes, null);
+    }
+
     @SuppressWarnings("unchecked")
     private <T extends Base> void dowithRow(SearchHit hit, List<T> list) {
-        T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) accessor.getIndexClass(hit.getIndex()));
+        T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) elasticUtil.getIndexClass(hit.getIndex()));
         ((ElasticBaseEntity) t).setScore(hit.getScore());
         list.add(t);
     }
@@ -187,7 +200,17 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> T save(T t) {
-        return accessor.index(t);
+        return elasticUtil.index(t);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#save(List<Base>)
+     */
+    @Override
+    public <T extends Base> List<T> save(List<T> ts) {
+        return elasticUtil.index(ts);
     }
 
     /**
@@ -199,7 +222,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     @Override
     public <T extends Base> void clear(Class<T> clazz) {
         if (ElasticBaseEntity.class.isAssignableFrom(clazz)) {
-            accessor.deleteIndex((Class<? extends ElasticBaseEntity>) clazz);
+            elasticUtil.deleteIndex(clazz);
         } else {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The class[%s] not extends from ElasticBaseEntity.", clazz.getName()));
@@ -249,6 +272,6 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) {
-        return accessor.remove(t, logicRemove);
+        return elasticUtil.remove(t, logicRemove);
     }
 }

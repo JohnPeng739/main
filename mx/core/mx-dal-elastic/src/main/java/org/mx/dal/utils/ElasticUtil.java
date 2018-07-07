@@ -3,8 +3,6 @@ package org.mx.dal.utils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
-import org.mx.dal.entity.ElasticBaseEntity;
-import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 
 import java.util.List;
@@ -33,14 +31,14 @@ public interface ElasticUtil {
      *
      * @param clazz 实现了ElasticBaseEntity的实体类
      */
-    void createIndex(Class<? extends ElasticBaseEntity> clazz);
+    <T extends Base> void createIndex(Class<T> clazz);
 
     /**
      * 删除指定实体对应的ES索引
      *
      * @param clazz 实现了ElasticBaseEntity的实体类
      */
-    void deleteIndex(Class<? extends ElasticBaseEntity> clazz);
+    <T extends Base> void deleteIndex(Class<T> clazz);
 
     /**
      * 获取指定索引对应的实体类名
@@ -53,25 +51,25 @@ public interface ElasticUtil {
     /**
      * 根据输入的条件进行检索
      *
-     * @param tuples     条件集合
+     * @param group      条件组
      * @param clazz      对应的实体类，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
      * @param pagination 分页对象
      * @param <T>        范型定义
      * @return 查询响应对象
      */
-    <T extends Base> SearchResponse search(List<GeneralAccessor.ConditionTuple> tuples, Class<T> clazz,
+    <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
                                            Pagination pagination);
 
     /**
      * 根据输入的条件进行检索
      *
-     * @param tuples     条件集合
+     * @param group      条件组
      * @param classes    对应的实体类集合，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
      * @param pagination 分页对象
      * @return 查询响应对象
      */
-    SearchResponse search(List<GeneralAccessor.ConditionTuple> tuples, List<Class<? extends Base>> classes,
-                          Pagination pagination);
+    <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes,
+                                           Pagination pagination);
 
     /**
      * 根据指定的ID获取实体对象
@@ -90,7 +88,16 @@ public interface ElasticUtil {
      * @param <T> 范型定义
      * @return 索引成功后的实体对象
      */
-    <T extends Base> T index(T t) throws UserInterfaceDalErrorException;
+    <T extends Base> T index(T t);
+
+    /**
+     * 索引指定的实体对象列表
+     *
+     * @param ts  实体对象列表，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
+     * @param <T> 范型定义
+     * @return 索引成功后的实体对象列表
+     */
+    <T extends Base> List<T> index(List<T> ts);
 
     /**
      * 删除指定实体对应的索引信息
