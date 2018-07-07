@@ -11,6 +11,7 @@ import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -195,6 +195,56 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
+        ConditionGroup group = ConditionGroup.and();
+        if (tuples != null && !tuples.isEmpty()) {
+            tuples.forEach(group::add);
+        }
+        return find(group, clazz);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Base> Predicate createCondition(CriteriaBuilder cb, Root<T> root, ConditionTuple tuple) {
+        switch (tuple.operate) {
+            case CONTAIN:
+                cb.like((Expression<String>) getField(tuple.field, root), (String) tuple.value);
+            case EQ:
+                return cb.equal(getField(tuple.field, root), tuple.value);
+            case LT:
+                return cb.lt((Expression<? extends Number>) getField(tuple.field, root), (Number) tuple.value);
+            case GT:
+                return cb.gt((Expression<? extends Number>) getField(tuple.field, root), (Number) tuple.value);
+            case LTE:
+                return cb.le((Expression<? extends Number>) getField(tuple.field, root), (Number) tuple.value);
+            case GTE:
+                return cb.ge((Expression<? extends Number>) getField(tuple.field, root), (Number) tuple.value);
+            default:
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));
+                }
+                throw new UserInterfaceSystemErrorException(
+                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED_OPERATE);
+        }
+    }
+
+    private <T extends Base> Predicate createGroupPredicate(CriteriaBuilder cb, Root<T> root, ConditionGroup group) {
+        if (group.getItems().size() == 1) {
+            return createCondition(cb, root, (ConditionTuple) group.getItems().get(0));
+        }
+        Predicate[] predicates = new Predicate[group.getItems().size()];
+        for (int index = 0; index < group.getItems().size(); index ++) {
+            predicates[index] = createGroupPredicate(cb, root, group.getItems().get(index));
+        }
+        return group.getOperateType() == ConditionGroup.OperateType.AND ? cb.and(predicates) : cb.or(predicates);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#find(ConditionGroup, Class)
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -202,11 +252,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
             CriteriaQuery<T> criteriaQuery = cb.createQuery(clazz);
             Root<T> root = criteriaQuery.from(clazz);
-            List<Predicate> conditions = new ArrayList<>();
-            if (tuples != null && tuples.size() > 0) {
-                tuples.forEach(tuple -> conditions.add(cb.equal(getField(tuple.field, root), tuple.value)));
-            }
-            criteriaQuery.where(conditions.toArray(new Predicate[0]));
+            criteriaQuery.where(createGroupPredicate(cb, root, group));
             Query query = entityManager.createQuery(criteriaQuery);
             return query.getResultList();
         } catch (ClassNotFoundException ex) {
@@ -215,14 +261,14 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     }
 
     /**
-     * 根据传入的filed，获取真正的比较字段。
+     * 根据传入的field，获取真正的比较字段。
      *
      * @param field 字段名，支持如"src.id"之类的对象操作
      * @param root  根
      * @param <T>   操作的范型类型
      * @return 真正的比较字段
      */
-    private <T extends Base> Path<T> getField(String field, Root<T> root) {
+    private <T extends Base> Path<?> getField(String field, Root<T> root) {
         String[] path = field.split("\\.");
         Path<T> result = root;
         for (String p : path) {
@@ -253,9 +299,13 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      * @see GeneralAccessor#save(Base)
      */
     @Transactional
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T save(T t) {
+        return save(t, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Base> T save(T t, boolean needFlush) {
         t.setUpdatedTime(new Date().getTime());
         t.setOperator(sessionDataStore.getCurrentUserCode());
         Class<T> clazz = (Class<T>) t.getClass();
@@ -271,7 +321,6 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             t.setId(null);
             t.setCreatedTime(new Date().getTime());
             entityManager.persist(t);
-            entityManager.flush();
         } else {
             // 修改操作
             T old = getById(t.getId(), clazz);
@@ -283,12 +332,32 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             }
             entityManager.merge(t);
         }
+        if (needFlush) {
+            entityManager.flush();
+        }
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save entity success, entity: %s.", t));
         }
         // return getById(t.getId(), (Class<T>) t.getClass(), false);
         // 为了提高性能，直接返回
         return t;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#save(List)
+     */
+    @Transactional
+    @Override
+    public <T extends Base> List<T> save(List<T> ts) {
+        if (ts != null && !ts.isEmpty()) {
+            for( T t : ts) {
+                save(t, false);
+            }
+        }
+        entityManager.flush();
+        return ts;
     }
 
     /**

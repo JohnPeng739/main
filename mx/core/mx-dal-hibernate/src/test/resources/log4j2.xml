@@ -32,7 +32,7 @@
 		</Async>
 	</Appenders>
 	<Loggers>
-		<logger name="org.mx" level="debug" additivity="false">
+		<logger name="org.mx" level="info" additivity="false">
 			<appender-ref ref="async" />
 		</logger>
 		<logger name="AuditLog" level="info" additivity="false">
