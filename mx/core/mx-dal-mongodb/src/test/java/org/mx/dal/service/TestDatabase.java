@@ -6,12 +6,56 @@ import org.mx.dal.BaseTest;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.entity.User;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class TestDatabase extends BaseTest {
+
+    @Test
+    public void testPerformance() {
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+                GeneralDictAccessor.class);
+        assertNotNull(accessor);
+
+        accessor.clear(User.class);
+
+        long t0 = System.currentTimeMillis();
+        for (int index = 1000; index < 2000; index++) {
+            User user = EntityFactory.createEntity(User.class);
+            user.setCode("john " + index);
+            user.setName("John Peng");
+            user.setAddress("some address is here, 中华人民共和国，美利坚合众国。");
+            user.setEmail("email");
+            user.setPostCode("zip");
+            user.setDesc("description");
+            accessor.save(user);
+        }
+        long t1 = System.currentTimeMillis() - t0;
+        assertEquals(1000, accessor.count(User.class));
+
+        t0 = System.currentTimeMillis();
+        List<User> users = new ArrayList<>(1000);
+        for (int index = 2000; index < 3000; index++) {
+            User user = EntityFactory.createEntity(User.class);
+            user.setCode("john " + index);
+            user.setName("John Peng");
+            user.setAddress("some address is here, 中华人民共和国，美利坚合众国。");
+            user.setEmail("email");
+            user.setPostCode("zip");
+            user.setDesc("description");
+            users.add(user);
+        }
+        accessor.save(users);
+        long t2 = System.currentTimeMillis() - t0;
+        assertEquals(2000, accessor.count(User.class));
+        assertTrue(t2 <= t1);
+
+        accessor.clear(User.class);
+    }
+
     @SuppressWarnings("unchecked")
     @Test
     public void testUserInterface() {
@@ -109,6 +153,15 @@ public class TestDatabase extends BaseTest {
             assertNotNull(check);
             assertTrue(check.isValid());
 
+            List<User> list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionGroup.or(
+                            GeneralAccessor.ConditionTuple.eq("code", "john"),
+                            GeneralAccessor.ConditionTuple.eq("code", "josh")
+                    ),
+                    GeneralAccessor.ConditionTuple.eq("valid", true)
+            ), User.class);
+            assertEquals(2, list.size());
+
             user = accessor.getByCode("john", User.class);
             assertNotNull(user);
             check = accessor.remove(user);
@@ -117,14 +170,14 @@ public class TestDatabase extends BaseTest {
             assertEquals(2, accessor.count(User.class, false));
             assertFalse(check.isValid());
 
-            List<User> list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("code", "john"),
-                    new GeneralAccessor.ConditionTuple("valid", true)
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.eq("code", "john"),
+                    GeneralAccessor.ConditionTuple.eq("valid", true)
             ), User.class);
             assertEquals(0, list.size());
-            list = accessor.find(Arrays.asList(
-                    new GeneralAccessor.ConditionTuple("code", "josh"),
-                    new GeneralAccessor.ConditionTuple("valid", true)
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.eq("code", "josh"),
+                    GeneralAccessor.ConditionTuple.eq("valid", true)
             ), User.class);
             assertEquals(1, list.size());
 

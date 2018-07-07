@@ -1,7 +1,9 @@
 package org.mx.dal.service.impl;
 
+import com.mongodb.util.JSONParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.Document;
 import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
@@ -12,11 +14,12 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralTextSearchAccessor;
 import org.mx.dal.session.SessionDataStore;
+import org.mx.error.UserInterfaceSystemErrorException;
+import org.springframework.data.mapping.MappingException;
+import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.TextCriteria;
-import org.springframework.data.mongodb.core.query.TextQuery;
+import org.springframework.data.mongodb.core.convert.MongoWriter;
+import org.springframework.data.mongodb.core.query.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +38,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  */
 public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSearchAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorMongoImpl.class);
+    private static final String ID_FIELD = "_id";
 
     protected MongoTemplate template;
     private SessionDataStore sessionDataStore;
@@ -99,7 +103,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             List<T> result;
             if (isValid) {
                 List<ConditionTuple> tuples = new ArrayList<>();
-                tuples.add(new ConditionTuple("valid", true));
+                tuples.add(ConditionTuple.eq("valid", true));
                 result = find(tuples, clazz);
             } else {
                 result = template.findAll(clazz);
@@ -184,35 +188,77 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      */
     @Override
     public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
+        ConditionGroup group = ConditionGroup.and();
+        if (tuples != null && !tuples.isEmpty()) {
+            tuples.forEach(group::add);
+        }
+        return find(group, clazz);
+    }
+
+    private Criteria createToupleCriteria(ConditionTuple tuple) {
+        switch (tuple.operate) {
+            case CONTAIN:
+                String keyword = (String) tuple.value;
+                // 将关键字中的空格转化为正则表达式的 OR 操作
+                keyword = keyword.replaceAll(" ", " | ");
+                where(tuple.field).regex(String.format(".*(%s).*", keyword));
+            case EQ:
+                return where(tuple.field).is(tuple.value);
+            case LT:
+                return where(tuple.field).lt(tuple.value);
+            case GT:
+                return where(tuple.field).gt(tuple.value);
+            case LTE:
+                return where(tuple.field).lte(tuple.value);
+            case GTE:
+                return where(tuple.field).gte(tuple.value);
+            default:
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));
+                }
+                throw new UserInterfaceSystemErrorException(
+                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED_OPERATE);
+        }
+    }
+
+    private Criteria createGroupCriteria(ConditionGroup group) {
+        Criteria criteria = new Criteria();
+        if (group.getItems().size() == 1) {
+            return createToupleCriteria((ConditionTuple) group.getItems().get(0));
+        }
+        Criteria[] subCriterias = new Criteria[group.getItems().size()];
+        for (int index = 0; index < group.getItems().size(); index ++) {
+            subCriterias[index] = createGroupCriteria(group.getItems().get(index));
+
+        }
+        if (group.getOperateType() == ConditionGroup.OperateType.AND) {
+            criteria.andOperator(subCriterias);
+        } else {
+            criteria.orOperator(subCriterias);
+        }
+        return criteria;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#find(ConditionGroup, Class)
+     */
+    @Override
+    public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
             }
-            Query query;
-            Criteria cd;
-            switch (tuples.size()) {
-                case 0:
-                    query = new Query();
-                    break;
-                case 1:
-                    ConditionTuple tuple = tuples.get(0);
-                    cd = where(tuple.field).is(tuple.value);
-                    query = query(cd);
-                    break;
-                default:
-                    cd = where(tuples.get(0).field).is(tuples.get(0).value);
-                    for (int index = 1; index < tuples.size(); index++) {
-                        tuple = tuples.get(index);
-                        cd.and(tuple.field).is(tuple.value);
-                    }
-                    query = query(cd);
-                    break;
+            Query query = new Query();
+            if (group != null && !group.getItems().isEmpty()) {
+                query.addCriteria(createGroupCriteria(group));
             }
             return template.find(query, clazz);
         } catch (ClassNotFoundException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Condition find entity[%s] fail, condition: %s.",
-                        clazz.getName(), StringUtils.merge(tuples, ",")), ex);
+                        clazz.getName(), group), ex);
             }
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
@@ -327,6 +373,78 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         }
         t = template.findById(t.getId(), (Class<T>) t.getClass());
         return t;
+    }
+
+    private <T> Document toDocument(T objectToSave, MongoWriter<T> writer) {
+        if (objectToSave instanceof Document) {
+            return (Document) objectToSave;
+        }
+
+        if (!(objectToSave instanceof String)) {
+            Document dbDoc = new Document();
+            writer.write(objectToSave, dbDoc);
+
+            if (dbDoc.containsKey(ID_FIELD) && dbDoc.get(ID_FIELD) == null) {
+                dbDoc.remove(ID_FIELD);
+            }
+            return dbDoc;
+        } else {
+            try {
+                return Document.parse((String) objectToSave);
+            } catch (JSONParseException e) {
+                throw new MappingException("Could not parse given String to save into a JSON document!", e);
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#save(List)
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Base> List<T> save(List<T> ts) {
+        if (ts == null || ts.isEmpty()) {
+            return ts;
+        }
+        BulkOperations bulk = template.bulkOps(BulkOperations.BulkMode.ORDERED, ts.get(0).getClass());
+        for (T t : ts) {
+            boolean isNew = true;
+            if (StringUtils.isBlank(t.getId())) {
+                // new
+                t.setCreatedTime(new Date().getTime());
+            } else {
+                T old = this.getById(t.getId(), (Class<T>) t.getClass());
+                if (old != null) {
+                    isNew = false;
+                    t.setCreatedTime(old.getCreatedTime());
+                    // 修改操作不能修改代码字段
+                    if (t instanceof BaseDict) {
+                        ((BaseDict) t).setCode(((BaseDict) old).getCode());
+                    }
+                }
+            }
+            t.setUpdatedTime(new Date().getTime());
+            t.setOperator(sessionDataStore.getCurrentUserCode());
+            if (isNew) {
+                bulk.insert(t);
+            } else {
+                bulk.updateOne(new Query(where("id").is(t.getId())),
+                        new BasicUpdate(toDocument(t, template.getConverter())));
+            }
+            if (t instanceof BaseDictTree) {
+                // 处理父级节点
+                BaseDictTree p = ((BaseDictTree) t).getParent();
+                if (p != null) {
+                    p.getChildren().add(t);
+                    bulk.updateOne(new Query(where("id").is(t.getId())),
+                            new BasicUpdate(toDocument(p, template.getConverter())));
+                }
+            }
+        }
+        bulk.execute();
+        return ts;
     }
 
     /**
