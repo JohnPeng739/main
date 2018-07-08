@@ -27,6 +27,7 @@ public class UserInterfaceServiceErrorException extends UserInterfaceException {
 
     public enum ServiceErrors implements UserInterfaceError {
         WS_CLIENT_INIT_FAIL("初始化Websocket客户端失败。"),
+        WS_SEND_FAIL("WebSocket送数据失败。"),
 
         COMM_UNSUPPORTED_ENCODING("不支持的字符串编码字符集。"),
         COMM_IO_ERROR("网络数据访问错误。"),

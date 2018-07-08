@@ -1,7 +1,7 @@
 package org.mx.service.server.config;
 
 import org.mx.service.server.CommServerFactory;
-import org.mx.service.server.HttpServerFactory;
+import org.mx.service.server.RestfulServerFactory;
 import org.mx.service.server.ServletServerFactory;
 import org.mx.service.server.WebsocketServerFactory;
 import org.mx.service.server.websocket.rule.DdosFilterRule;
@@ -65,9 +65,9 @@ public class ServerConfig {
      * @param context Spring IoC上下文
      * @return RESTful服务器工厂
      */
-    @Bean(name = "httpServerFactory", initMethod = "init", destroyMethod = "destroy")
-    public HttpServerFactory httpServerFactory(Environment env, ApplicationContext context) {
-        return new HttpServerFactory(env, context);
+    @Bean(name = "restfulServerFactory", initMethod = "init", destroyMethod = "destroy")
+    public RestfulServerFactory restfulServerFactory(Environment env, ApplicationContext context) {
+        return new RestfulServerFactory(env, context);
     }
 
     /**

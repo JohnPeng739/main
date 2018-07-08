@@ -2,13 +2,15 @@ package org.mx.service.server;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.websocket.api.WebSocketPolicy;
 import org.eclipse.jetty.websocket.server.WebSocketHandler;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
+import org.mx.TypeUtils;
 import org.mx.service.server.websocket.SimpleWsObject;
 import org.mx.service.server.websocket.WsSessionListener;
 import org.mx.service.server.websocket.WsSessionManager;
@@ -25,7 +27,7 @@ import java.util.Map;
  *
  * @author : john.peng created on date : 2017/11/4
  */
-public class WebsocketServerFactory extends AbstractServerFactory {
+public class WebsocketServerFactory extends HttpServerFactory {
     private static final Log logger = LogFactory.getLog(WebsocketServerFactory.class);
 
     private Map<String, SimpleWsObject> socketBeans;
@@ -34,20 +36,13 @@ public class WebsocketServerFactory extends AbstractServerFactory {
 
     /**
      * 默认的构造函数
-     */
-    public WebsocketServerFactory() {
-        super();
-        this.socketBeans = new HashMap<>();
-    }
-
-    /**
-     * 默认的构造函数
      *
      * @param env     Spring IoC上下文环境
      * @param context Spring IoC上下文
      */
     public WebsocketServerFactory(Environment env, ApplicationContext context) {
-        this();
+        super(env, "websocket");
+        this.socketBeans = new HashMap<>();
         this.env = env;
         this.context = context;
     }
@@ -55,29 +50,25 @@ public class WebsocketServerFactory extends AbstractServerFactory {
     /**
      * {@inheritDoc}
      *
-     * @see AbstractServerFactory#init()
+     * @see HttpServerFactory#getHandler()
      */
+    @Override
     @SuppressWarnings("unchecked")
-    public void init() throws Exception {
-        boolean enabled = env.getProperty("websocket.enabled", Boolean.class, true);
-        if (!enabled) {
-            // 显式配置enable为false，表示不进行初始化。
-            return;
-        }
-        final int port = env.getProperty("websocket.port", Integer.class, 9997);
+    protected Handler getHandler() {
         String websocketClassesStr = "websocket.service.classes";
-        String websocketServiceClassesDef = this.env.getProperty(websocketClassesStr);
+        String websocketServiceClassesDef = env.getProperty(websocketClassesStr);
         if (StringUtils.isBlank(websocketServiceClassesDef)) {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("You not define [%s], will not ", websocketClassesStr));
             }
+            return null;
         } else {
             // 初始化Websocket会话管理器
             WsSessionManager.getManager().init(env, context);
             String[] classesDefs = websocketServiceClassesDef.split(",");
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {
-                    List<Class<?>> websocketClasses = (List) this.context.getBean(classesDef, List.class);
+                    List<Class<?>> websocketClasses = (List) context.getBean(classesDef, List.class);
                     if (!websocketClasses.isEmpty()) {
                         websocketClasses.forEach((clazz) -> {
                             WsSessionListener listener = (WsSessionListener) context.getBean(clazz);
@@ -86,23 +77,25 @@ public class WebsocketServerFactory extends AbstractServerFactory {
                     }
                 }
             }
-
-            Server server = new Server(port);
-            server.setHandler(new WebSocketHandler() {
+            return new WebSocketHandler() {
                 @Override
                 public void configure(WebSocketServletFactory factory) {
-                    factory.getPolicy().setIdleTimeout(10000);
-                    // TODO 设置额外的Websocket参数，如：缓冲大小等
+                    WebSocketPolicy policy = factory.getPolicy();
+                    policy.setIdleTimeout(env.getProperty("websocket.idleTimeoutSecs", Long.class, 300L) * 1000);
+                    policy.setAsyncWriteTimeout(env.getProperty("websocket.asyncWriteTimeoutSecs", Long.class, 30L) * 1000);
+                    policy.setInputBufferSize((int) TypeUtils.string2Size(
+                            env.getProperty("websocket.inputBufferSize"), 4 * 1024));
+                    policy.setMaxTextMessageSize((int) TypeUtils.string2Size(
+                            env.getProperty("websocket.maxTextMessageSize"), 64 * 1024));
+                    policy.setMaxTextMessageBufferSize((int) TypeUtils.string2Size(
+                            env.getProperty("websocket.maxTextMessageBufferSize"), 32 * 1024));
+                    policy.setMaxBinaryMessageSize((int) TypeUtils.string2Size(
+                            env.getProperty("websocket.maxBinaryMessageSize"), 64 * 1024));
+                    policy.setMaxBinaryMessageBufferSize((int) TypeUtils.string2Size(
+                            env.getProperty("websocket.maxBinaryMessageBufferSize"), 32 * 1024));
                     factory.setCreator(new MyWebsocketCreator());
                 }
-            });
-            server.setStopAtShutdown(true);
-            server.setStopTimeout(10);
-            super.setServer(server);
-            server.start();
-            if (logger.isInfoEnabled()) {
-                logger.info(String.format("Start Websocket server success, listen port: %d.", port));
-            }
+            };
         }
     }
 

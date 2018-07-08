@@ -2,17 +2,18 @@ package org.mx.service.client.websocket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.java_websocket.WebSocket;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.*;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.mx.service.error.UserInterfaceServiceErrorException;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Future;
 
 /**
  * Websocket客户端Java调用类，支持重连机制。
@@ -23,101 +24,76 @@ public class WsClientInvoke {
     private static final Log logger = LogFactory.getLog(WsClientInvoke.class);
     private final Serializable reconnectMutex = "RECONNECT_TASK";
     private WebSocketClient client = null;
+    private SslContextFactory sslContextFactory = null;
+    private Future<Session> connection = null;
     private String uri = null;
     private boolean reconnect = true;
-    private BaseWebsocketClientListener listener = null;
+    private WebsocketClientListener listener = null;
     private Timer reconnectTimer = null;
 
     /**
-     * 初始化Websocket客户端调用器
+     * 初始化Websocket客户端调用器，使用HTTP方式。
      *
      * @param uri      连接Websocket服务器的URI
      * @param listener 客户端异步响应监听器，设置为null表示不监听。
-     * @throws UserInterfaceServiceErrorException 初始化过程中发生的异常
      */
-    public void init(final String uri, final BaseWebsocketClientListener listener) throws UserInterfaceServiceErrorException {
+    public void init(final String uri, final WebsocketClientListener listener) {
         this.init(uri, listener, true);
     }
 
     /**
-     * 初始化Websocket客户端调用器
+     * 初始化Websocket客户端调用器，使用HTTP方式。
      *
      * @param uri       连接Websocket服务器的URI
      * @param listener  客户端异步响应监听器，设置为null表示不监听。
      * @param reconnect 是否需要重连
-     * @throws UserInterfaceServiceErrorException 初始化过程中发生的异常
      */
-    public void init(final String uri, final BaseWebsocketClientListener listener, boolean reconnect) throws UserInterfaceServiceErrorException {
+    public void init(final String uri, final WebsocketClientListener listener, boolean reconnect) {
         this.uri = uri;
         this.listener = listener;
         this.reconnect = reconnect;
         this.initClient();
     }
 
-    private void initClient() throws UserInterfaceServiceErrorException {
+    /**
+     * 初始化Websocket客户端调用器，使用HTTPS方式。
+     *
+     * @param uri                连接Websocket服务器的URI
+     * @param listener           客户端异步响应监听器，设置为null表示不监听。
+     * @param reconnect          是否需要重连
+     * @param keystorePath       Keystore路径
+     * @param keystorePassword   Keystore密码
+     * @param keyManagerPassword Keystore管理密码
+     */
+    public void init(final String uri, final WebsocketClientListener listener, boolean reconnect,
+                     String keystorePath, String keystorePassword, String keyManagerPassword) {
+        this.sslContextFactory = new SslContextFactory();
+        this.sslContextFactory.setKeyStorePath(keystorePath);
+        this.sslContextFactory.setKeyStorePassword(keystorePassword);
+        this.sslContextFactory.setKeyManagerPassword(keyManagerPassword);
+        this.init(uri, listener, reconnect);
+    }
+
+    /**
+     * 初始化Websocket客户端
+     */
+    private void initClient() {
         try {
-            client = new WebSocketClient(new URI(uri)) {
-                /**
-                 * {@inheritDoc}
-                 * @see WebSocketClient#onOpen(ServerHandshake)
-                 */
-                @Override
-                public void onOpen(ServerHandshake handshakedata) {
-                    if (listener != null) {
-                        listener.onOpen();
-                    }
-                }
-
-                /**
-                 * {@inheritDoc}
-                 * @see WebSocketClient#onMessage(String)
-                 */
-                @Override
-                public void onMessage(String message) {
-                    if (listener != null) {
-                        listener.onTextMessage(message);
-                    }
-                }
-
-                /**
-                 * {@inheritDoc}
-                 * @see WebSocketClient#onMessage(ByteBuffer)
-                 */
-                @Override
-                public void onMessage(ByteBuffer buffer) {
-                    if (listener != null) {
-                        listener.onBinaryMessage(buffer.array());
-                    }
-                }
-
-                /**
-                 * {@inheritDoc}
-                 * @see WebSocketClient#onClose(int, String, boolean)
-                 */
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                    if (listener != null) {
-                        listener.onClose(code, reason, remote);
-                    }
-                }
-
-                /**
-                 * {@inheritDoc}
-                 * @see WebSocketClient#onError(Exception)
-                 */
-                @Override
-                public void onError(Exception ex) {
-                    if (listener != null) {
-                        listener.onError(ex);
-                    }
-                }
-            };
-            client.connect();
+            if (sslContextFactory != null) {
+                // Websocket by HTTPS
+                sslContextFactory.start();
+                client = new WebSocketClient(sslContextFactory);
+            } else {
+                // Websocket by HTTP
+                client = new WebSocketClient();
+            }
+            client.start();
+            connection = client.connect(new SimpleWebsocket(), new URI(uri));
             reconnectTimer = new Timer();
             // 延迟5s后间隔15s调用
             reconnectTimer.scheduleAtFixedRate(new ReconnectTask(), 5000, 15000);
             Thread.sleep(100);
-        } catch (URISyntaxException | InterruptedException ex) {
+        } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Initialize the weboscket client fail, uri: %s.", uri), ex);
             }
@@ -126,19 +102,18 @@ public class WsClientInvoke {
     }
 
     /**
-     * 获取连接状态
+     * 返回连接是否就绪
      *
-     * @return 状态
-     * @see WebSocket.READYSTATE
+     * @return 返回true表示就绪
      */
-    public WebSocket.READYSTATE getState() {
-        if (client != null) {
-            return client.getReadyState();
-        } else {
-            if (logger.isErrorEnabled()) {
-                logger.error("The Websocket client is null.");
+    public boolean isReady() {
+        try {
+            return connection != null && connection.get().isOpen();
+        } catch (Exception ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Get the session's state fail.", ex);
             }
-            return WebSocket.READYSTATE.NOT_YET_CONNECTED;
+            return false;
         }
     }
 
@@ -147,19 +122,13 @@ public class WsClientInvoke {
      */
     private void reconnect() {
         synchronized (WsClientInvoke.this.reconnectMutex) {
-            if (!reconnect) {
+            if (!reconnect || connection != null) {
                 // 不需要重连
                 return;
             }
-            if (client != null) {
-                WebSocket.READYSTATE state = client.getReadyState();
-                if (state == WebSocket.READYSTATE.CONNECTING || state == WebSocket.READYSTATE.OPEN) {
-                    // 正常连接状态，不需要重连
-                    return;
-                }
-            }
+            close();
             // 进行重连操作
-            this.initClient();
+            initClient();
             if (logger.isDebugEnabled()) {
                 logger.debug("Websocket client reconnect successfully.");
             }
@@ -170,10 +139,40 @@ public class WsClientInvoke {
      * 关闭Client
      */
     private void closeClient() {
+        if (connection != null) {
+            try {
+                connection.get().close(1000, "Normal close operate request.");
+                connection.cancel(true);
+                connection = null;
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Close the connection successfully.");
+                }
+            } catch (Exception ex) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Close the connection fail.", ex);
+                }
+            }
+        }
+        if (sslContextFactory != null) {
+            try {
+                sslContextFactory.stop();
+            } catch (Exception ex) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("Stop the SSL context factory fail.", ex);
+                }
+            }
+            sslContextFactory = null;
+        }
         if (client != null) {
-            client.close(1000, "Notmal close operate request.");
-            if (logger.isDebugEnabled()) {
-                logger.debug("The Websocket client is closed.");
+            try {
+                client.stop();
+                if (logger.isDebugEnabled()) {
+                    logger.debug("The Websocket client is closed.");
+                }
+            } catch (Exception ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("Close the client fail.", ex);
+                }
             }
         }
     }
@@ -196,24 +195,22 @@ public class WsClientInvoke {
     }
 
     /**
-     * 判断缓存是否为空
-     *
-     * @return 返回true表示为空，否则表示缓存中尚有数据
-     */
-    public boolean isBufferEmpty() {
-        return !client.hasBufferedData();
-    }
-
-    /**
      * 发生一个文本消息到Websocket服务器
      *
      * @param message 文本消息
      */
     public void send(String message) {
         this.reconnect();
-        client.send(message);
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Send text message successfully, message: %s.", message));
+        try {
+            connection.get().getRemote().sendString(message);
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Send text message successfully, message: %s.", message));
+            }
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Send text message fail, message: %s.", message), ex);
+            }
+            throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.WS_SEND_FAIL);
         }
     }
 
@@ -225,13 +222,59 @@ public class WsClientInvoke {
     public void send(byte[] message) {
         this.reconnect();
         if (message != null) {
-            client.send(message);
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Send binary message successfully, message length: %d.", message.length));
+            try {
+                connection.get().getRemote().sendBytes(ByteBuffer.wrap(message));
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("Send binary message successfully, message length: %d.", message.length));
+                }
+            } catch (Exception ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("Send binary message fail, length: %d.", message.length), ex);
+                }
+                throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.WS_SEND_FAIL);
             }
         } else {
             if (logger.isWarnEnabled()) {
                 logger.warn("The binary message is null.");
+            }
+        }
+    }
+
+    @WebSocket
+    public class SimpleWebsocket {
+        @OnWebSocketConnect
+        public void onOpen(Session session) {
+            if (listener != null) {
+                listener.onOpen(session);
+            }
+        }
+
+        @OnWebSocketMessage
+        public void onMessage(Session session, String message) {
+            if (listener != null) {
+                listener.onTextMessage(session, message);
+            }
+        }
+
+        @OnWebSocketMessage
+        public void onMessage(Session session, byte[] buffer, int offset, int length) {
+            if (listener != null) {
+                listener.onBinaryMessage(session, buffer, offset, length);
+            }
+        }
+
+        @OnWebSocketClose
+        public void onClose(Session session, int code, String reason) {
+            if (listener != null) {
+                listener.onClose(session, code, reason);
+            }
+            connection = null;
+        }
+
+        @OnWebSocketError
+        public void onError(Session session, Throwable ex) {
+            if (listener != null) {
+                listener.onError(session, ex);
             }
         }
     }
