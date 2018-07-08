@@ -6,7 +6,7 @@ package org.mx.comps.notify.online;
  * @author : john.peng created on date : 2018/1/3
  */
 public class OnlineDevice {
-    private String deviceId, state, connectKey;
+    private String deviceId, state, connectKey, extraData;
     private long registryTime, lastTime;
     private double lastLongitude, lastLatitude;
 
@@ -149,5 +149,23 @@ public class OnlineDevice {
      */
     public void setLastLatitude(double lastLatitude) {
         this.lastLatitude = lastLatitude;
+    }
+
+    /**
+     * 获取附加数据字串
+     *
+     * @return 附加数据字串
+     */
+    public String getExtraData() {
+        return extraData;
+    }
+
+    /**
+     * 设置附加数据字串
+     *
+     * @param extraData 附加数据字串
+     */
+    public void setExtraData(String extraData) {
+        this.extraData = extraData;
     }
 }

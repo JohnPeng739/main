@@ -64,8 +64,8 @@ public class NotifyWsClient {
      * @param longitude 设备当前经度
      * @param latitude  设备当前纬度
      */
-    public void regiesty(String deviceId, String state, double longitude, double latitude) {
-        RegistryCommand command = new RegistryCommand(deviceId, state, longitude, latitude);
+    public void regiesty(String deviceId, String state, double longitude, double latitude, String extraData) {
+        RegistryCommand command = new RegistryCommand(deviceId, state, longitude, latitude, extraData);
         invoke.send(JSON.toJSONString(command));
     }
 

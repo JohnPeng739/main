@@ -51,6 +51,10 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
         device.setLastTime(data.getLongValue("lastTime"));
         device.setLastLongitude(data.getDoubleValue("lastLongitude"));
         device.setLastLatitude(data.getDoubleValue("lastLatitude"));
+        JSONObject extraData = data.getJSONObject("extraData");
+        if (extraData != null) {
+            device.setExtraData(JSON.toJSONString(extraData));
+        }
         return processCommand(command, type, device);
     }
 
