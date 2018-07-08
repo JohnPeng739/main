@@ -95,7 +95,7 @@ public class NotifyProcessor {
                 if (logger.isWarnEnabled()) {
                     logger.warn(String.format("Unsupported type: %s.", tarType));
                 }
-                return null;
+                return set;
         }
     }
 
@@ -158,7 +158,7 @@ public class NotifyProcessor {
         boolean success = notifyPush(set, json);
         if (success) {
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Push notify success, num: %d.", set != null ? set.sessions.size() : 0));
+                logger.debug(String.format("Push notify success, num: %d.", set.sessions.size()));
             }
         }
         WsSessionManager sessionManager = WsSessionManager.getManager();

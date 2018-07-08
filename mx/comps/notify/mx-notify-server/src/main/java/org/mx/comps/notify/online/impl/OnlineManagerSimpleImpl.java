@@ -5,7 +5,9 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.comps.notify.online.OnlineDevice;
+import org.mx.comps.notify.online.OnlineDeviceAuthenticate;
 import org.mx.comps.notify.online.OnlineManager;
+import org.mx.comps.notify.processor.OnlineDeviceAuthenticateFactory;
 import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,22 +33,27 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     private static final Log logger = LogFactory.getLog(OnlineManagerSimpleImpl.class);
 
     private final Serializable onlineDeviceMutex = "ONLINE_DEVICE";
-    private ConcurrentMap<String, OnlineDevice> onlineDevices = null;
+    private ConcurrentMap<String, OnlineDevice> onlineDevices;
     private Timer cleanTimer = null;
     private int deviceIdleTimeoutSecs = 60;
 
     private Environment env;
+    private OnlineDeviceAuthenticate deviceAuthenticate;
 
     /**
      * 默认的构造函数
      *
-     * @param env Spring IoC上下文环境
+     * @param env     Spring IoC上下文环境
+     * @param factory 设备鉴别接口
      */
     @Autowired
-    public OnlineManagerSimpleImpl(Environment env) {
+    public OnlineManagerSimpleImpl(Environment env, OnlineDeviceAuthenticateFactory factory) {
         super();
         this.onlineDevices = new ConcurrentHashMap<>();
         this.env = env;
+        if (!factory.getAuthenticates().isEmpty()) {
+            this.deviceAuthenticate = factory.getAuthenticates().values().iterator().next();
+        }
     }
 
     /**
@@ -103,7 +110,14 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
      */
     @Override
     public boolean registryDevice(OnlineDevice onlineDevice) {
-        // TODO 处理终端认证
+        // 处理终端认证
+        if (deviceAuthenticate != null) {
+            // 需要进行设备身份鉴别
+            if (!deviceAuthenticate.authenticate(onlineDevice)) {
+                // 设备身份鉴别失败，返回。
+                return false;
+            }
+        }
         synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
             String key = String.format("%s@%s", onlineDevice.getDeviceId(), onlineDevice.getConnectKey());
             if (onlineDevices.containsKey(key)) {

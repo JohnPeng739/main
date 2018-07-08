@@ -1,8 +1,10 @@
 package org.mx.comps.notify.config;
 
+import org.mx.comps.notify.processor.OnlineDeviceAuthenticateFactory;
 import org.mx.comps.notify.rest.NotifyServerResource;
 import org.mx.comps.notify.websocket.NotificationWebsocket;
 import org.mx.service.server.config.ServerConfig;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -17,12 +19,18 @@ import java.util.List;
  */
 @Import({ServerConfig.class})
 @ComponentScan({
-        "org.mx.comps.notify.websocket",
         "org.mx.comps.notify.processor",
         "org.mx.comps.notify.online.impl",
+        "org.mx.comps.notify.websocket",
         "org.mx.comps.notify.rest"
 })
 public class NotificationServerConfig {
+
+    @Bean
+    public OnlineDeviceAuthenticateFactory onlineDeviceAuthenticateFactory(ApplicationContext context) {
+        return new OnlineDeviceAuthenticateFactory(context);
+    }
+
     /**
      * 通知推送服务器提供的Restful服务列表
      *

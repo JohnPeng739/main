@@ -1,12 +1,11 @@
 package org.mx.comps.notify.client;
 
 import com.alibaba.fastjson.JSON;
-import org.java_websocket.WebSocket;
 import org.mx.comps.notify.client.command.NotifyCommand;
 import org.mx.comps.notify.client.command.PingCommand;
 import org.mx.comps.notify.client.command.RegistryCommand;
 import org.mx.comps.notify.client.command.UnregistryCommand;
-import org.mx.service.client.websocket.BaseWebsocketClientListener;
+import org.mx.service.client.websocket.WebsocketClientListener;
 import org.mx.service.client.websocket.WsClientInvoke;
 
 /**
@@ -31,7 +30,7 @@ public class NotifyWsClient {
      * @param uri      连接的WebSocket URI
      * @param listener WebSocket客户端监听器
      */
-    public NotifyWsClient(String uri, BaseWebsocketClientListener listener) {
+    public NotifyWsClient(String uri, WebsocketClientListener listener) {
         this(uri, true, listener);
     }
 
@@ -42,19 +41,19 @@ public class NotifyWsClient {
      * @param reconnect 设置为true将自动重连
      * @param listener  WebSocket客户端监听器
      */
-    public NotifyWsClient(String uri, boolean reconnect, BaseWebsocketClientListener listener) {
+    public NotifyWsClient(String uri, boolean reconnect, WebsocketClientListener listener) {
         this();
         invoke = new WsClientInvoke();
         invoke.init(uri, listener, reconnect);
     }
 
     /**
-     * 获取当前连接状态
+     * 获取当前连接是否就绪
      *
-     * @return 状态
+     * @return 返回true表示已经就绪
      */
-    public WebSocket.READYSTATE getState() {
-        return invoke.getState();
+    public boolean isReady() {
+        return invoke.isReady();
     }
 
     /**
