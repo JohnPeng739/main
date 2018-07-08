@@ -63,6 +63,7 @@ public class NotifyWsClient {
      * @param state     设备当前状态
      * @param longitude 设备当前经度
      * @param latitude  设备当前纬度
+     * @param extraData 设备注册扩展信息
      */
     public void regiesty(String deviceId, String state, double longitude, double latitude, String extraData) {
         RegistryCommand command = new RegistryCommand(deviceId, state, longitude, latitude, extraData);
