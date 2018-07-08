@@ -465,7 +465,7 @@ public interface GeneralAccessor {
          * @param tuple 条件
          * @return 条件组
          */
-        public ConditionGroup add(ConditionTuple tuple) {
+        public ConditionGroup add(ConditionGroup tuple) {
             items.add(tuple);
             return this;
         }
@@ -477,7 +477,7 @@ public interface GeneralAccessor {
          */
         @Override
         public String toString() {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (ConditionGroup group : items) {
                 sb.append(group.toString());
                 sb.append(",");

@@ -38,7 +38,7 @@ project(':mx-spring') {
 }
 
 project(':mx-dal') {
-    version = '1.4.0'
+    version = '1.4.1'
     description = 'data access layer abstract classes and interfaces.'
 
     dependencies {
