@@ -51,7 +51,7 @@ project(':mx-dal') {
 }
 
 project(':mx-service-utils') {
-    version = '1.7.0'
+    version = '1.8.0'
     description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
     dependencies {
@@ -67,11 +67,8 @@ project(':mx-service-utils') {
                 libs.'jersey-hk2',
                 libs.'jetty-server',
                 libs.'jetty-servlet',
-                libs.'jetty-websocket'
-        )
-        compile(
                 libs.'httpclient',
-                libs.'java-websocket'
+                libs.'jetty-websocket'
         )
     }
 }
