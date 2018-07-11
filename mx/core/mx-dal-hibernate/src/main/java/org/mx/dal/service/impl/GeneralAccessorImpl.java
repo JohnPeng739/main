@@ -2,6 +2,7 @@ package org.mx.dal.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.DigestUtils;
 import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
@@ -318,7 +319,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         }
         if (StringUtils.isBlank(t.getId())) {
             // 新增操作
-            t.setId(null);
+            t.setId(DigestUtils.uuid());
             t.setCreatedTime(new Date().getTime());
             entityManager.persist(t);
         } else {
@@ -329,8 +330,12 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 if (t instanceof BaseDict) {
                     ((BaseDict) t).setCode(((BaseDict) old).getCode());
                 }
+                entityManager.merge(t);
+            } else {
+                // 新增操作，使用传入的ID
+                t.setCreatedTime(new Date().getTime());
+                entityManager.persist(t);
             }
-            entityManager.merge(t);
         }
         if (needFlush) {
             entityManager.flush();

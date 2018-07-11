@@ -1,9 +1,6 @@
 package org.mx.dal.entity;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
@@ -16,8 +13,6 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class BaseEntity implements Base {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
     @Column(name = "ID", nullable = false, length = 40)
     private String id;
 

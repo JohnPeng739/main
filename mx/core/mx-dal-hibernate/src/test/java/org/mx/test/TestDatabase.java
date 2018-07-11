@@ -117,13 +117,19 @@ public class TestDatabase extends BaseTest {
             // 证明修改代码无效
             assertNull(check);
 
+            String id = "id";
             user = EntityFactory.createEntity(User.class);
-            user.setId(DigestUtils.uuid());
+            user.setId(id);
             user.setCode("josh");
             user.setName("Josh Peng");
             check = accessor.save(user);
             assertNotNull(check);
             assertEquals(2, accessor.count(User.class));
+
+            // 证明给定的ID是有效的
+            check = accessor.getById(id, User.class);
+            assertNotNull(check);
+            assertEquals("josh", check.getCode());
 
             List<User> list = accessor.find(GeneralAccessor.ConditionGroup.and(
                     GeneralAccessor.ConditionGroup.or(
