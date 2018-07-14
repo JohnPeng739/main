@@ -4,8 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
-import org.mx.comps.notify.processor.MessageProcessor;
-import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.spring.utils.SpringContextHolder;
 
 /**
@@ -15,12 +13,16 @@ import org.mx.spring.utils.SpringContextHolder;
  * {
  *     command: 'registry',
  *     type: 'system',
- *     data: {
+ *     message: {
+ *     messageId: 'registry',
+ *     messageVersion: '1.0,
+ *       data: {
  *         deviceId: '',
  *         state: '',
  *         lastTime: 0,
  *         lastLongitude: 0.0,
  *         lastLatitude: 0.0
+ *       }
  *     }
  * }
  * </pre>
@@ -41,13 +43,10 @@ public class RegistryCommandProcessor extends DeviceCommandProcessor {
     private static final Log logger = LogFactory.getLog(RegistryCommandProcessor.class);
 
     /**
-     * {@inheritDoc}
-     *
-     * @see MessageProcessor#getCommand()
+     * 默认的构造函数
      */
-    @Override
-    public String getCommand() {
-        return COMMAND;
+    public RegistryCommandProcessor() {
+        super(COMMAND);
     }
 
     /**
@@ -57,10 +56,10 @@ public class RegistryCommandProcessor extends DeviceCommandProcessor {
      */
     @Override
     protected boolean processCommand(String command, String type, OnlineDevice onlineDevice) {
-        if (COMMAND.equals(command) && MessageProcessorChain.TYPE_SYSTEM.equals(type)) {
+        String connectKey = onlineDevice.getConnectKey();
+        try {
             // 注册指令
             OnlineManager onlineManager = SpringContextHolder.getBean(OnlineManager.class);
-            String connectKey = onlineDevice.getConnectKey();
             if (onlineManager.registryDevice(onlineDevice)) {
                 super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(), null);
             } else {
@@ -70,7 +69,11 @@ public class RegistryCommandProcessor extends DeviceCommandProcessor {
                 logger.debug(String.format("Process registry command successfully for session[%s].", connectKey));
             }
             return true;
-        } else {
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Process registry command fail.", ex);
+            }
+            super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(), ex.getMessage());
             return false;
         }
     }

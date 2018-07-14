@@ -7,8 +7,10 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
+import org.mx.comps.notify.client.command.Command;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.processor.MessageProcessor;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.server.websocket.WsSessionManager;
 import org.mx.spring.utils.SpringContextHolder;
 
@@ -21,6 +23,28 @@ import java.io.IOException;
  */
 public abstract class DeviceCommandProcessor implements MessageProcessor {
     private static final Log logger = LogFactory.getLog(DeviceCommandProcessor.class);
+
+    private String command;
+
+    /**
+     * 构造函数
+     *
+     * @param command 命令
+     */
+    public DeviceCommandProcessor(String command) {
+        super();
+        this.command = command;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see MessageProcessor#getCommand()
+     */
+    @Override
+    public String getCommand() {
+        return command;
+    }
 
     /**
      * 设备命令处理
@@ -41,21 +65,42 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
     public boolean processJsonCommand(Session session, JSONObject json) {
         String command = json.getString("command");
         String type = json.getString("type");
-        JSONObject data = json.getJSONObject("data");
-        String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
-        int port = session.getRemoteAddress().getPort();
-        OnlineDevice device = new OnlineDevice();
-        device.setDeviceId(data.getString("deviceId"));
-        device.setState(data.getString("state"));
-        device.setConnectKey(String.format("%s:%d", ip, port));
-        device.setLastTime(data.getLongValue("lastTime"));
-        device.setLastLongitude(data.getDoubleValue("lastLongitude"));
-        device.setLastLatitude(data.getDoubleValue("lastLatitude"));
-        JSONObject extraData = data.getJSONObject("extraData");
-        if (extraData != null) {
-            device.setExtraData(JSON.toJSONString(extraData));
+        if (this.command.equals(command) && Command.CommandType.SYSTEM.name().equalsIgnoreCase(type)) {
+            JSONObject message = json.getJSONObject("message");
+            if (StringUtils.isBlank(command) || StringUtils.isBlank(type) || message == null) {
+                // 命令对象不完整
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The command invalid, data: %s.", json.toJSONString()));
+                }
+                throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
+            }
+            String messageId = message.getString("messageId");
+            JSONObject data = message.getJSONObject("data");
+            if (StringUtils.isBlank(messageId) || data == null || StringUtils.isBlank(data.getString("deviceId"))) {
+                // 消息对象不完整
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The command's payload invalid, data: %s.", json.toJSONString()));
+                }
+                throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
+            }
+            // 构造在线设备对象
+            String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
+            int port = session.getRemoteAddress().getPort();
+            OnlineDevice device = new OnlineDevice();
+            device.setDeviceId(data.getString("deviceId"));
+            device.setState(data.getString("state"));
+            device.setConnectKey(String.format("%s:%d", ip, port));
+            device.setLastTime(data.getLongValue("lastTime"));
+            device.setLastLongitude(data.getDoubleValue("lastLongitude"));
+            device.setLastLatitude(data.getDoubleValue("lastLatitude"));
+            JSONObject extraData = data.getJSONObject("extraData");
+            if (extraData != null) {
+                device.setExtraData(JSON.toJSONString(extraData));
+            }
+            return processCommand(command, type, device);
+        } else {
+            return false;
         }
-        return processCommand(command, type, device);
     }
 
     /**
@@ -80,6 +125,7 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
                     res.put("error", error);
                 }
                 try {
+                    // 向发送方回送一个推送结果消息
                     session.getRemote().sendString(JSON.toJSONString(res));
                 } catch (IOException ex) {
                     if (logger.isErrorEnabled()) {

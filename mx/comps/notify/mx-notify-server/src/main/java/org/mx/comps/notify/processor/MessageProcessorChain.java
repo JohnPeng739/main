@@ -23,8 +23,6 @@ import java.util.Set;
  */
 @Component("messageProcessorChain")
 public class MessageProcessorChain {
-    public static final String TYPE_SYSTEM = "system";
-    public static final String TYPE_USER = "user";
     private static final Log logger = LogFactory.getLog(MessageProcessorChain.class);
 
     private Set<MessageProcessor> processors;

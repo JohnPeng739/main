@@ -5,8 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
-import org.mx.comps.notify.processor.MessageProcessor;
-import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.spring.utils.SpringContextHolder;
 
 /**
@@ -16,12 +14,12 @@ import org.mx.spring.utils.SpringContextHolder;
  * {
  *     command: 'unregistry',
  *     type: 'system',
- *     data: {
- *         deviceId: '',
- *         state: '',
- *         lastTime: 0,
- *         lastLongitude: 0.0,
- *         lastLatitude: 0.0
+ *     message: {
+ *       messageId: 'unregistry',
+ *       messageVersion: '1.0',
+ *       data: {
+ *         deviceId: ''
+ *       }
  *     }
  * }
  * </pre>
@@ -42,13 +40,10 @@ public class UnregistryCommandProcessor extends DeviceCommandProcessor {
     private static final Log logger = LogFactory.getLog(UnregistryCommandProcessor.class);
 
     /**
-     * {@inheritDoc}
-     *
-     * @see MessageProcessor#getCommand()
+     * 默认的构造函数
      */
-    @Override
-    public String getCommand() {
-        return COMMAND;
+    public UnregistryCommandProcessor() {
+        super(COMMAND);
     }
 
     /**
@@ -58,13 +53,14 @@ public class UnregistryCommandProcessor extends DeviceCommandProcessor {
      */
     @Override
     protected boolean processCommand(String command, String type, OnlineDevice onlineDevice) {
-        if (COMMAND.equals(command) && MessageProcessorChain.TYPE_SYSTEM.equals(type)) {
+        String connectKey = onlineDevice.getConnectKey();
+        try {
             // 注销指令
             OnlineManager onlineManager = SpringContextHolder.getBean(OnlineManager.class);
             if (onlineManager.unregistryDevice(onlineDevice)) {
-                super.sendResponseMessage(onlineDevice.getConnectKey(), command, onlineDevice.getDeviceId(), null);
+                super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(), null);
             } else {
-                super.sendResponseMessage(onlineDevice.getConnectKey(), command, onlineDevice.getDeviceId(),
+                super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(),
                         "Unregistry device fail.");
             }
             if (logger.isDebugEnabled()) {
@@ -72,7 +68,11 @@ public class UnregistryCommandProcessor extends DeviceCommandProcessor {
                         JSON.toJSONString(onlineDevice)));
             }
             return true;
-        } else {
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Process unregistry command fail.", ex);
+            }
+            super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(), ex.getMessage());
             return false;
         }
     }
