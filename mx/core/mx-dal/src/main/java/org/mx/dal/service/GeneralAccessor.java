@@ -250,6 +250,23 @@ public interface GeneralAccessor {
         }
 
         /**
+         * 创建一个前缀的条件
+         *
+         * @param field 字段名
+         * @param value 值
+         * @return 条件
+         */
+        public static ConditionTuple prefix(String field, String value) {
+            if (StringUtils.isBlank(field) || StringUtils.isBlank(value)) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format("The condition is invalid, field: %s, value: %s.", field, value));
+                }
+                return null;
+            }
+            return new ConditionTuple(field, ConditionOperate.PREFIX, value);
+        }
+
+        /**
          * 创建一个等于的条件
          *
          * @param field 字段名
@@ -384,7 +401,11 @@ public interface GeneralAccessor {
             /**
              * 包含
              */
-            CONTAIN
+            CONTAIN,
+            /**
+             * 前缀
+             */
+            PREFIX
         }
     }
 
