@@ -8,35 +8,35 @@ import org.mx.comps.notify.processor.MessageProcessorChain;
  * @author : john.peng created on date : 2018/1/9
  */
 public class UnregistryCommand extends BaseCommand {
-    private RegistryData data;
+    private UnregistryData data;
 
     public UnregistryCommand(String deviceId) {
         super("unregistry", MessageProcessorChain.TYPE_SYSTEM);
-        this.data = new RegistryData(deviceId);
+        this.data = new UnregistryData(deviceId);
     }
 
-    public void setData(RegistryData data) {
-        this.data = data;
-    }
-
-    public RegistryData getData() {
+    public UnregistryData getData() {
         return data;
     }
 
-    public class RegistryData {
+    public void setData(UnregistryData data) {
+        this.data = data;
+    }
+
+    public class UnregistryData {
         private String deviceId;
 
-        RegistryData(String deviceId) {
+        UnregistryData(String deviceId) {
             super();
-            this.deviceId = deviceId;
-        }
-
-        public void setDeviceId(String deviceId) {
             this.deviceId = deviceId;
         }
 
         public String getDeviceId() {
             return deviceId;
+        }
+
+        public void setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
         }
     }
 }

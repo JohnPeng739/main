@@ -31,6 +31,9 @@ public class MessageProcessorChain {
 
     /**
      * 默认的构造函数
+     *
+     * @param env     Spring IoC上下文环境
+     * @param context Spring IoC上下文
      */
     @Autowired
     public MessageProcessorChain(Environment env, ApplicationContext context) {

@@ -1,6 +1,7 @@
 package org.mx.comps.notify.client;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.mx.comps.notify.client.command.NotifyCommand;
 import org.mx.comps.notify.client.command.PingCommand;
 import org.mx.comps.notify.client.command.RegistryCommand;
@@ -81,15 +82,16 @@ public class NotifyWsClient {
     }
 
     /**
-     * 发送PONG指令，心跳指令
+     * 发送PING指令，终端状态报送指令
      *
      * @param deviceId  设备标示ID
      * @param state     设备当前状态
      * @param longitude 设备当前经度
      * @param latitude  设备当前纬度
+     * @param extraData 报送终端状态的附加数据
      */
-    public void ping(String deviceId, String state, double longitude, double latitude) {
-        PingCommand command = new PingCommand(deviceId, state, longitude, latitude);
+    public void ping(String deviceId, String state, double longitude, double latitude, JSONObject extraData) {
+        PingCommand command = new PingCommand(deviceId, state, longitude, latitude, JSON.toJSONString(extraData));
         invoke.send(JSON.toJSONString(command));
     }
 
