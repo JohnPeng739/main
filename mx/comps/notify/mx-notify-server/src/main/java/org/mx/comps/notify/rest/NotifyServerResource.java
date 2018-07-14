@@ -38,6 +38,12 @@ public class NotifyServerResource {
 
     private OnlineManager onlineManager;
 
+    /**
+     * 构造函数
+     *
+     * @param notifyProcessor 推送处理器
+     * @param onlineManager   在线设备管理器
+     */
     @Autowired
     public NotifyServerResource(NotifyProcessor notifyProcessor, OnlineManager onlineManager) {
         super();

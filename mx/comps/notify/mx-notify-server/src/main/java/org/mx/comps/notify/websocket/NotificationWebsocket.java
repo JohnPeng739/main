@@ -21,6 +21,11 @@ public final class NotificationWebsocket extends DefaultWsSessionMonitor {
 
     private MessageProcessorChain processorChain;
 
+    /**
+     * 构造函数
+     *
+     * @param processorChain 消息处理链
+     */
     @Autowired
     public NotificationWebsocket(MessageProcessorChain processorChain) {
         super("/notify");

@@ -11,7 +11,7 @@ import java.util.List;
  * @author : john.peng created on date : 2018/1/14
  */
 public class OnlineDeviceVO {
-    private String deviceId, state, connect;
+    private String deviceId, state, connect, extraData;
     private long registryTime, lastTime;
     private double lastLongitude, lastLatitude;
 
@@ -32,6 +32,7 @@ public class OnlineDeviceVO {
         vo.lastTime = device.getLastTime();
         vo.lastLongitude = device.getLastLongitude();
         vo.lastLatitude = device.getLastLatitude();
+        vo.extraData = device.getExtraData();
     }
 
     /**
@@ -176,5 +177,23 @@ public class OnlineDeviceVO {
      */
     public void setLastLatitude(double lastLatitude) {
         this.lastLatitude = lastLatitude;
+    }
+
+    /**
+     * 获取设备扩展数据
+     *
+     * @return 扩展数据
+     */
+    public String getExtraData() {
+        return extraData;
+    }
+
+    /**
+     * 设置设备扩展数据
+     *
+     * @param extraData 扩展数据
+     */
+    public void setExtraData(String extraData) {
+        this.extraData = extraData;
     }
 }

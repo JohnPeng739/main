@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.TypeUtils;
 import org.mx.comps.notify.processor.MessageProcessor;
-import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.comps.notify.processor.NotifyProcessor;
+import org.mx.comps.notify.client.command.Command;
 import org.mx.spring.utils.SpringContextHolder;
 
 /**
@@ -74,17 +74,19 @@ public class NotifyCommandProcessor implements MessageProcessor {
     public boolean processJsonCommand(Session session, JSONObject json) {
         String command = json.getString("command");
         String type = json.getString("type");
-        if (COMMAND.equals(command) && MessageProcessorChain.TYPE_USER.equals(type)) {
+        if (COMMAND.equals(command) && Command.CommandType.USER.name().equalsIgnoreCase(type)) {
             // 通知消息
-            JSONObject data = json.getJSONObject("data");
+            JSONObject message = json.getJSONObject("message");
+            JSONObject data = message.getJSONObject("data");
             String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
             int port = session.getRemoteAddress().getPort();
             data.put("connectKey", String.format("%s:%d", ip, port));
             NotifyProcessor notifyProcessor = SpringContextHolder.getBean(NotifyProcessor.class);
             notifyProcessor.notifyProcess(data);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     /**

@@ -4,8 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
-import org.mx.comps.notify.processor.MessageProcessor;
-import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.spring.utils.SpringContextHolder;
 
 /**
@@ -15,12 +13,16 @@ import org.mx.spring.utils.SpringContextHolder;
  *     {
  *         command: 'ping',
  *         type: 'system',
- *         data: {
+ *         message: {
+ *           messageId: 'ping',
+ *           messageVersion: '1.0',
+ *           data: {
  *             deviceId: '',
  *             state: '',
  *             lastTime: 0,
  *             lastLongitude: 0.0,
  *             lastLatitude: 0.0
+ *           }
  *         }
  *     }
  * </pre>
@@ -39,14 +41,8 @@ public class PingCommandProcessor extends DeviceCommandProcessor {
     public static final String COMMAND = "ping";
     private static final Log logger = LogFactory.getLog(PingCommandProcessor.class);
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see MessageProcessor#getCommand()
-     */
-    @Override
-    public String getCommand() {
-        return COMMAND;
+    public PingCommandProcessor() {
+        super(COMMAND);
     }
 
     /**
@@ -56,23 +52,29 @@ public class PingCommandProcessor extends DeviceCommandProcessor {
      */
     @Override
     protected boolean processCommand(String command, String type, OnlineDevice onlineDevice) {
-        if (COMMAND.equals(command) && MessageProcessorChain.TYPE_SYSTEM.equals(type)) {
-            // 心跳指令
+        String connectKey = onlineDevice.getConnectKey();
+        try {
+            // 报状态指令
             OnlineManager onlineManager = SpringContextHolder.getBean(OnlineManager.class);
             if (onlineManager == null) {
+                String errorMsg = "The OnlineManager is not initialized.";
                 if (logger.isWarnEnabled()) {
-                    logger.warn("The OnlineManager is not initialized.");
+                    logger.warn(errorMsg);
                 }
+                super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(), errorMsg);
                 return false;
             }
             onlineManager.pingDevice(onlineDevice);
-            String connectKey = onlineDevice.getConnectKey();
             super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(), null);
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("Process ping command successfully for session[%s].", connectKey));
             }
             return true;
-        } else {
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Process ping command fail.", ex);
+            }
+            super.sendResponseMessage(connectKey, command, onlineDevice.getDeviceId(), ex.getMessage());
             return false;
         }
     }

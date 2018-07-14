@@ -17,6 +17,11 @@ import java.util.Map;
 public class OnlineDeviceAuthenticateFactory {
     private ApplicationContext context;
 
+    /**
+     * 构造函数
+     *
+     * @param context Sping IoC上下文
+     */
     @Autowired
     public OnlineDeviceAuthenticateFactory(ApplicationContext context) {
         super();
