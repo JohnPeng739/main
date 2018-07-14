@@ -207,7 +207,9 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     private <T extends Base> Predicate createCondition(CriteriaBuilder cb, Root<T> root, ConditionTuple tuple) {
         switch (tuple.operate) {
             case CONTAIN:
-                cb.like((Expression<String>) getField(tuple.field, root), (String) tuple.value);
+                return cb.like((Expression<String>) getField(tuple.field, root), String.format("%%%s%%", tuple.value));
+            case PREFIX:
+                return cb.like((Expression<String>) getField(tuple.field, root), String.format("%s%%", tuple.value));
             case EQ:
                 return cb.equal(getField(tuple.field, root), tuple.value);
             case LT:

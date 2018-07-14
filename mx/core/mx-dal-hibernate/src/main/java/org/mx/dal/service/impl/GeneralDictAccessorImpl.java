@@ -39,7 +39,7 @@ public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements Gene
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> clazz) throws UserInterfaceDalErrorException {
         List<ConditionTuple> tuples = new ArrayList<>();
-        tuples.add(new ConditionTuple("code", code));
+        tuples.add(ConditionTuple.eq("code", code));
         List<T> result = super.find(tuples, clazz);
         if (result != null && result.size() > 0) {
             if (logger.isDebugEnabled()) {

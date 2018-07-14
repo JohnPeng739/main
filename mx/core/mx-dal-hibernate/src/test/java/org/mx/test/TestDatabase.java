@@ -149,6 +149,30 @@ public class TestDatabase extends BaseTest {
             ), User.class);
             assertEquals(2, list.size());
 
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.contain("code", "jo"),
+                    GeneralAccessor.ConditionTuple.eq("valid", true)
+            ), User.class);
+            assertEquals(2, list.size());
+
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.prefix("code", "jo"),
+                    GeneralAccessor.ConditionTuple.eq("valid", true)
+            ), User.class);
+            assertEquals(2, list.size());
+
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.contain("code", "o"),
+                    GeneralAccessor.ConditionTuple.eq("valid", true)
+            ), User.class);
+            assertEquals(2, list.size());
+
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.prefix("code", "o"),
+                    GeneralAccessor.ConditionTuple.eq("valid", true)
+            ), User.class);
+            assertEquals(0, list.size());
+
             check = accessor.getByCode("john", User.class);
             assertNotNull(check);
             assertTrue(check.isValid());
