@@ -198,10 +198,13 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
     private Criteria createToupleCriteria(ConditionTuple tuple) {
         switch (tuple.operate) {
             case CONTAIN:
-                String keyword = (String) tuple.value;
+                // 将关键字中的空格转化为正则表达式的 OR 操作\
+                return where(tuple.field).regex(String.format(".*(%s).*",
+                        ((String) tuple.value).replaceAll(" ", " | ")));
+            case PREFIX:
                 // 将关键字中的空格转化为正则表达式的 OR 操作
-                keyword = keyword.replaceAll(" ", " | ");
-                where(tuple.field).regex(String.format(".*(%s).*", keyword));
+                return where(tuple.field).regex(String.format("(%s).*",
+                        ((String) tuple.value).replaceAll(" ", " | ")));
             case EQ:
                 return where(tuple.field).is(tuple.value);
             case LT:
@@ -227,7 +230,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             return createToupleCriteria((ConditionTuple) group.getItems().get(0));
         }
         Criteria[] subCriterias = new Criteria[group.getItems().size()];
-        for (int index = 0; index < group.getItems().size(); index ++) {
+        for (int index = 0; index < group.getItems().size(); index++) {
             subCriterias[index] = createGroupCriteria(group.getItems().get(index));
 
         }
