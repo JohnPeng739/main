@@ -4,12 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
-import org.mx.comps.notify.processor.impl.NotifyCommandProcessor;
-import org.mx.comps.notify.processor.impl.PingCommandProcessor;
-import org.mx.comps.notify.processor.impl.RegistryCommandProcessor;
-import org.mx.comps.notify.processor.impl.UnregistryCommandProcessor;
+import org.mx.StringUtils;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.server.websocket.WsSessionManager;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -32,13 +33,28 @@ public class MessageProcessorChain {
      * 默认的构造函数
      */
     @Autowired
-    public MessageProcessorChain() {
+    public MessageProcessorChain(Environment env, ApplicationContext context) {
         super();
         this.processors = new HashSet<>();
-        this.processors.add(new RegistryCommandProcessor());
-        this.processors.add(new UnregistryCommandProcessor());
-        this.processors.add(new PingCommandProcessor());
-        this.processors.add(new NotifyCommandProcessor());
+        String names = env.getProperty("websocket.notify.processors");
+        for (String name : StringUtils.split(names)) {
+            String processorName = String.format("%sCommandProcessor", name);
+            try {
+                MessageProcessor processor = context.getBean(processorName, MessageProcessor.class);
+                this.processors.add(processor);
+            } catch (BeansException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The message processor[%s] not found.", processorName));
+                }
+                throw new UserInterfaceSystemErrorException(
+                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
+            }
+        }
+        if (processors.isEmpty()) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("There is none message processor.");
+            }
+        }
     }
 
     /**
