@@ -297,14 +297,14 @@ public class ElasticUtilRest implements ElasticUtil {
      * @param group 条件组
      * @return 查询
      */
-    private BoolQueryBuilder createQueryGroupBuilder(GeneralAccessor.ConditionGroup group) {
+    private BoolQueryBuilder createQueryGroupBuilder(GeneralAccessor.ConditionGroup group, Class<?> clazz) {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         if (group.getItems().size() == 1) {
             return boolQueryBuilder.must(createQueryBuilder(group.getOperateType(),
-                    (GeneralAccessor.ConditionTuple) group.getItems().get(0)));
+                    (GeneralAccessor.ConditionTuple) group.getItems().get(0), clazz));
         } else {
             for (GeneralAccessor.ConditionGroup subGroup : group.getItems()) {
-                QueryBuilder subQueryBuilder = createQueryGroupBuilder(subGroup);
+                QueryBuilder subQueryBuilder = createQueryGroupBuilder(subGroup, clazz);
                 if (group.getOperateType() == GeneralAccessor.ConditionGroup.OperateType.AND) {
                     boolQueryBuilder.must(subQueryBuilder);
                 } else {
@@ -312,6 +312,18 @@ public class ElasticUtilRest implements ElasticUtil {
                 }
             }
             return boolQueryBuilder;
+        }
+    }
+
+    private boolean isTextType(String field, Class<?> clazz) {
+        if (clazz.getName().equalsIgnoreCase("java.lang.Object")) {
+            return true;
+        }
+        try {
+            ElasticField elasticField = clazz.getDeclaredField(field).getAnnotation(ElasticField.class);
+            return "text".equalsIgnoreCase(elasticField.type());
+        } catch (NoSuchFieldException ex) {
+            return isTextType(field, clazz.getSuperclass());
         }
     }
 
@@ -323,12 +335,21 @@ public class ElasticUtilRest implements ElasticUtil {
      * @return 查询
      */
     private QueryBuilder createQueryBuilder(GeneralAccessor.ConditionGroup.OperateType operateType,
-                                            GeneralAccessor.ConditionTuple tuple) {
+                                            GeneralAccessor.ConditionTuple tuple, Class<?> clazz) {
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         if (operateType == GeneralAccessor.ConditionGroup.OperateType.AND) {
             switch (tuple.operate) {
                 case CONTAIN:
-                    queryBuilder.must(QueryBuilders.termQuery(tuple.field, tuple.value));
+                    if (isTextType(tuple.field, clazz)) {
+                        // 已经有全文检索索引，使用TERM搜索
+                        queryBuilder.must(QueryBuilders.termQuery(tuple.field, tuple.value));
+                    } else {
+                        // 无全文检索索引，使用正则表达式搜索
+                        queryBuilder.must(QueryBuilders.regexpQuery(tuple.field, String.format(".*(%s).*", tuple.value)));
+                    }
+                    break;
+                case PREFIX:
+                    queryBuilder.must(QueryBuilders.prefixQuery(tuple.field, (String) tuple.value));
                     break;
                 case EQ:
                     queryBuilder.must(QueryBuilders.matchQuery(tuple.field, tuple.value));
@@ -356,6 +377,9 @@ public class ElasticUtilRest implements ElasticUtil {
             switch (tuple.operate) {
                 case CONTAIN:
                     queryBuilder.should(QueryBuilders.termQuery(tuple.field, tuple.value));
+                    break;
+                case PREFIX:
+                    queryBuilder.should(QueryBuilders.prefixQuery(tuple.field, (String) tuple.value));
                     break;
                 case EQ:
                     queryBuilder.should(QueryBuilders.matchQuery(tuple.field, tuple.value));
@@ -397,7 +421,7 @@ public class ElasticUtilRest implements ElasticUtil {
         if (group == null || group.getItems().isEmpty()) {
             builder.query(QueryBuilders.matchAllQuery());
         } else {
-            builder.query(createQueryGroupBuilder(group));
+            builder.query(createQueryGroupBuilder(group, classes.get(0)));
         }
         if (pagination != null) {
             builder.from((pagination.getPage() - 1) * pagination.getSize());

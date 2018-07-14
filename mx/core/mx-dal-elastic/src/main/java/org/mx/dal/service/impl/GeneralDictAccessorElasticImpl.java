@@ -31,7 +31,7 @@ public class GeneralDictAccessorElasticImpl extends GeneralAccessorElasticImpl i
      */
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> clazz) throws UserInterfaceDalErrorException {
-        List<ConditionTuple> tuples = Collections.singletonList(new ConditionTuple("code", code));
+        List<ConditionTuple> tuples = Collections.singletonList(ConditionTuple.eq("code", code));
         List<T> list = super.find(tuples, clazz);
         return list != null && !list.isEmpty() ? list.get(0) : null;
     }

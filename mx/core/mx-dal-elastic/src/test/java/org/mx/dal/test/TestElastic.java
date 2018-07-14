@@ -107,12 +107,38 @@ public class TestElastic {
             list = accessor.find(GeneralAccessor.ConditionGroup.and(
                     GeneralAccessor.ConditionTuple.contain("desc", "高级工程师")),
                     UserEntityElastic.class);
-            assertEquals(100, list.size());list = accessor.find(GeneralAccessor.ConditionGroup.and(
+            assertEquals(100, list.size());
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
                     GeneralAccessor.ConditionTuple.contain("desc", "高级工程师"),
                     GeneralAccessor.ConditionTuple.eq("code", "john 19"),
                     GeneralAccessor.ConditionTuple.eq("age", "19")),
                     UserEntityElastic.class);
             assertEquals(1, list.size());
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.contain("desc", "高级工程师"),
+                    GeneralAccessor.ConditionTuple.contain("code", "john 1")),
+                    UserEntityElastic.class);
+            // 1, 10 - 19
+            assertEquals(11, list.size());
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.contain("desc", "高级工程师"),
+                    GeneralAccessor.ConditionTuple.prefix("code", "john 1")),
+                    UserEntityElastic.class);
+            // 1, 10 - 19
+            assertEquals(11, list.size());
+            assertEquals(11, list.size());
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.contain("desc", "高级工程师"),
+                    GeneralAccessor.ConditionTuple.contain("code", "hn 1")),
+                    UserEntityElastic.class);
+            // 1, 10 - 19
+            assertEquals(11, list.size());
+            list = accessor.find(GeneralAccessor.ConditionGroup.and(
+                    GeneralAccessor.ConditionTuple.contain("desc", "高级工程师"),
+                    GeneralAccessor.ConditionTuple.prefix("code", "hn 1")),
+                    UserEntityElastic.class);
+            assertEquals(0, list.size());
+
             list = accessor.find(GeneralAccessor.ConditionGroup.and(
                     GeneralAccessor.ConditionTuple.contain("desc", "高级工程师"),
                     GeneralAccessor.ConditionTuple.lte("age", 50),
