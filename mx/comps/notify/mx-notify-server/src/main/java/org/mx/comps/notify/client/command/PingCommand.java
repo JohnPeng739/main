@@ -8,31 +8,32 @@ import org.mx.comps.notify.processor.MessageProcessorChain;
  * @author : john.peng created on date : 2018/1/9
  */
 public class PingCommand extends BaseCommand {
-    private PongData data;
+    private PingData data;
 
-    public PingCommand(String deviceId, String state, double longitude, double latitude) {
+    public PingCommand(String deviceId, String state, double longitude, double latitude, String extraData) {
         super("ping", MessageProcessorChain.TYPE_SYSTEM);
-        this.data = new PongData(deviceId, state, longitude, latitude);
+        this.data = new PingData(deviceId, state, longitude, latitude, extraData);
     }
 
-    public PongData getData() {
+    public PingData getData() {
         return data;
     }
 
-    public void setData(PongData data) {
+    public void setData(PingData data) {
         this.data = data;
     }
 
-    public class PongData {
-        private String deviceId, state;
+    public class PingData {
+        private String deviceId, state, extraData;
         private double longitude, latitude;
 
-        public PongData(String deviceId, String state, double longitude, double latitude) {
+        public PingData(String deviceId, String state, double longitude, double latitude, String extraData) {
             super();
             this.deviceId = deviceId;
             this.state = state;
             this.longitude = longitude;
             this.latitude = latitude;
+            this.extraData = extraData;
         }
 
         public String getDeviceId() {
@@ -65,6 +66,14 @@ public class PingCommand extends BaseCommand {
 
         public void setLatitude(double latitude) {
             this.latitude = latitude;
+        }
+
+        public String getExtraData() {
+            return extraData;
+        }
+
+        public void setExtraData(String extraData) {
+            this.extraData = extraData;
         }
     }
 }

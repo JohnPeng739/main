@@ -20,7 +20,7 @@ public class TestNotifySend {
             Thread.sleep(500);
             assertTrue(wsClient.isReady());
             wsClient.regiesty("device03", "registry", 129.1234, 31.1234,  null);
-            wsClient.ping("device03", "alive", 129.1234, 31.1234);
+            wsClient.ping("device03", "alive", 129.1234, 31.1234, null);
             TestNotifyEvent event = new TestNotifyEvent("id", "address", "description");
             wsClient.notify("system", "device03",  NotifyBean.TarType.Devices, "device01",
                     -1, event);
