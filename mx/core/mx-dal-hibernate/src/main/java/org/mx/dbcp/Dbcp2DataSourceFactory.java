@@ -3,9 +3,11 @@ package org.mx.dbcp;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.StringUtils;
 import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -18,9 +20,10 @@ public class Dbcp2DataSourceFactory {
 
     private BasicDataSource pool = null;
     private Environment env;
+    private String prefix = "db";
 
     /**
-     * 默认的构造函数
+     * 构造函数
      *
      * @param env 配置信息环境
      */
@@ -30,7 +33,20 @@ public class Dbcp2DataSourceFactory {
     }
 
     /**
-     * 从缓冲池中获取一个数据库连接
+     * 构造函数
+     *
+     * @param env    配置信息环境
+     * @param prefix 配置前缀
+     */
+    public Dbcp2DataSourceFactory(Environment env, String prefix) {
+        this(env);
+        if (!StringUtils.isBlank(prefix)) {
+            this.prefix = prefix;
+        }
+    }
+
+    /**
+     * 从缓冲池中获取一个数据源
      *
      * @return 数据库连接
      */
@@ -39,18 +55,28 @@ public class Dbcp2DataSourceFactory {
     }
 
     /**
+     * 从缓冲池中获取一个数据库连接
+     *
+     * @return 数据库连接
+     * @throws SQLException 获取过程中发生的异常
+     */
+    public Connection getConnection() throws SQLException {
+        return pool.getConnection();
+    }
+
+    /**
      * 初始化缓冲池
      *
      * @throws SQLException 初始化过程中发生的异常
      */
     public void init() throws SQLException {
-        String driver = env.getProperty("db.driver"),
-                url = env.getProperty("db.url"),
-                user = env.getProperty("db.user"),
-                password = env.getProperty("db.password");
-        int initialSize = env.getProperty("db.initialSize", Integer.class, 3),
-                maxSize = env.getProperty("db.maxSize", Integer.class, 50),
-                maxIdleTime = env.getProperty("db.maxIdleTime", Integer.class, 3000);
+        String driver = env.getProperty(String.format("%s.driver", prefix)),
+                url = env.getProperty(String.format("%s.url", prefix)),
+                user = env.getProperty(String.format("%s.user", prefix)),
+                password = env.getProperty(String.format("%s.password", prefix));
+        int initialSize = env.getProperty(String.format("%s.initialSize", prefix), Integer.class, 1),
+                maxSize = env.getProperty(String.format("%s.maxSize", prefix), Integer.class, 30),
+                maxIdleTime = env.getProperty(String.format("%s.maxIdleTime", prefix), Integer.class, 3000);
         try {
             pool = new BasicDataSource();
             pool.setDriverClassName(driver);
