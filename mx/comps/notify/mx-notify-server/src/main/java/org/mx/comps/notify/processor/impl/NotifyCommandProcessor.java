@@ -77,12 +77,11 @@ public class NotifyCommandProcessor implements MessageProcessor {
         if (COMMAND.equals(command) && Command.CommandType.USER.name().equalsIgnoreCase(type)) {
             // 通知消息
             JSONObject message = json.getJSONObject("message");
-            JSONObject data = message.getJSONObject("data");
             String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
             int port = session.getRemoteAddress().getPort();
-            data.put("connectKey", String.format("%s:%d", ip, port));
+            message.getJSONObject("data").put("connectKey", String.format("%s:%d", ip, port));
             NotifyProcessor notifyProcessor = SpringContextHolder.getBean(NotifyProcessor.class);
-            notifyProcessor.notifyProcess(data);
+            notifyProcessor.notifyProcess(message);
             return true;
         } else {
             return false;

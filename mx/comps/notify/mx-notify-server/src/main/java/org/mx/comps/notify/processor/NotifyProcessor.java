@@ -130,11 +130,12 @@ public class NotifyProcessor {
     /**
      * 处理通知指令
      *
-     * @param data 通知数据
+     * @param message 通知消息数据
      */
-    public final void notifyProcess(JSONObject data) {
+    public final void notifyProcess(JSONObject message) {
+        JSONObject data = message.getJSONObject("data");
         if (listener != null) {
-            listener.before(data);
+            listener.before(message);
         }
         String src = data.getString("src");
         String deviceId = data.getString("deviceId");
@@ -149,18 +150,16 @@ public class NotifyProcessor {
             }
             return;
         }
-        JSONObject message = data.getJSONObject("message");
         TarSessionSet set = this.getTarSessionSet(tarType, tar);
-        JSONObject json = new JSONObject();
-        json.put("src", src);
-        json.put("pushTime", System.currentTimeMillis());
-        json.put("message", message);
-        boolean success = notifyPush(set, json);
+        message.put("pushTime", System.currentTimeMillis());
+        boolean success = notifyPush(set, message);
         if (success) {
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("Push notify success, num: %d.", set.sessions.size()));
             }
         }
+
+        // 如果必要，则向发送端发送推送回执
         WsSessionManager sessionManager = WsSessionManager.getManager();
         if (sessionManager != null) {
             String connectKey = data.getString("connectKey");
@@ -195,7 +194,7 @@ public class NotifyProcessor {
             }
         }
         if (listener != null) {
-            listener.after(data, success, set.invalidDevices);
+            listener.after(message, success, set.invalidDevices);
         }
         // TODO 根据set中的maybeCluster状态，添加中继到其他集群节点中进行转发
     }
