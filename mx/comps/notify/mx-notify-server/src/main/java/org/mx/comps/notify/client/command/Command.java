@@ -6,10 +6,10 @@ package org.mx.comps.notify.client.command;
  * @author john peng
  * Date time 2018/7/14 上午11:00
  */
-public class Command {
+public class Command<T> {
     private String command;
     private CommandType type = CommandType.SYSTEM;
-    private Message message = null;
+    private T payload = null;
 
     /**
      * 默认的构造函数
@@ -72,23 +72,23 @@ public class Command {
      *
      * @return 消息对象
      */
-    public Message getMessage() {
-        return message;
+    public T getPayload() {
+        return payload;
     }
 
     /**
      * 设置命令对象中的消息对象
      *
-     * @param message 消息对象
+     * @param payload 消息对象
      */
-    public void setMessage(Message message) {
-        this.message = message;
+    public void setPayload(T payload) {
+        this.payload = payload;
     }
 
     /**
      * 命令类型枚举定义
      */
     public enum CommandType {
-        SYSTEM, USER;
+        SYSTEM, USER
     }
 }

@@ -5,8 +5,7 @@ package org.mx.comps.notify.client.command;
  *
  * @author : john.peng created on date : 2018/1/9
  */
-public class UnregistryCommand extends Command {
-    private String messageId = "unregistry", messageVersion = "1.0";
+public class UnregistryCommand extends Command<UnregistryCommand.UnregistryData> {
 
     /**
      * 构造函数
@@ -15,7 +14,7 @@ public class UnregistryCommand extends Command {
      */
     public UnregistryCommand(String deviceId) {
         super("unregistry", CommandType.SYSTEM);
-        super.setMessage(new Message<>(messageId, messageVersion, new UnregistryData(deviceId)));
+        super.setPayload(new UnregistryData(deviceId));
     }
 
     /**

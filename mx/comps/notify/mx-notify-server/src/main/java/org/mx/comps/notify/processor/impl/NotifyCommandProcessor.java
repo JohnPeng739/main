@@ -15,14 +15,16 @@ import org.mx.spring.utils.SpringContextHolder;
  * {
  *     commond: 'notify',
  *     type: 'user',
- *     data: {
+ *     payload: {
  *         src: '',
  *         deviceId: '',
  *         tarType: '',
  *         tar: '',
  *         expiredTime: -1,
  *         message: {
- *             ......
+ *             messageId: '',
+ *             messageVersion: '1.0,
+ *             data: {...}
  *         }
  *     }
  * }
@@ -76,12 +78,12 @@ public class NotifyCommandProcessor implements MessageProcessor {
         String type = json.getString("type");
         if (COMMAND.equals(command) && Command.CommandType.USER.name().equalsIgnoreCase(type)) {
             // 通知消息
-            JSONObject message = json.getJSONObject("message");
+            JSONObject payload = json.getJSONObject("payload");
             String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
             int port = session.getRemoteAddress().getPort();
-            message.getJSONObject("data").put("connectKey", String.format("%s:%d", ip, port));
+            payload.put("connectKey", String.format("%s:%d", ip, port));
             NotifyProcessor notifyProcessor = SpringContextHolder.getBean(NotifyProcessor.class);
-            notifyProcessor.notifyProcess(message);
+            notifyProcessor.notifyProcess(payload);
             return true;
         } else {
             return false;

@@ -133,15 +133,13 @@ public class NotifyProcessor {
      * @param message 通知消息数据
      */
     public final void notifyProcess(JSONObject message) {
-        JSONObject data = message.getJSONObject("data");
         if (listener != null) {
             listener.before(message);
         }
-        String src = data.getString("src");
-        String deviceId = data.getString("deviceId");
-        String tarType = data.getString("tarType");
-        String tar = data.getString("tar");
-        long expiredTime = data.getLongValue("expiredTime");
+        String deviceId = message.getString("deviceId");
+        String tarType = message.getString("tarType");
+        String tar = message.getString("tar");
+        long expiredTime = message.getLongValue("expiredTime");
         long currentTime = System.currentTimeMillis();
         if (expiredTime > 0 && currentTime > expiredTime) {
             if (logger.isWarnEnabled()) {
@@ -162,7 +160,7 @@ public class NotifyProcessor {
         // 如果必要，则向发送端发送推送回执
         WsSessionManager sessionManager = WsSessionManager.getManager();
         if (sessionManager != null) {
-            String connectKey = data.getString("connectKey");
+            String connectKey = message.getString("connectKey");
             if (!StringUtils.isBlank(connectKey)) {
                 // 如果没有设置connectKey，意味着来自于Restful的请求，就不需要向请求方进行反馈响应。
                 Session session = sessionManager.getSession(connectKey);

@@ -5,8 +5,7 @@ package org.mx.comps.notify.client.command;
  *
  * @author : john.peng created on date : 2018/1/9
  */
-public class PingCommand extends Command {
-    private String messageId = "ping", messageVersion = "1.0";
+public class PingCommand extends Command<PingCommand.PingData> {
 
     /**
      * 构造函数
@@ -19,8 +18,7 @@ public class PingCommand extends Command {
      */
     public PingCommand(String deviceId, String state, double longitude, double latitude, String extraData) {
         super("ping", CommandType.SYSTEM);
-        super.setMessage(new Message<>(messageId, messageVersion,
-                new PingData(deviceId, state, longitude, latitude, extraData)));
+        super.setPayload(new PingData(deviceId, state, longitude, latitude, extraData));
     }
 
     /**

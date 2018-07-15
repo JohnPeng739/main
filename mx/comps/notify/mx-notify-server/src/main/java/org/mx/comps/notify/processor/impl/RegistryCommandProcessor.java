@@ -13,16 +13,12 @@ import org.mx.spring.utils.SpringContextHolder;
  * {
  *     command: 'registry',
  *     type: 'system',
- *     message: {
- *     messageId: 'registry',
- *     messageVersion: '1.0,
- *       data: {
+ *     payload: {
  *         deviceId: '',
  *         state: '',
  *         lastTime: 0,
  *         lastLongitude: 0.0,
  *         lastLatitude: 0.0
- *       }
  *     }
  * }
  * </pre>

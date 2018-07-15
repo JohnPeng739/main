@@ -5,8 +5,7 @@ package org.mx.comps.notify.client.command;
  *
  * @author : john.peng created on date : 2018/1/9
  */
-public class RegistryCommand extends Command {
-    private String messageId = "registry", messageVersion = "1.0";
+public class RegistryCommand extends Command<RegistryCommand.RegistryData> {
 
     /**
      * 构造函数
@@ -19,8 +18,7 @@ public class RegistryCommand extends Command {
      */
     public RegistryCommand(String deviceId, String state, double longitude, double latitude, String extraData) {
         super("registry", CommandType.SYSTEM);
-        super.setMessage(new Message<>(messageId, messageVersion,
-                new RegistryData(deviceId, state, longitude, latitude, extraData)));
+        super.setPayload(new RegistryData(deviceId, state, longitude, latitude, extraData));
     }
 
     /**

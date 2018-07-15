@@ -66,22 +66,13 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
         String command = json.getString("command");
         String type = json.getString("type");
         if (this.command.equals(command) && Command.CommandType.SYSTEM.name().equalsIgnoreCase(type)) {
-            JSONObject message = json.getJSONObject("message");
-            if (StringUtils.isBlank(command) || StringUtils.isBlank(type) || message == null) {
-                // 命令对象不完整
+            JSONObject data = json.getJSONObject("payload");
+            if (data == null || StringUtils.isBlank(data.getString("deviceId"))) {
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The command invalid, data: %s.", json.toJSONString()));
+                    logger.error(String.format("The payload is null for the command[%s].", command));
                 }
-                throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
-            }
-            String messageId = message.getString("messageId");
-            JSONObject data = message.getJSONObject("data");
-            if (StringUtils.isBlank(messageId) || data == null || StringUtils.isBlank(data.getString("deviceId"))) {
-                // 消息对象不完整
-                if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The command's payload invalid, data: %s.", json.toJSONString()));
-                }
-                throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
+                throw new UserInterfaceSystemErrorException(
+                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
             }
             // 构造在线设备对象
             String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());

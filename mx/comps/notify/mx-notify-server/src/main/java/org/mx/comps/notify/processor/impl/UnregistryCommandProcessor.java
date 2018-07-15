@@ -14,12 +14,8 @@ import org.mx.spring.utils.SpringContextHolder;
  * {
  *     command: 'unregistry',
  *     type: 'system',
- *     message: {
- *       messageId: 'unregistry',
- *       messageVersion: '1.0',
- *       data: {
+ *     payload: {
  *         deviceId: ''
- *       }
  *     }
  * }
  * </pre>

@@ -7,7 +7,8 @@ import org.mx.comps.notify.client.NotifyWsClient;
 import org.mx.comps.notify.test.TestNotifyEvent;
 import org.mx.service.client.websocket.DefaultWebsocketClientMoniter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestNotifySend {
     @Test
@@ -19,19 +20,19 @@ public class TestNotifySend {
         try {
             Thread.sleep(500);
             assertTrue(wsClient.isReady());
-            wsClient.regiesty("device03", "registry", 129.1234, 31.1234,  null);
+            wsClient.regiesty("device03", "registry", 129.1234, 31.1234, null);
             wsClient.ping("device03", "alive", 129.1234, 31.1234, null);
             TestNotifyEvent event = new TestNotifyEvent("id", "address", "description");
-            wsClient.notify("system", "device03",  NotifyBean.TarType.Devices, "device01",
-                    -1, event);
+            wsClient.notify("ws client", "device03", NotifyBean.TarType.Devices, "device01",
+                    -1, "notifyMessage", "1.0", event);
 
-            NotifyBean<TestNotifyEvent> notify = new NotifyBean<>("test system **", "device03",
+            NotifyBean<TestNotifyEvent> notify = new NotifyBean<>("rest client", "device03",
                     NotifyBean.TarType.Devices, "device01,device02",
-                    -1, event);
-            assertEquals(true, restClient.sendNotify(notify));
+                    -1, "notifyMessage", "1.0", event);
+            assertTrue(restClient.sendNotify(notify));
             notify.setTarType(NotifyBean.TarType.States);
             notify.setTar("就绪");
-            notify.setSrc("##########");
+            notify.setSrc("#####rest client#####");
             restClient.sendNotify(notify);
             wsClient.unregistry("device03");
         } catch (Exception ex) {

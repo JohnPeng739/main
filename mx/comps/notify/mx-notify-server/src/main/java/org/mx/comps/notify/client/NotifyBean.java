@@ -1,5 +1,7 @@
 package org.mx.comps.notify.client;
 
+import org.mx.comps.notify.client.command.Message;
+
 /**
  * 推送通知对象定义
  *
@@ -9,7 +11,7 @@ public class NotifyBean<T> {
     private String src, tar, deviceId;
     private TarType tarType = TarType.Devices;
     private long expiredTime;
-    private T message;
+    private Message<T> message;
 
     /**
      * 默认的构造函数
@@ -21,21 +23,24 @@ public class NotifyBean<T> {
     /**
      * 默认的构造函数
      *
-     * @param src         源
-     * @param deviceId    设备ID
-     * @param tarType     目标类型
-     * @param tar         目标
-     * @param expiredTime 过期时间
-     * @param message     业务消息对象
+     * @param src            源
+     * @param deviceId       设备ID
+     * @param tarType        目标类型
+     * @param tar            目标
+     * @param expiredTime    过期时间
+     * @param messageId      消息号
+     * @param messageVersion 消息版本
+     * @param message        业务消息对象
      */
-    public NotifyBean(String src, String deviceId, TarType tarType, String tar, long expiredTime, T message) {
+    public NotifyBean(String src, String deviceId, TarType tarType, String tar, long expiredTime, String messageId,
+                      String messageVersion, T message) {
         super();
         this.src = src;
         this.deviceId = deviceId;
         this.tarType = tarType;
         this.tar = tar;
         this.expiredTime = expiredTime;
-        this.message = message;
+        this.message = new Message<>(messageId, messageVersion, message);
     }
 
     /**
@@ -133,7 +138,7 @@ public class NotifyBean<T> {
      *
      * @return 业务消息对象
      */
-    public T getMessage() {
+    public Message<T> getMessage() {
         return message;
     }
 
@@ -142,7 +147,7 @@ public class NotifyBean<T> {
      *
      * @param message 业务消息对象
      */
-    public void setMessage(T message) {
+    public void setMessage(Message<T> message) {
         this.message = message;
     }
 

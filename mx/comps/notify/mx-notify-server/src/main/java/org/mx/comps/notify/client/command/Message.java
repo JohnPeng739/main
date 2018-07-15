@@ -8,7 +8,7 @@ package org.mx.comps.notify.client.command;
  */
 public class Message<T> {
     private String messageId, messageVersion;
-    private T payload;
+    private T data;
 
     /**
      * 默认的构造函数
@@ -32,13 +32,13 @@ public class Message<T> {
     /**
      * 构造函数
      *
-     * @param id       消息号
-     * @param version  消息版本
-     * @param payloady 载荷数据
+     * @param id      消息号
+     * @param version 消息版本
+     * @param data    载荷数据
      */
-    public Message(String id, String version, T payloady) {
+    public Message(String id, String version, T data) {
         this(id, version);
-        this.payload = payloady;
+        this.data = data;
     }
 
     /**
@@ -83,15 +83,15 @@ public class Message<T> {
      * @return 载荷数据
      */
     public T getData() {
-        return payload;
+        return data;
     }
 
     /**
      * 设置消息对象中的载荷数据对象
      *
-     * @param payload 载荷数据
+     * @param data 载荷数据
      */
-    public void setData(T payload) {
-        this.payload = payload;
+    public void setData(T data) {
+        this.data = data;
     }
 }

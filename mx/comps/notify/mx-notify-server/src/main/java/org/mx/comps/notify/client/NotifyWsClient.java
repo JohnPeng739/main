@@ -98,17 +98,20 @@ public class NotifyWsClient {
     /**
      * 发送推送通知指令
      *
-     * @param src         推送源
-     * @param deviceId    设备ID
-     * @param tarType     目标类型
-     * @param tar         推送目标
-     * @param expiredTime 通知过期时间
-     * @param notify      通知消息内容对象
-     * @param <T>         通知消息内容对象泛型
+     * @param src            推送源
+     * @param deviceId       设备ID
+     * @param tarType        目标类型
+     * @param tar            推送目标
+     * @param expiredTime    通知过期时间
+     * @param messageId      消息号
+     * @param messageVersion 消息版本
+     * @param message        通知消息内容对象
+     * @param <T>            通知消息内容对象泛型
      */
     public <T> void notify(String src, String deviceId, NotifyBean.TarType tarType, String tar, long expiredTime,
-                           T notify) {
-        NotifyCommand<T> command = new NotifyCommand<>(src, deviceId, tarType, tar, expiredTime, notify);
+                           String messageId, String messageVersion, T message) {
+        NotifyCommand<T> command = new NotifyCommand<>(src, deviceId, tarType, tar, expiredTime, messageId,
+                messageVersion, message);
         invoke.send(JSON.toJSONString(command));
     }
 
