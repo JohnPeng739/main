@@ -8,6 +8,7 @@ import org.mx.StringUtils;
 import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.service.server.websocket.DefaultWsSessionMonitor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,11 +25,12 @@ public final class NotificationWebsocket extends DefaultWsSessionMonitor {
     /**
      * 构造函数
      *
+     * @param env            Spring IoC上下文环境
      * @param processorChain 消息处理链
      */
     @Autowired
-    public NotificationWebsocket(MessageProcessorChain processorChain) {
-        super("/notify");
+    public NotificationWebsocket(Environment env, MessageProcessorChain processorChain) {
+        super(env.getProperty("websocket.notify.path", "/notify"));
         this.processorChain = processorChain;
     }
 
