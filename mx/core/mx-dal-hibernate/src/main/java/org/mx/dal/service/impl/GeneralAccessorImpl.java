@@ -234,7 +234,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             return createCondition(cb, root, (ConditionTuple) group.getItems().get(0));
         }
         Predicate[] predicates = new Predicate[group.getItems().size()];
-        for (int index = 0; index < group.getItems().size(); index ++) {
+        for (int index = 0; index < group.getItems().size(); index++) {
             predicates[index] = createGroupPredicate(cb, root, group.getItems().get(index));
         }
         return group.getOperateType() == ConditionGroup.OperateType.AND ? cb.and(predicates) : cb.or(predicates);
@@ -309,7 +309,9 @@ public class GeneralAccessorImpl implements GeneralAccessor {
 
     @SuppressWarnings("unchecked")
     private <T extends Base> T save(T t, boolean needFlush) {
-        t.setUpdatedTime(new Date().getTime());
+        if (t.getUpdatedTime() <= 0) {
+            t.setUpdatedTime(new Date().getTime());
+        }
         t.setOperator(sessionDataStore.getCurrentUserCode());
         Class<T> clazz = (Class<T>) t.getClass();
         if (t instanceof BaseDictTree) {
@@ -322,7 +324,9 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         if (StringUtils.isBlank(t.getId())) {
             // 新增操作
             t.setId(DigestUtils.uuid());
-            t.setCreatedTime(new Date().getTime());
+            if (t.getCreatedTime() <= 0) {
+                t.setCreatedTime(new Date().getTime());
+            }
             entityManager.persist(t);
         } else {
             // 修改操作
@@ -335,7 +339,9 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 entityManager.merge(t);
             } else {
                 // 新增操作，使用传入的ID
-                t.setCreatedTime(new Date().getTime());
+                if (t.getCreatedTime() <= 0) {
+                    t.setCreatedTime(new Date().getTime());
+                }
                 entityManager.persist(t);
             }
         }
@@ -359,7 +365,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Override
     public <T extends Base> List<T> save(List<T> ts) {
         if (ts != null && !ts.isEmpty()) {
-            for( T t : ts) {
+            for (T t : ts) {
                 save(t, false);
             }
         }
