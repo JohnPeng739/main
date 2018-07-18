@@ -18,6 +18,7 @@ public class SpringRedisConfig {
     /**
      * 创建redis配置对象
      *
+     * @param env Spring IoC上下文环境
      * @return redis配置对象
      */
     @Bean
