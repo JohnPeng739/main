@@ -2,7 +2,6 @@ package org.mx.spring.cache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.StringUtils;
 import org.mx.spring.cache.redis.RedisCache;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.cache.CacheManager;
@@ -11,7 +10,6 @@ import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -27,8 +25,8 @@ import java.util.Set;
 public class CacheManagerFactory {
     private static final Log logger = LogFactory.getLog(CacheManagerFactory.class);
 
-    private Environment env;
     private ApplicationContext context;
+    private CacheConfigBean config;
 
     private CacheManager cacheManager = null;
     private DisposableBean disposableBean = null;
@@ -37,19 +35,19 @@ public class CacheManagerFactory {
      * 默认的构造函数
      *
      * @param context Spring IoC上下文
-     * @param env     Spring环境上下文
+     * @param config  缓存配置对象
      */
-    public CacheManagerFactory(ApplicationContext context, Environment env) {
+    public CacheManagerFactory(ApplicationContext context, CacheConfigBean config) {
         super();
         this.context = context;
-        this.env = env;
+        this.config = config;
     }
 
     /**
      * 初始化缓存工厂
      */
     public void init() {
-        String type = env.getProperty("cache.type", "");
+        String type = config.getType();
         switch (type) {
             case "ehcache":
                 createEhCacheManager();
@@ -73,8 +71,7 @@ public class CacheManagerFactory {
      * 创建基于ConcurrentMap的缓存
      */
     private void createConcurrentMapCacheManager() {
-        String list = env.getProperty("cache.internal.list", "");
-        String[] names = StringUtils.split(list);
+        String[] names = config.getInternalList();
         Set<ConcurrentMapCache> caches = new HashSet<>(names.length);
         for (String name : names) {
             caches.add(new ConcurrentMapCache(name));
@@ -88,7 +85,7 @@ public class CacheManagerFactory {
      * 创建基于ehcache的缓存
      */
     private void createEhCacheManager() {
-        String location = env.getProperty("cache.ehcache.config", "ehcache.xml");
+        String location = config.getEhcacheConfig();
         EhCacheManagerFactoryBean factoryBean = new EhCacheManagerFactoryBean();
         factoryBean.setConfigLocation(new ClassPathResource(location));
         factoryBean.afterPropertiesSet();
@@ -101,8 +98,7 @@ public class CacheManagerFactory {
      */
     @SuppressWarnings("unchecked")
     private void createRedisCacheManager() {
-        String list = env.getProperty("cache.redis.list", "");
-        String[] names = StringUtils.split(list);
+        String[] names = config.getRedisList();
         Set<RedisCache> caches = new HashSet<>(names.length);
         RedisTemplate<String, Object> redisTemplate = context.getBean(RedisTemplate.class);
         for (String name : names) {

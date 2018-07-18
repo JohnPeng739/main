@@ -1,9 +1,9 @@
 package org.mx.spring.redis;
 
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * 描述： Redis连接工厂类
@@ -12,18 +12,17 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
  * Date time 2018/4/25 下午2:22
  */
 public class MyRedisConnectionFactoryBean {
-    private Environment env;
-
     private JedisConnectionFactory connectionFactory = null;
+    private RedisConfigBean config;
 
     /**
      * 默认的构造函数
      *
-     * @param env Spring环境上下文
+     * @param config Redis配置对象
      */
-    public MyRedisConnectionFactoryBean(Environment env) {
+    public MyRedisConnectionFactoryBean(RedisConfigBean config) {
         super();
-        this.env = env;
+        this.config = config;
     }
 
     /**
@@ -37,22 +36,19 @@ public class MyRedisConnectionFactoryBean {
      * 初始化连接工厂Bean
      */
     public void init() {
-        boolean enable = env.getProperty("redis.enable", Boolean.class, false);
+        boolean enable = config.isEnable();
         if (enable) {
-            String redisType = env.getProperty("redis.type");
-            RedisPoolConfig poolConfig = new RedisPoolConfig(env);
+            String redisType = config.getType();
+            JedisPoolConfig poolConfig = config.getPoolConfig();
             switch (redisType) {
                 case "standalone":
-                    RedisStandaloneConfig standaloneConfig = new RedisStandaloneConfig(env);
-                    connectionFactory = new JedisConnectionFactory(standaloneConfig.get());
+                    connectionFactory = new JedisConnectionFactory(config.getStandaloneConfig());
                     break;
                 case "sentinel":
-                    RedisSentinelConfig sentinelConfig = new RedisSentinelConfig(env);
-                    connectionFactory = new JedisConnectionFactory(sentinelConfig.get(), poolConfig.get());
+                    connectionFactory = new JedisConnectionFactory(config.getSentinelConfig(), poolConfig);
                     break;
                 case "cluster":
-                    RedisClusterConfig clusterConfig = new RedisClusterConfig(env);
-                    connectionFactory = new JedisConnectionFactory(clusterConfig.get(), poolConfig.get());
+                    connectionFactory = new JedisConnectionFactory(config.getClusterConfig(), poolConfig);
                 default:
                     throw new UserInterfaceSystemErrorException(
                             UserInterfaceSystemErrorException.SystemErrors.SPRING_CACHE_REDIS_TYPE_UNSUPPORTED);
