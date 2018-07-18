@@ -312,7 +312,9 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         if (t.getUpdatedTime() <= 0) {
             t.setUpdatedTime(new Date().getTime());
         }
-        t.setOperator(sessionDataStore.getCurrentUserCode());
+        if (StringUtils.isBlank(t.getOperator())) {
+            t.setOperator(sessionDataStore.getCurrentUserCode());
+        }
         Class<T> clazz = (Class<T>) t.getClass();
         if (t instanceof BaseDictTree) {
             BaseDictTree parent = ((BaseDictTree) t).getParent();
