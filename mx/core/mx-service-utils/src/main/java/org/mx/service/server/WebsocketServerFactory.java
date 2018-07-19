@@ -10,12 +10,10 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
-import org.mx.TypeUtils;
 import org.mx.service.server.websocket.SimpleWsObject;
 import org.mx.service.server.websocket.WsSessionListener;
 import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -31,20 +29,20 @@ public class WebsocketServerFactory extends HttpServerFactory {
     private static final Log logger = LogFactory.getLog(WebsocketServerFactory.class);
 
     private Map<String, SimpleWsObject> socketBeans;
-    private Environment env;
+    private WebsocketServerConfigBean websocketServerConfigBean;
     private ApplicationContext context;
 
     /**
      * 默认的构造函数
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param context                   Spring IoC上下文
+     * @param websocketServerConfigBean WebSocket服务配置对象
      */
-    public WebsocketServerFactory(Environment env, ApplicationContext context) {
-        super(env, "websocket");
+    public WebsocketServerFactory(ApplicationContext context, WebsocketServerConfigBean websocketServerConfigBean) {
+        super(websocketServerConfigBean);
         this.socketBeans = new HashMap<>();
-        this.env = env;
         this.context = context;
+        this.websocketServerConfigBean = websocketServerConfigBean;
     }
 
     /**
@@ -55,17 +53,15 @@ public class WebsocketServerFactory extends HttpServerFactory {
     @Override
     @SuppressWarnings("unchecked")
     protected Handler getHandler() {
-        String websocketClassesStr = "websocket.service.classes";
-        String websocketServiceClassesDef = env.getProperty(websocketClassesStr);
-        if (StringUtils.isBlank(websocketServiceClassesDef)) {
+        String[] classesDefs = websocketServerConfigBean.getServiceClasses();
+        if (classesDefs == null || classesDefs.length <= 0) {
             if (logger.isWarnEnabled()) {
-                logger.warn(String.format("You not define [%s], will not ", websocketClassesStr));
+                logger.warn("You not define any WebSocket classes.");
             }
             return null;
         } else {
             // 初始化Websocket会话管理器
-            WsSessionManager.getManager().init(env, context);
-            String[] classesDefs = websocketServiceClassesDef.split(",");
+            WsSessionManager.getManager().init(context, websocketServerConfigBean);
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {
                     List<Class<?>> websocketClasses = (List) context.getBean(classesDef, List.class);
@@ -81,18 +77,13 @@ public class WebsocketServerFactory extends HttpServerFactory {
                 @Override
                 public void configure(WebSocketServletFactory factory) {
                     WebSocketPolicy policy = factory.getPolicy();
-                    policy.setIdleTimeout(env.getProperty("websocket.idleTimeoutSecs", Long.class, 300L) * 1000);
-                    policy.setAsyncWriteTimeout(env.getProperty("websocket.asyncWriteTimeoutSecs", Long.class, 30L) * 1000);
-                    policy.setInputBufferSize((int) TypeUtils.string2Size(
-                            env.getProperty("websocket.inputBufferSize"), 4 * 1024));
-                    policy.setMaxTextMessageSize((int) TypeUtils.string2Size(
-                            env.getProperty("websocket.maxTextMessageSize"), 64 * 1024));
-                    policy.setMaxTextMessageBufferSize((int) TypeUtils.string2Size(
-                            env.getProperty("websocket.maxTextMessageBufferSize"), 32 * 1024));
-                    policy.setMaxBinaryMessageSize((int) TypeUtils.string2Size(
-                            env.getProperty("websocket.maxBinaryMessageSize"), 64 * 1024));
-                    policy.setMaxBinaryMessageBufferSize((int) TypeUtils.string2Size(
-                            env.getProperty("websocket.maxBinaryMessageBufferSize"), 32 * 1024));
+                    policy.setIdleTimeout(websocketServerConfigBean.getIdleTimeoutSecs() * 1000);
+                    policy.setAsyncWriteTimeout(websocketServerConfigBean.getAsyncWriteTimeoutSecs() * 1000);
+                    policy.setInputBufferSize((int) websocketServerConfigBean.getInputBufferSize());
+                    policy.setMaxTextMessageSize((int) websocketServerConfigBean.getMaxTextMessageSize());
+                    policy.setMaxTextMessageBufferSize((int) websocketServerConfigBean.getMaxTextMessageBufferSize());
+                    policy.setMaxBinaryMessageSize((int) websocketServerConfigBean.getMaxBinaryMessageSize());
+                    policy.setMaxBinaryMessageBufferSize((int) websocketServerConfigBean.getMaxBinaryMessageBufferSize());
                     factory.setCreator(new MyWebsocketCreator());
                 }
             };

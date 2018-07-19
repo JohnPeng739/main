@@ -1,9 +1,6 @@
 package org.mx.service.server.config;
 
-import org.mx.service.server.CommServerFactory;
-import org.mx.service.server.RestfulServerFactory;
-import org.mx.service.server.ServletServerFactory;
-import org.mx.service.server.WebsocketServerFactory;
+import org.mx.service.server.*;
 import org.mx.service.server.websocket.rule.DdosFilterRule;
 import org.mx.service.server.websocket.rule.ListFilterRule;
 import org.mx.spring.config.SpringConfig;
@@ -22,75 +19,120 @@ import org.springframework.core.env.Environment;
  */
 @Import({SpringConfig.class})
 public class ServerConfig {
+
+    /**
+     * 创建RESTful服务配置对象
+     *
+     * @return RESTful服务配置对象
+     */
+    @Bean
+    public RestfulServerConfigBean restfulServerConfigBean() {
+        return new RestfulServerConfigBean();
+    }
+
+    /**
+     * 创建Servlet服务配置对象
+     *
+     * @return Servlet服务配置对象
+     */
+    @Bean
+    public ServletServerConfigBean servletServerConfigBean() {
+        return new ServletServerConfigBean();
+    }
+
+    /**
+     * 创建WebSocket配置对象
+     *
+     * @return WebSocket配置对象
+     */
+    @Bean
+    public WebsocketServerConfigBean websocketServerConfigBean() {
+        return new WebsocketServerConfigBean();
+    }
+
+    /**
+     * 创建COMM配置对象
+     *
+     * @param env Spring IoC上下文环境
+     * @return COMM配置对象
+     */
+    @Bean
+    public CommServerConfigBean commServerConfigBean(Environment env) {
+        return new CommServerConfigBean(env);
+    }
+
     /**
      * 创建黑白名单过滤器规则
      *
-     * @param env Spring IoC上下文环境
+     * @param websocketServerConfigBean WebSocket配置对象
      * @return 规则
      */
     @Bean(name = "listFilterRule")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public ListFilterRule listFilterRule(Environment env) {
-        return new ListFilterRule(env);
+    public ListFilterRule listFilterRule(WebsocketServerConfigBean websocketServerConfigBean) {
+        return new ListFilterRule(websocketServerConfigBean.getWebSocketFilter());
     }
 
     /**
      * 创建DDOS过滤器规则
      *
-     * @param env Spring IoC上下文环境
+     * @param websocketServerConfigBean WebSocket配置对象
      * @return 规则
      */
     @Bean(name = "ddosFilterRule")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    public DdosFilterRule ddosFilterRule(Environment env) {
-        return new DdosFilterRule(env);
+    public DdosFilterRule ddosFilterRule(WebsocketServerConfigBean websocketServerConfigBean) {
+        return new DdosFilterRule(websocketServerConfigBean.getWebSocketFilter());
     }
 
     /**
      * 创建基于TCP/IP通信的服务器工厂
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param context              Spring IoC上下文
+     * @param commServerConfigBean COMM通信配置对象
      * @return 通信服务器工厂
      */
     @Bean(name = "commServerFactory", initMethod = "init", destroyMethod = "destroy")
-    public CommServerFactory commServerFactory(Environment env, ApplicationContext context) {
-        return new CommServerFactory(env, context);
+    public CommServerFactory commServerFactory(ApplicationContext context, CommServerConfigBean commServerConfigBean) {
+        return new CommServerFactory(context, commServerConfigBean);
     }
 
     /**
      * 创建RESTful服务器工厂
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param context                 Spring IoC上下文
+     * @param restfulServerConfigBean RESTful配置对象
      * @return RESTful服务器工厂
      */
     @Bean(name = "restfulServerFactory", initMethod = "init", destroyMethod = "destroy")
-    public RestfulServerFactory restfulServerFactory(Environment env, ApplicationContext context) {
-        return new RestfulServerFactory(env, context);
+    public RestfulServerFactory restfulServerFactory(ApplicationContext context,
+                                                     RestfulServerConfigBean restfulServerConfigBean) {
+        return new RestfulServerFactory(context, restfulServerConfigBean);
     }
 
     /**
      * 创建Servlet服务器工厂
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param context                 Spring IoC上下文
+     * @param servletServerConfigBean Servlet服务配置对象
      * @return Servlet服务器工厂
      */
     @Bean(name = "servletServerFactory", initMethod = "init", destroyMethod = "destroy")
-    public ServletServerFactory servletServerFactory(Environment env, ApplicationContext context) {
-        return new ServletServerFactory(env, context);
+    public ServletServerFactory servletServerFactory(ApplicationContext context,
+                                                     ServletServerConfigBean servletServerConfigBean) {
+        return new ServletServerFactory(context, servletServerConfigBean);
     }
 
     /**
      * 创建Websocket服务器工厂
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param context                   Spring IoC上下文
+     * @param websocketServerConfigBean WebSocket配置对象
      * @return Websocket服务器工厂
      */
     @Bean(name = "websocketServerFactory", initMethod = "init", destroyMethod = "destroy")
-    public WebsocketServerFactory websocketServerFactory(Environment env, ApplicationContext context) {
-        return new WebsocketServerFactory(env, context);
+    public WebsocketServerFactory websocketServerFactory(ApplicationContext context,
+                                                         WebsocketServerConfigBean websocketServerConfigBean) {
+        return new WebsocketServerFactory(context, websocketServerConfigBean);
     }
 }

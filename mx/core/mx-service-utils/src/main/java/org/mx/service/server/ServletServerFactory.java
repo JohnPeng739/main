@@ -8,7 +8,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.mx.StringUtils;
 import org.mx.service.server.servlet.BaseHttpServlet;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 
 import java.util.List;
 
@@ -20,13 +19,13 @@ import java.util.List;
 public class ServletServerFactory extends HttpServerFactory {
     private static final Log logger = LogFactory.getLog(ServletServerFactory.class);
 
-    private Environment env;
+    private ServletServerConfigBean servletServerConfigBean;
     private ApplicationContext context;
 
-    public ServletServerFactory(Environment env, ApplicationContext context) {
-        super(env, "servlet");
-        this.env = env;
+    public ServletServerFactory(ApplicationContext context, ServletServerConfigBean servletServerConfigBean) {
+        super(servletServerConfigBean);
         this.context = context;
+        this.servletServerConfigBean = servletServerConfigBean;
     }
 
     /**
@@ -37,17 +36,15 @@ public class ServletServerFactory extends HttpServerFactory {
     @Override
     @SuppressWarnings("unchecked")
     protected Handler getHandler() {
-        String serviceClassesDef = "servlet.service.classes";
-        String servletServiceClassesDef = env.getProperty(serviceClassesDef);
-        if (StringUtils.isBlank(servletServiceClassesDef)) {
+        String[] classesDefs = servletServerConfigBean.getServiceClasses();
+        if (classesDefs == null || classesDefs.length <= 0) {
             if (logger.isWarnEnabled()) {
-                logger.warn(String.format("You not define [%s], will not ", serviceClassesDef));
+                logger.warn("You not define any servlet classes.");
             }
             return null;
         } else {
             ServletContextHandler contextHandler = new ServletContextHandler(1);
             contextHandler.setContextPath("/");
-            String[] classesDefs = servletServiceClassesDef.split(",");
             for (String classesDef : classesDefs) {
                 if (!StringUtils.isBlank(classesDef)) {
                     List<Class<?>> servletClasses = (List) context.getBean(classesDef, List.class);

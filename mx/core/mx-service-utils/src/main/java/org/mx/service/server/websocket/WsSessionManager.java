@@ -5,8 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
+import org.mx.service.server.WebsocketServerConfigBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -246,15 +246,15 @@ public class WsSessionManager {
     /**
      * 初始化会话管理器
      *
-     * @param env     Spring IoC上下文文件
-     * @param context Spring IoC上下文
+     * @param context                   Spring IoC上下文
+     * @param websocketServerConfigBean WebSocket服务配置对象
      */
-    public void init(Environment env, ApplicationContext context) {
+    public void init(ApplicationContext context, WebsocketServerConfigBean websocketServerConfigBean) {
         // 配置过滤规则
-        if (env != null) {
-            String filtersStr = env.getProperty("websocket.session.filter.rules");
-            if (!StringUtils.isBlank(filtersStr)) {
-                for (String filterStr : StringUtils.split(filtersStr, ",", true, true)) {
+        if (websocketServerConfigBean != null && websocketServerConfigBean.getWebSocketFilter() != null) {
+            String[] filters = websocketServerConfigBean.getWebSocketFilter().getFilters();
+            if (filters != null && filters.length > 0) {
+                for (String filterStr : filters) {
                     WsSessionFilterRule rule = context.getBean(filterStr, WsSessionFilterRule.class);
                     rule.init(this);
                     rules.add(rule);
@@ -263,9 +263,9 @@ public class WsSessionManager {
         }
 
         // 获取可能配置的ping间隔时间
-        if (env != null) {
-            pingCycleSec = env.getProperty(pingCycleSecKey, Integer.class, 10);
-            cleanCycleSec = env.getProperty(cleanCycleSecKey, Integer.class, 60);
+        if (websocketServerConfigBean != null) {
+            pingCycleSec = websocketServerConfigBean.getPingCycleSec();
+            cleanCycleSec = websocketServerConfigBean.getCleanCycleSec();
         }
 
         // 初始化ping定时任务

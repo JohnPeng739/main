@@ -5,9 +5,9 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
+import org.mx.service.server.WebsocketServerConfigBean;
 import org.mx.service.server.websocket.WsSessionFilterRule;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.springframework.core.env.Environment;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -22,12 +22,12 @@ import java.util.Set;
  * <strong>如果同时配置了黑白名单，以白名单为准。</strong>
  *
  * @author John.Peng
- *         Date time 2018/3/10 下午7:02
+ * Date time 2018/3/10 下午7:02
  */
 public class ListFilterRule implements WsSessionFilterRule {
     private static final Log logger = LogFactory.getLog(ListFilterRule.class);
 
-    private Environment env;
+    private WebsocketServerConfigBean.WebSocketFilter filter;
 
     private Set<byte[]> allows, blocks;
 
@@ -37,9 +37,9 @@ public class ListFilterRule implements WsSessionFilterRule {
         this.blocks = new HashSet<>();
     }
 
-    public ListFilterRule(Environment env) {
+    public ListFilterRule(WebsocketServerConfigBean.WebSocketFilter filter) {
         this();
-        this.env = env;
+        this.filter = filter;
     }
 
     /**
@@ -50,7 +50,7 @@ public class ListFilterRule implements WsSessionFilterRule {
      */
     private void addFilter(String filter, Set<byte[]> set) {
         String[] ips = StringUtils.split(filter, ",", true, true);
-        if (ips == null || ips.length <= 0) {
+        if (ips.length <= 0) {
             return;
         }
         try {
@@ -74,12 +74,12 @@ public class ListFilterRule implements WsSessionFilterRule {
      */
     @Override
     public void init(WsSessionManager manager) {
-        String allowsStr = env.getProperty("websocket.session.filter.rules.list.allows");
+        String allowsStr = filter.getListAllows();
         if (!StringUtils.isBlank(allowsStr)) {
             // 设置白名单
             addFilter(allowsStr, allows);
         }
-        String blocksStr = env.getProperty("websocket.session.filter.rules.list.blocks");
+        String blocksStr = filter.getListBlocks();
         if (allows.isEmpty() && !StringUtils.isBlank(blocksStr)) {
             // 设置黑名单
             addFilter(blocksStr, blocks);

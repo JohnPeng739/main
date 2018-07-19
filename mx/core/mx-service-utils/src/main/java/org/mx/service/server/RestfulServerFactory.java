@@ -11,7 +11,6 @@ import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.mx.StringUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 
 import java.util.List;
 
@@ -24,19 +23,19 @@ import java.util.List;
 public class RestfulServerFactory extends HttpServerFactory {
     private static final Log logger = LogFactory.getLog(RestfulServerFactory.class);
 
-    private Environment env;
     private ApplicationContext context;
+    private RestfulServerConfigBean restfulServerConfigBean;
 
     /**
      * 默认的构造函数
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param context                 Spring IoC上下文
+     * @param restfulServerConfigBean RESTful配置对象
      */
-    public RestfulServerFactory(Environment env, ApplicationContext context) {
-        super(env, "restful");
-        this.env = env;
+    public RestfulServerFactory(ApplicationContext context, RestfulServerConfigBean restfulServerConfigBean) {
+        super(restfulServerConfigBean);
         this.context = context;
+        this.restfulServerConfigBean = restfulServerConfigBean;
     }
 
     /**
@@ -47,11 +46,10 @@ public class RestfulServerFactory extends HttpServerFactory {
     @Override
     @SuppressWarnings("unchecked")
     protected Handler getHandler() {
-        String serviceClassesDef = "restful.service.classes";
-        String restfulServiceClasses = env.getProperty(serviceClassesDef);
-        if (StringUtils.isBlank(restfulServiceClasses)) {
+        String[] serverClasses = restfulServerConfigBean.getServiceClasses();
+        if (serverClasses == null || serverClasses.length <= 0) {
             if (logger.isWarnEnabled()) {
-                logger.warn(String.format("You not define [%s], will not create the HttpServer.", serviceClassesDef));
+                logger.warn("You not define any restful service resource, will not create the HttpServer.");
             }
             return null;
         } else {
@@ -59,8 +57,7 @@ public class RestfulServerFactory extends HttpServerFactory {
             config.register(UriConnegFilter.class);
             config.register(JettyHttpContainerProvider.class);
             config.register(RequestContextFilter.class);
-            String[] classesDefs = restfulServiceClasses.split(",");
-            for (String classesDef : classesDefs) {
+            for (String classesDef : serverClasses) {
                 if (!StringUtils.isBlank(classesDef)) {
                     List<Class<?>> restfulClasses = (List) context.getBean(classesDef, List.class);
                     if (!restfulClasses.isEmpty()) {

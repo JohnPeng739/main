@@ -4,9 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.TypeUtils;
+import org.mx.service.server.WebsocketServerConfigBean;
 import org.mx.service.server.websocket.WsSessionFilterRule;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.springframework.core.env.Environment;
 
 import java.io.Serializable;
 import java.util.*;
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentMap;
  * <strong>如果一个会话被判定为DDOS攻击，仅阻止本会话连接，不影响前面已经建立的会话!</strong>
  *
  * @author John.Peng
- *         Date time 2018/3/10 下午7:46
+ * Date time 2018/3/10 下午7:46
  */
 public class DdosFilterRule implements WsSessionFilterRule {
     private static final Log logger = LogFactory.getLog(DdosFilterRule.class);
@@ -32,7 +32,7 @@ public class DdosFilterRule implements WsSessionFilterRule {
             maxConnectionsKey = "websocket.session.filter.rules.ddos.maxConnections";
     private final Serializable setMutex = "Set task";
 
-    private Environment env = null;
+    private WebsocketServerConfigBean.WebSocketFilter filter;
 
     private WsSessionManager manager = null;
     private ConcurrentMap<String, Map<String, Long>> nodes = null;
@@ -43,16 +43,16 @@ public class DdosFilterRule implements WsSessionFilterRule {
         nodes = new ConcurrentHashMap<>();
     }
 
-    public DdosFilterRule(Environment env) {
+    public DdosFilterRule(WebsocketServerConfigBean.WebSocketFilter filter) {
         this();
-        this.env = env;
+        this.filter = filter;
     }
 
     @Override
     public void init(WsSessionManager manager) {
         this.manager = manager;
-        cycleSec = env.getProperty(cycleSecKey, Integer.class, 30);
-        maxConnections = env.getProperty(maxConnectionsKey, Integer.class, 15);
+        cycleSec = filter.getDdosCycleSec();
+        maxConnections = filter.getDdosMaxConnections();
     }
 
     @Override
