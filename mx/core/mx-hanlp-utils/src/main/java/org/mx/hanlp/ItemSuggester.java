@@ -43,11 +43,11 @@ public interface ItemSuggester {
     void close();
 
     /**
-     * 获取推荐器类型
+     * 获取推荐器名称
      *
-     * @return 推荐器类型
+     * @return 推荐器名称
      */
-    String getType();
+    String getName();
 
     /**
      * 根据关键字获取推荐条目，也就是所谓的"推荐"，默认返回1条推荐。
@@ -70,8 +70,8 @@ public interface ItemSuggester {
      * 推荐条目实体类
      */
     class SuggestItem {
-        public static final String DEFAULT_TYPE = "default";
-        private String type = DEFAULT_TYPE, id = null, content = null;
+        public static final String DEFAULT_NAME = "default";
+        private String name = DEFAULT_NAME, id = null, content = null;
         private double score = 0.0f;
 
         /**
@@ -98,29 +98,29 @@ public interface ItemSuggester {
         /**
          * 默认的构造函数
          *
-         * @param type    推荐器类型
+         * @param name    推荐器名称
          * @param id      ID
          * @param content 推荐内容
          */
-        private SuggestItem(String type, String id, String content) {
+        private SuggestItem(String name, String id, String content) {
             this(id, content);
-            if (type != null) {
-                this.type = type;
+            if (name != null) {
+                this.name = name;
             }
         }
 
         /**
          * 默认的构造函数
          *
-         * @param type    推荐器类型
+         * @param name    推荐器名称
          * @param id      ID
          * @param content 推荐内容
          * @param score   推荐分数
          */
-        private SuggestItem(String type, String id, String content, double score) {
+        private SuggestItem(String name, String id, String content, double score) {
             this(id, content);
-            if (type != null) {
-                this.type = type;
+            if (name != null) {
+                this.name = name;
             }
             this.score = score;
         }
@@ -133,7 +133,7 @@ public interface ItemSuggester {
          * @param content 推荐内容
          * @return 推荐条目对象
          * @see #valueOf(String, String, String)
-         * @see #DEFAULT_TYPE
+         * @see #DEFAULT_NAME
          */
         public static SuggestItem valueOf(String id, String content) {
             return new SuggestItem(id, content);
@@ -142,44 +142,44 @@ public interface ItemSuggester {
         /**
          * 根据指定参数构造一个推荐条目对象
          *
-         * @param type    推荐器类型
+         * @param name    推荐器名称
          * @param id      ID
          * @param content 推荐内容
          * @return 推荐条目对象
          */
-        public static SuggestItem valueOf(String type, String id, String content) {
-            return new SuggestItem(type, id, content);
+        public static SuggestItem valueOf(String name, String id, String content) {
+            return new SuggestItem(name, id, content);
         }
 
         /**
          * 根据指定参数构造一个推荐条目对象
          *
-         * @param type    推荐器类型
+         * @param name    推荐器名称
          * @param id      ID
          * @param content 推荐内容
          * @param score   推荐分数
          * @return 推荐条目对象
          */
-        public static SuggestItem valueOf(String type, String id, String content, double score) {
-            return new SuggestItem(type, id, content, score);
+        public static SuggestItem valueOf(String name, String id, String content, double score) {
+            return new SuggestItem(name, id, content, score);
         }
 
         /**
-         * 获取推荐器类型
+         * 获取推荐器名称
          *
-         * @return 推荐器类型
+         * @return 推荐器名称
          */
-        public String getType() {
-            return type;
+        public String getName() {
+            return name;
         }
 
         /**
-         * 设置推荐器类型
+         * 设置推荐器名称
          *
-         * @param type 推荐器类型
+         * @param name 推荐器名称
          */
-        public void setType(String type) {
-            this.type = type;
+        public void setName(String name) {
+            this.name = name;
         }
 
         /**

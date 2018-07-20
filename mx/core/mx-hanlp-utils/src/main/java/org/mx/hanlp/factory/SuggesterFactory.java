@@ -3,11 +3,9 @@ package org.mx.hanlp.factory;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.StringUtils;
 import org.mx.hanlp.ItemSuggester;
 import org.mx.hanlp.factory.suggest.SuggestContentProvider;
 import org.mx.hanlp.impl.ItemSuggesterImpl;
-import org.springframework.core.env.Environment;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -29,28 +27,28 @@ public class SuggesterFactory {
     private List<Future<Long>> futures = null;
     private Timer cleanTimer;
 
-    private Environment env;
+    private SuggesterConfigBean suggesterConfigBean;
 
     /**
      * 默认的构造函数
      *
-     * @param env Spring IoC上下文环境
+     * @param suggesterConfigBean 推荐器配置对象
      */
-    public SuggesterFactory(Environment env) {
+    public SuggesterFactory(SuggesterConfigBean suggesterConfigBean) {
         super();
-        this.env = env;
+        this.suggesterConfigBean = suggesterConfigBean;
         this.suggesters = new HashMap<>();
         this.stats = new HashMap<>();
     }
 
     /**
-     * 获取系统中存在的默认推荐器，其类型为<pre>{@link ItemSuggester.SuggestItem#DEFAULT_TYPE}</pre>。
+     * 获取系统中存在的默认推荐器，其类型为<pre>{@link ItemSuggester.SuggestItem#DEFAULT_NAME}</pre>。
      *
      * @return 推荐器，如果不存在，则返回null。
-     * @see ItemSuggester.SuggestItem#DEFAULT_TYPE
+     * @see ItemSuggester.SuggestItem#DEFAULT_NAME
      */
     public ItemSuggester getSuggester() {
-        return getSuggester(ItemSuggester.SuggestItem.DEFAULT_TYPE);
+        return getSuggester(ItemSuggester.SuggestItem.DEFAULT_NAME);
     }
 
     /**
@@ -171,35 +169,21 @@ public class SuggesterFactory {
      * @throws Exception 初始化过程中发生的异常
      */
     public void init() throws Exception {
-        int num = env.getProperty("suggester.num", Integer.class, 0);
-        if (num <= 0) {
+        if (suggesterConfigBean.getNum() <= 0) {
             if (logger.isWarnEnabled()) {
                 logger.warn("There not config any suggester.");
             }
             return;
         }
         int total = 0;
-        for (int index = 1; index <= num; index++) {
-            String type = env.getProperty(String.format("suggester.%d.type", index)),
-                    clazzName = env.getProperty(String.format("suggester.%d.provider", index));
-            if (StringUtils.isBlank(type)) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn("The type is blank for the suggester, it will be ignored.");
-                }
-                continue;
-            }
-            SuggestContentProvider provider = null;
-            if (StringUtils.isBlank(clazzName)) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("The class's name maybe blank for the suggester.");
-                }
-            } else {
-                provider = (SuggestContentProvider) Class.forName(clazzName).newInstance();
-                provider.initEnvironment(env, String.format("suggester.%d.config", index));
-            }
-            ItemSuggester itemSuggester = new ItemSuggesterImpl(type, provider);
-            suggesters.put(type, itemSuggester);
-            stats.put(type, new SuggesterStat(type));
+        for (SuggesterConfigBean.SuggesterProviderConfig providerConfig : suggesterConfigBean.getSuggesterProviders()) {
+            SuggestContentProvider provider = (SuggestContentProvider) Class.forName(providerConfig.getProvider())
+                    .newInstance();
+            provider.init(providerConfig);
+            String name = providerConfig.getName();
+            ItemSuggester itemSuggester = new ItemSuggesterImpl(name, provider);
+            suggesters.put(name, itemSuggester);
+            stats.put(name, new SuggesterStat(name));
             total++;
         }
         // 启动清理定时器，启动后3秒开始，每隔30秒检测一次

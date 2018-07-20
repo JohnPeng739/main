@@ -30,7 +30,7 @@ public class UserInterfaceHanlpErrorException extends UserInterfaceException {
      */
     public enum HanlpErrors implements UserInterfaceError {
         SUGGESTER_NOT_FOUND("指定的推荐器不存在，请联系开发人员。"),
-        SUGGESTER_TYPE_UNMATCH("指定的推荐器类型不匹配，请联系开发人员。"),
+        SUGGESTER_UNMATCH("指定的推荐器不匹配，请联系开发人员。"),
 
         DB_NO_DRIVER("没有配置指定的数据库驱动程序，请联系开发人员。"),
         DB_NO_URL("没有配置数据库访问字符串，请联系开发人员。"),

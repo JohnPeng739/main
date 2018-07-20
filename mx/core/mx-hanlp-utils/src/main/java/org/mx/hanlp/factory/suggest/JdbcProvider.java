@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.hanlp.ItemSuggester;
 import org.mx.hanlp.error.UserInterfaceHanlpErrorException;
-import org.springframework.core.env.Environment;
+import org.mx.hanlp.factory.SuggesterConfigBean;
 
 import java.sql.*;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import java.util.Set;
  * 描述： JDBC连接方式导入推荐数据提供器。
  *
  * @author John.Peng
- *         Date time 2018/4/20 下午6:22
+ * Date time 2018/4/20 下午6:22
  */
 public class JdbcProvider implements SuggestContentProvider {
     private static final Log logger = LogFactory.getLog(JdbcProvider.class);
@@ -27,22 +27,24 @@ public class JdbcProvider implements SuggestContentProvider {
     /**
      * {@inheritDoc}
      *
-     * @see SuggestContentProvider#initEnvironment(Environment, String)
+     * @see SuggestContentProvider#init(SuggesterConfigBean.SuggesterProviderConfig)
      */
     @Override
-    public void initEnvironment(Environment env, String prefix) {
-        driver = env.getProperty(String.format("%s.driver", prefix));
-        url = env.getProperty(String.format("%s.url", prefix));
-        user = env.getProperty(String.format("%s.user", prefix));
-        password = env.getProperty(String.format("%s.password", prefix));
-        query = env.getProperty(String.format("%s.query", prefix));
+    public void init(SuggesterConfigBean.SuggesterProviderConfig providerConfig) {
+        SuggesterConfigBean.SuggesterJdbcProviderConfig jdbcProviderConfig =
+                (SuggesterConfigBean.SuggesterJdbcProviderConfig) providerConfig;
+        driver = jdbcProviderConfig.getDriver();
+        url = jdbcProviderConfig.getUrl();
+        user = jdbcProviderConfig.getUser();
+        password = jdbcProviderConfig.getPassword();
+        query = jdbcProviderConfig.getQuery();
         if (StringUtils.isBlank(driver)) {
             throw new UserInterfaceHanlpErrorException(UserInterfaceHanlpErrorException.HanlpErrors.DB_NO_DRIVER);
         }
         if (StringUtils.isBlank(url)) {
             throw new UserInterfaceHanlpErrorException(UserInterfaceHanlpErrorException.HanlpErrors.DB_NO_URL);
         }
-        idField = env.getProperty(String.format("%s.id", prefix), "ID");
+        idField = jdbcProviderConfig.getIdField();
     }
 
     /**
@@ -84,7 +86,7 @@ public class JdbcProvider implements SuggestContentProvider {
                 if (logger.isDebugEnabled()) {
                     logger.debug(json.toJSONString());
                 }
-                itemSuggester.addSuggestItem(ItemSuggester.SuggestItem.valueOf(itemSuggester.getType(),
+                itemSuggester.addSuggestItem(ItemSuggester.SuggestItem.valueOf(itemSuggester.getName(),
                         id, json.toJSONString()));
                 total++;
             }

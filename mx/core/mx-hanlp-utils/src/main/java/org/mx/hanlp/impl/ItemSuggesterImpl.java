@@ -24,7 +24,7 @@ import java.util.Map;
 public class ItemSuggesterImpl implements ItemSuggester {
     private static final Log logger = LogFactory.getLog(ItemSuggester.class);
 
-    private String type = SuggestItem.DEFAULT_TYPE;
+    private String name = SuggestItem.DEFAULT_NAME;
     // fingerprint: id
     private Map<String, String> fingerprints = null;
 
@@ -43,12 +43,12 @@ public class ItemSuggesterImpl implements ItemSuggester {
     /**
      * 默认的构造函数
      *
-     * @param type     推荐器类型
+     * @param name     推荐器名称
      * @param provider 推荐内容提供器
      */
-    public ItemSuggesterImpl(String type, SuggestContentProvider provider) {
+    public ItemSuggesterImpl(String name, SuggestContentProvider provider) {
         this();
-        this.type = type;
+        this.name = name;
         this.provider = provider;
     }
 
@@ -60,10 +60,10 @@ public class ItemSuggesterImpl implements ItemSuggester {
     @Override
     public void addSuggestItem(SuggestItem suggestItem) {
         Assert.notNull(suggestItem, "The suggest item can not be null.");
-        String type = suggestItem.getType(), id = suggestItem.getId(), content = suggestItem.getContent();
-        if (!this.type.equalsIgnoreCase(type)) {
+        String name = suggestItem.getName(), id = suggestItem.getId(), content = suggestItem.getContent();
+        if (!this.name.equalsIgnoreCase(name)) {
             throw new UserInterfaceHanlpErrorException(
-                    UserInterfaceHanlpErrorException.HanlpErrors.SUGGESTER_TYPE_UNMATCH);
+                    UserInterfaceHanlpErrorException.HanlpErrors.SUGGESTER_UNMATCH);
         }
         String fingerprint = DigestUtils.md5(content);
         fingerprints.put(fingerprint, id);
@@ -130,11 +130,11 @@ public class ItemSuggesterImpl implements ItemSuggester {
     /**
      * {@inheritDoc}
      *
-     * @see ItemSuggester#getType()
+     * @see ItemSuggester#getName()
      */
     @Override
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -164,7 +164,7 @@ public class ItemSuggesterImpl implements ItemSuggester {
                             "the cache is out of sync.", hit.getSentence()));
                 }
             } else {
-                list.add(SuggestItem.valueOf(type, id, hit.getSentence(), hit.getScore()));
+                list.add(SuggestItem.valueOf(name, id, hit.getSentence(), hit.getScore()));
             }
         }
         return list;

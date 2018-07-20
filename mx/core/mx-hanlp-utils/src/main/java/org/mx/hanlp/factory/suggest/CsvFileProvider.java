@@ -6,7 +6,7 @@ import org.mx.StringUtils;
 import org.mx.TypeUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.hanlp.ItemSuggester;
-import org.springframework.core.env.Environment;
+import org.mx.hanlp.factory.SuggesterConfigBean;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -23,7 +23,7 @@ import java.util.List;
  * prefix.fields.content=5   # 表示第五列为条目的内容
  *
  * @author John.Peng
- *         Date time 2018/4/16 下午7:03
+ * Date time 2018/4/16 下午7:03
  */
 public class CsvFileProvider implements SuggestContentProvider {
     private static final Log logger = LogFactory.getLog(CsvFileProvider.class);
@@ -34,25 +34,27 @@ public class CsvFileProvider implements SuggestContentProvider {
     /**
      * {@inheritDoc}
      *
-     * @see SuggestContentProvider#initEnvironment(Environment, String)
+     * @see SuggestContentProvider#init(SuggesterConfigBean.SuggesterProviderConfig)
      */
     @Override
-    public void initEnvironment(Environment env, String prefix) {
-        path = env.getProperty(String.format("%s.path", prefix));
+    public void init(SuggesterConfigBean.SuggesterProviderConfig providerConfig) {
+        SuggesterConfigBean.SuggesterCsvProviderConfig csvProviderConfig =
+                (SuggesterConfigBean.SuggesterCsvProviderConfig) providerConfig;
+        path = csvProviderConfig.getPath();
         if (!Files.exists(Paths.get(path))) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The file[%s] not existed.", path));
             }
             throw new UserInterfaceSystemErrorException(UserInterfaceSystemErrorException.SystemErrors.FILE_NOT_EXISTED);
         }
-        idFiled = env.getProperty(String.format("%s.fields.id", prefix), Integer.class, 1);
+        idFiled = csvProviderConfig.getIdField();
         if (idFiled <= 0) {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("The id field's index[%d] is invalid, will replace by 1.", idFiled));
             }
             idFiled = 1;
         }
-        contentField = env.getProperty(String.format("%s.fields.content", prefix), Integer.class, 2);
+        contentField = csvProviderConfig.getContentField();
         if (contentField <= 0) {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("The content field's index[%d] is invalid, will replace by 2.", contentField));
@@ -85,12 +87,12 @@ public class CsvFileProvider implements SuggestContentProvider {
                     continue;
                 }
                 String id = segs.get(idFiled - 1), content = segs.get(contentField - 1);
-                itemSuggester.addSuggestItem(ItemSuggester.SuggestItem.valueOf(itemSuggester.getType(), id, content));
-                total ++;
+                itemSuggester.addSuggestItem(ItemSuggester.SuggestItem.valueOf(itemSuggester.getName(), id, content));
+                total++;
             } while (true);
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Load the csv file[%s] into %s suggester successfully.", path,
-                        itemSuggester.getType()));
+                        itemSuggester.getName()));
             }
             return total;
         } catch (IOException ex) {

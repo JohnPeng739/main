@@ -1,6 +1,7 @@
 package org.mx.hanlp.config;
 
 import org.mx.hanlp.TextExtracter;
+import org.mx.hanlp.factory.SuggesterConfigBean;
 import org.mx.hanlp.factory.SuggesterFactory;
 import org.mx.hanlp.impl.TextExtracterImpl;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +19,13 @@ public class SuggesterConfig {
         return new TextExtracterImpl();
     }
 
+    @Bean
+    public SuggesterConfigBean suggesterConfigBean(Environment env) {
+        return new SuggesterConfigBean(env);
+    }
+
     @Bean(name = "suggesterFactory", initMethod = "init", destroyMethod = "destroy")
-    public SuggesterFactory suggesterFactory(Environment env) {
-        return new SuggesterFactory(env);
+    public SuggesterFactory suggesterFactory(SuggesterConfigBean suggesterConfigBean) {
+        return new SuggesterFactory(suggesterConfigBean);
     }
 }
