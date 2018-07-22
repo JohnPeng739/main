@@ -7,6 +7,7 @@ import org.mx.dal.service.impl.GeneralAccessorElasticImpl;
 import org.mx.dal.service.impl.GeneralDictAccessorElasticImpl;
 import org.mx.dal.service.impl.OperateLogServiceElasticImpl;
 import org.mx.dal.session.SessionDataStore;
+import org.mx.dal.utils.ElasticConfigBean;
 import org.mx.dal.utils.ElasticUtil;
 import org.mx.dal.utils.ElasticUtilRest;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +22,15 @@ import org.springframework.core.env.Environment;
  */
 @Import(DalConfig.class)
 public class DalElasticConfig {
+
+    @Bean(name = "elasticConfigBean")
+    public ElasticConfigBean elasticConfigBean(Environment env) {
+        return new ElasticConfigBean(env);
+    }
+
     @Bean(name = "elasticUtilRest", initMethod = "init", destroyMethod = "destroy")
-    public ElasticUtil elasticUtilRest(Environment env, SessionDataStore sessionDataStore) {
-        return new ElasticUtilRest(env, sessionDataStore);
+    public ElasticUtil elasticUtilRest(SessionDataStore sessionDataStore, ElasticConfigBean elasticConfigBean) {
+        return new ElasticUtilRest(sessionDataStore, elasticConfigBean);
     }
 
     @Bean(name = "generalAccessorElastic")

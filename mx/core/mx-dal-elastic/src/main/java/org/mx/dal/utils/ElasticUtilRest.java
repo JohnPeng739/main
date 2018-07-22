@@ -38,7 +38,6 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.springframework.core.env.Environment;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -57,7 +56,7 @@ import java.util.function.BiConsumer;
 public class ElasticUtilRest implements ElasticUtil {
     private static final Log logger = LogFactory.getLog(ElasticUtilRest.class);
 
-    private Environment env;
+    private ElasticConfigBean elasticConfigBean;
     private SessionDataStore sessionDataStore;
 
     private RestHighLevelClient client = null;
@@ -66,12 +65,12 @@ public class ElasticUtilRest implements ElasticUtil {
     /**
      * 默认的构造函数
      *
-     * @param env              Spring环境上下文
-     * @param sessionDataStore 会话数据服务接口
+     * @param sessionDataStore  会话数据服务接口
+     * @param elasticConfigBean Elastic配置对象
      */
-    public ElasticUtilRest(Environment env, SessionDataStore sessionDataStore) {
+    public ElasticUtilRest(SessionDataStore sessionDataStore, ElasticConfigBean elasticConfigBean) {
         super();
-        this.env = env;
+        this.elasticConfigBean = elasticConfigBean;
         this.sessionDataStore = sessionDataStore;
     }
 
@@ -91,19 +90,24 @@ public class ElasticUtilRest implements ElasticUtil {
 
     @SuppressWarnings("unchecked")
     private void scanElasticEntitiesAndInitialize() {
-        String basePakcages = env.getProperty("elastic.entity.base");
-        String[] packages = StringUtils.split(basePakcages, true, true);
-        for (String p : packages) {
-            ClassUtils.scanPackage(p, className -> {
-                try {
-                    Class<? extends ElasticBaseEntity> clazz = (Class<? extends ElasticBaseEntity>) Class.forName(className);
-                    createIndex(clazz);
-                } catch (Exception ex) {
-                    if (logger.isWarnEnabled()) {
-                        logger.warn(String.format("Initialize the index of the class[%s] fail.", className), ex);
+        String[] packages = elasticConfigBean.getEntityBasePackages();
+        if (packages.length > 0) {
+            for (String p : packages) {
+                ClassUtils.scanPackage(p, className -> {
+                    try {
+                        Class<? extends ElasticBaseEntity> clazz = (Class<? extends ElasticBaseEntity>) Class.forName(className);
+                        createIndex(clazz);
+                    } catch (Exception ex) {
+                        if (logger.isWarnEnabled()) {
+                            logger.warn(String.format("Initialize the index of the class[%s] fail.", className), ex);
+                        }
                     }
-                }
-            });
+                });
+            }
+        } else {
+            if (logger.isWarnEnabled()) {
+                logger.warn("There are not any elastic entity.");
+            }
         }
     }
 
@@ -159,10 +163,8 @@ public class ElasticUtilRest implements ElasticUtil {
                 if (ex.status() == RestStatus.NOT_FOUND) {
                     CreateIndexRequest request = new CreateIndexRequest(index);
                     Map<String, Object> settings = new HashMap<>();
-                    settings.put("number_of_shards",
-                            env.getProperty("elastic.index.shards", Integer.class, 3));
-                    settings.put("number_of_replicas",
-                            env.getProperty("elastic.index.replicas", Integer.class, 2));
+                    settings.put("number_of_shards", elasticConfigBean.getShards());
+                    settings.put("number_of_replicas", elasticConfigBean.getReplicas());
                     request.settings(settings);
                     Map<String, Map<String, Object>> mapping = new HashMap<>();
                     mapping.put(index, new HashMap<>());
@@ -232,20 +234,18 @@ public class ElasticUtilRest implements ElasticUtil {
      * @see ElasticUtil#init()
      */
     public void init() {
-        int servers = env.getProperty("elastic.servers", Integer.class, 0);
-        if (servers <= 0) {
+        if (elasticConfigBean.getServerNum() <= 0) {
             if (logger.isErrorEnabled()) {
                 logger.error("There are not define the elastic api server.");
             }
             return;
         }
 
-        HttpHost[] elasticServers = new HttpHost[servers];
-        for (int index = 1; index <= servers; index++) {
-            String protocol = env.getProperty(String.format("elastic.servers.%d.protocol", index), "http");
-            String server = env.getProperty(String.format("elastic.servers.%d.server", index), "localhost");
-            int port = env.getProperty(String.format("elastic.servers.%d.port", index), Integer.class, 9200);
-            elasticServers[index - 1] = new HttpHost(server, port, protocol);
+        HttpHost[] elasticServers = new HttpHost[elasticConfigBean.getServerNum()];
+        for (int index = 1; index <= elasticConfigBean.getServerNum(); index++) {
+            ElasticConfigBean.ElasticServerConfig serverConfig = elasticConfigBean.getServerConfigs().get(index);
+            elasticServers[index - 1] = new HttpHost(serverConfig.getServer(), serverConfig.getPort(),
+                    serverConfig.getProtocol());
         }
         client = new RestHighLevelClient(RestClient.builder(elasticServers));
         scanElasticEntitiesAndInitialize();
@@ -528,7 +528,7 @@ public class ElasticUtilRest implements ElasticUtil {
             if (logger.isWarnEnabled()) {
                 logger.warn("The entity is null.");
             }
-            return t;
+            return null;
         }
         try {
             DocWriteRequest request = createRequest(t);
