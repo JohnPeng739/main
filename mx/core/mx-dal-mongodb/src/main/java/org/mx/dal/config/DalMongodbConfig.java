@@ -2,6 +2,7 @@ package org.mx.dal.config;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import org.mx.StringUtils;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.OperateLogService;
@@ -9,6 +10,7 @@ import org.mx.dal.service.impl.GeneralAccessorMongoImpl;
 import org.mx.dal.service.impl.GeneralDictAccessorMongoImpl;
 import org.mx.dal.service.impl.OperateLogServiceMongoImpl;
 import org.mx.dal.session.SessionDataStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,6 +29,11 @@ import org.springframework.util.Assert;
 @Import({DalConfig.class})
 @ComponentScan({"org.mx.dal.service.impl"})
 public class DalMongodbConfig {
+    @Value("${mongodb.uri:}")
+    private String mongodbUrl;
+    @Value("${mongodb.database:database}")
+    private String mongoDatabase;
+
     /**
      * 默认的构造函数
      */
@@ -42,9 +49,8 @@ public class DalMongodbConfig {
      */
     @Bean(name = "mongoClient")
     public MongoClient mongoClient(Environment env) {
-        String uri = env.getProperty("mongodb.uri");
-        Assert.notNull(uri, "The Mongodb Uri not configured.");
-        return new MongoClient(new MongoClientURI(uri));
+        Assert.isTrue(!StringUtils.isBlank(mongodbUrl), "The Mongodb Uri not configured.");
+        return new MongoClient(new MongoClientURI(mongodbUrl));
     }
 
     /**
@@ -56,11 +62,7 @@ public class DalMongodbConfig {
      */
     @Bean(name = "mongoTemplate")
     public MongoTemplate mongoTemplate(Environment env) {
-        String database = env.getProperty("database");
-        if (database == null || database.length() <= 0) {
-            database = "database";
-        }
-        return new MongoTemplate(mongoClient(env), database);
+        return new MongoTemplate(mongoClient(env), mongoDatabase);
     }
 
     @Bean(name = "generalAccessorMongodb")
