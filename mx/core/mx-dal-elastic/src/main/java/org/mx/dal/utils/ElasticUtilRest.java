@@ -242,9 +242,9 @@ public class ElasticUtilRest implements ElasticUtil {
         }
 
         HttpHost[] elasticServers = new HttpHost[elasticConfigBean.getServerNum()];
-        for (int index = 1; index <= elasticConfigBean.getServerNum(); index++) {
+        for (int index = 0; index < elasticConfigBean.getServerNum(); index++) {
             ElasticConfigBean.ElasticServerConfig serverConfig = elasticConfigBean.getServerConfigs().get(index);
-            elasticServers[index - 1] = new HttpHost(serverConfig.getServer(), serverConfig.getPort(),
+            elasticServers[index] = new HttpHost(serverConfig.getServer(), serverConfig.getPort(),
                     serverConfig.getProtocol());
         }
         client = new RestHighLevelClient(RestClient.builder(elasticServers));
