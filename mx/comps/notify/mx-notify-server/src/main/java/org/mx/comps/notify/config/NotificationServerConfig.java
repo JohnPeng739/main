@@ -29,6 +29,12 @@ import java.util.List;
         "org.mx.comps.notify.rest"
 })
 public class NotificationServerConfig {
+
+    @Bean
+    public NotifyConfigBean notifyConfigBean() {
+        return new NotifyConfigBean();
+    }
+
     /**
      * 创建一个系统默认的终端注册命令处理器
      *

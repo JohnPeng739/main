@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.StringUtils;
+import org.mx.comps.notify.config.NotifyConfigBean;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineDeviceAuthenticate;
 import org.mx.comps.notify.online.OnlineManager;
@@ -12,7 +13,6 @@ import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -37,20 +37,20 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     private Timer cleanTimer = null;
     private int deviceIdleTimeoutSecs = 60;
 
-    private Environment env;
+    private NotifyConfigBean notifyConfigBean;
     private OnlineDeviceAuthenticate deviceAuthenticate;
 
     /**
      * 默认的构造函数
      *
-     * @param env     Spring IoC上下文环境
-     * @param factory 设备鉴别接口
+     * @param notifyConfigBean 推送配置对象
+     * @param factory          设备鉴别接口
      */
     @Autowired
-    public OnlineManagerSimpleImpl(Environment env, OnlineDeviceAuthenticateFactory factory) {
+    public OnlineManagerSimpleImpl(NotifyConfigBean notifyConfigBean, OnlineDeviceAuthenticateFactory factory) {
         super();
         this.onlineDevices = new ConcurrentHashMap<>();
-        this.env = env;
+        this.notifyConfigBean = notifyConfigBean;
         if (!factory.getAuthenticates().isEmpty()) {
             this.deviceAuthenticate = factory.getAuthenticates().values().iterator().next();
         }
@@ -81,12 +81,11 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
      */
     @Override
     public void afterPropertiesSet() {
-        if (env != null) {
-            deviceIdleTimeoutSecs = env.getProperty("websocket.notify.device.idleTimeoutSecs",
-                    Integer.class, 60);
+        int deviceIdleTimeoutSecs = notifyConfigBean.getDeviceIdleTimeoutSecs();
+        if (deviceIdleTimeoutSecs > 0) {
+            cleanTimer = new Timer();
+            cleanTimer.scheduleAtFixedRate(new CleanTask(), 5000, deviceIdleTimeoutSecs * 1000 / 3);
         }
-        cleanTimer = new Timer();
-        cleanTimer.scheduleAtFixedRate(new CleanTask(), 5000, deviceIdleTimeoutSecs * 1000 / 3);
     }
 
     /**

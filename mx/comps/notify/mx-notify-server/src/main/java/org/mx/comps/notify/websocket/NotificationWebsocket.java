@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
+import org.mx.comps.notify.config.NotifyConfigBean;
 import org.mx.comps.notify.processor.MessageProcessorChain;
 import org.mx.service.server.websocket.DefaultWsSessionMonitor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,12 +25,12 @@ public final class NotificationWebsocket extends DefaultWsSessionMonitor {
     /**
      * 构造函数
      *
-     * @param env            Spring IoC上下文环境
-     * @param processorChain 消息处理链
+     * @param notifyConfigBean 推送配置对象
+     * @param processorChain   消息处理链
      */
     @Autowired
-    public NotificationWebsocket(Environment env, MessageProcessorChain processorChain) {
-        super(env.getProperty("websocket.notify.path", "/notify"));
+    public NotificationWebsocket(NotifyConfigBean notifyConfigBean, MessageProcessorChain processorChain) {
+        super(notifyConfigBean.getNotifyPath());
         this.processorChain = processorChain;
     }
 

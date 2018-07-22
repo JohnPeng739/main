@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
-import org.mx.StringUtils;
+import org.mx.comps.notify.config.NotifyConfigBean;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -30,15 +29,14 @@ public class MessageProcessorChain {
     /**
      * 默认的构造函数
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param notifyConfigBean 推送配置对象
+     * @param context          Spring IoC上下文
      */
     @Autowired
-    public MessageProcessorChain(Environment env, ApplicationContext context) {
+    public MessageProcessorChain(NotifyConfigBean notifyConfigBean, ApplicationContext context) {
         super();
         this.processors = new HashSet<>();
-        String names = env.getProperty("websocket.notify.processors");
-        for (String name : StringUtils.split(names)) {
+        for (String name : notifyConfigBean.getProcessors()) {
             String processorName = String.format("%sCommandProcessor", name);
             try {
                 MessageProcessor processor = context.getBean(processorName, MessageProcessor.class);

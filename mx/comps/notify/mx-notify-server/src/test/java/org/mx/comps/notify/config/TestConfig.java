@@ -5,7 +5,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
 @PropertySource({
-        "classpath:server.properties"
+        "classpath:server.properties",
+        "classpath:notify.properties"
 })
 @Import({NotificationServerConfig.class})
 @ComponentScan({
