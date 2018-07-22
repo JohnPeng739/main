@@ -9,12 +9,12 @@ import org.mx.dal.service.impl.GeneralAccessorImpl;
 import org.mx.dal.service.impl.GeneralDictAccessorImpl;
 import org.mx.dal.service.impl.OperateLogServiceImpl;
 import org.mx.dal.session.SessionDataStore;
+import org.mx.dbcp.Dbcp2DataSourceConfigBean;
 import org.mx.dbcp.Dbcp2DataSourceFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -42,15 +42,26 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
 
     private PlatformTransactionManager transactionManager = null;
 
+    @Bean("dbcp2DataSourceConfigBean")
+    public DataSourceConfigBean dbcp2DataSourceConfigBean(Environment env) {
+        return new Dbcp2DataSourceConfigBean(env, "db");
+    }
+
+    @Bean("jpaConfigBean")
+    public JpaConfigBean jpaConfigBean() {
+        return new JpaConfigBean();
+    }
+
     /**
      * 创建JDBC数据源工厂
      *
-     * @param env Spring IoC上下文环境
+     * @param dataSourceConfigBean 数据源配置对象
      * @return DBCP数据源工厂
      */
     @Bean(name = "dataSourceFactory", initMethod = "init", destroyMethod = "close")
-    public Dbcp2DataSourceFactory dataSourceFactory(Environment env) {
-        Dbcp2DataSourceFactory factory = new Dbcp2DataSourceFactory(env);
+    public Dbcp2DataSourceFactory dataSourceFactory(
+            @Qualifier("dbcp2DataSourceConfigBean") DataSourceConfigBean dataSourceConfigBean) {
+        Dbcp2DataSourceFactory factory = new Dbcp2DataSourceFactory(dataSourceConfigBean);
         try {
             factory.init();
         } catch (SQLException ex) {
@@ -64,51 +75,46 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     /**
      * 从工厂中获取JDBC数据源
      *
-     * @param env Spring IoC上下文环境
+     * @param dataSourceFactory DBCP2数据库连接池
      * @return 数据源
      */
     @Bean(name = "dataSource")
-    public DataSource dataSource(Environment env) {
-        return dataSourceFactory(env).getDataSource();
-    }
-
-    @Bean("jpaEntityPackagesDal")
-    @Lazy(false)
-    public JpaEntityPackagesDefine jpaEntityPackages() {
-        return new JpaEntityPackagesDefine("org.mx.dal.entity");
+    public DataSource dataSource(Dbcp2DataSourceFactory dataSourceFactory) {
+        return dataSourceFactory.getDataSource();
     }
 
     /**
      * 创建实体管理器工厂Bean
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param context       Spring IoC上下文
+     * @param dataSource    数据源
+     * @param jpaConfigBean JPA配置对象
      * @return 实体管理器工厂Bean
      */
     @Bean("entityManagerFactory")
-    @DependsOn({"dataSource"})
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(Environment env,
-                                                                           ApplicationContext context) {
-        String database = env.getProperty("jpa.database", String.class, "H2");
-        String databasePlatform = env.getProperty("jpa.databasePlatform", String.class,
-                "org.hibernate.dialect.H2Dialect");
-        boolean generateDDL = env.getProperty("jpa.generateDDL", Boolean.class, true);
-        boolean showSQL = env.getProperty("jpa.showSQL", Boolean.class, true);
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(ApplicationContext context,
+                                                                           DataSource dataSource,
+                                                                           JpaConfigBean jpaConfigBean) {
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-        adapter.setDatabase(Database.valueOf(database));
-        adapter.setDatabasePlatform(databasePlatform);
-        adapter.setGenerateDdl(generateDDL);
-        adapter.setShowSql(showSQL);
+        adapter.setDatabase(Database.valueOf(jpaConfigBean.getJpaDatabase()));
+        adapter.setDatabasePlatform(jpaConfigBean.getJpaDatabasePlatform());
+        adapter.setGenerateDdl(jpaConfigBean.isGenerateDDL());
+        adapter.setShowSql(jpaConfigBean.isShowSQL());
         adapter.setPrepareConnection(true);
 
         String[] jpaDefines = context.getBeanNamesForType(JpaEntityPackagesDefine.class);
         Set<String> jpaEntityPackages = new HashSet<>();
+        if (jpaConfigBean.getJpaEntityPackages().length > 0) {
+            for (String p : jpaConfigBean.getJpaEntityPackages()) {
+                jpaEntityPackages.add(p);
+            }
+        }
         for (String jpaDefine : jpaDefines) {
             JpaEntityPackagesDefine define = context.getBean(jpaDefine, JpaEntityPackagesDefine.class);
             jpaEntityPackages.addAll(define.getPackages());
         }
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-        emf.setDataSource(context.getBean("dataSource", DataSource.class));
+        emf.setDataSource(dataSource);
         emf.setPackagesToScan(jpaEntityPackages.toArray(new String[0]));
         emf.setJpaVendorAdapter(adapter);
         return emf;
@@ -117,14 +123,14 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     /**
      * 创建事务管理器
      *
-     * @param env     Spring IoC上下文环境
-     * @param context Spring IoC上下文
+     * @param containerEntityManagerFactoryBean 实体管理器工厂Bean
      * @return 事务管理器
      */
     @Bean
-    public PlatformTransactionManager transactionManager(Environment env, ApplicationContext context) {
+    public PlatformTransactionManager transactionManager(
+            LocalContainerEntityManagerFactoryBean containerEntityManagerFactoryBean) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactoryBean(env, context).getObject());
+        transactionManager.setEntityManagerFactory(containerEntityManagerFactoryBean.getObject());
         this.transactionManager = transactionManager;
         return transactionManager;
     }

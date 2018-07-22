@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.h2.tools.Server;
 import org.mx.StringUtils;
-import org.springframework.core.env.Environment;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.List;
 public class H2ServerFactory {
     private static final Log logger = LogFactory.getLog(H2ServerFactory.class);
 
-    private Environment env;
+    private H2ServerConfigBean h2ServerConfigBean;
 
     private Server tcpServer;
     private Server webServer;
@@ -27,11 +26,11 @@ public class H2ServerFactory {
     /**
      * 默认的构造函数
      *
-     * @param env 配置信息环境
+     * @param h2ServerConfigBean H2数据库配置对象
      */
-    public H2ServerFactory(Environment env) {
+    public H2ServerFactory(H2ServerConfigBean h2ServerConfigBean) {
         super();
-        this.env = env;
+        this.h2ServerConfigBean = h2ServerConfigBean;
     }
 
     /**
@@ -65,21 +64,16 @@ public class H2ServerFactory {
      * 初始化TCP服务器
      */
     private void initTcpServer() {
-        boolean enable = env.getProperty("h2.tcp.enable", Boolean.class, false);
-        if (enable) {
-            int port = env.getProperty("h2.tcp.port", Integer.class, 9092);
-            String baseDir = env.getProperty("h2.tcp.baseDir", String.class, "~/h2db");
-            boolean daemon = env.getProperty("h2.tcp.daemon", Boolean.class, true);
-            boolean trace = env.getProperty("h2.tcp.trace", Boolean.class, true);
+        if (h2ServerConfigBean.isTcpEnabled()) {
             List<String> args = new ArrayList<>();
             args.add("-tcpPort");
-            args.add(String.valueOf(port));
-            //args.add("-baseDir");
-            //args.add(baseDir);
-            if (daemon) {
+            args.add(String.valueOf(h2ServerConfigBean.getTcpPort()));
+            args.add("-baseDir");
+            args.add(h2ServerConfigBean.getTcpBaseDir());
+            if (h2ServerConfigBean.isTcpDaemon()) {
                 args.add("-tcpDaemon");
             }
-            if (trace) {
+            if (h2ServerConfigBean.isTcpTrace()) {
                 args.add("-trace");
             }
             try {
@@ -103,21 +97,16 @@ public class H2ServerFactory {
      * 初始化WEB服务器
      */
     private void initWebServer() {
-        boolean enable = env.getProperty("h2.web.enable", Boolean.class, false);
-        if (enable) {
-            int port = env.getProperty("h2.web.port", Integer.class, 9092);
-            String baseDir = env.getProperty("h2.web.baseDir", String.class, "~/h2db");
-            boolean daemon = env.getProperty("h2.web.daemon", Boolean.class, true);
-            boolean trace = env.getProperty("h2.web.trace", Boolean.class, true);
+        if (h2ServerConfigBean.isWebEnabled()) {
             List<String> args = new ArrayList<>();
             args.add("-webPort");
-            args.add(String.valueOf(port));
+            args.add(String.valueOf(h2ServerConfigBean.getWebPort()));
             args.add("-baseDir");
-            args.add(baseDir);
-            if (daemon) {
+            args.add(h2ServerConfigBean.getWebBaseDir());
+            if (h2ServerConfigBean.isWebDaemon()) {
                 args.add("-webDaemon");
             }
-            if (trace) {
+            if (h2ServerConfigBean.isWebTrace()) {
                 args.add("-trace");
             }
             try {
@@ -141,21 +130,16 @@ public class H2ServerFactory {
      * 初始化PG服务器
      */
     private void initPgServer() {
-        boolean enable = env.getProperty("h2.pg.enable", Boolean.class, false);
-        if (enable) {
-            int port = env.getProperty("h2.pg.port", Integer.class, 5435);
-            String baseDir = env.getProperty("h2.pg.baseDir", String.class, "~/h2db");
-            boolean daemon = env.getProperty("h2.pg.daemon", Boolean.class, true);
-            boolean trace = env.getProperty("h2.pg.trace", Boolean.class, true);
+        if (h2ServerConfigBean.isPgEnabled()) {
             List<String> args = new ArrayList<>();
             args.add("-pgPort");
-            args.add(String.valueOf(port));
+            args.add(String.valueOf(h2ServerConfigBean.getPgPort()));
             args.add("-baseDir");
-            args.add(baseDir);
-            if (daemon) {
+            args.add(h2ServerConfigBean.getPgBaseDir());
+            if (h2ServerConfigBean.isPgDaemon()) {
                 args.add("-pgDaemon");
             }
-            if (trace) {
+            if (h2ServerConfigBean.isPgTrace()) {
                 args.add("-trace");
             }
             try {

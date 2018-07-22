@@ -4,7 +4,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
-import org.springframework.core.env.Environment;
+import org.mx.dal.config.DataSourceConfigBean;
+import org.mx.error.UserInterfaceSystemErrorException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -19,30 +20,16 @@ public class Dbcp2DataSourceFactory {
     private static final Log logger = LogFactory.getLog(Dbcp2DataSourceFactory.class);
 
     private BasicDataSource pool = null;
-    private Environment env;
-    private String prefix = "db";
+    private DataSourceConfigBean dataSourceConfigBean;
 
     /**
      * 构造函数
      *
-     * @param env 配置信息环境
+     * @param dataSourceConfigBean 数据源配置对象
      */
-    public Dbcp2DataSourceFactory(Environment env) {
+    public Dbcp2DataSourceFactory(DataSourceConfigBean dataSourceConfigBean) {
         super();
-        this.env = env;
-    }
-
-    /**
-     * 构造函数
-     *
-     * @param env    配置信息环境
-     * @param prefix 配置前缀
-     */
-    public Dbcp2DataSourceFactory(Environment env, String prefix) {
-        this(env);
-        if (!StringUtils.isBlank(prefix)) {
-            this.prefix = prefix;
-        }
+        this.dataSourceConfigBean = dataSourceConfigBean;
     }
 
     /**
@@ -70,13 +57,22 @@ public class Dbcp2DataSourceFactory {
      * @throws SQLException 初始化过程中发生的异常
      */
     public void init() throws SQLException {
-        String driver = env.getProperty(String.format("%s.driver", prefix)),
-                url = env.getProperty(String.format("%s.url", prefix)),
-                user = env.getProperty(String.format("%s.user", prefix)),
-                password = env.getProperty(String.format("%s.password", prefix));
-        int initialSize = env.getProperty(String.format("%s.initialSize", prefix), Integer.class, 1),
-                maxSize = env.getProperty(String.format("%s.maxSize", prefix), Integer.class, 30),
-                maxIdleTime = env.getProperty(String.format("%s.maxIdleTime", prefix), Integer.class, 3000);
+        String driver = dataSourceConfigBean.getDriver(),
+                url = dataSourceConfigBean.getUrl(),
+                user = dataSourceConfigBean.getUser(),
+                password = dataSourceConfigBean.getPassword();
+        if (StringUtils.isBlank(driver) || StringUtils.isBlank(url)) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Data source config invalid, driver: %s, url: %s, user: %s, password: %s.",
+                        driver, url, user, password));
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        int initialSize = dataSourceConfigBean.getInitialSize(),
+                maxSize = dataSourceConfigBean.getMaxSize(),
+                maxIdleTime = dataSourceConfigBean.getMaxIdleTime();
         try {
             pool = new BasicDataSource();
             pool.setDriverClassName(driver);

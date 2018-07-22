@@ -1,7 +1,6 @@
 package org.mx.test.config;
 
 import org.mx.dal.config.DalHibernateConfig;
-import org.mx.dal.config.JpaEntityPackagesDefine;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -25,9 +24,4 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "org.mx.test.repository"
 })
 public class TestDalConfig {
-    @Bean("jpaEntityPackagesDalTest")
-    @Lazy(false)
-    public JpaEntityPackagesDefine jpaEntityPackages() {
-        return new JpaEntityPackagesDefine("org.mx.test.entity");
-    }
 }
