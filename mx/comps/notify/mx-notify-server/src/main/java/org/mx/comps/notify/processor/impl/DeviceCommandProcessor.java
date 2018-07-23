@@ -12,7 +12,6 @@ import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.processor.MessageProcessor;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.mx.spring.utils.SpringContextHolder;
 
 import java.io.IOException;
 
@@ -103,7 +102,7 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
      * @param error      错误信息
      */
     protected void sendResponseMessage(String connectKey, String command, String deviceId, String error) {
-        WsSessionManager sessionManager = SpringContextHolder.getBean(WsSessionManager.class);
+        WsSessionManager sessionManager = WsSessionManager.getManager();
         if (sessionManager != null) {
             Session session = sessionManager.getSession(connectKey);
             if (session != null) {
