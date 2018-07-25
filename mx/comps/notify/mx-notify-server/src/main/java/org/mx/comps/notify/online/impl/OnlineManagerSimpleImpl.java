@@ -35,7 +35,6 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     private final Serializable onlineDeviceMutex = "ONLINE_DEVICE";
     private ConcurrentMap<String, OnlineDevice> onlineDevices;
     private Timer cleanTimer = null;
-    private int deviceIdleTimeoutSecs = 60;
 
     private NotifyConfigBean notifyConfigBean;
     private OnlineDeviceAuthenticate deviceAuthenticate;
@@ -231,6 +230,7 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
                     // 连接的会话已经断开，将设备从在线设备列表中移除
                     onlineDevices.remove(k);
                 }
+                int deviceIdleTimeoutSecs = notifyConfigBean.getDeviceIdleTimeoutSecs();
                 if (deviceIdleTimeoutSecs > 0) {
                     // 只有设置了正确的闲置时间，才使用心跳来判定设备是否在线
                     long delay = (System.currentTimeMillis() - v.getLastTime()) / 1000;
