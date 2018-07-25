@@ -82,10 +82,13 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     @Override
     public void afterPropertiesSet() {
         int deviceIdleTimeoutSecs = notifyConfigBean.getDeviceIdleTimeoutSecs();
+        cleanTimer = new Timer();
+        // 默认检测周期为20秒
+        long period = 20000;
         if (deviceIdleTimeoutSecs > 0) {
-            cleanTimer = new Timer();
-            cleanTimer.scheduleAtFixedRate(new CleanTask(), 5000, deviceIdleTimeoutSecs * 1000 / 3);
+            period = deviceIdleTimeoutSecs * 1000 / 3;
         }
+        cleanTimer.scheduleAtFixedRate(new CleanTask(), 5000, period);
     }
 
     /**
@@ -222,17 +225,26 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
         synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
             Set<String> invalid = new HashSet<>();
             onlineDevices.forEach((k, v) -> {
-                long delay = (System.currentTimeMillis() - v.getLastTime()) / 1000;
-                if (delay > deviceIdleTimeoutSecs) {
-                    // 超过约定时间没有心跳，判定为无效在线设备
+                String connectKey = v.getConnectKey();
+                Session session = sessionManager.getSession(connectKey);
+                if (session == null || !session.isOpen()) {
+                    // 连接的会话已经断开，将设备从在线设备列表中移除
                     onlineDevices.remove(k);
-                    if (logger.isDebugEnabled()) {
-                        logger.debug(String.format("The device[%s, %s] has been cleared for %d seconds without a heartbeat.",
-                                v.getDeviceId(), v.getConnectKey(), delay));
-                    }
-                    if (sessionManager != null) {
-                        // 同时对设备的会话进行清理
-                        invalid.add(v.getConnectKey());
+                }
+                if (deviceIdleTimeoutSecs > 0) {
+                    // 只有设置了正确的闲置时间，才使用心跳来判定设备是否在线
+                    long delay = (System.currentTimeMillis() - v.getLastTime()) / 1000;
+                    if (delay > deviceIdleTimeoutSecs) {
+                        // 超过约定时间没有心跳，判定为无效在线设备
+                        onlineDevices.remove(k);
+                        if (logger.isDebugEnabled()) {
+                            logger.debug(String.format("The device[%s, %s] has been cleared for %d seconds without a heartbeat.",
+                                    v.getDeviceId(), v.getConnectKey(), delay));
+                        }
+                        if (sessionManager != null) {
+                            // 同时对设备的会话进行清理
+                            invalid.add(v.getConnectKey());
+                        }
                     }
                 }
             });

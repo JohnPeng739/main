@@ -136,6 +136,9 @@ public class NotifyProcessor {
         if (listener != null) {
             listener.before(message);
         }
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Starting notify the message: %s.", message.toJSONString()));
+        }
         String deviceId = message.getString("deviceId");
         String tarType = message.getString("tarType");
         String tar = message.getString("tar");
