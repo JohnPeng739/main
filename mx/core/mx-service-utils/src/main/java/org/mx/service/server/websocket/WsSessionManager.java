@@ -39,6 +39,7 @@ public class WsSessionManager {
     private ConcurrentMap<String, Session> sessions;
     private ConcurrentMap<String, PingPongTime> pongs;
     private Set<WsSessionFilterRule> rules;
+    private List<WsSessionRemovedListener> removedListeners;
     private Set<String> blocks;
 
     /**
@@ -50,6 +51,7 @@ public class WsSessionManager {
         this.pongs = new ConcurrentHashMap<>();
         this.rules = new HashSet<>();
         this.blocks = new HashSet<>();
+        this.removedListeners = new ArrayList<>();
     }
 
     /**
@@ -62,6 +64,28 @@ public class WsSessionManager {
             manager = new WsSessionManager();
         }
         return manager;
+    }
+
+    /**
+     * 向会话移除监听回调列表中添加指定的监听器
+     *
+     * @param listener 会话移除监听接口
+     * @return 会话移除监听接口列表
+     */
+    public List<WsSessionRemovedListener> addSessionRemovedListener(WsSessionRemovedListener listener) {
+        this.removedListeners.add(listener);
+        return this.removedListeners;
+    }
+
+    /**
+     * 从会话移除监听回调列表中移除指定的监听器
+     *
+     * @param listener 会话移除监听接口
+     * @return 会话移除监听接口列表
+     */
+    public List<WsSessionRemovedListener> removeSessionRemovedListener(WsSessionRemovedListener listener) {
+        this.removedListeners.remove(listener);
+        return this.removedListeners;
     }
 
     /**
@@ -224,6 +248,10 @@ public class WsSessionManager {
             }
             sessions.remove(connectKey);
             pongs.remove(connectKey);
+            // 通知外部监听程序，移除了相应的连接
+            if (removedListeners != null && !removedListeners.isEmpty()) {
+                removedListeners.forEach(listener -> listener.sessionRemoved(connectKey));
+            }
         } else {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("The session[%s] not exist, the remove operate be ignored.", connectKey));
