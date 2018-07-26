@@ -173,7 +173,8 @@ public class WsSessionManager {
         if (session != null) {
             synchronized (setMutex) {
                 String connectKey = getConnectKey(session);
-                removeWsSession(connectKey);
+                sessions.remove(connectKey);
+                pongs.remove(connectKey);
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Remove a websocket session[%s] successfully.", connectKey));
                 }
