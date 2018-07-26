@@ -10,6 +10,7 @@ import org.mx.comps.notify.online.OnlineDeviceAuthenticate;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.comps.notify.processor.OnlineDeviceAuthenticateFactory;
 import org.mx.service.server.websocket.WsSessionManager;
+import org.mx.service.server.websocket.WsSessionRemovedListener;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,15 @@ import java.util.stream.Stream;
  * @author : john.peng created on date : 2018/1/5
  */
 @Component("onlineManagerSimple")
-public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean, DisposableBean {
+public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean, DisposableBean,
+        WsSessionRemovedListener {
     private static final Log logger = LogFactory.getLog(OnlineManagerSimpleImpl.class);
 
     private final Serializable onlineDeviceMutex = "ONLINE_DEVICE";
     private ConcurrentMap<String, OnlineDevice> onlineDevices;
     private Timer cleanTimer = null;
+
+    private WsSessionManager wsSessionManager;
 
     private NotifyConfigBean notifyConfigBean;
     private OnlineDeviceAuthenticate deviceAuthenticate;
@@ -52,6 +56,23 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
         this.notifyConfigBean = notifyConfigBean;
         if (!factory.getAuthenticates().isEmpty()) {
             this.deviceAuthenticate = factory.getAuthenticates().values().iterator().next();
+        }
+        wsSessionManager = WsSessionManager.getManager();
+        wsSessionManager.addSessionRemovedListener(this);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see WsSessionRemovedListener#sessionRemoved(String)
+     */
+    @Override
+    public void sessionRemoved(String connectKey) {
+        // 连接的会话已经断开，将设备从在线设备列表中移除
+        onlineDevices.remove(connectKey);
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("The online device[%s] is removed, because the session has been removed.",
+                    connectKey));
         }
     }
 
@@ -204,9 +225,8 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     @Override
     public Session getConnectionSession(String connectKey) {
         if (!StringUtils.isBlank(connectKey)) {
-            WsSessionManager sessionManager = WsSessionManager.getManager();
-            if (sessionManager != null) {
-                return sessionManager.getSession(connectKey);
+            if (wsSessionManager != null) {
+                return wsSessionManager.getSession(connectKey);
             } else {
                 if (logger.isWarnEnabled()) {
                     logger.warn("The WsSessionManager is not initialized.");
@@ -220,16 +240,9 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
      * 根据心跳时间来清除无效的连接设备
      */
     private void cleanInvalidDevices() {
-        WsSessionManager sessionManager = WsSessionManager.getManager();
         synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
             Set<String> invalid = new HashSet<>();
             onlineDevices.forEach((k, v) -> {
-                String connectKey = v.getConnectKey();
-                Session session = sessionManager.getSession(connectKey);
-                if (session == null || !session.isOpen()) {
-                    // 连接的会话已经断开，将设备从在线设备列表中移除
-                    onlineDevices.remove(k);
-                }
                 int deviceIdleTimeoutSecs = notifyConfigBean.getDeviceIdleTimeoutSecs();
                 if (deviceIdleTimeoutSecs > 0) {
                     // 只有设置了正确的闲置时间，才使用心跳来判定设备是否在线
@@ -241,14 +254,14 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
                             logger.debug(String.format("The device[%s, %s] has been cleared for %d seconds without a heartbeat.",
                                     v.getDeviceId(), v.getConnectKey(), delay));
                         }
-                        if (sessionManager != null) {
+                        if (wsSessionManager != null) {
                             // 同时对设备的会话进行清理
                             invalid.add(v.getConnectKey());
                         }
                     }
                 }
             });
-            sessionManager.removeWsSessions(invalid, 4002, "Be blocked for device's ping.");
+            wsSessionManager.removeWsSessions(invalid, 4002, "Be blocked for device's ping.");
         }
     }
 
