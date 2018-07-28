@@ -12,15 +12,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * 标准化的Websocket对象定义，通用结构，便于后续业务定制自有的WebSocket通信对象。
+ */
 @WebSocket
 public class SimpleWsObject {
     private static final Log logger = LogFactory.getLog(SimpleWsObject.class);
     private WsSessionListener listener = null;
 
+    /**
+     * 默认的构造函数
+     */
     public SimpleWsObject() {
         super();
     }
 
+    /**
+     * 构造函数
+     *
+     * @param listener Websocket会话监听器
+     */
     public SimpleWsObject(WsSessionListener listener) {
         this();
         this.listener = listener;
@@ -38,6 +49,11 @@ public class SimpleWsObject {
         return String.format("%s:%d", ip, port);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see OnWebSocketConnect
+     */
     @OnWebSocketConnect
     public final void onConnect(Session session) {
         String connectKey = getConnectKey(session);
@@ -53,6 +69,11 @@ public class SimpleWsObject {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see OnWebSocketClose
+     */
     @OnWebSocketClose
     public final void onClose(Session session, int code, String reason) {
         String connectKey = getConnectKey(session);
@@ -71,6 +92,11 @@ public class SimpleWsObject {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see OnWebSocketError
+     */
     @OnWebSocketError
     public final void onError(Session session, Throwable throwable) {
         String connectKey = getConnectKey(session);
@@ -82,6 +108,11 @@ public class SimpleWsObject {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see OnWebSocketFrame
+     */
     @OnWebSocketFrame
     public final void onFrame(Session session, Frame frame) {
         String connectKey = getConnectKey(session);
@@ -100,6 +131,11 @@ public class SimpleWsObject {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see OnWebSocketMessage
+     */
     @OnWebSocketMessage
     public final void onBinaryMessage(Session session, InputStream inputStream) {
         String connectKey = getConnectKey(session);
@@ -122,6 +158,11 @@ public class SimpleWsObject {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see OnWebSocketMessage
+     */
     @OnWebSocketMessage
     public final void onTextMessage(Session session, String message) {
         String connectKey = getConnectKey(session);

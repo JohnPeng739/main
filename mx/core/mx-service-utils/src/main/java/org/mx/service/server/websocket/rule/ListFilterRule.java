@@ -31,12 +31,20 @@ public class ListFilterRule implements WsSessionFilterRule {
 
     private Set<byte[]> allows, blocks;
 
+    /**
+     * 默认的构造函数
+     */
     public ListFilterRule() {
         super();
         this.allows = new HashSet<>();
         this.blocks = new HashSet<>();
     }
 
+    /**
+     * 构造函数
+     *
+     * @param filter 过滤器配置信息
+     */
     public ListFilterRule(WebsocketServerConfigBean.WebSocketFilter filter) {
         this();
         this.filter = filter;

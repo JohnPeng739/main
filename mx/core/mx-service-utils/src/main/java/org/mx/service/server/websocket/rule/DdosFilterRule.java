@@ -38,16 +38,29 @@ public class DdosFilterRule implements WsSessionFilterRule {
     private ConcurrentMap<String, Map<String, Long>> nodes = null;
     private int cycleSec = 30, maxConnections = 15;
 
+    /**
+     * 默认构造函数
+     */
     public DdosFilterRule() {
         super();
         nodes = new ConcurrentHashMap<>();
     }
 
+    /**
+     * 构造函数
+     *
+     * @param filter 过滤配置信息
+     */
     public DdosFilterRule(WebsocketServerConfigBean.WebSocketFilter filter) {
         this();
         this.filter = filter;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see WsSessionFilterRule#init(WsSessionManager)
+     */
     @Override
     public void init(WsSessionManager manager) {
         this.manager = manager;
@@ -55,6 +68,11 @@ public class DdosFilterRule implements WsSessionFilterRule {
         maxConnections = filter.getDdosMaxConnections();
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see WsSessionFilterRule#destroy()
+     */
     @Override
     public void destroy() {
         synchronized (setMutex) {
@@ -62,6 +80,11 @@ public class DdosFilterRule implements WsSessionFilterRule {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see WsSessionFilterRule#filter(Session)
+     */
     @Override
     public boolean filter(Session session) {
         String ip = TypeUtils.byteArray2Ip(session.getRemoteAddress().getAddress().getAddress());
