@@ -100,6 +100,10 @@ public class WebsocketServerFactory extends HttpServerFactory {
             if (requestUri != null) {
                 String path = requestUri.getPath();
                 if (!StringUtils.isBlank(path)) {
+                    // 如果path没有以"/"开头，则拼上
+                    if (!path.startsWith("/")) {
+                        path = String.format("/%s", path);
+                    }
                     return socketBeans.get(path);
                 }
             }

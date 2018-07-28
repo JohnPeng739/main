@@ -2,12 +2,13 @@ package org.mx.service.server.websocket;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.StringUtils;
 
 /**
  * 描述： 默认的Websocket session生命周期监控器实现。
  *
  * @author John.Peng
- *         Date time 2018/3/10 上午10:56
+ * Date time 2018/3/10 上午10:56
  */
 public class DefaultWsSessionMonitor implements WsSessionListener {
     private static final Log logger = LogFactory.getLog(DefaultWsSessionMonitor.class);
@@ -25,7 +26,13 @@ public class DefaultWsSessionMonitor implements WsSessionListener {
 
     @Override
     public String getPath() {
-        return path;
+        if (StringUtils.isBlank(path)) {
+            // 默认为根路径
+            return "/";
+        } else {
+            // 如果没有以"/"开头，自动拼上
+            return path.startsWith("/") ? path : String.format("/%s", path);
+        }
     }
 
     @Override
