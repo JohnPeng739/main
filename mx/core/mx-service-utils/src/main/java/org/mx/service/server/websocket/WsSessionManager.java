@@ -173,12 +173,7 @@ public class WsSessionManager {
         if (session != null) {
             synchronized (setMutex) {
                 String connectKey = getConnectKey(session);
-                sessions.remove(connectKey);
-                pongs.remove(connectKey);
-                // 通知外部监听程序，移除了相应的连接
-                if (removedListeners != null && !removedListeners.isEmpty()) {
-                    removedListeners.forEach(listener -> listener.sessionRemoved(connectKey));
-                }
+                removeWsSession(connectKey);
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("Remove a websocket session[%s] successfully.", connectKey));
                 }
@@ -243,7 +238,10 @@ public class WsSessionManager {
      */
     private void removeWsSession(String connectKey, int code, String reason) {
         if (sessions.containsKey(connectKey)) {
+            // 先清除缓存，防止在session.close()时被重复回调。
             Session session = sessions.get(connectKey);
+            sessions.remove(connectKey);
+            pongs.remove(connectKey);
             try {
                 session.close(code, reason);
             } catch (Exception ex) {
@@ -251,8 +249,6 @@ public class WsSessionManager {
                     logger.error("Close the session fail.", ex);
                 }
             }
-            sessions.remove(connectKey);
-            pongs.remove(connectKey);
             // 通知外部监听程序，移除了相应的连接
             if (removedListeners != null && !removedListeners.isEmpty()) {
                 removedListeners.forEach(listener -> listener.sessionRemoved(connectKey));
