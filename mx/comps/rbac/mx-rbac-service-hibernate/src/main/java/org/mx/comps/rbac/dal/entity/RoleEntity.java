@@ -4,7 +4,6 @@ import org.mx.dal.entity.BaseDictEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,12 +14,12 @@ import java.util.Set;
 @Entity
 @Table(name = "TB_ROLE")
 public class RoleEntity extends BaseDictEntity implements Role {
-    @ManyToMany(targetEntity = AccountEntity.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = AccountEntity.class, fetch = FetchType.LAZY)
     @JoinTable(name = "TB_ACCOUNT_ROLE",
             joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ID"))
     private Set<Account> accounts;
-    @ManyToMany(targetEntity = PrivilegeEntity.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = PrivilegeEntity.class, fetch = FetchType.LAZY)
     @JoinTable(name = "TB_ROLE_PRIVILEGE",
             joinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "PRIVILEGE_ID", referencedColumnName = "ID"))

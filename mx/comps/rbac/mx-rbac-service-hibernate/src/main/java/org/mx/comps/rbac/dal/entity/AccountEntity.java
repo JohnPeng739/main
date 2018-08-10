@@ -18,7 +18,7 @@ public class AccountEntity extends BaseDictEntity implements Account {
     private String password;
     @ManyToOne(targetEntity = UserEntity.class)
     private User owner;
-    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.LAZY)
     @JoinTable(name = "TB_ACCOUNT_ROLE",
             joinColumns = @JoinColumn(name = "ACCOUNT_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))

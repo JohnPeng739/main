@@ -10,6 +10,7 @@ import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.AccreditManageService;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.comps.rbac.service.UserManageService;
+import org.mx.comps.rbac.service.hibernate.impl.LazyLoadServiceImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
 
@@ -37,6 +38,8 @@ public class TestAccredit extends BaseTest {
         assertNotNull(accountManageService);
         RoleManageService roleManageService = context.getBean(RoleManageService.class);
         assertNotNull(roleManageService);
+        LazyLoadServiceImpl lazyLoad = context.getBean(LazyLoadServiceImpl.class);
+        assertNotNull(lazyLoad);
 
         try {
             TestUser.testInsertUser(service, userManageService);
@@ -133,6 +136,7 @@ public class TestAccredit extends BaseTest {
                     TestAccount.account1Id, TestAccount.account2Id,
                     Arrays.asList(TestRole.role1Id, TestRole.role2Id, TestRole.role3Id), startTime, endTime, "desc");
             Accredit accredit = accreditService.accredit(accreditInfo);
+            accredit = lazyLoad.getAccreditById(accredit.getId());
             assertEquals(1, service.count(Accredit.class));
             assertNotNull(accredit);
             assertEquals(account1, accredit.getSrc());
@@ -142,7 +146,7 @@ public class TestAccredit extends BaseTest {
             assertEquals(endTime, accredit.getEndTime().getTime());
             assertTrue(accredit.isValid());
             assertEquals("desc", accredit.getDesc());
-            accredit = service.getById(accredit.getId(), Accredit.class);
+            accredit = lazyLoad.getAccreditById(accredit.getId());
             assertNotNull(accredit);
             assertEquals(account1, accredit.getSrc());
             assertEquals(account2, accredit.getTar());
@@ -169,7 +173,7 @@ public class TestAccredit extends BaseTest {
             accredit = accreditService.accredit(accreditInfo);
             assertEquals(2, service.count(Accredit.class));
             assertEquals(2, service.count(Accredit.class, false));
-            accredit = service.getById(accredit.getId(), Accredit.class);
+            accredit = lazyLoad.getAccreditById(accredit.getId());
             assertNotNull(accredit);
             assertEquals(account1, accredit.getSrc());
             assertEquals(account2, accredit.getTar());
@@ -187,11 +191,12 @@ public class TestAccredit extends BaseTest {
             accreditInfo = AccreditManageService.AccreditInfo.valueOf(
                     TestAccount.account1Id, TestAccount.account2Id,
                     Arrays.asList(TestRole.role1Id, TestRole.role3Id), startTime, -1, "desc");
-            accredit = accreditService.accredit(accreditInfo);
+            String accreditId = accreditService.accredit(accreditInfo).getId();
+            accredit = lazyLoad.getAccreditById(accreditId);
             assertEquals(2, service.count(Accredit.class));
             assertEquals(3, service.count(Accredit.class, false));
             assertNotNull(accredit);
-            accredit = service.getById(accredit.getId(), Accredit.class);
+            accredit = lazyLoad.getAccreditById(accredit.getId());
             assertNotNull(accredit);
             assertEquals(account1, accredit.getSrc());
             assertEquals(account2, accredit.getTar());

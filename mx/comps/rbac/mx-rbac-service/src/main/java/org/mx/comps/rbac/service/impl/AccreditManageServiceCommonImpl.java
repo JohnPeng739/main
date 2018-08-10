@@ -8,9 +8,7 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccreditManageService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -23,9 +21,6 @@ import java.util.Set;
  */
 public abstract class AccreditManageServiceCommonImpl implements AccreditManageService {
     protected GeneralAccessor accessor = null;
-
-    @Autowired
-    private OperateLogService operateLogService = null;
 
     /**
      * 保存授权实体对象
@@ -85,12 +80,7 @@ public abstract class AccreditManageServiceCommonImpl implements AccreditManageS
         }
         accredit.setValid(true);
         accredit.setDesc(accreditInfo.getDesc());
-        accredit = this.save(accredit);
-        if (operateLogService != null) {
-            operateLogService.writeLog(String.format("新增授权[%s=>%s]成功。", accredit.getSrc().getName(),
-                    accredit.getTar().getName()));
-        }
-        return accredit;
+        return this.save(accredit);
     }
 
     /**
@@ -111,11 +101,6 @@ public abstract class AccreditManageServiceCommonImpl implements AccreditManageS
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCREDIT_HAS_CLOSED);
         }
         accredit.setValid(false);
-        accredit = this.save(accredit);
-        if (operateLogService != null) {
-            operateLogService.writeLog(String.format("关闭授权[%s=>%s]成功。", accredit.getSrc().getName(),
-                    accredit.getTar().getName()));
-        }
-        return accredit;
+        return this.save(accredit);
     }
 }

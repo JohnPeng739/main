@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "TB_PRIVILEGE")
 public class PrivilegeEntity extends BaseDictEntity implements Privilege {
-    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.LAZY)
     @JoinTable(name = "TB_ROLE_PRIVILEGE",
             joinColumns = @JoinColumn(name = "PRIVILEGE_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))

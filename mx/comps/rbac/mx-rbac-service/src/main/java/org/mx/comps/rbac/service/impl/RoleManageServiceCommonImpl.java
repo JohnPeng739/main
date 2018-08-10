@@ -10,9 +10,7 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 的角色管理服务公共实现。
@@ -23,9 +21,6 @@ public abstract class RoleManageServiceCommonImpl implements RoleManageService {
     private static final Log logger = LogFactory.getLog(RoleManageServiceCommonImpl.class);
 
     protected GeneralDictAccessor accessor = null;
-
-    @Autowired
-    private OperateLogService operateLogService = null;
 
     /**
      * 保存角色实体对象
@@ -70,7 +65,7 @@ public abstract class RoleManageServiceCommonImpl implements RoleManageService {
                 role.getAccounts().add(account);
             }
         }
-        if (role.getPrivileges() != null && !role.getPrivileges().isEmpty()) {
+        if (role.getPrivileges() != null) {
             role.getPrivileges().clear();
             for (String privilegeId : roleInfo.getPrivilegeIds()) {
                 Privilege privilege = accessor.getById(privilegeId, Privilege.class);
@@ -81,11 +76,6 @@ public abstract class RoleManageServiceCommonImpl implements RoleManageService {
             }
         }
         role.setValid(roleInfo.isValid());
-        role = this.save(role);
-        if (operateLogService != null) {
-            operateLogService.writeLog(String.format("保存角色[code=%s, name=%s]信息成功。",
-                    roleInfo.getCode(), roleInfo.getName()));
-        }
-        return role;
+        return this.save(role);
     }
 }

@@ -11,7 +11,6 @@ import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.UserManageService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,9 +28,6 @@ public abstract class UserManageServiceCommonImpl implements UserManageService {
 
     @Autowired
     private AccountManageService accountManageService = null;
-
-    @Autowired
-    private OperateLogService operateLogService = null;
 
     /**
      * 保存用户实体对象
@@ -60,11 +56,7 @@ public abstract class UserManageServiceCommonImpl implements UserManageService {
         if (account != null) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_HAS_EXIST);
         }
-        account = accountManageService.saveAccount(accountInfo);
-        if (operateLogService != null) {
-            operateLogService.writeLog(String.format("为用户[%s]分配账户[%s]成功。", user.getFullName(), account.getCode()));
-        }
-        return account;
+        return accountManageService.saveAccount(accountInfo);
     }
 
     /**
@@ -106,15 +98,10 @@ public abstract class UserManageServiceCommonImpl implements UserManageService {
         }
         user.setDesc(userInfo.getDesc());
         user.setFirstName(userInfo.getFirstName());
-        user.setMiddleName(userInfo.getMiddleName());
         user.setLastName(userInfo.getLastName());
         user.setSex(userInfo.getSex());
         user.setStation(userInfo.getStation());
         user.setValid(userInfo.isValid());
-        user = this.save(user);
-        if (operateLogService != null) {
-            operateLogService.writeLog(String.format("保存用户[name=%s]信息成功。", user.getFullName()));
-        }
-        return user;
+        return this.save(user);
     }
 }

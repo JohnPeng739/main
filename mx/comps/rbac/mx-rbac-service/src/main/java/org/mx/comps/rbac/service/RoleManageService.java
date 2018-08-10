@@ -46,11 +46,11 @@ public interface RoleManageService {
             this.valid = valid;
         }
 
-        public static final RoleInfo valueOf(String code, String name, String desc) {
+        public static RoleInfo valueOf(String code, String name, String desc) {
             return new RoleInfo(code, name, desc);
         }
 
-        public static final RoleInfo valueOf(String code, String name, String desc, String roleId, List<String> accountIds,
+        public static RoleInfo valueOf(String code, String name, String desc, String roleId, List<String> accountIds,
                                              List<String> privilegeIds, boolean valid) {
             return new RoleInfo(code, name, desc, roleId, accountIds, privilegeIds, valid);
         }

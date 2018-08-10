@@ -9,6 +9,7 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.DepartmentManageService;
 import org.mx.comps.rbac.service.UserManageService;
+import org.mx.comps.rbac.service.hibernate.impl.LazyLoadServiceImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 
 import java.text.ParseException;
@@ -29,7 +30,7 @@ public class TestUser extends BaseTest {
 
     public static void testInsertUser(GeneralDictAccessor service, UserManageService userService) throws ParseException {
         long birthday = new SimpleDateFormat("yyyy-MM-dd").parse("1973-09-18").getTime();
-        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("喜", "明",
+        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("明喜",
                 "彭", User.Sex.MALE, "", birthday, "", "manager", true,
                 "This is John.Peng.");
         User john = userService.saveUser(userInfo);
@@ -65,22 +66,22 @@ public class TestUser extends BaseTest {
         assertEquals(service.count(User.class, true), 1);
         assertEquals(service.count(User.class, false), 1);
 
-        userInfo = UserManageService.UserInfo.valueOf("joy", "",
+        userInfo = UserManageService.UserInfo.valueOf("joy",
                 "peng", User.Sex.FEMALE);
         User joy = userService.saveUser(userInfo);
         joyId = joy.getId();
         assertEquals(2, service.count(User.class));
         assertNotNull(joy);
         assertNotNull(joy.getId());
-        assertEquals(joy.getFullName(), "peng joy");
+        assertEquals(joy.getFullName(), "joy peng");
         joy = service.getById(joy.getId(), User.class);
         assertNotNull(joy);
         assertNotNull(joy.getId());
-        assertEquals(joy.getFullName(), "peng joy");
+        assertEquals(joy.getFullName(), "joy peng");
     }
 
     public static void testEditUser(GeneralDictAccessor service, UserManageService userService) {
-        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("josh", "",
+        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("josh",
                 "peng", User.Sex.MALE, "", -1, "", "", true,
                 "original desc.");
         User josh = userService.saveUser(userInfo);
@@ -88,7 +89,7 @@ public class TestUser extends BaseTest {
         assertNotNull(josh);
         assertNotNull(josh.getId());
         assertEquals(service.count(User.class), 3);
-        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(), josh.getMiddleName(),
+        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(),
                 josh.getLastName(), josh.getSex(), josh.getId(), -1, "", "", false,
                 "new desc.");
         josh = userService.saveUser(userInfo);
@@ -99,7 +100,7 @@ public class TestUser extends BaseTest {
         assertEquals(service.count(User.class, true), 2);
         assertEquals(service.count(User.class, false), 3);
 
-        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(), josh.getMiddleName(),
+        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(),
                 josh.getLastName(), josh.getSex(), josh.getId(), -1, "", "", true,
                 josh.getDesc());
         userService.saveUser(userInfo);
@@ -136,6 +137,8 @@ public class TestUser extends BaseTest {
         assertNotNull(service);
         DepartmentManageService departManageService = context.getBean(DepartmentManageService.class);
         assertNotNull(departManageService);
+        LazyLoadServiceImpl lazyLoad =context.getBean(LazyLoadServiceImpl.class);
+        assertNotNull(lazyLoad);
 
         try {
             TestDepartment.testInsertDepartment(service, departManageService);
@@ -151,7 +154,7 @@ public class TestUser extends BaseTest {
             User josh = service.getById(joshId, User.class);
             assertNotNull(josh);
             assertNull(josh.getDepartment());
-            Department depart1 = service.getById(TestDepartment.depart1Id, Department.class);
+            Department depart1 = lazyLoad.getDepartmentById(TestDepartment.depart1Id);
             assertNotNull(depart1);
             joy.setDepartment(depart1);
             service.save(joy);
@@ -159,7 +162,7 @@ public class TestUser extends BaseTest {
             assertNotNull(joy);
             assertNotNull(joy.getDepartment());
             assertEquals(depart1, joy.getDepartment());
-            depart1 = service.getById(TestDepartment.depart1Id, Department.class);
+            depart1 = lazyLoad.getDepartmentById(TestDepartment.depart1Id);
             assertNotNull(depart1);
             assertEquals(1, depart1.getEmployees().size());
             assertEquals(new HashSet<>(Arrays.asList(joy)), depart1.getEmployees());
@@ -170,7 +173,7 @@ public class TestUser extends BaseTest {
             assertNotNull(josh);
             assertNotNull(josh.getDepartment());
             assertEquals(depart1, josh.getDepartment());
-            depart1 = service.getById(TestDepartment.depart1Id, Department.class);
+            depart1 = lazyLoad.getDepartmentById(TestDepartment.depart1Id);
             assertNotNull(depart1);
             assertEquals(2, depart1.getEmployees().size());
             assertEquals(new HashSet<>(Arrays.asList(joy, josh)), depart1.getEmployees());
@@ -180,7 +183,7 @@ public class TestUser extends BaseTest {
             joy = service.getById(joyId, User.class);
             assertNotNull(joy);
             assertNull(joy.getDepartment());
-            depart1 = service.getById(TestDepartment.depart1Id, Department.class);
+            depart1 = lazyLoad.getDepartmentById(TestDepartment.depart1Id);
             assertNotNull(depart1);
             assertEquals(1, depart1.getEmployees().size());
             assertEquals(new HashSet<>(Arrays.asList(josh)), depart1.getEmployees());
@@ -197,6 +200,9 @@ public class TestUser extends BaseTest {
         assertNotNull(service);
         AccountManageService accountManageService = context.getBean(AccountManageService.class);
         assertNotNull(accountManageService);
+        LazyLoadServiceImpl lazyLoad = context.getBean(LazyLoadServiceImpl.class);
+        assertNotNull(lazyLoad);
+
         try {
             testInsertUser(service, userService);
             testEditUser(service, userService);
@@ -219,12 +225,11 @@ public class TestUser extends BaseTest {
             // 正常创建
             accountInfo = AccountManageService.AccountInfo.valueOf("John.Peng",
                     "edmund!@#123", "desc", "", john.getId(), Arrays.asList(), true);
-            Account account = userService.allocateAccount(accountInfo);
+            String accountId = userService.allocateAccount(accountInfo).getId();
+            Account account = lazyLoad.getAccoutById(accountId);
             assertNotNull(account);
             assertEquals(3, service.count(User.class));
             assertEquals(1, service.count(Account.class));
-            account = service.getByCode("John.Peng", Account.class);
-            assertNotNull(account);
             assertNotNull(account.getOwner());
             assertEquals(john, account.getOwner());
             assertEquals(DigestUtils.md5("edmund!@#123"), account.getPassword());

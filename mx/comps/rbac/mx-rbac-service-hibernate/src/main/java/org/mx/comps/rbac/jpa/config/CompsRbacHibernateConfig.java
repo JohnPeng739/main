@@ -1,7 +1,6 @@
 package org.mx.comps.rbac.jpa.config;
 
 import org.mx.dal.config.DalHibernateConfig;
-import org.mx.dal.config.JpaEntityPackagesDefine;
 import org.springframework.context.annotation.*;
 
 /**
@@ -14,10 +13,9 @@ import org.springframework.context.annotation.*;
 @ComponentScan({
         "org.mx.comps.rbac.service.hibernate.impl"
 })
+@ComponentScan({
+        "org.mx.comps.jwt",
+        "org.mx.comps.rbac.service.hibernate.impl"
+})
 public class CompsRbacHibernateConfig {
-    @Bean("jpaEntityPackagesRbac")
-    @Lazy(false)
-    public JpaEntityPackagesDefine jpaEntityPackages() {
-        return new JpaEntityPackagesDefine("org.mx.comps.rbac.dal.entity");
-    }
 }

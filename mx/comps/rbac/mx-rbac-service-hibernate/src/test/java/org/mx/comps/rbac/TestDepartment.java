@@ -57,8 +57,8 @@ public class TestDepartment extends BaseTest {
         assertNotNull(depart3.getId());
         depart3Id = depart3.getId();
 
-        departInfo = DepartmentManageService.DepartInfo.valueOf("depart3",
-                "new name", "description", depart3.getId(), "", Arrays.asList(), false);
+        departInfo = DepartmentManageService.DepartInfo.valueOf(depart3Id, "depart3",
+                "new name", "description", "", Arrays.asList(), false);
         depart3 = departService.saveDepartment(departInfo);
         assertEquals(2, service.count(Department.class));
         assertEquals(3, service.count(Department.class, false));
@@ -68,8 +68,8 @@ public class TestDepartment extends BaseTest {
         assertEquals("new name", depart3.getName());
         assertFalse(depart3.isValid());
 
-        departInfo = DepartmentManageService.DepartInfo.valueOf("depart3",
-                "depart3", "description", depart3.getId(), "", Arrays.asList(), true);
+        departInfo = DepartmentManageService.DepartInfo.valueOf(depart3Id,"depart3",
+                "depart3", "description", "", Arrays.asList(), true);
         departService.saveDepartment(departInfo);
         assertEquals(3, service.count(Department.class));
         assertEquals(3, service.count(Department.class, false));
@@ -119,8 +119,8 @@ public class TestDepartment extends BaseTest {
             User john = service.getById(TestUser.johnId, User.class);
             assertNotNull(john);
             assertTrue(john.isValid());
-            DepartmentManageService.DepartInfo departInfo = DepartmentManageService.DepartInfo.valueOf(depart1.getCode(),
-                    depart1.getName(), depart1.getDesc(), depart1.getId(), john.getId(), Arrays.asList(), true);
+            DepartmentManageService.DepartInfo departInfo = DepartmentManageService.DepartInfo.valueOf(depart1.getId(), depart1.getCode(),
+                    depart1.getName(), depart1.getDesc(), john.getId(), Arrays.asList(), true);
             depart1 = departService.saveDepartment(departInfo);
             assertEquals(3, service.count(Department.class));
             assertNotNull(depart1);
@@ -129,8 +129,8 @@ public class TestDepartment extends BaseTest {
             assertNotNull(depart1.getManager());
             assertEquals(john, depart1.getManager());
 
-            departInfo = DepartmentManageService.DepartInfo.valueOf(depart1.getCode(),
-                    depart1.getName(), depart1.getDesc(), depart1.getId(), null, Arrays.asList(), true);
+            departInfo = DepartmentManageService.DepartInfo.valueOf(depart1.getId(),depart1.getCode(),
+                    depart1.getName(), depart1.getDesc(),  null, Arrays.asList(), true);
             departService.saveDepartment(departInfo);
             depart1 = service.getById(depart1Id, Department.class);
             assertEquals(3, service.count(Department.class));

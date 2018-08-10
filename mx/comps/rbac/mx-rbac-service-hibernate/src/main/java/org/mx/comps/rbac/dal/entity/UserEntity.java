@@ -5,8 +5,6 @@ import org.mx.dal.entity.BaseEntity;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 /**
  * 用户对象实体定义，使用JPA
@@ -18,11 +16,9 @@ import java.util.Set;
 public class UserEntity extends BaseEntity implements User {
     @Column(name = "FIRST_NAME", nullable = false, length = 20)
     private String firstName;
-    @Column(name = "MIDDLE_NAME", length = 6)
-    private String middleName;
     @Column(name = "LAST_NAME", nullable = false, length = 6)
     private String lastName;
-    @Column(name = "DESCRIPTION", length = 255)
+    @Column(name = "DESCRIPTION")
     private String desc;
     @Column(name = "SEX")
     private Sex sex;
@@ -58,26 +54,6 @@ public class UserEntity extends BaseEntity implements User {
     /**
      * {@inheritDoc}
      *
-     * @see User#getMiddleName()
-     */
-    @Override
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see User#setMiddleName(String)
-     */
-    @Override
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
      * @see User#getLastName()
      */
     @Override
@@ -102,8 +78,12 @@ public class UserEntity extends BaseEntity implements User {
      */
     @Override
     public String getFullName() {
-        return String.format("%s%s%s", firstName == null ? "" : firstName + " ", middleName == null ? "" : middleName,
-                lastName == null ? "" : lastName + "");
+        if (StringUtils.isChinese(firstName) && StringUtils.isChinese(lastName)) {
+            return String.format("%s %s", lastName, firstName).trim();
+        } else {
+            return String.format("%s %s", firstName == null ? "" : firstName + "",
+                    lastName == null ? "" : lastName + "").trim();
+        }
     }
 
     /**

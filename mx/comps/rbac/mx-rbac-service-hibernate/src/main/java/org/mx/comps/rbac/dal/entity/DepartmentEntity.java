@@ -1,6 +1,6 @@
 package org.mx.comps.rbac.dal.entity;
 
-import org.mx.dal.entity.BaseDictEntity;
+import org.mx.dal.entity.BaseDictTreeEntity;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -13,11 +13,11 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "TB_DEPARTMENT")
-public class DepartmentEntity extends BaseDictEntity implements Department {
+public class DepartmentEntity extends BaseDictTreeEntity<DepartmentEntity> implements Department {
     @ManyToOne(targetEntity = UserEntity.class)
     private User manager;
     // 只查看关系，不维护，在User中维护关系。
-    @OneToMany(targetEntity = UserEntity.class, cascade = {CascadeType.REFRESH}, mappedBy = "department", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = UserEntity.class, cascade = {CascadeType.REFRESH}, mappedBy = "department", fetch = FetchType.LAZY)
     private Set<User> employees;
 
     /**

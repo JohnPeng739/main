@@ -10,12 +10,19 @@ import org.mx.comps.rbac.service.hibernate.TestLogicalTransactService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.impl.GeneralDictAccessorImpl;
+import org.mx.dal.session.SessionDataStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component("testLogicalTransactService")
 public class TestLogicalTransactServiceImpl extends GeneralDictAccessorImpl implements TestLogicalTransactService {
     private static final Log logger = LogFactory.getLog(TestLogicalTransactServiceImpl.class);
+
+    @Autowired
+    public TestLogicalTransactServiceImpl(SessionDataStore sessionDataStore) {
+        super(sessionDataStore);
+    }
 
     @Transactional
     @Override

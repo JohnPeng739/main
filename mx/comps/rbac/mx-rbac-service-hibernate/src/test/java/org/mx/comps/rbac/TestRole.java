@@ -8,6 +8,7 @@ import org.mx.comps.rbac.dal.entity.User;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.comps.rbac.service.UserManageService;
+import org.mx.comps.rbac.service.hibernate.impl.LazyLoadServiceImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 
 import java.util.Arrays;
@@ -110,6 +111,8 @@ public class TestRole extends BaseTest {
         assertNotNull(userManageService);
         AccountManageService accountManageService = context.getBean(AccountManageService.class);
         assertNotNull(accountManageService);
+        LazyLoadServiceImpl lazyLoad = context.getBean(LazyLoadServiceImpl.class);
+        assertNotNull(lazyLoad);
 
         try {
             TestUser.testInsertUser(service, userManageService);
@@ -122,7 +125,7 @@ public class TestRole extends BaseTest {
             assertEquals(3, service.count(Account.class));
             assertEquals(3, service.count(Role.class));
 
-            Role role1 = service.getById(role1Id, Role.class);
+            Role role1 = lazyLoad.getRoleById(role1Id);
             assertNotNull(role1);
             assertEquals(0, role1.getAccounts().size());
             Account account1 = service.getById(TestAccount.account1Id, Account.class);
@@ -137,7 +140,7 @@ public class TestRole extends BaseTest {
                     Arrays.asList(), role1.isValid());
             roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
-            role1 = service.getById(role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(role1Id);
             assertNotNull(role1);
             assertNotNull(role1.getAccounts());
             assertEquals(3, role1.getAccounts().size());
@@ -148,7 +151,7 @@ public class TestRole extends BaseTest {
                     Arrays.asList(), role1.isValid());
             roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
-            role1 = service.getById(role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(role1Id);
             assertNotNull(role1);
             assertNotNull(role1.getAccounts());
             assertEquals(2, role1.getAccounts().size());
@@ -158,7 +161,7 @@ public class TestRole extends BaseTest {
                     role1.getDesc(), role1.getId(), Arrays.asList(),
                     Arrays.asList(), role1.isValid());
             roleService.saveRole(roleInfo);
-            role1 = service.getById(role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(role1Id);
             assertNotNull(role1);
             assertEquals(0, role1.getAccounts().size());
         } catch (Exception ex) {
@@ -172,6 +175,9 @@ public class TestRole extends BaseTest {
         assertNotNull(service);
         RoleManageService roleService = context.getBean(RoleManageService.class);
         assertNotNull(service);
+        LazyLoadServiceImpl lazyLoad = context.getBean(LazyLoadServiceImpl.class);
+        assertNotNull(lazyLoad);
+
         try {
             TestPrivilege.testInsertPrivilege(service);
             TestPrivilege.testEditPrivilege(service);
@@ -180,16 +186,16 @@ public class TestRole extends BaseTest {
             assertEquals(3, service.count(Role.class));
             assertEquals(3, service.count(Privilege.class));
 
-            Role role1 = service.getById(role1Id, Role.class);
+            Role role1 = lazyLoad.getRoleById(role1Id);
             assertNotNull(role1);
             assertTrue(role1.getPrivileges().isEmpty());
-            Privilege p1 = service.getById(TestPrivilege.p1Id, Privilege.class);
+            Privilege p1 = lazyLoad.getPrivilegeById(TestPrivilege.p1Id);
             assertNotNull(p1);
             assertTrue(p1.getRoles().isEmpty());
-            Privilege p2 = service.getById(TestPrivilege.p2Id, Privilege.class);
+            Privilege p2 = lazyLoad.getPrivilegeById(TestPrivilege.p2Id);
             assertNotNull(p2);
             assertTrue(p2.getRoles().isEmpty());
-            Privilege p3 = service.getById(TestPrivilege.p3Id, Privilege.class);
+            Privilege p3 = lazyLoad.getPrivilegeById(TestPrivilege.p3Id);
             assertNotNull(p3);
             assertTrue(p3.getRoles().isEmpty());
 
@@ -198,19 +204,19 @@ public class TestRole extends BaseTest {
                     Arrays.asList(p1.getId(), p2.getId(), p3.getId()), role1.isValid());
             roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
-            role1 = service.getById(role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(role1Id);
             assertNotNull(role1);
             assertEquals(3, role1.getPrivileges().size());
             assertEquals(new HashSet<>(Arrays.asList(p1, p2, p3)), role1.getPrivileges());
-            p1 = service.getById(TestPrivilege.p1Id, Privilege.class);
+            p1 = lazyLoad.getPrivilegeById(TestPrivilege.p1Id);
             assertNotNull(p1);
             assertEquals(1, p1.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1)), p1.getRoles());
-            p2 = service.getById(TestPrivilege.p2Id, Privilege.class);
+            p2 = lazyLoad.getPrivilegeById(TestPrivilege.p2Id);
             assertNotNull(p2);
             assertEquals(1, p2.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1)), p2.getRoles());
-            p3 = service.getById(TestPrivilege.p3Id, Privilege.class);
+            p3 = lazyLoad.getPrivilegeById(TestPrivilege.p3Id);
             assertNotNull(p3);
             assertEquals(1, p3.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1)), p3.getRoles());
@@ -220,18 +226,18 @@ public class TestRole extends BaseTest {
                     Arrays.asList(p1.getId(), p3.getId()), role1.isValid());
             roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
-            role1 = service.getById(role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(role1Id);
             assertNotNull(role1);
             assertEquals(2, role1.getPrivileges().size());
             assertEquals(new HashSet<>(Arrays.asList(p1, p3)), role1.getPrivileges());
-            p1 = service.getById(TestPrivilege.p1Id, Privilege.class);
+            p1 = lazyLoad.getPrivilegeById(TestPrivilege.p1Id);
             assertNotNull(p1);
             assertEquals(1, p1.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1)), p1.getRoles());
-            p2 = service.getById(TestPrivilege.p2Id, Privilege.class);
+            p2 = lazyLoad.getPrivilegeById(TestPrivilege.p2Id);
             assertNotNull(p2);
             assertEquals(0, p2.getRoles().size());
-            p3 = service.getById(TestPrivilege.p3Id, Privilege.class);
+            p3 = lazyLoad.getPrivilegeById(TestPrivilege.p3Id);
             assertNotNull(p3);
             assertEquals(1, p3.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1)), p3.getRoles());
@@ -241,16 +247,16 @@ public class TestRole extends BaseTest {
                     Arrays.asList(), role1.isValid());
             roleService.saveRole(roleInfo);
             assertEquals(3, service.count(Role.class));
-            role1 = service.getById(role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(role1Id);
             assertNotNull(role1);
             assertEquals(0, role1.getPrivileges().size());
-            p1 = service.getById(TestPrivilege.p1Id, Privilege.class);
+            p1 = lazyLoad.getPrivilegeById(TestPrivilege.p1Id);
             assertNotNull(p1);
             assertEquals(0, p1.getRoles().size());
-            p2 = service.getById(TestPrivilege.p2Id, Privilege.class);
+            p2 = lazyLoad.getPrivilegeById(TestPrivilege.p2Id);
             assertNotNull(p2);
             assertEquals(0, p2.getRoles().size());
-            p3 = service.getById(TestPrivilege.p3Id, Privilege.class);
+            p3 = lazyLoad.getPrivilegeById(TestPrivilege.p3Id);
             assertNotNull(p3);
             assertEquals(0, p3.getRoles().size());
         } catch (Exception ex) {

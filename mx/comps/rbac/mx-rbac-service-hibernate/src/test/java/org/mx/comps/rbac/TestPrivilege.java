@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.mx.comps.rbac.dal.entity.Privilege;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.service.RoleManageService;
+import org.mx.comps.rbac.service.hibernate.impl.LazyLoadServiceImpl;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
 
@@ -100,6 +101,8 @@ public class TestPrivilege extends BaseTest {
         assertNotNull(service);
         RoleManageService roleManageService = context.getBean( RoleManageService.class);
         assertNotNull(roleManageService);
+        LazyLoadServiceImpl lazyLoad = context.getBean(LazyLoadServiceImpl.class);
+        assertNotNull(lazyLoad);
 
         try {
             TestRole.testInsertRole(service, roleManageService);
@@ -109,12 +112,12 @@ public class TestPrivilege extends BaseTest {
             assertEquals(3, service.count(Role.class));
             assertEquals(3, service.count(Privilege.class));
 
-            Privilege p1 = service.getById(p1Id, Privilege.class);
+            Privilege p1 = lazyLoad.getPrivilegeById(p1Id);
             assertNotNull(p1);
             assertTrue(p1.getRoles().isEmpty());
-            Role role1 = service.getById(TestRole.role1Id, Role.class);
-            Role role2 = service.getById(TestRole.role2Id, Role.class);
-            Role role3 = service.getById(TestRole.role3Id, Role.class);
+            Role role1 = lazyLoad.getRoleById(TestRole.role1Id);
+            Role role2 = lazyLoad.getRoleById(TestRole.role2Id);
+            Role role3 = lazyLoad.getRoleById(TestRole.role3Id);
             assertNotNull(role1);
             assertTrue(role1.getPrivileges().isEmpty());
             assertNotNull(role2);
@@ -126,53 +129,53 @@ public class TestPrivilege extends BaseTest {
             p1.getRoles().add(role2);
             p1.getRoles().add(role3);
             service.save(p1);
-            p1 = service.getById(p1Id, Privilege.class);
+            p1 = lazyLoad.getPrivilegeById(p1Id);
             assertNotNull(p1);
             assertEquals(3, p1.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1, role2, role3)), p1.getRoles());
-            role1 = service.getById(TestRole.role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(TestRole.role1Id);
             assertNotNull(role1);
             assertEquals(1, role1.getPrivileges().size());
             assertEquals(new HashSet<>(Arrays.asList(p1)), role1.getPrivileges());
-            role2 = service.getById(TestRole.role2Id, Role.class);
+            role2 = lazyLoad.getRoleById(TestRole.role2Id);
             assertNotNull(role2);
             assertEquals(1, role2.getPrivileges().size());
             assertEquals(new HashSet<>(Arrays.asList(p1)), role2.getPrivileges());
-            role3 = service.getById(TestRole.role3Id, Role.class);
+            role3 = lazyLoad.getRoleById(TestRole.role3Id);
             assertNotNull(role3);
             assertEquals(1, role3.getPrivileges().size());
             assertEquals(new HashSet<>(Arrays.asList(p1)), role3.getPrivileges());
 
             p1.getRoles().remove(role2);
             service.save(p1);
-            p1 = service.getById(p1Id, Privilege.class);
+            p1 = lazyLoad.getPrivilegeById(p1Id);
             assertNotNull(p1);
             assertEquals(2, p1.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1, role3)), p1.getRoles());
-            role1 = service.getById(TestRole.role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(TestRole.role1Id);
             assertNotNull(role1);
             assertEquals(1, role1.getPrivileges().size());
             assertEquals(new HashSet<>(Arrays.asList(p1)), role1.getPrivileges());
-            role2 = service.getById(TestRole.role2Id, Role.class);
+            role2 = lazyLoad.getRoleById(TestRole.role2Id);
             assertNotNull(role2);
             assertEquals(0, role2.getPrivileges().size());
-            role3 = service.getById(TestRole.role3Id, Role.class);
+            role3 = lazyLoad.getRoleById(TestRole.role3Id);
             assertNotNull(role3);
             assertEquals(1, role3.getPrivileges().size());
             assertEquals(new HashSet<>(Arrays.asList(p1)), role3.getPrivileges());
 
             p1.getRoles().clear();
             service.save(p1);
-            p1 = service.getById(p1Id, Privilege.class);
+            p1 = lazyLoad.getPrivilegeById(p1Id);
             assertNotNull(p1);
             assertEquals(0, p1.getRoles().size());
-            role1 = service.getById(TestRole.role1Id, Role.class);
+            role1 = lazyLoad.getRoleById(TestRole.role1Id);
             assertNotNull(role1);
             assertEquals(0, role1.getPrivileges().size());
-            role2 = service.getById(TestRole.role2Id, Role.class);
+            role2 = lazyLoad.getRoleById(TestRole.role2Id);
             assertNotNull(role2);
             assertEquals(0, role2.getPrivileges().size());
-            role3 = service.getById(TestRole.role1Id, Role.class);
+            role3 = lazyLoad.getRoleById(TestRole.role3Id);
             assertNotNull(role3);
             assertEquals(0, role3.getPrivileges().size());
         } catch (Exception ex) {

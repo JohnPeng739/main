@@ -5,7 +5,6 @@ import org.mx.dal.entity.BaseEntity;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,7 +17,7 @@ import java.util.Set;
 public class AccreditEntity extends BaseEntity implements Accredit {
     @ManyToOne(targetEntity = AccountEntity.class)
     private Account src;
-    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = RoleEntity.class, fetch = FetchType.LAZY)
     @JoinTable(name = "TB_ACCREDIT_ROLES",
             joinColumns = @JoinColumn(name = "ACCREDIT_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID"))

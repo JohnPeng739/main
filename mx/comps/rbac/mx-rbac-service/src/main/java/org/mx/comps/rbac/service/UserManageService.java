@@ -26,7 +26,7 @@ public interface UserManageService {
     User saveUser(UserInfo userInfo);
 
     class UserInfo {
-        private String userId, firstName, middleName, lastName, station, desc, departId;
+        private String userId, firstName, lastName, station, desc, departId;
         private boolean valid = true;
         private User.Sex sex = User.Sex.FEMALE;
         private long birthday = -1;
@@ -35,17 +35,16 @@ public interface UserManageService {
             super();
         }
 
-        private UserInfo(String firstName, String middleName, String lastName, User.Sex sex) {
+        private UserInfo(String firstName, String lastName, User.Sex sex) {
             this();
             this.firstName = firstName;
-            this.middleName = middleName;
             this.lastName = lastName;
             this.sex = sex;
         }
 
-        private UserInfo(String firstName, String middleName, String lastName, User.Sex sex, String userId,
+        private UserInfo(String firstName, String lastName, User.Sex sex, String userId,
                          long birthday, String departId, String station, boolean valid, String desc) {
-            this(firstName, middleName, lastName, sex);
+            this(firstName, lastName, sex);
             this.userId = userId;
             if (birthday > 0) {
                 this.birthday = birthday;
@@ -56,14 +55,14 @@ public interface UserManageService {
             this.desc = desc;
         }
 
-        public static final UserInfo valueOf(String firstName, String middleName, String lastName, User.Sex sex) {
-            return new UserInfo(firstName, middleName, lastName, sex);
+        public static UserInfo valueOf(String firstName, String lastName, User.Sex sex) {
+            return new UserInfo(firstName, lastName, sex);
         }
 
-        public static final UserInfo valueOf(String firstName, String middleName, String lastName, User.Sex sex,
-                                             String userId, long birthday, String departId, String station,
-                                             boolean valid, String desc) {
-            return new UserInfo(firstName, middleName, lastName, sex, userId, birthday, departId, station, valid, desc);
+        public static UserInfo valueOf(String firstName, String lastName, User.Sex sex,
+                                       String userId, long birthday, String departId, String station,
+                                       boolean valid, String desc) {
+            return new UserInfo(firstName, lastName, sex, userId, birthday, departId, station, valid, desc);
         }
 
         public String getUserId() {
@@ -72,10 +71,6 @@ public interface UserManageService {
 
         public String getFirstName() {
             return firstName;
-        }
-
-        public String getMiddleName() {
-            return middleName;
         }
 
         public String getLastName() {

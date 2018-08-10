@@ -15,11 +15,9 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -36,9 +34,6 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
 
     @Autowired
     private JwtService jwtService = null;
-
-    @Autowired
-    private OperateLogService operateLogService = null;
 
     /**
      * 保存账户实体对象
@@ -103,12 +98,7 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
                 account.getRoles().add(role);
             }
             account.setValid(accountInfo.isValid());
-            account = this.save(account);
-            if (operateLogService != null) {
-                operateLogService.writeLog(String.format("保存账户[code=%s, name=%s]成功。",
-                        account.getCode(), account.getName()));
-            }
-            return account;
+            return this.save(account);
         } catch (UserInterfaceDalErrorException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(ex);
@@ -131,12 +121,7 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         if (account.getPassword().equals(DigestUtils.md5(oldPassword))) {
             // the old password is matched.
             account.setPassword(DigestUtils.md5(newPassword));
-            account = this.save(account);
-            if (operateLogService != null) {
-                operateLogService.writeLog(String.format("修改账户[code=%s, name=%s]的密码成功。",
-                        account.getCode(), account.getName()));
-            }
-            return account;
+            return this.save(account);
         } else {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_PASSWORD_NOT_MATCHED);
         }
@@ -154,12 +139,7 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND);
         }
         account.setFavoriteTools(accountPersonalInfo.getFavoriteTools());
-        account = this.save(account);
-        if (operateLogService != null) {
-            operateLogService.writeLog(String.format("修改账户[code=%s, name=%s]的个性化信息成功。",
-                    account.getCode(), account.getName()));
-        }
-        return account;
+        return this.save(account);
     }
 
     /**
@@ -176,9 +156,11 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         if (!DigestUtils.md5(password).equals(account.getPassword())) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_PASSWORD_NOT_MATCHED);
         }
-        List<GeneralAccessor.ConditionTuple> tuples = Arrays.asList(new GeneralAccessor.ConditionTuple("account", account),
-                new GeneralAccessor.ConditionTuple("online", true));
-        List<LoginHistory> loginHistories = accessor.find(tuples, LoginHistory.class);
+        GeneralAccessor.ConditionGroup group = GeneralAccessor.ConditionGroup.and(
+                GeneralAccessor.ConditionTuple.eq("account", account),
+                GeneralAccessor.ConditionTuple.eq("online", true)
+        );
+        List<LoginHistory> loginHistories = accessor.find(group, LoginHistory.class);
         LoginHistory loginHistory;
         if (loginHistories != null && !loginHistories.isEmpty()) {
             // 已经登录
@@ -204,12 +186,7 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         loginHistory.setOnline(true);
         // 设置令牌
         loginHistory.setToken(jwtService.sign(account.getCode()));
-        loginHistory = accessor.save(loginHistory);
-        if (operateLogService != null) {
-            operateLogService.writeLog(String.format("账户[code=%s, name=%s]登录系统成功。",
-                    account.getCode(), account.getName()));
-        }
-        return loginHistory;
+        return accessor.save(loginHistory);
     }
 
     /**
@@ -223,9 +200,11 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         if (account == null) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_FOUND);
         }
-        List<GeneralAccessor.ConditionTuple> tuples = Arrays.asList(new GeneralAccessor.ConditionTuple("account", account),
-                new GeneralAccessor.ConditionTuple("online", true));
-        List<LoginHistory> loginHistories = accessor.find(tuples, LoginHistory.class);
+        GeneralAccessor.ConditionGroup group = GeneralAccessor.ConditionGroup.and(
+                GeneralAccessor.ConditionTuple.eq("account", account),
+                GeneralAccessor.ConditionTuple.eq("online", true)
+        );
+        List<LoginHistory> loginHistories = accessor.find(group, LoginHistory.class);
         if (loginHistories == null || loginHistories.isEmpty()) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.ACCOUNT_NOT_LOGIN);
         } else {
@@ -236,12 +215,7 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
             LoginHistory loginHistory = loginHistories.get(0);
             loginHistory.setLogoutTime(new Date().getTime());
             loginHistory.setOnline(false);
-            loginHistory = accessor.save(loginHistory);
-            if (operateLogService != null) {
-                operateLogService.writeLog(String.format("账户[code=%s, name=%s]登出系统成功。",
-                        account.getCode(), account.getName()));
-            }
-            return loginHistory;
+            return accessor.save(loginHistory);
         }
     }
 }

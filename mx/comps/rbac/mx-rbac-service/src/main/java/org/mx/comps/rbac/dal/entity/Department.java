@@ -1,6 +1,6 @@
 package org.mx.comps.rbac.dal.entity;
 
-import org.mx.dal.entity.BaseDict;
+import org.mx.dal.entity.BaseDictTree;
 
 import java.util.Set;
 
@@ -9,7 +9,7 @@ import java.util.Set;
  *
  * @author : john.peng created on date : 2017/11/4
  */
-public interface Department extends BaseDict {
+public interface Department extends BaseDictTree {
     /**
      * 获取管理者
      *

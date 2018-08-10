@@ -9,9 +9,7 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.DepartmentManageService;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 部门管理服务公共实现类。
@@ -22,9 +20,6 @@ public abstract class DepartmentManageServiceCommonImpl implements DepartmentMan
     private static final Log logger = LogFactory.getLog(DepartmentManageServiceCommonImpl.class);
 
     protected GeneralDictAccessor accessor = null;
-
-    @Autowired
-    private OperateLogService operateLogService = null;
 
     /**
      * 保存部门实体对象
@@ -80,10 +75,6 @@ public abstract class DepartmentManageServiceCommonImpl implements DepartmentMan
         }
         department.setValid(departInfo.isValid());
         department = this.save(department);
-        if (operateLogService != null) {
-            operateLogService.writeLog(String.format("保存部门[code=%s, name=%s]信息成功。",
-                    departInfo.getCode(), departInfo.getName()));
-        }
         return department;
     }
 }

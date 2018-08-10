@@ -3,8 +3,6 @@ package org.mx.comps.rbac.dal.entity;
 import org.mx.dal.entity.Base;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 /**
  * 用户对象定义接口
@@ -27,20 +25,6 @@ public interface User extends Base {
      * @param firstName 名
      */
     void setFirstName(String firstName);
-
-    /**
-     * 获取姓名中的辈分
-     *
-     * @return 辈分
-     */
-    String getMiddleName();
-
-    /**
-     * 设置姓名中辈分
-     *
-     * @param middleName 辈分
-     */
-    void setMiddleName(String middleName);
 
     /**
      * 获取姓名中姓

@@ -10,6 +10,7 @@ import org.mx.comps.rbac.error.UserInterfaceRbacErrorException;
 import org.mx.comps.rbac.service.AccountManageService;
 import org.mx.comps.rbac.service.RoleManageService;
 import org.mx.comps.rbac.service.UserManageService;
+import org.mx.comps.rbac.service.hibernate.impl.LazyLoadServiceImpl;
 import org.mx.dal.service.GeneralDictAccessor;
 
 import java.security.NoSuchAlgorithmException;
@@ -152,6 +153,8 @@ public class TestAccount extends BaseTest {
         assertNotNull(userManageService);
         RoleManageService roleManageService = context.getBean(RoleManageService.class);
         assertNotNull(roleManageService);
+        LazyLoadServiceImpl lazyLoad = context.getBean(LazyLoadServiceImpl.class);
+        assertNotNull(lazyLoad);
 
         try {
             TestUser.testInsertUser(service, userManageService);
@@ -163,7 +166,7 @@ public class TestAccount extends BaseTest {
             testEditAccount(service, accountService);
             assertEquals(3, service.count(Role.class));
             assertEquals(3, service.count(Account.class));
-            Account account1 = service.getById(account1Id, Account.class);
+            Account account1 = lazyLoad.getAccoutById(account1Id);
             assertNotNull(account1);
             assertTrue(account1.getRoles().isEmpty());
             Role role1 = service.getById(TestRole.role1Id, Role.class);
@@ -178,7 +181,7 @@ public class TestAccount extends BaseTest {
                     Arrays.asList(role1.getId(), role2.getId(), role3.getId()), account1.isValid());
             accountService.saveAccount(accountInfo);
             assertEquals(3, service.count(Account.class));
-            account1 = service.getById(account1Id, Account.class);
+            account1 = lazyLoad.getAccoutById(account1Id);
             assertNotNull(account1);
             assertEquals(3, account1.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1, role2, role3)), account1.getRoles());
@@ -188,7 +191,7 @@ public class TestAccount extends BaseTest {
                     Arrays.asList(role1.getId(), role3.getId()), account1.isValid());
             accountService.saveAccount(accountInfo);
             assertEquals(3, service.count(Account.class));
-            account1 = service.getById(account1Id, Account.class);
+            account1 = lazyLoad.getAccoutById(account1Id);
             assertNotNull(account1);
             assertEquals(2, account1.getRoles().size());
             assertEquals(new HashSet<>(Arrays.asList(role1, role3)), account1.getRoles());
@@ -197,7 +200,7 @@ public class TestAccount extends BaseTest {
                     "", account1.getDesc(), account1.getId(), TestUser.johnId,
                     Arrays.asList(), account1.isValid());
             accountService.saveAccount(accountInfo);
-            account1 = service.getById(account1Id, Account.class);
+            account1 = lazyLoad.getAccoutById(account1Id);
             assertNotNull(account1);
             assertTrue(account1.getRoles().isEmpty());
         } catch (Exception ex) {
