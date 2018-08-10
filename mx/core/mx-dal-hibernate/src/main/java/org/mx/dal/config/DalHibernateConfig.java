@@ -4,10 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.dal.service.impl.GeneralAccessorImpl;
 import org.mx.dal.service.impl.GeneralDictAccessorImpl;
-import org.mx.dal.service.impl.OperateLogServiceImpl;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.dbcp.Dbcp2DataSourceConfigBean;
 import org.mx.dbcp.Dbcp2DataSourceFactory;
@@ -26,8 +24,6 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * 基于Hibernate的DAL基础实现
@@ -102,20 +98,9 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
         adapter.setShowSql(jpaConfigBean.isShowSQL());
         adapter.setPrepareConnection(true);
 
-        String[] jpaDefines = context.getBeanNamesForType(JpaEntityPackagesDefine.class);
-        Set<String> jpaEntityPackages = new HashSet<>();
-        if (jpaConfigBean.getJpaEntityPackages().length > 0) {
-            for (String p : jpaConfigBean.getJpaEntityPackages()) {
-                jpaEntityPackages.add(p);
-            }
-        }
-        for (String jpaDefine : jpaDefines) {
-            JpaEntityPackagesDefine define = context.getBean(jpaDefine, JpaEntityPackagesDefine.class);
-            jpaEntityPackages.addAll(define.getPackages());
-        }
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource);
-        emf.setPackagesToScan(jpaEntityPackages.toArray(new String[0]));
+        emf.setPackagesToScan(jpaConfigBean.getJpaEntityPackages());
         emf.setJpaVendorAdapter(adapter);
         return emf;
     }
@@ -143,11 +128,6 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     @Bean(name = "generalDictAccessorJpa")
     public GeneralDictAccessor generalDictAccessorJpa(SessionDataStore sessionDataStore) {
         return new GeneralDictAccessorImpl(sessionDataStore);
-    }
-
-    @Bean(name = "operateLogService")
-    public OperateLogService operateLogService(SessionDataStore sessionDataStore) {
-        return new OperateLogServiceImpl(generalAccessorJpa(sessionDataStore), sessionDataStore);
     }
 
     /**

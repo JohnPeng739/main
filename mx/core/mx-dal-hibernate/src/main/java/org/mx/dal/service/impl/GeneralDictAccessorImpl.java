@@ -9,7 +9,6 @@ import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,9 +37,7 @@ public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements Gene
     @Transactional(readOnly = true)
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> clazz) throws UserInterfaceDalErrorException {
-        List<ConditionTuple> tuples = new ArrayList<>();
-        tuples.add(ConditionTuple.eq("code", code));
-        List<T> result = super.find(tuples, clazz);
+        List<T> result = super.find(ConditionTuple.eq("code", code), clazz);
         if (result != null && result.size() > 0) {
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("Found %d dict entity, entity: %s, code: %s.",

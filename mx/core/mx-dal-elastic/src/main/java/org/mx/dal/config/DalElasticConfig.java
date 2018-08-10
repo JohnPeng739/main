@@ -2,10 +2,8 @@ package org.mx.dal.config;
 
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.service.OperateLogService;
 import org.mx.dal.service.impl.GeneralAccessorElasticImpl;
 import org.mx.dal.service.impl.GeneralDictAccessorElasticImpl;
-import org.mx.dal.service.impl.OperateLogServiceElasticImpl;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.dal.utils.ElasticConfigBean;
 import org.mx.dal.utils.ElasticUtil;
@@ -41,10 +39,5 @@ public class DalElasticConfig {
     @Bean(name = "generalDictAccessorElastic")
     public GeneralDictAccessor generalDictAccessorElastic(ElasticUtil elasticUtil) {
         return new GeneralDictAccessorElasticImpl(elasticUtil);
-    }
-
-    @Bean(name = "operateLogServiceElastic")
-    public OperateLogService operateLogServiceElastic(ElasticUtil elasticUtil, SessionDataStore sessionDataStore) {
-        return new OperateLogServiceElasticImpl(generalAccessorElastic(elasticUtil), sessionDataStore);
     }
 }

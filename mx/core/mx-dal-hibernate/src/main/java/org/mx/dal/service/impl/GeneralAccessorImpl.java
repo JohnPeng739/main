@@ -187,22 +187,6 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see GeneralAccessor#find(List, Class)
-     */
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
-        ConditionGroup group = ConditionGroup.and();
-        if (tuples != null && !tuples.isEmpty()) {
-            tuples.forEach(group::add);
-        }
-        return find(group, clazz);
-    }
-
     @SuppressWarnings("unchecked")
     private <T extends Base> Predicate createCondition(CriteriaBuilder cb, Root<T> root, ConditionTuple tuple) {
         switch (tuple.operate) {
@@ -288,7 +272,11 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
-        List<T> result = find(tuples, clazz);
+        ConditionGroup group = ConditionGroup.and();
+        if (tuples != null && !tuples.isEmpty()) {
+            tuples.forEach(group::add);
+        }
+        List<T> result = find(group, clazz);
         if (result != null && result.size() > 0) {
             return result.get(0);
         } else {

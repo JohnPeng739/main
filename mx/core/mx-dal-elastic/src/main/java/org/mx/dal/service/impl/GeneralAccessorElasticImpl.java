@@ -120,20 +120,6 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#find(List, Class)
-     */
-    @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
-        ConditionGroup group = ConditionGroup.and();
-        for (ConditionTuple tuple : tuples) {
-            group.add(tuple);
-        }
-        return find(group, Collections.singletonList(clazz), null);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
      * @see GeneralAccessor#find(org.mx.dal.service.GeneralAccessor.ConditionGroup, Class)
      */
     @Override
@@ -185,7 +171,11 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
-        List<T> result = find(tuples, clazz);
+        ConditionGroup group = ConditionGroup.and();
+        for (ConditionTuple tuple : tuples) {
+            group.add(tuple);
+        }
+        List<T> result = find(group, clazz);
         if (result != null && result.size() > 0) {
             return result.get(0);
         } else {

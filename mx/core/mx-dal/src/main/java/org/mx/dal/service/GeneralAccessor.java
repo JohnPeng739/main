@@ -88,18 +88,6 @@ public interface GeneralAccessor {
     <T extends Base> T getById(String id, Class<T> clazz);
 
     /**
-     * 根据指定字段的值获取数据记录集合，多个条件采用and组合。
-     *
-     * @param tuples 条件元组（包括字段名和字段值）
-     * @param clazz  实体接口类
-     * @param <T>    实现Base接口的泛型对象类型
-     * @return 实体对象集合
-     * @see ConditionTuple
-     * @deprecated 强烈推荐使用 {@link #find(ConditionGroup, Class)} 替代，未来版本可以不会支持本方法。
-     */
-    <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz);
-
-    /**
      * 根据指定的条件组查询数据
      *
      * @param group 条件组
@@ -118,7 +106,6 @@ public interface GeneralAccessor {
      * @param <T>    实现Base接口的泛型对象类型
      * @return 实体对象，如果不存在则返回null
      * @see ConditionTuple
-     * @see #find(List, Class)
      */
     <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz);
 

@@ -5,7 +5,6 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.utils.ElasticUtil;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,8 +30,7 @@ public class GeneralDictAccessorElasticImpl extends GeneralAccessorElasticImpl i
      */
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> clazz) throws UserInterfaceDalErrorException {
-        List<ConditionTuple> tuples = Collections.singletonList(ConditionTuple.eq("code", code));
-        List<T> list = super.find(tuples, clazz);
+        List<T> list = super.find(ConditionTuple.eq("code", code), clazz);
         return list != null && !list.isEmpty() ? list.get(0) : null;
     }
 }

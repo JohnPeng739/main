@@ -104,7 +104,9 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             if (isValid) {
                 List<ConditionTuple> tuples = new ArrayList<>();
                 tuples.add(ConditionTuple.eq("valid", true));
-                result = find(tuples, clazz);
+                ConditionGroup group = ConditionGroup.and();
+                tuples.forEach(group::add);
+                result = find(group, clazz);
             } else {
                 result = template.findAll(clazz);
             }
@@ -179,20 +181,6 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         } catch (ClassNotFoundException ex) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see GeneralAccessor#find(List, Class)
-     */
-    @Override
-    public <T extends Base> List<T> find(List<ConditionTuple> tuples, Class<T> clazz) {
-        ConditionGroup group = ConditionGroup.and();
-        if (tuples != null && !tuples.isEmpty()) {
-            tuples.forEach(group::add);
-        }
-        return find(group, clazz);
     }
 
     private Criteria createToupleCriteria(ConditionTuple tuple) {
@@ -274,7 +262,11 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      */
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
-        List<T> list = find(tuples, clazz);
+        ConditionGroup group = ConditionGroup.and();
+        if (tuples != null && !tuples.isEmpty()) {
+            tuples.forEach(group::add);
+        }
+        List<T> list = find(group, clazz);
         if (list.isEmpty()) {
             return null;
         } else {
