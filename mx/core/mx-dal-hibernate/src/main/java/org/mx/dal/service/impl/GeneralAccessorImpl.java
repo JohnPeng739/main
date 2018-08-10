@@ -13,7 +13,6 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -37,16 +36,12 @@ public class GeneralAccessorImpl implements GeneralAccessor {
 
     protected SessionDataStore sessionDataStore;
 
-    public GeneralAccessorImpl() {
-        super();
-    }
-
     /**
      * 默认的构造函数
      *
      * @param sessionDataStore 会话数据服务接口
      */
-    public GeneralAccessorImpl(@Qualifier("sessionDataThreadLocal") SessionDataStore sessionDataStore) {
+    public GeneralAccessorImpl(SessionDataStore sessionDataStore) {
         super();
         this.sessionDataStore = sessionDataStore;
     }

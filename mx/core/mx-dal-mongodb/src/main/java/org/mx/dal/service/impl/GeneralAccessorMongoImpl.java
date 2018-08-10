@@ -43,12 +43,8 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
     protected MongoTemplate template;
     private SessionDataStore sessionDataStore;
 
-    public GeneralAccessorMongoImpl() {
-        super();
-    }
-
     public GeneralAccessorMongoImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
-        this();
+        super();
         this.template = template;
         this.sessionDataStore = sessionDataStore;
     }

@@ -21,10 +21,6 @@ import java.util.List;
 public class GeneralDictAccessorImpl extends GeneralAccessorImpl implements GeneralDictAccessor {
     private static final Log logger = LogFactory.getLog(GeneralDictAccessorImpl.class);
 
-    public GeneralDictAccessorImpl() {
-        super();
-    }
-
     public GeneralDictAccessorImpl(SessionDataStore sessionDataStore) {
         super(sessionDataStore);
     }
