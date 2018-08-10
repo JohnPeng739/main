@@ -9,13 +9,13 @@ import org.mx.comps.rbac.service.UserManageService;
  * @author : john.peng created on date : 2017/12/03
  */
 public class UserInfoVO {
-    private String id, firstName, middleName, lastName, station, desc, departId;
+    private String id, firstName, lastName, station, desc, departId;
     private boolean valid = true;
     private User.Sex sex = User.Sex.FEMALE;
     private long birthday = -1;
 
     public UserManageService.UserInfo getUserInfo() {
-        return UserManageService.UserInfo.valueOf(firstName, middleName, lastName, sex, id, birthday,
+        return UserManageService.UserInfo.valueOf(firstName, lastName, sex, id, birthday,
                 departId, station, valid, desc);
     }
 
@@ -35,13 +35,6 @@ public class UserInfoVO {
         this.firstName = firstName;
     }
 
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
 
     public String getLastName() {
         return lastName;

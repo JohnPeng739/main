@@ -15,7 +15,7 @@ import java.util.*;
 public class UserVO extends BaseVO {
     private static final Log logger = LogFactory.getLog(UserVO.class);
 
-    private String firstName, middleName, lastName, fullName, desc, station;
+    private String firstName, lastName, fullName, desc, station;
     private User.Sex sex;
     private long birthday;
     private DepartmentVO department;
@@ -27,7 +27,6 @@ public class UserVO extends BaseVO {
         UserVO userVO = new UserVO();
         BaseVO.transform(user, userVO);
         userVO.firstName = user.getFirstName();
-        userVO.middleName = user.getMiddleName();
         userVO.lastName = user.getLastName();
         userVO.fullName = user.getFullName();
         userVO.desc = user.getDesc();
@@ -60,14 +59,6 @@ public class UserVO extends BaseVO {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
     }
 
     public String getLastName() {
