@@ -1,5 +1,6 @@
 package org.mx.comps.rbac.dal.entity;
 
+import org.mx.StringUtils;
 import org.mx.dal.entity.MongoBaseEntity;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
@@ -48,26 +49,6 @@ public class UserEntity extends MongoBaseEntity implements User {
     /**
      * {@inheritDoc}
      *
-     * @see User#getMiddleName()
-     */
-    @Override
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see User#setMiddleName(String)
-     */
-    @Override
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
      * @see User#getLastName()
      */
     @Override
@@ -92,8 +73,12 @@ public class UserEntity extends MongoBaseEntity implements User {
      */
     @Override
     public String getFullName() {
-        return String.format("%s%s%s", lastName == null ? "" : lastName + " ", middleName == null ? "" : middleName,
-                firstName == null ? "" : firstName);
+        if (StringUtils.isChinese(firstName) && StringUtils.isChinese(lastName)) {
+            return String.format("%s %s", lastName, firstName).trim();
+        } else {
+            return String.format("%s %s", firstName == null ? "" : firstName + "",
+                    lastName == null ? "" : lastName + "").trim();
+        }
     }
 
     /**

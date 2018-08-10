@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,11 +50,11 @@ public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
      */
     @Override
     public boolean hasSameAccredit(AccreditInfo accreditInfo) {
-        List<GeneralAccessor.ConditionTuple> conditions = new ArrayList<>();
-        conditions.add(new GeneralAccessor.ConditionTuple("src", accessor.getById(accreditInfo.getSrcAccountId(), Account.class)));
-        conditions.add(new GeneralAccessor.ConditionTuple("tar", accessor.getById(accreditInfo.getTarAccountId(), Account.class)));
-        conditions.add(new GeneralAccessor.ConditionTuple("valid", true));
-        List<Accredit> accredits = accessor.find(conditions, Accredit.class)
+        List<Accredit> accredits = accessor.find(GeneralAccessor.ConditionGroup.and(
+                GeneralAccessor.ConditionTuple.eq("src", accessor.getById(accreditInfo.getSrcAccountId(), Account.class)),
+                GeneralAccessor.ConditionTuple.eq("tar", accessor.getById(accreditInfo.getTarAccountId(), Account.class)),
+                GeneralAccessor.ConditionTuple.eq("valid", true)
+        ), Accredit.class)
                 .stream()
                 .filter(accredit -> !accredit.isClosed())
                 .collect(Collectors.toList());

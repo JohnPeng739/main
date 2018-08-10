@@ -10,7 +10,7 @@ import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import org.junit.After;
 import org.junit.Before;
-import org.mx.comps.rbac.mongodb.config.CompsRbacMongodbConfig;
+import org.mx.comps.rbac.config.TestMongodbConfig;
 import org.mx.dal.session.SessionDataStore;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -29,7 +29,8 @@ public class BaseTest {
                     .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
             mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
             mongod = mongodExecutable.start();
-            context = new AnnotationConfigApplicationContext(CompsRbacMongodbConfig.class);
+
+            context = new AnnotationConfigApplicationContext(TestMongodbConfig.class);
 
             SessionDataStore sessionDataStore = context.getBean(SessionDataStore.class);
             assertNotNull(sessionDataStore);

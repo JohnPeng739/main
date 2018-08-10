@@ -1,6 +1,6 @@
 package org.mx.comps.rbac.dal.entity;
 
-import org.mx.dal.entity.MongoBaseDictEntity;
+import org.mx.dal.entity.MongoBaseDictTreeEntity;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * @author : john.peng created on date : 2017/12/12
  */
 @Document(collection = "department")
-public class DepartmentEntity extends MongoBaseDictEntity implements Department {
+public class DepartmentEntity extends MongoBaseDictTreeEntity implements Department {
     @DBRef
     private User manager;
     @DBRef

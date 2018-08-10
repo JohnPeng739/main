@@ -29,7 +29,7 @@ public class TestUser extends BaseTest {
 
     public static void testInsertUser(GeneralDictAccessor service, UserManageService userService) throws ParseException {
         long birthday = new SimpleDateFormat("yyyy-MM-dd").parse("1973-09-18").getTime();
-        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("喜", "明",
+        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("明喜",
                 "彭", User.Sex.MALE, "", birthday, "", "manager", true,
                 "This is John.Peng.");
         User john = userService.saveUser(userInfo);
@@ -65,22 +65,22 @@ public class TestUser extends BaseTest {
         assertEquals(service.count(User.class, true), 1);
         assertEquals(service.count(User.class, false), 1);
 
-        userInfo = UserManageService.UserInfo.valueOf("joy", "",
+        userInfo = UserManageService.UserInfo.valueOf("joy",
                 "peng", User.Sex.FEMALE);
         User joy = userService.saveUser(userInfo);
         joyId = joy.getId();
         assertEquals(2, service.count(User.class));
         assertNotNull(joy);
         assertNotNull(joy.getId());
-        assertEquals(joy.getFullName(), "peng joy");
+        assertEquals(joy.getFullName(), "joy peng");
         joy = service.getById(joy.getId(), User.class);
         assertNotNull(joy);
         assertNotNull(joy.getId());
-        assertEquals(joy.getFullName(), "peng joy");
+        assertEquals(joy.getFullName(), "joy peng");
     }
 
     public static void testEditUser(GeneralDictAccessor service, UserManageService userService) {
-        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("josh", "",
+        UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf("josh",
                 "peng", User.Sex.MALE, "", -1, "", "", true,
                 "original desc.");
         User josh = userService.saveUser(userInfo);
@@ -88,7 +88,7 @@ public class TestUser extends BaseTest {
         assertNotNull(josh);
         assertNotNull(josh.getId());
         assertEquals(service.count(User.class), 3);
-        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(), josh.getMiddleName(),
+        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(),
                 josh.getLastName(), josh.getSex(), josh.getId(), -1, "", "", false,
                 "new desc.");
         josh = userService.saveUser(userInfo);
@@ -99,7 +99,7 @@ public class TestUser extends BaseTest {
         assertEquals(service.count(User.class, true), 2);
         assertEquals(service.count(User.class, false), 3);
 
-        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(), josh.getMiddleName(),
+        userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(),
                 josh.getLastName(), josh.getSex(), josh.getId(), -1, "", "", true,
                 josh.getDesc());
         userService.saveUser(userInfo);
@@ -155,7 +155,7 @@ public class TestUser extends BaseTest {
             Department depart1 = service.getById(TestDepartment.depart1Id, Department.class);
             assertNotNull(depart1);
             UserManageService.UserInfo userInfo = UserManageService.UserInfo.valueOf(joy.getFirstName(),
-                    joy.getMiddleName(), joy.getLastName(), joy.getSex(), joy.getId(), 0,
+                    joy.getLastName(), joy.getSex(), joy.getId(), 0,
                     depart1.getId(), joy.getStation(), joy.isValid(), joy.getDesc());
             userService.saveUser(userInfo);
             joy = service.getById(joyId, User.class);
@@ -168,7 +168,7 @@ public class TestUser extends BaseTest {
             assertEquals(new HashSet<>(Arrays.asList(joy)), depart1.getEmployees());
 
             userInfo = UserManageService.UserInfo.valueOf(josh.getFirstName(),
-                    josh.getMiddleName(), josh.getLastName(), josh.getSex(), josh.getId(), 0,
+                    josh.getLastName(), josh.getSex(), josh.getId(), 0,
                     depart1.getId(), josh.getStation(), josh.isValid(), josh.getDesc());
             userService.saveUser(userInfo);
             josh = service.getById(joshId, User.class);
@@ -181,7 +181,7 @@ public class TestUser extends BaseTest {
             assertEquals(new HashSet<>(Arrays.asList(joy, josh)), depart1.getEmployees());
 
             userInfo = UserManageService.UserInfo.valueOf(joy.getFirstName(),
-                    joy.getMiddleName(), joy.getLastName(), joy.getSex(), joy.getId(), 0,
+                    joy.getLastName(), joy.getSex(), joy.getId(), 0,
                     null, joy.getStation(), joy.isValid(), joy.getDesc());
             userService.saveUser(userInfo);
             joy = service.getById(joyId, User.class);
