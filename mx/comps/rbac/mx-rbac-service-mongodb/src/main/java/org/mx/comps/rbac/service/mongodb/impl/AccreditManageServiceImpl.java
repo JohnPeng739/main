@@ -46,10 +46,10 @@ public class AccreditManageServiceImpl extends AccreditManageServiceCommonImpl {
     /**
      * {@inheritDoc}
      *
-     * @see AccreditManageServiceCommonImpl#hasSameAccredit(AccreditInfo)
+     * @see AccreditManageServiceCommonImpl#hasSameAccredit(AccreditManageService.AccreditInfo)
      */
     @Override
-    public boolean hasSameAccredit(AccreditInfo accreditInfo) {
+    public boolean hasSameAccredit(AccreditManageService.AccreditInfo accreditInfo) {
         List<Accredit> accredits = accessor.find(GeneralAccessor.ConditionGroup.and(
                 GeneralAccessor.ConditionTuple.eq("src", accessor.getById(accreditInfo.getSrcAccountId(), Account.class)),
                 GeneralAccessor.ConditionTuple.eq("tar", accessor.getById(accreditInfo.getTarAccountId(), Account.class)),
