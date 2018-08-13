@@ -21,9 +21,13 @@ import javax.servlet.ServletRequest;
 @Aspect
 public class AuthenticateAspect {
     private static final Log logger = LogFactory.getLog(AuthenticateAspect.class);
+    private JwtService jwtService;
 
     @Autowired
-    private JwtService jwtService = null;
+    public AuthenticateAspect(JwtService jwtService) {
+        super();
+        this.jwtService = jwtService;
+    }
 
     /**
      * Request参数在最后
@@ -96,7 +100,7 @@ public class AuthenticateAspect {
             if (!StringUtils.isBlank(token) && token.startsWith("Bearer ")) {
                 token = token.substring("Bearer ".length());
             }
-            if (jwtService.verify(token)) {
+            if (jwtService.verify(token).isPassed()) {
                 if (logger.isDebugEnabled()) {
                     logger.debug(String.format("The token[%s] verify passed.", token));
                 }
