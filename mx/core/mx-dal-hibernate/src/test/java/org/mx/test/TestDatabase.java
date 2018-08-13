@@ -23,7 +23,6 @@ public class TestDatabase extends BaseTest {
         GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
-
         accessor.clear(User.class);
 
         long t0 = System.currentTimeMillis();

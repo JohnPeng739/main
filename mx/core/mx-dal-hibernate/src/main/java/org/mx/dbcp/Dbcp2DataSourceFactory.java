@@ -33,6 +33,24 @@ public class Dbcp2DataSourceFactory {
     }
 
     /**
+     * 获取当前有效的连接数
+     *
+     * @return 有效连接数
+     */
+    public int getNumActive() {
+        return pool.getNumActive();
+    }
+
+    /**
+     * 获取当前空闲连接数
+     *
+     * @return 空闲连接数
+     */
+    public int getNumIdle() {
+        return pool.getNumIdle();
+    }
+
+    /**
      * 从缓冲池中获取一个数据源
      *
      * @return 数据库连接
@@ -70,18 +88,22 @@ public class Dbcp2DataSourceFactory {
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        int initialSize = dataSourceConfigBean.getInitialSize(),
-                maxSize = dataSourceConfigBean.getMaxSize(),
-                maxIdleTime = dataSourceConfigBean.getMaxIdleTime();
         try {
             pool = new BasicDataSource();
             pool.setDriverClassName(driver);
             pool.setUrl(url);
             pool.setUsername(user);
             pool.setPassword(password);
-            pool.setInitialSize(initialSize);
-            pool.setMaxTotal(maxSize);
-            pool.setMaxIdle(maxIdleTime);
+            pool.setInitialSize(dataSourceConfigBean.getInitialSize());
+            pool.setMinIdle(dataSourceConfigBean.getMinIdle());
+            pool.setMaxIdle(dataSourceConfigBean.getMaxIdle());
+            pool.setMaxTotal(dataSourceConfigBean.getMaxSize());
+            pool.setMaxWaitMillis(dataSourceConfigBean.getMaxWaitMillis());
+            pool.setTestOnCreate(dataSourceConfigBean.isTestOnCreate());
+            pool.setTestOnBorrow(dataSourceConfigBean.isTestOnBorrow());
+            pool.setTestOnReturn(dataSourceConfigBean.isTestOnReturn());
+            pool.setTestWhileIdle(dataSourceConfigBean.isTestWhileIdle());
+            pool.setValidationQuery(dataSourceConfigBean.getValidationQuery());
         } catch (Exception ex) {
             String msg = "Init DBCP2 pool fail.";
             if (logger.isErrorEnabled()) {

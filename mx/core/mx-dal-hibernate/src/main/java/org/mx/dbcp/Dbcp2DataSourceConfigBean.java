@@ -78,20 +78,90 @@ public class Dbcp2DataSourceConfigBean implements DataSourceConfigBean {
     /**
      * {@inheritDoc}
      *
-     * @see DataSourceConfigBean#getMaxSize()
+     * @see DataSourceConfigBean#getMinIdle()
      */
     @Override
-    public int getMaxSize() {
-        return env.getProperty(String.format("%s.maxSize", prefix), Integer.class, 100);
+    public int getMinIdle() {
+        return env.getProperty(String.format("%s.minIdle", prefix), Integer.class, 3);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see DataSourceConfigBean#getMaxIdleTime()
+     * @see DataSourceConfigBean#getMaxIdle()
      */
     @Override
-    public int getMaxIdleTime() {
-        return env.getProperty(String.format("%s.maxIdleTime", prefix), Integer.class, 3000);
+    public int getMaxIdle() {
+        return env.getProperty(String.format("%s.maxIdle", prefix), Integer.class, 5);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DataSourceConfigBean#getMaxSize()
+     */
+    @Override
+    public int getMaxSize() {
+        return env.getProperty(String.format("%s.maxSize", prefix), Integer.class, 50);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DataSourceConfigBean#getMaxWaitMillis()
+     */
+    @Override
+    public int getMaxWaitMillis() {
+        return env.getProperty(String.format("%s.maxWaitMillis", prefix), Integer.class, 3000);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DataSourceConfigBean#isTestOnCreate()
+     */
+    @Override
+    public boolean isTestOnCreate() {
+        return env.getProperty(String.format("%s.testOnCreate", prefix), Boolean.class, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DataSourceConfigBean#isTestOnBorrow()
+     */
+    @Override
+    public boolean isTestOnBorrow() {
+        return env.getProperty(String.format("%s.testOnBorrow", prefix), Boolean.class, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DataSourceConfigBean#isTestOnReturn()
+     */
+    @Override
+    public boolean isTestOnReturn() {
+        return env.getProperty(String.format("%s.testOnReturn", prefix), Boolean.class, false);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DataSourceConfigBean#isTestWhileIdle()
+     */
+    @Override
+    public boolean isTestWhileIdle() {
+        return env.getProperty(String.format("%s.testWhileIdle", prefix), Boolean.class, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see DataSourceConfigBean#getValidationQuery()
+     */
+    @Override
+    public String getValidationQuery() {
+        return env.getProperty(String.format("%s.validationQuery", prefix), "select 1");
     }
 }
