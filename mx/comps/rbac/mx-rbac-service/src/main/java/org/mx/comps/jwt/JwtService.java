@@ -95,9 +95,10 @@ public class JwtService {
      * 直接的令牌验证
      *
      * @param token 令牌数据
-     * @return 如果验证通过，返回true；否则返回false
+     * @return 验证结果
+     * @see JwtVerifyResult
      */
-    public boolean verify(String token) {
+    public JwtVerifyResult verify(String token) {
         return verify(token, null);
     }
 
@@ -106,9 +107,10 @@ public class JwtService {
      *
      * @param token    令牌数据
      * @param fnVerify 自定义的校验方法，接收数据结集合，校验成功返回true，否则返回false。
-     * @return 如果验证通过，返回true；否则返回false
+     * @return 验证结果
+     * @see JwtVerifyResult
      */
-    public boolean verify(String token, Predicate<Map<String, Claim>> fnVerify) {
+    public JwtVerifyResult verify(String token, Predicate<Map<String, Claim>> fnVerify) {
         if (StringUtils.isBlank(token)) {
             throw new UserInterfaceRbacErrorException(UserInterfaceRbacErrorException.RbacErrors.NOT_AUTHENTICATED);
         }
@@ -116,16 +118,16 @@ public class JwtService {
             DecodedJWT jwt = verifier.verify(token);
             if (fnVerify != null) {
                 // 有自定义校验方法
-                return fnVerify.test(jwt.getClaims());
+                return fnVerify.test(jwt.getClaims()) ? new JwtVerifyResult(jwt) : new JwtVerifyResult();
             } else {
                 // 签名校验成功，无自定义校验方法
-                return true;
+                return new JwtVerifyResult(jwt);
             }
         } catch (JWTVerificationException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error("Verify the JWT fail.", ex);
             }
-            return false;
+            return new JwtVerifyResult();
         }
     }
 
@@ -187,5 +189,80 @@ public class JwtService {
         Map<String, Object> map = new HashMap<>();
         map.put("user", userCode);
         return sign(map);
+    }
+
+    /**
+     * JWT验证结果定义
+     */
+    public class JwtVerifyResult {
+        private boolean passed = false;
+        private String header, payload, signature;
+        private Map<String, Claim> claims;
+
+        /**
+         * 默认的构造函数，构造一个验证不通过的结果
+         */
+        private JwtVerifyResult() {
+            super();
+        }
+
+        /**
+         * 构造函数，构造一个通过的结果
+         *
+         * @param jwt JWT解码对象
+         */
+        private JwtVerifyResult(DecodedJWT jwt) {
+            this();
+            passed = true;
+            header = jwt.getHeader();
+            payload = jwt.getPayload();
+            signature = jwt.getSignature();
+            claims = jwt.getClaims();
+        }
+
+        /**
+         * 获取验证是否通过
+         *
+         * @return 返回true表示令牌验证通过，否则不通过
+         */
+        public boolean isPassed() {
+            return passed;
+        }
+
+        /**
+         * 获取令牌中的头段，采用BASE64编码
+         *
+         * @return 头
+         */
+        public String getHeader() {
+            return header;
+        }
+
+        /**
+         * 获取令牌中的载荷段，采用BASE64编码
+         *
+         * @return 载荷
+         */
+        public String getPayload() {
+            return payload;
+        }
+
+        /**
+         * 获取令牌中的签名段，采用BASE64编码
+         *
+         * @return 签名
+         */
+        public String getSignature() {
+            return signature;
+        }
+
+        /**
+         * 获取令牌的中载荷数据，Map集合方式
+         *
+         * @return 载荷数据
+         */
+        public Map<String, Claim> getClaims() {
+            return claims;
+        }
     }
 }

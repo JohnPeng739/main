@@ -36,20 +36,12 @@ public class JwtVerifyFuncBuilder {
     }
 
     public Predicate<Map<String, Claim>> fieldEquals(String key, Object value) {
-        return new Predicate<Map<String, Claim>>() {
-            @Override
-            public boolean test(Map<String, Claim> claims) {
-                return claims != null && claims.containsKey(key) && value != null && claimEquals(value, claims.get(key));
-            }
-        };
+        return claims -> claims != null && claims.containsKey(key) && value != null &&
+                claimEquals(value, claims.get(key));
     }
 
     public Predicate<Map<String, Claim>> fieldArrayContains(String key, List<Object> value) {
-        return new Predicate<Map<String, Claim>>() {
-            @Override
-            public boolean test(Map<String, Claim> claims) {
-                return claims != null && claims.containsKey(key) && value != null && claimEquals(value, claims.get(key));
-            }
-        };
+        return claims -> claims != null && claims.containsKey(key) && value != null &&
+                claimEquals(value, claims.get(key));
     }
 }
