@@ -53,7 +53,9 @@ public class MongoBaseDictTreeEntity<T extends BaseDictTree> extends MongoBaseDi
     @Override
     public void setParent(BaseDictTree parent) {
         this.parent = (T) parent;
-        this.parentId = parent.getId();
+        if (parent != null) {
+            this.parentId = parent.getId();
+        }
     }
 
     /**
