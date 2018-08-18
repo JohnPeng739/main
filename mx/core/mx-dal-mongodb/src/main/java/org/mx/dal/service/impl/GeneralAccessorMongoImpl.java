@@ -379,10 +379,11 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         template.save(t);
         if (t instanceof BaseDictTree) {
             // 处理父级节点
-            BaseDictTree p = ((BaseDictTree) t).getParent();
-            if (p != null) {
-                p.getChildren().add(t);
-                template.save(p);
+            String parentId = ((BaseDictTree) t).getParentId();
+            if (!StringUtils.isBlank(parentId)) {
+                T parent = template.findById(parentId, (Class<T>) t.getClass());
+                ((BaseDictTree) parent).getChildren().add(t);
+                template.save(parent);
             }
         }
         t = template.findById(t.getId(), (Class<T>) t.getClass());
