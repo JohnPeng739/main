@@ -48,6 +48,17 @@ public class WebsocketServerFactory extends HttpServerFactory {
     /**
      * {@inheritDoc}
      *
+     * @see AbstractServerFactory#destroy()
+     */
+    @Override
+    public void destroy() {
+        WsSessionManager.getManager().destroy();
+        super.destroy();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see HttpServerFactory#getHandler()
      */
     @Override
