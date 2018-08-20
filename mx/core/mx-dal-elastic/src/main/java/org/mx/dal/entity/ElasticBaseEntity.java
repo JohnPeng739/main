@@ -16,6 +16,7 @@ public class ElasticBaseEntity implements Base {
     @ElasticField(type = "boolean")
     private boolean valid = true;
 
+    @ElasticField(type = "float", store = false)
     private float score = 0.0f;
 
     /**

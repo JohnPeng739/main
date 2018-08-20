@@ -34,6 +34,13 @@ public @interface ElasticField {
     String type() default "keyword";
 
     /**
+     * 属性字段是否保存，默认为保存。
+     *
+     * @return 设置为true表示保存该属性，否则为不保存
+     */
+    boolean store() default true;
+
+    /**
      * 属性字段使用的分词器，如果不指定，则使用系统默认的分词器。
      *
      * @return 分词器

@@ -19,21 +19,24 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.geo.GeoDistance;
+import org.elasticsearch.common.geo.GeoPoint;
+import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.mx.ClassUtils;
 import org.mx.DigestUtils;
 import org.mx.StringUtils;
 import org.mx.dal.Pagination;
 import org.mx.dal.annotation.ElasticField;
 import org.mx.dal.annotation.ElasticIndex;
-import org.mx.dal.entity.Base;
-import org.mx.dal.entity.BaseDict;
-import org.mx.dal.entity.ElasticBaseEntity;
+import org.mx.dal.entity.*;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
@@ -41,10 +44,7 @@ import org.mx.error.UserInterfaceSystemErrorException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 /**
@@ -148,6 +148,7 @@ public class ElasticUtilRest implements ElasticUtil {
                 }
                 Map<String, Object> fieldProperties = new HashMap<>();
                 fieldProperties.put("type", type);
+                fieldProperties.put("store", field.store());
                 if (!StringUtils.isBlank(anaylyzer)) {
                     fieldProperties.put("analyzer", anaylyzer);
                     // 为了预防可能配置了分词器，却忘记配置正确的类型，自动更正为"text"类型。
@@ -408,6 +409,25 @@ public class ElasticUtilRest implements ElasticUtil {
     }
 
     /**
+     * 根据输入的实体类，获取对应的索引列表
+     *
+     * @param classes 实体类列表
+     * @return 索引列表
+     */
+    private String[] getIndices(List<Class<? extends Base>> classes) {
+        String[] indices;
+        if (classes == null || classes.isEmpty()) {
+            indices = new String[]{"*"};
+        } else {
+            indices = new String[classes.size()];
+            for (int index = 0; index < classes.size(); index++) {
+                indices[index] = getIndex(classes.get(index));
+            }
+        }
+        return indices;
+    }
+
+    /**
      * {@inheritDoc} <br>
      * 在没有传入分页对象的情况下，最多返回前1000条记录。
      *
@@ -430,16 +450,7 @@ public class ElasticUtilRest implements ElasticUtil {
             // 默认不分页的情况下，返回前1000条记录
             builder.size(1000);
         }
-        String[] indices;
-        if (classes == null || classes.isEmpty()) {
-            indices = new String[]{"*"};
-        } else {
-            indices = new String[classes.size()];
-            for (int index = 0; index < classes.size(); index++) {
-                indices[index] = getIndex(classes.get(index));
-            }
-        }
-        SearchRequest request = new SearchRequest(indices);
+        SearchRequest request = new SearchRequest(getIndices(classes));
         request.source(builder);
         try {
             return client.search(request);
@@ -449,6 +460,100 @@ public class ElasticUtilRest implements ElasticUtil {
             }
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
         }
+    }
+
+    /**
+     * 执行一次空间查询
+     *
+     * @param builder 查询源构建器
+     * @param indices 索引列表
+     * @param <T>     泛型定义
+     * @return 符合条件的实体列表
+     */
+    @SuppressWarnings("unchecked")
+    private <T extends ElasticGeoPointBaseEntity> List<T> geoQuery(SearchSourceBuilder builder, String... indices) {
+        SearchRequest request = new SearchRequest(indices);
+        request.source(builder);
+        try {
+            SearchResponse response = client.search(request);
+            List<T> list = new ArrayList<>();
+            if (response.status() == RestStatus.OK) {
+                response.getHits().forEach(hit -> {
+                    T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) getIndexClass(hit.getIndex()));
+                    if (hit.getSortValues() != null && hit.getSortValues().length > 0) {
+                        t.setDistance((double) hit.getSortValues()[0]);
+                    }
+                    if (!Float.isNaN(hit.getScore())) {
+                        t.setScore(hit.getScore());
+                    }
+                    list.add(t);
+                });
+            }
+            return list;
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Search fail from elastic.", ex);
+            }
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#geoNearBy(GeoPointLocation, double, List)
+     */
+    @Override
+    public <T extends ElasticGeoPointBaseEntity> List<T> geoNearBy(GeoPointLocation centerPoint, double distanceMeters,
+                                                                   List<Class<? extends Base>> classes) {
+        if (centerPoint == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The center point is null.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        builder.query(QueryBuilders.geoDistanceQuery("location")
+                .point(centerPoint.get())
+                .distance(distanceMeters, DistanceUnit.METERS)
+                .geoDistance(GeoDistance.ARC));
+        builder.sort(new GeoDistanceSortBuilder("location", centerPoint.getLat(), centerPoint.getLon())
+                .unit(DistanceUnit.METERS)
+                .order(SortOrder.ASC)
+                .geoDistance(GeoDistance.ARC));
+        return geoQuery(builder, getIndices(classes));
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#geoWithInPolygon(GeoPointLocation, List, List)
+     */
+    @Override
+    public <T extends ElasticGeoPointBaseEntity> List<T> geoWithInPolygon(GeoPointLocation centerPoint,
+                                                                          List<GeoPointLocation> polygon,
+                                                                          List<Class<? extends Base>> classes) {
+        if (polygon == null || polygon.size() < 3) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The polygon's point is less than 3.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        List<GeoPoint> points = new ArrayList<>(polygon.size());
+        polygon.forEach(point -> points.add(point.get()));
+        builder.query(QueryBuilders.geoPolygonQuery("location", points));
+        if (centerPoint != null) {
+            builder.sort(new GeoDistanceSortBuilder("location", centerPoint.getLat(), centerPoint.getLon())
+                    .unit(DistanceUnit.METERS)
+                    .order(SortOrder.ASC)
+                    .geoDistance(GeoDistance.ARC));
+        }
+        return geoQuery(builder, getIndices(classes));
     }
 
     /**

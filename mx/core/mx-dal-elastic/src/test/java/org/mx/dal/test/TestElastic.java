@@ -5,14 +5,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mx.DigestUtils;
 import org.mx.dal.EntityFactory;
+import org.mx.dal.entity.GeoPointLocation;
 import org.mx.dal.service.ElasticAccessor;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.test.entity.AnimalEntityElastic;
 import org.mx.dal.test.entity.UserEntityElastic;
+import org.mx.dal.test.entity.WeatherEntityElastic;
+import org.mx.dal.utils.ElasticUtil;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -28,6 +32,7 @@ public class TestElastic {
         assertNotNull(accessor);
         accessor.clear(UserEntityElastic.class);
         accessor.clear(AnimalEntityElastic.class);
+        accessor.clear(WeatherEntityElastic.class);
         context.close();
         context = new AnnotationConfigApplicationContext(TestConfig.class);
     }
@@ -39,7 +44,59 @@ public class TestElastic {
         assertNotNull(accessor);
         accessor.clear(UserEntityElastic.class);
         accessor.clear(AnimalEntityElastic.class);
+        accessor.clear(WeatherEntityElastic.class);
         context.close();
+    }
+
+    @Test
+    public void testGeo() {
+        GeneralAccessor accessor = context.getBean("generalAccessorElastic", GeneralAccessor.class);
+        assertNotNull(accessor);
+        ElasticUtil elasticUtil = context.getBean(ElasticUtil.class);
+        assertNotNull(elasticUtil);
+
+        try {
+            WeatherEntityElastic w1 = EntityFactory.createEntity(WeatherEntityElastic.class);
+            w1.setLocation(new GeoPointLocation(0,0));
+            w1.setName("原点");
+            w1.setType("晴天");
+            w1.setTemperature(38.0f);
+            accessor.save(w1);
+
+            WeatherEntityElastic w2 = EntityFactory.createEntity(WeatherEntityElastic.class);
+            w2.setName("地方1");
+            w2.setTemperature(22.0f);
+            w2.setType("阴天");
+            w2.setLocation(new GeoPointLocation(10, 45));
+            accessor.save(w2);
+
+            Thread.sleep(1000);
+
+            List<WeatherEntityElastic> list = elasticUtil.geoNearBy(new GeoPointLocation(1, 1),
+                    200 * 1000, Collections.singletonList(WeatherEntityElastic.class));
+            assertEquals(1, list.size());
+            list = elasticUtil.geoNearBy(new GeoPointLocation(1, 1),
+                    5000 * 1000, Collections.singletonList(WeatherEntityElastic.class));
+            assertEquals(2, list.size());
+
+            list = elasticUtil.geoWithInPolygon(null, Arrays.asList(
+                    new GeoPointLocation(0,0),
+                    new GeoPointLocation(20, 0),
+                    new GeoPointLocation(20, 30),
+                    new GeoPointLocation(0, 30)
+            ), Collections.singletonList(WeatherEntityElastic.class));
+            assertEquals(1, list.size());
+            list = elasticUtil.geoWithInPolygon(new GeoPointLocation(10, 25), Arrays.asList(
+                    new GeoPointLocation(0,0),
+                    new GeoPointLocation(20, 0),
+                    new GeoPointLocation(20, 50),
+                    new GeoPointLocation(0, 50)
+            ), Collections.singletonList(WeatherEntityElastic.class));
+            assertEquals(2, list.size());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            fail(ex.getMessage());
+        }
     }
 
     @Test
@@ -367,7 +424,7 @@ public class TestElastic {
             assertNotNull(list1);
             assertEquals(1, list1.size());
 
-            list1 = ((ElasticAccessor)accessor).find(GeneralAccessor.ConditionGroup.and(
+            list1 = ((ElasticAccessor) accessor).find(GeneralAccessor.ConditionGroup.and(
                     GeneralAccessor.ConditionTuple.contain("name", "cat")
             ), Arrays.asList(AnimalEntityElastic.class, UserEntityElastic.class));
             assertNotNull(list1);

@@ -3,6 +3,8 @@ package org.mx.dal.utils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
+import org.mx.dal.entity.ElasticGeoPointBaseEntity;
+import org.mx.dal.entity.GeoPointLocation;
 import org.mx.dal.service.GeneralAccessor;
 
 import java.util.List;
@@ -73,6 +75,31 @@ public interface ElasticUtil {
      */
     <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes,
                                            Pagination pagination);
+
+    /**
+     * 根据输入的中心点和距离，搜索出符合条件的点位数据
+     *
+     * @param centerPoint    中心点
+     * @param distanceMeters 距离（单位为米）
+     * @param classes        实体类列表
+     * @param <T>            泛型定义
+     * @return 符合条件的点位数据列表，并计算了具体距离（distance属性）
+     */
+    <T extends ElasticGeoPointBaseEntity> List<T> geoNearBy(GeoPointLocation centerPoint, double distanceMeters,
+                                                            List<Class<? extends Base>> classes);
+
+    /**
+     * 根据输入的多边形范围，搜索出符合条件的点位数据；如果同时设置的中心点，则还会计算出距中心点的距离。
+     *
+     * @param centerPoint 中心点，可以为空
+     * @param polygon     多边形点位列表
+     * @param classes     实体类列表
+     * @param <T>         泛型定义
+     * @return 符合条件的点位数据列表，如果设置了中心点的话，还将计算具体距离（distance属性）
+     */
+    <T extends ElasticGeoPointBaseEntity> List<T> geoWithInPolygon(GeoPointLocation centerPoint,
+                                                                   List<GeoPointLocation> polygon,
+                                                                   List<Class<? extends Base>> classes);
 
     /**
      * 根据指定的ID获取实体对象
