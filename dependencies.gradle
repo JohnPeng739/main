@@ -34,6 +34,7 @@ ext.versions = [
   zookeeper	: '3.4.9',
   'mx-utils'    	: '2.1.22',
   'mx-spring'		: '1.2.0',
+  'mx-jwt-utils'	: '1.0.0',
   'mx-service-utils'	: '1.8.8',
   'mx-hanlp-utils'	: '1.0.12',
   'mx-dal'      	: '2.0.0',
@@ -131,6 +132,7 @@ ext.libs = [
 
   "mx-utils"            : "org.mx:mx-utils:${versions.'mx-utils'}",
   "mx-spring"		: "org.mx:mx-spring:${versions.'mx-spring'}",
+  "mx-jwt-utils"	: "org.mx:mx-jwt-utils:${versions.'mx-jwt-utils'}",
   "mx-service-utils"	: "org.mx:mx-service-utils:${versions.'mx-service-utils'}",
   "mx-hanlp-utils"	: "org.mx:mx-hanlp-utils:${versions.'mx-hanlp-utils'}",
 
