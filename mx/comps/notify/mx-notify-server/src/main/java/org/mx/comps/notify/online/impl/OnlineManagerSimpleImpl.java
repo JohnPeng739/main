@@ -69,7 +69,13 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     @Override
     public void sessionRemoved(String connectKey) {
         // 连接的会话已经断开，将设备从在线设备列表中移除
-        onlineDevices.remove(connectKey);
+        synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
+            onlineDevices.forEach((k, v) -> {
+                if (k.endsWith(connectKey)) {
+                    onlineDevices.remove(k);
+                }
+            });
+        }
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("The online device[%s] is removed, because the session has been removed.",
                     connectKey));
