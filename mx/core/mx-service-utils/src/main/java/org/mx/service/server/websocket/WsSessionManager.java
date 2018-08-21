@@ -237,7 +237,7 @@ public class WsSessionManager {
      * @param reason     关闭原因
      */
     private void removeWsSession(String connectKey, int code, String reason) {
-        if (sessions.containsKey(connectKey)) {
+        if (sessions != null && sessions.containsKey(connectKey)) {
             // 先清除缓存，防止在session.close()时被重复回调。
             Session session = sessions.get(connectKey);
             sessions.remove(connectKey);
