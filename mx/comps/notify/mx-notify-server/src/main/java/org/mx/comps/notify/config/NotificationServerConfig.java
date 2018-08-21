@@ -1,6 +1,5 @@
 package org.mx.comps.notify.config;
 
-import org.mx.comps.notify.processor.OnlineDeviceAuthenticateFactory;
 import org.mx.comps.notify.processor.impl.NotifyCommandProcessor;
 import org.mx.comps.notify.processor.impl.PingCommandProcessor;
 import org.mx.comps.notify.processor.impl.RegistryCommandProcessor;
@@ -8,7 +7,6 @@ import org.mx.comps.notify.processor.impl.UnregistryCommandProcessor;
 import org.mx.comps.notify.rest.NotifyServerResource;
 import org.mx.comps.notify.websocket.NotificationWebsocket;
 import org.mx.service.server.config.ServerConfig;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -30,7 +28,7 @@ import java.util.List;
 })
 public class NotificationServerConfig {
 
-    @Bean
+    @Bean("notifyConfigBean")
     public NotifyConfigBean notifyConfigBean() {
         return new NotifyConfigBean();
     }
@@ -73,17 +71,6 @@ public class NotificationServerConfig {
     @Bean(name = "notifyCommandProcessor")
     public NotifyCommandProcessor notifyCommandProcessor() {
         return new NotifyCommandProcessor();
-    }
-
-    /**
-     * 根据配置创建在线终端设备身份认证的工厂
-     *
-     * @param context Spring IoC上下文
-     * @return 在线终端设备身份认证工厂
-     */
-    @Bean(name = "onlineDeviceAuthenticateFactory")
-    public OnlineDeviceAuthenticateFactory onlineDeviceAuthenticateFactory(ApplicationContext context) {
-        return new OnlineDeviceAuthenticateFactory(context);
     }
 
     /**

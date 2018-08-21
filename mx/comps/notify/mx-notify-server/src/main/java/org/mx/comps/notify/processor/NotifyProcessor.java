@@ -7,10 +7,12 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.websocket.api.Session;
 import org.mx.DateUtils;
 import org.mx.StringUtils;
+import org.mx.comps.notify.config.NotifyConfigBean;
 import org.mx.comps.notify.online.OnlineManager;
 import org.mx.comps.notify.processor.impl.NotifyCommandProcessor;
 import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -30,10 +32,12 @@ public class NotifyProcessor {
     private NotifyProcessListener listener;
 
     @Autowired
-    public NotifyProcessor(OnlineManager onlineManager, NotifyProcessListener listener) {
+    public NotifyProcessor(ApplicationContext context, NotifyConfigBean notifyConfigBean, OnlineManager onlineManager) {
         super();
         this.onlineManager = onlineManager;
-        this.listener = listener;
+        if (!StringUtils.isBlank(notifyConfigBean.getNotifyListener())) {
+            this.listener = context.getBean(notifyConfigBean.getNotifyListener(), NotifyProcessListener.class);
+        }
     }
 
     /**

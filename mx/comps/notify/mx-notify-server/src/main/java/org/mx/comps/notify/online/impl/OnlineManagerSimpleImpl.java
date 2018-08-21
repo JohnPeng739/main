@@ -8,12 +8,12 @@ import org.mx.comps.notify.config.NotifyConfigBean;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineDeviceAuthenticate;
 import org.mx.comps.notify.online.OnlineManager;
-import org.mx.comps.notify.processor.OnlineDeviceAuthenticateFactory;
 import org.mx.service.server.websocket.WsSessionManager;
 import org.mx.service.server.websocket.WsSessionRemovedListener;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -46,16 +46,16 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
     /**
      * 默认的构造函数
      *
+     * @param context          Spring IoC上下午
      * @param notifyConfigBean 推送配置对象
-     * @param factory          设备鉴别接口
      */
     @Autowired
-    public OnlineManagerSimpleImpl(NotifyConfigBean notifyConfigBean, OnlineDeviceAuthenticateFactory factory) {
+    public OnlineManagerSimpleImpl(ApplicationContext context, NotifyConfigBean notifyConfigBean) {
         super();
         this.onlineDevices = new ConcurrentHashMap<>();
         this.notifyConfigBean = notifyConfigBean;
-        if (!factory.getAuthenticates().isEmpty()) {
-            this.deviceAuthenticate = factory.getAuthenticates().values().iterator().next();
+        if (!StringUtils.isBlank(notifyConfigBean.getAuthenticate())) {
+            this.deviceAuthenticate = context.getBean(notifyConfigBean.getAuthenticate(), OnlineDeviceAuthenticate.class);
         }
         wsSessionManager = WsSessionManager.getManager();
         wsSessionManager.addSessionRemovedListener(this);

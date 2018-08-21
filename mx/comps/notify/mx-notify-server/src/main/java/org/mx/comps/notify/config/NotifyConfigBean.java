@@ -14,6 +14,10 @@ public class NotifyConfigBean {
     private String notifyPath;
     @Value("${websocket.notify.processors:}")
     private String processorsString;
+    @Value("${websocket.notify.notifyListener:}")
+    private String notifyListener;
+    @Value("${websocket.notify.authenticate:}")
+    private String authenticate;
     @Value("${websocket.notify.device.idleTimeoutSecs:-1}")
     private int deviceIdleTimeoutSecs;
 
@@ -23,6 +27,14 @@ public class NotifyConfigBean {
 
     public String[] getProcessors() {
         return StringUtils.split(processorsString);
+    }
+
+    public String getNotifyListener() {
+        return notifyListener;
+    }
+
+    public String getAuthenticate() {
+        return authenticate;
     }
 
     public int getDeviceIdleTimeoutSecs() {

@@ -41,6 +41,7 @@ public final class NotificationWebsocket extends DefaultWsSessionMonitor {
      */
     @Override
     public void hasText(String connectKey, String message) {
+        super.hasText(connectKey, message);
         if (StringUtils.isBlank(message)) {
             if (logger.isWarnEnabled()) {
                 logger.warn("The text message is blank.");
@@ -55,7 +56,6 @@ public final class NotificationWebsocket extends DefaultWsSessionMonitor {
                 }
             }
         }
-        super.hasText(connectKey, message);
     }
 
     /**
@@ -65,7 +65,7 @@ public final class NotificationWebsocket extends DefaultWsSessionMonitor {
      */
     @Override
     public void hasBinary(String connectKey, byte[] buffer) {
-        processorChain.processBinaryData(connectKey, buffer);
         super.hasBinary(connectKey, buffer);
+        processorChain.processBinaryData(connectKey, buffer);
     }
 }
