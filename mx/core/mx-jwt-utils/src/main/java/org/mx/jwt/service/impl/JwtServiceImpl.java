@@ -41,11 +41,22 @@ public class JwtServiceImpl implements JwtService {
     private Algorithm algorithm;
     private JWTVerifier verifier;
 
+    /**
+     * 构造函数
+     *
+     * @param authConfigBean 服务配置信息对象
+     */
     public JwtServiceImpl(AuthConfigBean authConfigBean) {
         super();
         this.authConfigBean = authConfigBean;
     }
 
+    /**
+     * 根据指定的算法名称构造对应的算法对象
+     *
+     * @param algorithm 算法名称
+     * @return 算法对象
+     */
     private Algorithm getAlgorithm(String algorithm) {
         if (algorithm.startsWith("HS")) {
             return getHsAlgorithm(algorithm);
@@ -61,6 +72,12 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
+    /**
+     * 根据指定的HS（HMAC）算法名称，构造对应的RSA算法对象
+     *
+     * @param algorithm 算法名称
+     * @return HS算法对象
+     */
     private Algorithm getHsAlgorithm(String algorithm) {
         AuthConfigBean.HsConfigBean hsConfigBean = authConfigBean.getHsConfig();
         String secret = hsConfigBean.getSecret();
@@ -84,6 +101,12 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
+    /**
+     * 根据指定的RSA算法名称，构造对应的RSA算法对象
+     *
+     * @param algorithm 算法名称
+     * @return RSA算法对象
+     */
     private Algorithm getRsaAlgorithm(String algorithm) {
         AuthConfigBean.RsaConfigBean rsaConfigBean = authConfigBean.getRsaConfig();
         String keystore = rsaConfigBean.getKeystore(),
@@ -105,7 +128,7 @@ public class JwtServiceImpl implements JwtService {
             keyStore.load(fis, rsaConfigBean.getPassword1().toCharArray());
             RSAPrivateCrtKey privateKey = (RSAPrivateCrtKey) keyStore.getKey(alias, password2.toCharArray());
             RSAPublicKeySpec spec = new RSAPublicKeySpec(privateKey.getModulus(), privateKey.getPublicExponent());
-            RSAPublicKey publicKey = (RSAPublicKey)KeyFactory.getInstance("RSA").generatePublic(spec);
+            RSAPublicKey publicKey = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(spec);
             switch (algorithm) {
                 case "RSA512":
                     return Algorithm.RSA512(publicKey, privateKey);
@@ -125,12 +148,15 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
+    /**
+     * 初始化相关的资源
+     */
     public void init() {
         try {
             algorithm = getAlgorithm(authConfigBean.getAlgorithm());
 
             verifier = JWT.require(algorithm)
-                    .withIssuer(authConfigBean.getIssue())
+                    .withIssuer(authConfigBean.getIssuer())
                     .withSubject(authConfigBean.getSubject())
                     .acceptLeeway(1)
                     .acceptExpiresAt(1)
@@ -145,12 +171,20 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
+    /**
+     * 销毁相关的资源
+     */
     public void destroy() {
         if (verifier != null) {
             verifier = null;
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see JwtService#signToken(String)
+     */
     @Override
     public String signToken(String accountCode) {
         Map<String, Object> claims = new HashMap<>(1);
@@ -158,12 +192,17 @@ public class JwtServiceImpl implements JwtService {
         return signToken(claims);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see JwtService#signToken(Map)
+     */
     @SuppressWarnings("unchecked")
     @Override
     public String signToken(Map<String, Object> claims) {
         Date expiredDate = new Date(System.currentTimeMillis() + authConfigBean.getExpired());
         JWTCreator.Builder builder = JWT.create()
-                .withIssuer(authConfigBean.getIssue())
+                .withIssuer(authConfigBean.getIssuer())
                 .withSubject(authConfigBean.getSubject())
                 .withExpiresAt(expiredDate);
 
@@ -211,11 +250,21 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see JwtService#verifyToken(String)
+     */
     @Override
     public JwtVerifyResult verifyToken(String token) {
         return verifyToken(token, null);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see JwtService#verifyToken(String, Predicate)
+     */
     @Override
     public JwtVerifyResult verifyToken(String token, Predicate<Map<String, Claim>> predicate) {
         if (StringUtils.isBlank(token)) {

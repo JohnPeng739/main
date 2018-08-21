@@ -27,7 +27,7 @@ public class UserInterfaceJwtErrorException extends UserInterfaceException {
     }
 
     /**
-     * RBAC(基于角色的访问控制)操作错误枚举定义
+     * JWT（JSON Web Tokens）操作错误枚举定义
      */
     public enum JwtErrors implements UserInterfaceError {
         BLANK_TOKEN("JWT令牌为空。"),
