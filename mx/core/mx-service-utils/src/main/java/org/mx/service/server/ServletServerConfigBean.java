@@ -42,7 +42,7 @@ public class ServletServerConfigBean extends HttpServerConfigBean {
      * 默认的构造函数
      */
     public ServletServerConfigBean() {
-        super(ServerType.RESTful);
+        super(ServerType.Servlet);
     }
 
     /**

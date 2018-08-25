@@ -69,7 +69,7 @@ public class WebsocketServerConfigBean extends HttpServerConfigBean {
      * 默认的构造函数
      */
     public WebsocketServerConfigBean() {
-        super(ServerType.RESTful);
+        super(ServerType.WebSocket);
     }
 
     /**
