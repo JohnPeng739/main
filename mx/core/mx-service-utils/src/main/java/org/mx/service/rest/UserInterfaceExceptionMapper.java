@@ -6,6 +6,7 @@ import org.mx.error.UserInterfaceError;
 import org.mx.error.UserInterfaceException;
 import org.mx.service.rest.vo.DataVO;
 
+import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -17,6 +18,7 @@ import javax.ws.rs.ext.Provider;
  * @author john peng
  * Date time 2018/8/26 下午6:05
  */
+@PreMatching
 @Provider
 public class UserInterfaceExceptionMapper implements ExceptionMapper<Exception> {
     private static final Log logger = LogFactory.getLog(UserInterfaceExceptionMapper.class);
