@@ -2,7 +2,6 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
 import org.mx.comps.rbac.rest.vo.*;
@@ -49,7 +48,6 @@ public class AccountManageResource {
 
     @Path("loginHistories")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<LoginHistoryVO>> loginHistories() {
         try {
             List<LoginHistory> histories = accessor.list(LoginHistory.class);
@@ -69,7 +67,6 @@ public class AccountManageResource {
 
     @Path("loginHistories")
     @POST
-    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<LoginHistoryVO>> loginHistories(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -92,7 +89,6 @@ public class AccountManageResource {
 
     @Path("accounts")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<AccountVO>> listAccounts() {
         try {
             List<Account> accounts = accessor.list(Account.class);
@@ -111,7 +107,6 @@ public class AccountManageResource {
 
     @Path("accounts")
     @POST
-    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<AccountVO>> pagingAccounts(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -133,7 +128,6 @@ public class AccountManageResource {
 
     @Path("accounts/{id}")
     @PUT
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccountVO> saveAccount(@PathParam("id") String id, @QueryParam("userCode") String userCode,
                                          AccountInfoVO accountInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
@@ -157,7 +151,6 @@ public class AccountManageResource {
 
     @Path("accounts/{id}")
     @DELETE
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccountVO> invalidateAccount(@PathParam("id") String id, @QueryParam("userCode") String userCode) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
@@ -179,7 +172,6 @@ public class AccountManageResource {
 
     @Path("accounts/{id}/password/change")
     @POST
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccountVO> changePassword(@PathParam("id") String id, @QueryParam("userCode") String userCode,
                                             ChangePasswordVO vo) {
         sessionDataStore.setCurrentUserCode(userCode);
@@ -208,7 +200,6 @@ public class AccountManageResource {
 
     @Path("accounts/{id}/personal/change")
     @POST
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<AccountVO> changePersonal(@PathParam("id") String id, @QueryParam("userCode") String userCode,
                                             ChangePersonalVO vo) {
         sessionDataStore.setCurrentUserCode(userCode);
@@ -251,7 +242,6 @@ public class AccountManageResource {
 
     @Path("logout/{id}")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<LoginHistoryVO> logout(@PathParam("id") String id, @QueryParam("userCode") String userCode,
                                          @Context Request request) {
         sessionDataStore.setCurrentUserCode(userCode);

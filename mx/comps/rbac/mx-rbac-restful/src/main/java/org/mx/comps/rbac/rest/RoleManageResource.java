@@ -2,7 +2,6 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Role;
 import org.mx.comps.rbac.rest.vo.RoleInfoVO;
 import org.mx.comps.rbac.rest.vo.RoleVO;
@@ -41,7 +40,6 @@ public class RoleManageResource {
 
     @Path("roles")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<RoleVO>> roles() {
         try {
             List<Role> roles = accessor.list(Role.class);
@@ -61,7 +59,6 @@ public class RoleManageResource {
 
     @Path("roles")
     @POST
-    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<RoleVO>> roles(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -84,7 +81,6 @@ public class RoleManageResource {
 
     @Path("roles/{id}")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<RoleVO> getRole(@PathParam("id") String id) {
         try {
             Role role = accessor.getById(id, Role.class);
@@ -104,7 +100,6 @@ public class RoleManageResource {
 
     @Path("roles/new")
     @POST
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<RoleVO> saveRole(@QueryParam("userCode") String userCode, RoleInfoVO roleInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
@@ -127,7 +122,6 @@ public class RoleManageResource {
 
     @Path("roles/{id}")
     @PUT
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<RoleVO> saveRole(@QueryParam("userCode") String userCode, @PathParam("id") String id, RoleInfoVO roleInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {
@@ -150,7 +144,6 @@ public class RoleManageResource {
 
     @Path("roles/{id}")
     @DELETE
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<RoleVO> deleteRole(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {

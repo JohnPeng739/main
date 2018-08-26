@@ -2,7 +2,6 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Privilege;
 import org.mx.comps.rbac.rest.vo.PrivilegeVO;
 import org.mx.dal.EntityFactory;
@@ -37,7 +36,6 @@ public class PrivilegeManageResource {
 
     @Path("privileges")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<PrivilegeVO>> privileges() {
         try {
             List<Privilege> privileges = accessor.list(Privilege.class);
@@ -57,7 +55,6 @@ public class PrivilegeManageResource {
 
     @Path("privileges")
     @POST
-    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<PrivilegeVO>> privileges(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -80,7 +77,6 @@ public class PrivilegeManageResource {
 
     @Path("privileges/{id}")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> getPrivilege(@PathParam("id") String id) {
         try {
             Privilege privilege = accessor.getById(id, Privilege.class);
@@ -120,7 +116,6 @@ public class PrivilegeManageResource {
 
     @Path("privileges/new")
     @POST
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> savePrivilege(@QueryParam("userCode") String userCode, PrivilegeVO privilegeVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         return savePrivilegeInfo(privilegeVO);
@@ -128,7 +123,6 @@ public class PrivilegeManageResource {
 
     @Path("privileges/{id}")
     @PUT
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> savePrivilege(@QueryParam("userCode") String userCode, @PathParam("id") String id, PrivilegeVO privilegeVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         return savePrivilegeInfo(privilegeVO);
@@ -136,7 +130,6 @@ public class PrivilegeManageResource {
 
     @Path("privilege/{id}")
     @DELETE
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<PrivilegeVO> savePrivilege(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {

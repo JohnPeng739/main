@@ -4,7 +4,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.DigestUtils;
 import org.mx.StringUtils;
-import org.mx.comps.jwt.JwtService;
 import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.comps.rbac.dal.entity.LoginHistory;
 import org.mx.comps.rbac.dal.entity.Role;
@@ -16,6 +15,7 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
+import org.mx.jwt.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
@@ -185,7 +185,7 @@ public abstract class AccountManageServiceCommonImpl implements AccountManageSer
         loginHistory.setLoginTime(new Date().getTime());
         loginHistory.setOnline(true);
         // 设置令牌
-        loginHistory.setToken(jwtService.sign(account.getCode()));
+        loginHistory.setToken(jwtService.signToken(account.getCode()));
         return accessor.save(loginHistory);
     }
 

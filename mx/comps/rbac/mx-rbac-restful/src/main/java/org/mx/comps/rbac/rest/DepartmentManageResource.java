@@ -2,7 +2,6 @@ package org.mx.comps.rbac.rest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.comps.jwt.AuthenticateAround;
 import org.mx.comps.rbac.dal.entity.Department;
 import org.mx.comps.rbac.rest.vo.DepartmentInfoVO;
 import org.mx.comps.rbac.rest.vo.DepartmentVO;
@@ -41,7 +40,6 @@ public class DepartmentManageResource {
 
     @Path("departments")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<List<DepartmentVO>> departments() {
         try {
             List<Department> departments = accessor.list(Department.class);
@@ -61,7 +59,6 @@ public class DepartmentManageResource {
 
     @Path("departments")
     @POST
-    @AuthenticateAround(returnValueClass = PaginationDataVO.class)
     public PaginationDataVO<List<DepartmentVO>> departments(Pagination pagination) {
         if (pagination == null) {
             pagination = new Pagination();
@@ -84,7 +81,6 @@ public class DepartmentManageResource {
 
     @Path("departments/{id}")
     @GET
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<DepartmentVO> getDepartment(@PathParam("id") String id) {
         try {
             Department department = accessor.getById(id, Department.class);
@@ -123,7 +119,6 @@ public class DepartmentManageResource {
 
     @Path("departments/new")
     @POST
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<DepartmentVO> saveDepartment(@QueryParam("userCode") String userCode, DepartmentInfoVO departmentInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
         departmentInfoVO.setId(null);
@@ -132,7 +127,6 @@ public class DepartmentManageResource {
 
     @Path("departments/{id}")
     @PUT
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<DepartmentVO> saveDepartment(@QueryParam("userCode") String userCode, @PathParam("id") String id,
                                                DepartmentInfoVO departmentInfoVO) {
         sessionDataStore.setCurrentUserCode(userCode);
@@ -142,7 +136,6 @@ public class DepartmentManageResource {
 
     @Path("departments/{id}")
     @DELETE
-    @AuthenticateAround(returnValueClass = DataVO.class)
     public DataVO<DepartmentVO> deleteDepartment(@QueryParam("userCode") String userCode, @PathParam("id") String id) {
         sessionDataStore.setCurrentUserCode(userCode);
         try {

@@ -16,7 +16,7 @@ project(':mx-rbac-service') {
       libs.'mx-spring',
       libs.'mx-dal',
       libs.'mx-service-utils',
-      libs.'java-jwt',
+      libs.'mx-jwt-utils',
       libs.'aspectj'
     )
   }
