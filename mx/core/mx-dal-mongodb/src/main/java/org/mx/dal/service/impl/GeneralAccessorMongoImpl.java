@@ -85,27 +85,6 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         return count(clazz, true);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Base> T fetchParentMaybe(T t) {
-        if (t instanceof BaseDictTree) {
-            String parentId = ((BaseDictTree) t).getParentId();
-            if (!StringUtils.isBlank(parentId)) {
-                T parent = template.findById(parentId, (Class<T>) t.getClass());
-                ((BaseDictTree) t).setParent((BaseDictTree) parent);
-            }
-        }
-        return t;
-    }
-
-    private <T extends Base> List<T> fetchParentMaybe(List<T> list) {
-        if (list != null && !list.isEmpty()) {
-            for (T t : list) {
-                fetchParentMaybe(t);
-            }
-        }
-        return list;
-    }
-
     /**
      * {@inheritDoc}
      *
@@ -125,7 +104,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
                 tuples.forEach(group::add);
                 result = find(group, clazz);
             } else {
-                result = fetchParentMaybe(template.findAll(clazz));
+                result = template.findAll(clazz);
             }
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("List %d entity[%s].", result.size(), clazz.getName()));
@@ -179,7 +158,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             } else {
                 result = template.find(new Query().skip(skip).limit(limit), clazz);
             }
-            return fetchParentMaybe(result);
+            return result;
         } catch (ClassNotFoundException ex) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
@@ -196,7 +175,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
             }
-            return fetchParentMaybe(template.findById(id, clazz));
+            return template.findById(id, clazz);
         } catch (ClassNotFoundException ex) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
@@ -264,7 +243,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             if (group != null && !group.getItems().isEmpty()) {
                 query.addCriteria(createGroupCriteria(group));
             }
-            return fetchParentMaybe(template.find(query, clazz));
+            return template.find(query, clazz);
         } catch (ClassNotFoundException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Condition find entity[%s] fail, condition: %s.",
@@ -343,7 +322,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
                 query.skip((pagination.getPage() - 1) * pagination.getSize());
                 query.limit(pagination.getSize());
             }
-            return fetchParentMaybe(template.find(query, clazz));
+            return template.find(query, clazz);
         } catch (ClassNotFoundException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Text search entity[%s] fail, condition: %s.",

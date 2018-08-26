@@ -1,6 +1,5 @@
 package org.mx.dal.entity;
 
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.HashSet;
@@ -14,9 +13,8 @@ import java.util.Set;
  * @see BaseDictTree
  */
 public class MongoBaseDictTreeEntity<T extends BaseDictTree> extends MongoBaseDictEntity implements BaseDictTree {
-    @Transient
+    @DBRef
     private T parent;
-    private String parentId;
     @DBRef
     private Set<T> children = new HashSet<>();
 
@@ -27,11 +25,7 @@ public class MongoBaseDictTreeEntity<T extends BaseDictTree> extends MongoBaseDi
      */
     @Override
     public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
+        return parent == null ? null : parent.getId();
     }
 
     /**
@@ -53,9 +47,6 @@ public class MongoBaseDictTreeEntity<T extends BaseDictTree> extends MongoBaseDi
     @Override
     public void setParent(BaseDictTree parent) {
         this.parent = (T) parent;
-        if (parent != null) {
-            this.parentId = parent.getId();
-        }
     }
 
     /**
@@ -66,5 +57,14 @@ public class MongoBaseDictTreeEntity<T extends BaseDictTree> extends MongoBaseDi
     @Override
     public Set<T> getChildren() {
         return children;
+    }
+
+    /**
+     * 设置节点的下级节点集合
+     *
+     * @param children 下级节点集合
+     */
+    public void setChildren(Set<T> children) {
+        this.children = children;
     }
 }
