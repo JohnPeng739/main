@@ -11,6 +11,7 @@ import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.mx.StringUtils;
 import org.mx.service.rest.UserInterfaceExceptionMapper;
+import org.mx.service.rest.auth.RestAuthenticateFilter;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
@@ -70,6 +71,8 @@ public class RestfulServerFactory extends HttpServerFactory {
                     }
                 }
             }
+            // 注册身份令牌过滤器
+            config.register(RestAuthenticateFilter.class);
             // 注册通用的UserInterface异常处理类
             config.register(UserInterfaceExceptionMapper.class);
             /*

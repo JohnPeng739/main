@@ -4,9 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.error.UserInterfaceError;
 import org.mx.error.UserInterfaceException;
+import org.mx.service.error.UserInterfaceServiceErrorException;
 import org.mx.service.rest.vo.DataVO;
 
-import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -18,13 +18,9 @@ import javax.ws.rs.ext.Provider;
  * @author john peng
  * Date time 2018/8/26 下午6:05
  */
-@PreMatching
 @Provider
 public class UserInterfaceExceptionMapper implements ExceptionMapper<Exception> {
     private static final Log logger = LogFactory.getLog(UserInterfaceExceptionMapper.class);
-
-    public static final int NOT_CAPTURED_CODE = 9999;
-    public static final String NOT_CAPTURED_MSG = "未捕获的程序异常。";
 
     /**
      * {@inheritDoc}
@@ -44,7 +40,9 @@ public class UserInterfaceExceptionMapper implements ExceptionMapper<Exception> 
                 logger.error("Any not captured exception", ex);
             }
             return Response.ok(new DataVO((UserInterfaceError) new UserInterfaceException(
-                    NOT_CAPTURED_CODE, NOT_CAPTURED_MSG, ex.getMessage(), ex
+                    UserInterfaceServiceErrorException.ServiceErrors.SERVICE_OTHER_FAIL.getErrorCode(),
+                    UserInterfaceServiceErrorException.ServiceErrors.SERVICE_OTHER_FAIL.getErrorMessage(),
+                    ex.getMessage(), ex
             ))).build();
         }
     }

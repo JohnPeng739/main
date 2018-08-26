@@ -71,6 +71,7 @@ project(':mx-service-utils') {
                 project(':mx-utils'),
                 project(':mx-dal'),
                 project(':mx-spring'),
+                project(':mx-jwt-utils'),
                 libs.'jersey-server',
                 libs.'jersey-media-jackson',
                 libs.'jersey-jetty-http',

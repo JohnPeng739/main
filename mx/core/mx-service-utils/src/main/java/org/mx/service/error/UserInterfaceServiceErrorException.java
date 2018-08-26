@@ -26,6 +26,9 @@ public class UserInterfaceServiceErrorException extends UserInterfaceException {
     }
 
     public enum ServiceErrors implements UserInterfaceError {
+        JWT_SERVICE_NOT_INIT("JWT(JSON Web Tokens)鉴别服务未初始化。"),
+        TOKEN_INVALID("无效的身份令牌。"),
+
         WS_CLIENT_INIT_FAIL("初始化Websocket客户端失败。"),
         WS_SEND_FAIL("WebSocket送数据失败。"),
 

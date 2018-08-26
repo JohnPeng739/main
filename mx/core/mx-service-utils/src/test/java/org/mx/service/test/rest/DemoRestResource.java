@@ -1,6 +1,7 @@
 package org.mx.service.test.rest;
 
 import org.mx.error.UserInterfaceSystemErrorException;
+import org.mx.service.rest.auth.RestAuthenticate;
 import org.mx.service.rest.vo.DataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -41,7 +42,7 @@ public class DemoRestResource {
 
     @Path("exception/system")
     @GET
-    public DataVO<Boolean> systemException() {
+    public DataVO<String> systemException() {
         throw new UserInterfaceSystemErrorException(
                 UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
         );
@@ -51,5 +52,12 @@ public class DemoRestResource {
     @GET
     public DataVO<Boolean> exception() {
         throw new RuntimeException("Any exception.");
+    }
+
+    @Path("authenticate")
+    @GET
+    @RestAuthenticate
+    public DataVO<String> authenticate() {
+        return new DataVO<>("ok");
     }
 }

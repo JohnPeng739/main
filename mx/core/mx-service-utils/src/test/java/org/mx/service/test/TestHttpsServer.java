@@ -8,7 +8,7 @@ import org.mx.StringUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.client.rest.RestClientInvoke;
 import org.mx.service.client.rest.RestInvokeException;
-import org.mx.service.rest.UserInterfaceExceptionMapper;
+import org.mx.service.error.UserInterfaceServiceErrorException;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.service.server.AbstractServerFactory;
 import org.mx.service.server.RestfulServerFactory;
@@ -65,8 +65,11 @@ public class TestHttpsServer {
 
             dataVO = invoke.get("https://localhost:9999/service/exception", DataVO.class);
             assertNotNull(dataVO);
-            assertEquals(UserInterfaceExceptionMapper.NOT_CAPTURED_CODE, dataVO.getErrorCode());
-            assertEquals(UserInterfaceExceptionMapper.NOT_CAPTURED_MSG, dataVO.getErrorMessage());
+            assertEquals(UserInterfaceServiceErrorException.ServiceErrors.SERVICE_OTHER_FAIL.getErrorCode(),
+                    dataVO.getErrorCode());
+            assertEquals(UserInterfaceServiceErrorException.ServiceErrors.SERVICE_OTHER_FAIL.getErrorMessage(),
+                    dataVO.getErrorMessage());
+
             invoke.close();
         } catch (RestInvokeException ex) {
             ex.printStackTrace();

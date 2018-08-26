@@ -5,12 +5,10 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 /**
  * 基于Jetty的Restful服务的调用客户端工具类
@@ -93,26 +91,46 @@ public class RestClientInvoke {
     }
 
     public <R> R get(String url, Class<R> resultType) throws RestInvokeException {
+        return get(url, resultType, null);
+    }
+
+    public <R> R get(String url, Class<R> resultType, Map<String, Object> headers) throws RestInvokeException {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Request invoke GET RESTful service, url: %s, result type: %s.",
                     url, resultType.getName()));
         }
         WebTarget target = client.target(url);
-        Response response = target.request().get();
+        Invocation.Builder builder = target.request();
+        if (headers != null && !headers.isEmpty()) {
+            headers.forEach(builder::header);
+        }
+        Response response = builder.get();
         return dowithResponse(response, resultType);
     }
 
     public <R> R delete(String url, Class<R> resultType) throws RestInvokeException {
+        return delete(url, resultType, null);
+    }
+
+    public <R> R delete(String url, Class<R> resultType, Map<String, Object> headers) throws RestInvokeException {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Request invoke DELETE RESTful service, url: %s, result type: %s.",
                     url, resultType.getName()));
         }
         WebTarget target = client.target(url);
-        Response response = target.request().delete();
+        Invocation.Builder builder = target.request();
+        if (headers != null && !headers.isEmpty()) {
+            headers.forEach(builder::header);
+        }
+        Response response = builder.delete();
         return dowithResponse(response, resultType);
     }
 
     public <R, D> R post(String url, D d, Class<R> resultType) throws RestInvokeException {
+        return post(url, d, resultType, null);
+    }
+
+    public <R, D> R post(String url, D d, Class<R> resultType, Map<String, Object> headers) throws RestInvokeException {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Request invoke POST RESTful service, url: %s, result type: %s.",
                     url, resultType.getName()));
@@ -122,11 +140,19 @@ public class RestClientInvoke {
         if (d != null) {
             entity = Entity.entity(d, MediaType.APPLICATION_JSON_TYPE);
         }
-        Response response = target.request().post(entity);
+        Invocation.Builder builder = target.request();
+        if (headers != null && !headers.isEmpty()) {
+            headers.forEach(builder::header);
+        }
+        Response response = builder.post(entity);
         return dowithResponse(response, resultType);
     }
 
     public <R, D> R put(String url, D d, Class<R> resultType) throws RestInvokeException {
+        return put(url, d, resultType, null);
+    }
+
+    public <R, D> R put(String url, D d, Class<R> resultType, Map<String, Object> headers) throws RestInvokeException {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Request invoke PUT RESTful service, url: %s, result type: %s.",
                     url, resultType.getName()));
@@ -136,7 +162,11 @@ public class RestClientInvoke {
         if (d != null) {
             entity = Entity.entity(d, MediaType.APPLICATION_JSON_TYPE);
         }
-        Response response = target.request().put(entity);
+        Invocation.Builder builder = target.request();
+        if (headers != null && !headers.isEmpty()) {
+            headers.forEach(builder::header);
+        }
+        Response response = builder.put(entity);
         return dowithResponse(response, resultType);
     }
 }
