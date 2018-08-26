@@ -142,7 +142,9 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
         if (deviceAuthenticate != null) {
             // 需要进行设备身份鉴别
             if (!deviceAuthenticate.authenticate(onlineDevice)) {
-                // 设备身份鉴别失败，返回。
+                // 设备身份鉴别失败，断开连接，返回false。
+                wsSessionManager.removeWsSessions(Collections.singleton(onlineDevice.getConnectKey()), 4002,
+                        "The device authenticate fail.");
                 return false;
             }
         }
