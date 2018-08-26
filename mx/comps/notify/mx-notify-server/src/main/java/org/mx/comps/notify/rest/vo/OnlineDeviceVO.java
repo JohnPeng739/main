@@ -1,5 +1,6 @@
 package org.mx.comps.notify.rest.vo;
 
+import com.alibaba.fastjson.JSONObject;
 import org.mx.comps.notify.online.OnlineDevice;
 
 import java.util.ArrayList;
@@ -11,9 +12,10 @@ import java.util.List;
  * @author : john.peng created on date : 2018/1/14
  */
 public class OnlineDeviceVO {
-    private String deviceId, state, connect, extraData;
+    private String deviceId, state, connect;
     private long registryTime, lastTime;
     private double lastLongitude, lastLatitude;
+    private JSONObject extraData;
 
     /**
      * 将在线设备对象转换为对应的值对象
@@ -184,7 +186,7 @@ public class OnlineDeviceVO {
      *
      * @return 扩展数据
      */
-    public String getExtraData() {
+    public JSONObject getExtraData() {
         return extraData;
     }
 
@@ -193,7 +195,7 @@ public class OnlineDeviceVO {
      *
      * @param extraData 扩展数据
      */
-    public void setExtraData(String extraData) {
+    public void setExtraData(JSONObject extraData) {
         this.extraData = extraData;
     }
 }

@@ -1,5 +1,7 @@
 package org.mx.comps.notify.client.command;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * 设备注册命令
  *
@@ -16,7 +18,7 @@ public class RegistryCommand extends Command<RegistryCommand.RegistryData> {
      * @param latitude  纬度
      * @param extraData 扩展数据
      */
-    public RegistryCommand(String deviceId, String state, double longitude, double latitude, String extraData) {
+    public RegistryCommand(String deviceId, String state, double longitude, double latitude, JSONObject extraData) {
         super("registry", CommandType.SYSTEM);
         super.setPayload(new RegistryData(deviceId, state, longitude, latitude, extraData));
     }
@@ -25,8 +27,9 @@ public class RegistryCommand extends Command<RegistryCommand.RegistryData> {
      * 设备注册数据对象定义
      */
     public class RegistryData {
-        private String deviceId, state, extraData;
+        private String deviceId, state;
         private double longitude, latitude;
+        private JSONObject extraData;
 
         /**
          * 构造函数
@@ -37,7 +40,7 @@ public class RegistryCommand extends Command<RegistryCommand.RegistryData> {
          * @param latitude  纬度
          * @param extraData 扩展数据
          */
-        public RegistryData(String deviceId, String state, double longitude, double latitude, String extraData) {
+        public RegistryData(String deviceId, String state, double longitude, double latitude, JSONObject extraData) {
             super();
             this.deviceId = deviceId;
             this.state = state;
@@ -123,7 +126,7 @@ public class RegistryCommand extends Command<RegistryCommand.RegistryData> {
          *
          * @return 扩展数据
          */
-        public String getExtraData() {
+        public JSONObject getExtraData() {
             return extraData;
         }
 
@@ -132,7 +135,7 @@ public class RegistryCommand extends Command<RegistryCommand.RegistryData> {
          *
          * @param extraData 扩展数据
          */
-        public void setExtraData(String extraData) {
+        public void setExtraData(JSONObject extraData) {
             this.extraData = extraData;
         }
     }

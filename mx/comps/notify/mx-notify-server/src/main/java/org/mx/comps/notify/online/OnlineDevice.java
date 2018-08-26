@@ -1,14 +1,17 @@
 package org.mx.comps.notify.online;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * 在线设备对象定义
  *
  * @author : john.peng created on date : 2018/1/3
  */
 public class OnlineDevice {
-    private String deviceId, state, connectKey, extraData;
+    private String deviceId, state, connectKey;
     private long registryTime, lastTime;
     private double lastLongitude, lastLatitude;
+    private JSONObject extraData;
 
     /**
      * 更新设备信息
@@ -152,20 +155,20 @@ public class OnlineDevice {
     }
 
     /**
-     * 获取附加数据字串
+     * 获取附加JSON数据对象
      *
-     * @return 附加数据字串
+     * @return 附加JSON数据对象
      */
-    public String getExtraData() {
+    public JSONObject getExtraData() {
         return extraData;
     }
 
     /**
-     * 设置附加数据字串
+     * 设置附加JSON数据对象
      *
-     * @param extraData 附加数据字串
+     * @param extraData 附加JSON数据对象
      */
-    public void setExtraData(String extraData) {
+    public void setExtraData(JSONObject extraData) {
         this.extraData = extraData;
     }
 }
