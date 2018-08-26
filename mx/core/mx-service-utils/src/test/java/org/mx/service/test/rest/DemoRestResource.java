@@ -1,5 +1,6 @@
 package org.mx.service.test.rest;
 
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.rest.vo.DataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -36,5 +37,19 @@ public class DemoRestResource {
     @PUT
     public DataVO<String> put(String data) {
         return new DataVO<>(String.format("put data: %s.", data));
+    }
+
+    @Path("exception/system")
+    @GET
+    public DataVO<Boolean> systemException() {
+        throw new UserInterfaceSystemErrorException(
+                UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+        );
+    }
+
+    @Path("exception")
+    @GET
+    public DataVO<Boolean> exception() {
+        throw new RuntimeException("Any exception.");
     }
 }

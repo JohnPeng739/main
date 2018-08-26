@@ -35,7 +35,7 @@ ext.versions = [
   'mx-utils'    	: '2.1.22',
   'mx-spring'		: '1.2.0',
   'mx-jwt-utils'	: '1.0.0',
-  'mx-service-utils'	: '1.8.8',
+  'mx-service-utils'	: '1.9.0',
   'mx-hanlp-utils'	: '1.0.12',
   'mx-dal'      	: '2.0.0',
   'mx-dal-hibernate'    : '2.0.1',

@@ -63,7 +63,7 @@ project(':mx-dal') {
 }
 
 project(':mx-service-utils') {
-    version = '1.8.8'
+    version = '1.9.0'
     description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
     dependencies {

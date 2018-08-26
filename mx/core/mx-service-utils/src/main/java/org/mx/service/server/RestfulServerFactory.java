@@ -10,6 +10,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.mx.StringUtils;
+import org.mx.service.rest.UserInterfaceExceptionMapper;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
@@ -69,6 +70,8 @@ public class RestfulServerFactory extends HttpServerFactory {
                     }
                 }
             }
+            // 注册通用的UserInterface异常处理类
+            config.register(UserInterfaceExceptionMapper.class);
             /*
              * 为了使用Spring IoC注入，需要将ApplicationContext事先注入
              */
