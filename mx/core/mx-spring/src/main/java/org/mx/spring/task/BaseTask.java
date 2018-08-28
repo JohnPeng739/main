@@ -1,5 +1,7 @@
 package org.mx.spring.task;
 
+import java.util.concurrent.Future;
+
 /**
  * 描述： 默认的任务类
  *
@@ -11,6 +13,8 @@ public abstract class BaseTask implements Task {
     private boolean async = true;
     private long startTime = -1, finishTime = -1;
     private TaskState state = TaskState.INIT;
+
+    private Future<?> future;
 
     /**
      * 默认的构造函数
@@ -133,5 +137,13 @@ public abstract class BaseTask implements Task {
      */
     protected void setFinishTime(long finishTime) {
         this.finishTime = finishTime;
+    }
+
+    protected Future<?> getFuture() {
+        return future;
+    }
+
+    protected void setFuture(Future<?> future) {
+        this.future = future;
     }
 }

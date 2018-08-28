@@ -4,7 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.DateUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -20,9 +23,9 @@ public class TaskFactory {
     private ExecutorService asyncExecutorPoolService; // 单次异步执行服务池
     private ScheduledExecutorService scheduledExecutorService; // 周期调度服务池
 
-    private List<Task> serialTasks = new ArrayList<>();
-    private List<Task> asyncTasks = new ArrayList<>();
-    private List<Task> scheduledTasks = new ArrayList<>();
+    private Map<String, Task> serialTasks = new ConcurrentHashMap<>();
+    private Map<String, Task> asyncTasks = new ConcurrentHashMap<>();
+    private Map<String, Task> scheduledTasks = new ConcurrentHashMap<>();
     private Map<String, Task.ScheduledConfig> scheduledConfigs = new HashMap<>();
 
     /**
@@ -41,8 +44,8 @@ public class TaskFactory {
      *
      * @return 串行任务列表
      */
-    public List<Task> getSerialTasks() {
-        return serialTasks;
+    public Collection<Task> getSerialTasks() {
+        return serialTasks.values();
     }
 
     /**
@@ -50,8 +53,26 @@ public class TaskFactory {
      *
      * @return 单次异步任务列表
      */
-    public List<Task> getAsyncTasks() {
-        return asyncTasks;
+    public Collection<Task> getAsyncTasks() {
+        return asyncTasks.values();
+    }
+
+    /**
+     * 获取指定的单次异步任务
+     *
+     * @param taskName 任务名称
+     * @return 指定的任务对象，如果不存在，则返回null。
+     */
+    public Task getAsyncTask(String taskName) {
+        return asyncTasks.get(taskName);
+    }
+
+    public Task removeAsyncTask(String taskName) {
+        if (asyncTasks.containsKey(taskName)) {
+            Task task = asyncTasks.get(taskName);
+            cancelTask(task);
+        }
+        return asyncTasks.remove(taskName);
     }
 
     /**
@@ -59,8 +80,26 @@ public class TaskFactory {
      *
      * @return 可调度任务列表
      */
-    public List<Task> getScheduledTasks() {
-        return scheduledTasks;
+    public Collection<Task> getScheduledTasks() {
+        return scheduledTasks.values();
+    }
+
+    /**
+     * 获取指定的调度任务
+     *
+     * @param taskName 任务名称
+     * @return 指定的任务对象，如果不存在，则返回null。
+     */
+    public Task getScheduledTask(String taskName) {
+        return scheduledTasks.get(taskName);
+    }
+
+    public Task removeScheduledTask(String taskName) {
+        if (scheduledTasks.containsKey(taskName)) {
+            Task task = scheduledTasks.get(taskName);
+            cancelTask(task);
+        }
+        return scheduledTasks.remove(taskName);
     }
 
     /**
@@ -78,7 +117,7 @@ public class TaskFactory {
         if (logger.isInfoEnabled()) {
             logger.info("Submit a serial task.");
         }
-        serialTasks.add(task);
+        serialTasks.put(task.getName(), task);
         return this;
     }
 
@@ -93,7 +132,7 @@ public class TaskFactory {
             return;
         }
         try {
-            singleExecutorService.submit(() -> serialTasks.forEach(this::runTask));
+            singleExecutorService.submit(() -> serialTasks.forEach((k, v) -> runTask(v)));
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Submit a serial task successfully, total: %d.", serialTasks.size()));
             }
@@ -114,9 +153,12 @@ public class TaskFactory {
         if (logger.isInfoEnabled()) {
             logger.info("Submit a async task.");
         }
-        asyncTasks.add(task);
+        asyncTasks.put(task.getName(), task);
         try {
-            asyncExecutorPoolService.submit(() -> runTask(task));
+            Future<?> future = asyncExecutorPoolService.submit(() -> runTask(task));
+            if (task instanceof BaseTask) {
+                ((BaseTask) task).setFuture(future);
+            }
             if (logger.isInfoEnabled()) {
                 logger.info(String.format("Submit a async task successfully, name: %s, state: %s, start: %s.",
                         task.getName(), task.getState(), DateUtils.get23Date(new Date(task.getStartTime()))));
@@ -141,7 +183,7 @@ public class TaskFactory {
         if (logger.isInfoEnabled()) {
             logger.info("Submit a scheduled task.");
         }
-        scheduledTasks.add(task);
+        scheduledTasks.put(task.getName(), task);
         scheduledConfigs.put(task.getName(), config);
         this.schedule(task);
         if (logger.isInfoEnabled()) {
@@ -185,11 +227,25 @@ public class TaskFactory {
      */
     private void schedule(Task task) {
         Task.ScheduledConfig config = scheduledConfigs.get(task.getName());
+        Future<?> future;
         if (config.isOnlyOne()) {
-            scheduledExecutorService.schedule(() -> runTask(task), config.getDelay(), config.getTimeUnit());
+            future = scheduledExecutorService.schedule(() -> runTask(task), config.getDelay(), config.getTimeUnit());
         } else {
-            scheduledExecutorService.scheduleAtFixedRate(() -> runTask(task), config.getDelay(), config.getPeriod(),
+            future = scheduledExecutorService.scheduleAtFixedRate(() -> runTask(task), config.getDelay(), config.getPeriod(),
                     config.getTimeUnit());
+        }
+        if (task instanceof BaseTask) {
+            ((BaseTask) task).setFuture(future);
+        }
+    }
+
+    private void cancelTask(Task task) {
+        if (task instanceof BaseTask && ((BaseTask) task).getFuture() != null &&
+                task.getState() == Task.TaskState.RUNNING) {
+            ((BaseTask) task).getFuture().cancel(true);
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("The task[%s] will be canceled.", task.getName()));
+            }
         }
     }
 
@@ -198,7 +254,9 @@ public class TaskFactory {
      */
     public void shutdown() {
         serialTasks.clear();
+        asyncTasks.values().forEach(this::cancelTask);
         asyncTasks.clear();
+        scheduledTasks.values().forEach(this::cancelTask);
         scheduledTasks.clear();
         if (singleExecutorService != null) {
             singleExecutorService.shutdownNow();
