@@ -1,6 +1,7 @@
 package org.mx.dal.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -40,12 +41,18 @@ import org.mx.dal.entity.*;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.session.SessionDataStore;
+import org.mx.dal.utils.bean.IndicesInfoBean;
+import org.mx.dal.utils.bean.NodeInfoBean;
 import org.mx.error.UserInterfaceSystemErrorException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * 描述： 采用Restful方式进行Elastic访问的实现类
@@ -53,7 +60,7 @@ import java.util.function.BiConsumer;
  * @author John.Peng
  * Date time 2018/4/1 上午9:31
  */
-public class ElasticUtilRest implements ElasticUtil {
+public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     private static final Log logger = LogFactory.getLog(ElasticUtilRest.class);
 
     private ElasticConfigBean elasticConfigBean;
@@ -129,6 +136,53 @@ public class ElasticUtilRest implements ElasticUtil {
     /**
      * {@inheritDoc}
      *
+     * @see ElasticLowLevelUtil#createIndex(String, Map, Map)
+     */
+    @Override
+    public <T extends Base> void createIndex(String index, Map<String, Object> settings, Map<String, Object> properties) {
+        // 初始化Index
+        try {
+            OpenIndexRequest request = new OpenIndexRequest(index);
+            client.indices().open(request);
+        } catch (ElasticsearchStatusException ex) {
+            if (ex.status() == RestStatus.NOT_FOUND) {
+                CreateIndexRequest request = new CreateIndexRequest(index);
+                request.settings(settings);
+                Map<String, Map<String, Object>> mapping = new HashMap<>();
+                mapping.put(index, properties);
+                request.mapping(index, mapping);
+                try {
+                    client.indices().create(request);
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(String.format("Create index[%s] successfully.", index));
+                    }
+                } catch (IOException ex1) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(String.format("Create the index[%s] fail.", index), ex1);
+                    }
+                    throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_INDEX_FAIL);
+                }
+            }
+        } catch (IOException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("Create index[%s] fail.", index), ex);
+            }
+        }
+
+        try {
+            String className = getIndexClass(index).getName();
+            indexes.put(className, index);
+            revIndexes.put(index, className);
+        } catch (Exception ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Get index class fail.", ex);
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see ElasticUtil#createIndex(Class)
      */
     @Override
@@ -156,41 +210,11 @@ public class ElasticUtilRest implements ElasticUtil {
                 }
                 properties.put(name, fieldProperties);
             });
-            // 初始化Index
-            try {
-                OpenIndexRequest request = new OpenIndexRequest(index);
-                client.indices().open(request);
-            } catch (ElasticsearchStatusException ex) {
-                if (ex.status() == RestStatus.NOT_FOUND) {
-                    CreateIndexRequest request = new CreateIndexRequest(index);
-                    Map<String, Object> settings = new HashMap<>();
-                    settings.put("number_of_shards", elasticConfigBean.getShards());
-                    settings.put("number_of_replicas", elasticConfigBean.getReplicas());
-                    request.settings(settings);
-                    Map<String, Map<String, Object>> mapping = new HashMap<>();
-                    mapping.put(index, new HashMap<>());
-                    mapping.get(index).put("properties", properties);
-                    request.mapping(index, mapping);
-                    try {
-                        client.indices().create(request);
-                        if (logger.isDebugEnabled()) {
-                            logger.debug(String.format("Create index[%s] successfully.", index));
-                        }
-                    } catch (IOException ex1) {
-                        if (logger.isErrorEnabled()) {
-                            logger.error(String.format("Create the index[%s] fail.", index), ex1);
-                        }
-                        throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_INDEX_FAIL);
-                    }
-                }
-            } catch (IOException ex) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn(String.format("Create index[%s] fail.", index), ex);
-                }
-            }
-            String className = clazz.getName();
-            indexes.put(className, index);
-            revIndexes.put(index, className);
+
+            Map<String, Object> settings = new HashMap<>();
+            settings.put("number_of_shards", elasticConfigBean.getShards());
+            settings.put("number_of_replicas", elasticConfigBean.getReplicas());
+            createIndex(index, settings, properties);
         }
     }
 
@@ -209,24 +233,82 @@ public class ElasticUtilRest implements ElasticUtil {
                 index = clazz.getName();
             }
             // 删除Index
-            try {
-                OpenIndexRequest reqOpen = new OpenIndexRequest(index);
-                client.indices().open(reqOpen);
-                DeleteIndexRequest reqDelete = new DeleteIndexRequest(index);
-                client.indices().delete(reqDelete);
-                if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("Delete the index[%s] successfully.", index));
-                }
-            } catch (IOException ex) {
-                if (logger.isWarnEnabled()) {
-                    logger.warn(String.format("Delete the index[%s] fail.", index), ex);
-                }
-            }
-            // 清理缓存
-            String className = clazz.getName();
-            indexes.remove(className);
-            revIndexes.remove(index);
+            deleteIndex(index);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticLowLevelUtil#deleteIndex(String)
+     */
+    @Override
+    public void deleteIndex(String index) {
+        try {
+            OpenIndexRequest reqOpen = new OpenIndexRequest(index);
+            client.indices().open(reqOpen);
+            DeleteIndexRequest reqDelete = new DeleteIndexRequest(index);
+            client.indices().delete(reqDelete);
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Delete the index[%s] successfully.", index));
+            }
+        } catch (IOException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("Delete the index[%s] fail.", index), ex);
+            }
+        }
+        // 清理缓存
+        try {
+            String className = getIndexClass(index).getName();
+            indexes.remove(className);
+        } catch (Exception ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Get index class fail.", ex);
+            }
+        }
+        revIndexes.remove(index);
+    }
+
+    private void performLowLevelGetRequest(String path, Consumer<String> action) {
+        try {
+            InputStream in = client.getLowLevelClient()
+                    .performRequest("GET", path).getEntity().getContent();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String line;
+            while (!StringUtils.isBlank(line = reader.readLine())) {
+                action.accept(line);
+            }
+            in.close();
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Low level rest client invoke %s fail.", path), ex);
+            }
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_REST_FAIL);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticLowLevelUtil#getAllNodes() ()
+     */
+    @Override
+    public List<NodeInfoBean> getAllNodes() {
+        List<NodeInfoBean> list = new ArrayList<>();
+        performLowLevelGetRequest("_cat/nodes", line -> list.add(new NodeInfoBean(line)));
+        return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticLowLevelUtil#getAllIndexes()
+     */
+    @Override
+    public List<IndicesInfoBean> getAllIndexes() {
+        List<IndicesInfoBean> list = new ArrayList<>();
+        performLowLevelGetRequest("/_cat/indices", line -> list.add(new IndicesInfoBean(line)));
+        return list;
     }
 
     /**
@@ -264,6 +346,12 @@ public class ElasticUtilRest implements ElasticUtil {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#getIndexClass(String)
+     */
+    @Override
     public Class<?> getIndexClass(String index) {
         if (revIndexes.containsKey(index)) {
             String className = revIndexes.get(index);
@@ -559,6 +647,25 @@ public class ElasticUtilRest implements ElasticUtil {
     /**
      * {@inheritDoc}
      *
+     * @see ElasticLowLevelUtil#getById(String, String)
+     */
+    @Override
+    public JSONObject getById(String id, String index) {
+        GetRequest request = new GetRequest(index, index, id);
+        try {
+            GetResponse response = client.get(request);
+            return response.isExists() ? JSON.parseObject(response.getSourceAsString()) : null;
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Get data fail, index: %s, type: %s, id: %s.", index, index, id));
+            }
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see ElasticUtil#getById(String, Class)
      */
     @SuppressWarnings("unchecked")
@@ -678,6 +785,29 @@ public class ElasticUtilRest implements ElasticUtil {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_INDEX_FAIL);
         }
         return ts;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticLowLevelUtil#remove(String, String)
+     */
+    public void remove(String id, String index) {
+        if (getById(id, index) != null) {
+            DeleteRequest request = new DeleteRequest(index, index, id);
+            try {
+                client.delete(request);
+            } catch (IOException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("Delete the data from elastic fail.", ex);
+                }
+                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
+            }
+        } else {
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("The document[%s] not found in index[%s].", id, index));
+            }
+        }
     }
 
     /**
