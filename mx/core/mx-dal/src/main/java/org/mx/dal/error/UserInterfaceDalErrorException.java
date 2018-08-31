@@ -38,6 +38,7 @@ public class UserInterfaceDalErrorException extends UserInterfaceException {
         ENTITY_INDEX_NOT_FOUND("指定实体没有建立索引。"),
 
         ES_INDEX_FAIL("指定实体的索引操作失败。"),
+        ES_REST_FAIL("调用ES REST服务失败。"),
 
         DB_OTHER_FAIL("未知数据访问错误。");
 
