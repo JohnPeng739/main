@@ -1,0 +1,28 @@
+plugins {
+    id 'com.jfrog.bintray' version '1.8.0'
+}
+
+apply from: '../../../../dependencies.gradle'
+
+apply from: '../../../../allprojects.gradle'
+
+project(':es-manager-service') {
+    version = '1.0.0'
+    description = 'Mx Tools (Elastic search manager) Service.'
+
+    dependencies {
+        compile(
+                libs.'mx-utils',
+                libs.'mx-spring',
+                libs.'mx-jwt-utils',
+                libs.'mx-dal',
+                libs.'mx-dal-hibernate',
+                libs.'mx-dal-elastic',
+                libs.'mx-rbac-service',
+                libs.'mx-rbac-service-hibernate',
+                libs.'mx-service-utils'
+        )
+    }
+}
+
+apply from: '../../../../subproject.gradle'
