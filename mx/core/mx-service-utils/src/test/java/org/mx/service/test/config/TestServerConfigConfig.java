@@ -1,5 +1,6 @@
 package org.mx.service.test.config;
 
+import org.mx.service.rest.cors.CorsConfigBean;
 import org.mx.service.server.CommServerConfigBean;
 import org.mx.service.server.RestfulServerConfigBean;
 import org.mx.service.server.ServletServerConfigBean;
@@ -17,7 +18,8 @@ import org.springframework.core.env.Environment;
  */
 @Configuration
 @PropertySource({
-        "classpath:server-config-test.properties"
+        "classpath:server-config-test.properties",
+        "classpath:cors.properties"
 })
 public class TestServerConfigConfig {
     /**
@@ -59,5 +61,15 @@ public class TestServerConfigConfig {
     @Bean
     public CommServerConfigBean commServerConfigBean(Environment env) {
         return new CommServerConfigBean(env);
+    }
+
+    /**
+     * 创建跨域配置对象
+     *
+     * @return 跨域配置对象
+     */
+    @Bean
+    public CorsConfigBean corsConfigBean() {
+        return new CorsConfigBean();
     }
 }

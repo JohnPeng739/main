@@ -12,6 +12,8 @@ import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.mx.StringUtils;
 import org.mx.service.rest.UserInterfaceExceptionMapper;
 import org.mx.service.rest.auth.RestAuthenticateFilter;
+import org.mx.service.rest.cors.CorsConfigBean;
+import org.mx.service.rest.cors.CorsFilter;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
@@ -27,17 +29,21 @@ public class RestfulServerFactory extends HttpServerFactory {
 
     private ApplicationContext context;
     private RestfulServerConfigBean restfulServerConfigBean;
+    private CorsConfigBean corsConfigBean;
 
     /**
      * 默认的构造函数
      *
      * @param context                 Spring IoC上下文
      * @param restfulServerConfigBean RESTful配置对象
+     * @param corsConfigBean          跨域配置对象
      */
-    public RestfulServerFactory(ApplicationContext context, RestfulServerConfigBean restfulServerConfigBean) {
+    public RestfulServerFactory(ApplicationContext context, RestfulServerConfigBean restfulServerConfigBean,
+                                CorsConfigBean corsConfigBean) {
         super(restfulServerConfigBean);
         this.context = context;
         this.restfulServerConfigBean = restfulServerConfigBean;
+        this.corsConfigBean = corsConfigBean;
     }
 
     /**
@@ -70,6 +76,10 @@ public class RestfulServerFactory extends HttpServerFactory {
                         restfulClasses.forEach(config::register);
                     }
                 }
+            }
+            // 根据需要注册跨域过滤器
+            if (corsConfigBean.isEnabled()) {
+                config.register(CorsFilter.class);
             }
             // 注册身份令牌过滤器
             config.register(RestAuthenticateFilter.class);

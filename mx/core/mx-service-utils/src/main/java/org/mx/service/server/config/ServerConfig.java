@@ -1,5 +1,6 @@
 package org.mx.service.server.config;
 
+import org.mx.service.rest.cors.CorsConfigBean;
 import org.mx.service.server.*;
 import org.mx.service.server.websocket.rule.DdosFilterRule;
 import org.mx.service.server.websocket.rule.ListFilterRule;
@@ -62,6 +63,16 @@ public class ServerConfig {
     }
 
     /**
+     * 创建跨域配置对象
+     *
+     * @return 跨域配置对象
+     */
+    @Bean
+    public CorsConfigBean corsConfigBean() {
+        return new CorsConfigBean();
+    }
+
+    /**
      * 创建黑白名单过滤器规则
      *
      * @param websocketServerConfigBean WebSocket配置对象
@@ -102,12 +113,14 @@ public class ServerConfig {
      *
      * @param context                 Spring IoC上下文
      * @param restfulServerConfigBean RESTful配置对象
+     * @param corsConfigBean          跨域配置对象
      * @return RESTful服务器工厂
      */
     @Bean(name = "restfulServerFactory", initMethod = "init", destroyMethod = "destroy")
     public RestfulServerFactory restfulServerFactory(ApplicationContext context,
-                                                     RestfulServerConfigBean restfulServerConfigBean) {
-        return new RestfulServerFactory(context, restfulServerConfigBean);
+                                                     RestfulServerConfigBean restfulServerConfigBean,
+                                                     CorsConfigBean corsConfigBean) {
+        return new RestfulServerFactory(context, restfulServerConfigBean, corsConfigBean);
     }
 
     /**

@@ -3,6 +3,7 @@ package org.mx.service.test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mx.service.rest.cors.CorsConfigBean;
 import org.mx.service.server.CommServerConfigBean;
 import org.mx.service.server.RestfulServerConfigBean;
 import org.mx.service.server.ServletServerConfigBean;
@@ -128,5 +129,19 @@ public class TestServerConfig {
         assertEquals(123, config.getUdpServers().get(0).getMaxTimeout());
         assertEquals("org.mx.service.server.comm.DefaultPacketWrapper", config.getUdpServers().get(0).getPacketWrapper());
         assertEquals("udpReceiver", config.getUdpServers().get(0).getReceiver());
+    }
+
+    @Test
+    public void testCorsConfig() {
+        CorsConfigBean config = context.getBean(CorsConfigBean.class);
+        assertNotNull(config);
+
+        assertTrue(config.isEnabled());
+        assertEquals("http://www.baidu.com/", config.getAllowOrigin());
+        assertEquals("origin, content-type, accept, authorization, token", config.getAllowHeaders());
+        assertEquals("X-My-Custorm-Header, X-Custom-Header", config.getExposeHeader());
+        assertEquals("GET, POST, PUT, DELETE, OPTIONS", config.getAllowMethods());
+        assertEquals("true", config.getAllowCredentials());
+        assertEquals("12096000", config.getMaxAge());
     }
 }
