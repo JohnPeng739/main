@@ -149,7 +149,7 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
                 CreateIndexRequest request = new CreateIndexRequest(index);
                 request.settings(settings);
                 Map<String, Map<String, Object>> mapping = new HashMap<>();
-                mapping.put(index, properties);
+                mapping.put("properties", properties);
                 request.mapping(index, mapping);
                 try {
                     client.indices().create(request);
@@ -166,16 +166,6 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         } catch (IOException ex) {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("Create index[%s] fail.", index), ex);
-            }
-        }
-
-        try {
-            String className = getIndexClass(index).getName();
-            indexes.put(className, index);
-            revIndexes.put(index, className);
-        } catch (Exception ex) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Get index class fail.", ex);
             }
         }
     }
@@ -215,6 +205,9 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             settings.put("number_of_shards", elasticConfigBean.getShards());
             settings.put("number_of_replicas", elasticConfigBean.getReplicas());
             createIndex(index, settings, properties);
+            String className = clazz.getName();
+            indexes.put(className, index);
+            revIndexes.put(index, className);
         }
     }
 
@@ -234,6 +227,9 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             }
             // 删除Index
             deleteIndex(index);
+            // 清理缓存
+            String className = clazz.getName();
+            indexes.remove(className);
         }
     }
 
@@ -255,15 +251,6 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         } catch (IOException ex) {
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("Delete the index[%s] fail.", index), ex);
-            }
-        }
-        // 清理缓存
-        try {
-            String className = getIndexClass(index).getName();
-            indexes.remove(className);
-        } catch (Exception ex) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("Get index class fail.", ex);
             }
         }
         revIndexes.remove(index);
