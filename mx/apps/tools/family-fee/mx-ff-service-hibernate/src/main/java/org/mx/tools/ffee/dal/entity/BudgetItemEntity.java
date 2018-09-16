@@ -18,8 +18,6 @@ import javax.persistence.Table;
 public class BudgetItemEntity extends BaseEntity implements BudgetItem {
     @Column(name = "BUDGET_YEAR")
     private int year;
-    @Column(name = "BUDGET_TYPE")
-    private Type type;
     @Column(name = "MONEY")
     private double money;
     @Column(name = "DESCRIPTION")
@@ -43,24 +41,6 @@ public class BudgetItemEntity extends BaseEntity implements BudgetItem {
      */
     public void setYear(int year) {
         this.year = year;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see BudgetItem#getType()
-     */
-    public Type getType() {
-        return type;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see BudgetItem#setType(Type)
-     */
-    public void setType(Type type) {
-        this.type = type;
     }
 
     /**
@@ -102,18 +82,18 @@ public class BudgetItemEntity extends BaseEntity implements BudgetItem {
     /**
      * {@inheritDoc}
      *
-     * @see BudgetItem#getCource()
+     * @see BudgetItem#getCourse()
      */
-    public Course getCource() {
+    public Course getCourse() {
         return course;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see BudgetItem#setCource(Course)
+     * @see BudgetItem#setCourse(Course)
      */
-    public void setCource(Course course) {
+    public void setCourse(Course course) {
         this.course = course;
     }
 }

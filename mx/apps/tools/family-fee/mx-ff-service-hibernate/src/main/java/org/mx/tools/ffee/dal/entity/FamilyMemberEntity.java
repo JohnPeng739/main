@@ -2,10 +2,7 @@ package org.mx.tools.ffee.dal.entity;
 
 import org.mx.dal.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 描述： 家庭成员信息实体类，基于Hibernate实现。
@@ -16,44 +13,52 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TB_FAMILY_MEMBER")
 public class FamilyMemberEntity extends BaseEntity implements FamilyMember {
+    @ManyToOne(targetEntity = FamilyEntity.class)
+    private Family family;
     @Column(name = "MEMBER_ROLE")
-    private String memberRole;
-    @ManyToOne(targetEntity = FfeeAccountEntity.class)
+    private String role;
+    @OneToOne(targetEntity = FfeeAccountEntity.class)
     private FfeeAccount ffeeAccount;
+    @Column(name = "IS_OWNER")
+    private boolean isOwner;
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see FamilyMember#getMemberRole()
-     */
-    public String getMemberRole() {
-        return memberRole;
+    @Override
+    public Family getFamily() {
+        return family;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see FamilyMember#setMemberRole(String)
-     */
-    public void setMemberRole(String memberRole) {
-        this.memberRole = memberRole;
+    @Override
+    public String getRole() {
+        return role;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see FamilyMember#getFfeeAccount()
-     */
+    @Override
     public FfeeAccount getFfeeAccount() {
         return ffeeAccount;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see FamilyMember#setFfeeAccount(FfeeAccount)
-     */
+    @Override
+    public boolean isOwner() {
+        return isOwner;
+    }
+
+    @Override
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
+    @Override
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Override
     public void setFfeeAccount(FfeeAccount ffeeAccount) {
         this.ffeeAccount = ffeeAccount;
+    }
+
+    @Override
+    public void setIsOwner(boolean owner) {
+        isOwner = owner;
     }
 }

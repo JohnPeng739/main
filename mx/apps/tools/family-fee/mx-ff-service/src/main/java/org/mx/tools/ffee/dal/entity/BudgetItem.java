@@ -13,10 +13,6 @@ public interface BudgetItem extends Base {
 
     void setYear(int year);
 
-    Type getType();
-
-    void setType(Type type);
-
     double getMoney();
 
     void setMoney(double money);
@@ -25,18 +21,7 @@ public interface BudgetItem extends Base {
 
     void setDesc(String desc);
 
-    Course getCource();
+    Course getCourse();
 
-    void setCource(Course course);
-
-    enum Type {
-        /**
-         * 收入预算
-         */
-        INCOME,
-        /**
-         * 支出预算
-         */
-        SPENDING
-    }
+    void setCourse(Course course);
 }

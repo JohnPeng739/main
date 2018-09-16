@@ -1,62 +1,67 @@
 package org.mx.tools.ffee.dal.entity;
 
-import org.mx.comps.rbac.dal.entity.Account;
 import org.mx.dal.entity.Base;
 
 /**
  * 描述： FFEE中的账户信息接口定义，依赖RBAC中的Account。
  *
  * @author John.Peng
- *         Date time 2018/2/17 下午4:28
+ * Date time 2018/2/17 下午4:28
  */
 public interface FfeeAccount extends Base {
-    /**
-     * 获取FFEE关联的常规账户对象
-     *
-     * @return 账户对象
-     */
-    Account getAccount();
+    String getOpenId();
 
-    /**
-     * 设置FFEE关联的常规账户对象
-     *
-     * @param account 账户对象
-     */
-    void setAccount(Account account);
+    void setOpenId(String openId);
 
-    /**
-     * 获取账户来源类型
-     *
-     * @return 账户来源类型
-     */
-    AccountSourceType getSourceType();
+    String getUnionId();
 
-    /**
-     * 设置账户来源类型
-     *
-     * @param sourceType 账户来源类型
-     */
-    void setSourceType(AccountSourceType sourceType);
+    void setUnionId(String unionId);
 
-    /**
-     * 账户来源类型
-     */
-    enum AccountSourceType {
-        /**
-         * 常规注册
-         */
-        NORMAL,
-        /**
-         * 微信
-         */
-        WEIXIN,
-        /**
-         * 微博
-         */
-        WEIBO,
-        /**
-         * QQ
-         */
-        QQ
+    String getNickname();
+
+    void setNickname(String nickname);
+
+    Gender getGender();
+
+    void setGender(Gender gender);
+
+    String getMobile();
+
+    void setMobile(String mobile);
+
+    String getEmail();
+
+    void setEmail(String email);
+
+    String getWx();
+
+    void setWx(String wx);
+
+    String getQq();
+
+    void setQq(String qq);
+
+    String getWb();
+
+    void setWb(String wb);
+
+    String getAvatarUrl();
+
+    void setAvatarUrl(String avatarUrl);
+
+    String getCountry();
+
+    void setCountry(String country);
+
+    String getProvince();
+
+    void setProvince(String province);
+
+    String getCity();
+
+    void setCity(String city);
+
+    enum Gender {
+        MALE, FEMALE, NA
     }
 }

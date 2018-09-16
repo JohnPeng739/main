@@ -15,7 +15,6 @@ project(':mx-ff-service') {
       libs.'mx-utils',
       libs.'mx-spring',
       libs.'mx-dal',
-      libs.'mx-rbac-restful',
       libs.'mx-service-utils',
       libs.'aspectj'
     )
@@ -31,24 +30,7 @@ project(':mx-ff-service-hibernate') {
       project(':mx-ff-service'),
       libs.'javax-el-api',
       libs.'mx-dal-hibernate',
-      libs.'mx-rbac-service-hibernate',
       libs.'spring-tx'
-    )
-  }
-}
-
-project(':mx-ff-service-mongodb') {
-  version = '1.0.0'
-  description = 'Mx Tools (Family Fee) Service for mongodb based mx-dal-mongodb &amp; mx-rbac-service-mongodb.'
-
-  dependencies {
-    compile(
-      project(':mx-ff-service'),
-      libs.'mx-dal-mongodb',
-      libs.'mx-rbac-service-mongodb'
-    )
-    testCompile(
-      libs.'mongodb-embed'
     )
   }
 }
@@ -60,7 +42,6 @@ project(':mx-ff-restful') {
   dependencies {
     compile(
       project(':mx-ff-service'),
-      project(':mx-ff-service-hibernate'),
       libs.'jersey-server',
       libs.'jersey-media-jackson',
       libs.'jersey-jetty-http',
@@ -69,7 +50,19 @@ project(':mx-ff-restful') {
       libs.'jetty-server',
       libs.'jetty-servlet',
       libs.'jetty-websocket'
-      // project(':mx-ff-service-mongodb')
+    )
+  }
+}
+
+project(':mx-ff-allinone') {
+  version = '1.0.0'
+  description = 'Mx Tools (Family Fee) for deployment.'
+
+  dependencies {
+    compile(
+            project(':mx-ff-service'),
+            project(':mx-ff-service-hibernate'),
+            project(':mx-ff-restful')
     )
   }
 }

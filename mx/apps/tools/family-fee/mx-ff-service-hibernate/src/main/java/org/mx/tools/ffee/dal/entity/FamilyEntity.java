@@ -10,7 +10,7 @@ import java.util.Set;
  * 描述： 家庭信息实体类，基于Hibernate实现。
  *
  * @author John.Peng
- *         Date time 2018/2/18 上午10:49
+ * Date time 2018/2/18 上午10:49
  */
 @Entity
 @Table(name = "TB_FAMILY")
@@ -19,9 +19,11 @@ public class FamilyEntity extends BaseEntity implements Family {
     private String name;
     @Column(name = "DESCRIPTION")
     private String desc;
+    @Column(name = "AVATAR_URL")
+    private String avatarUrl;
     @ManyToOne(targetEntity = FfeeAccount.class)
-    private FfeeAccount owner;
-    @OneToMany(targetEntity = FamilyMemberEntity.class, cascade = {CascadeType.REFRESH}, mappedBy = "family", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = FamilyMemberEntity.class, cascade = {CascadeType.REFRESH},
+            mappedBy = "family", fetch = FetchType.EAGER)
     private Set<FamilyMember> members;
 
     /**
@@ -50,22 +52,24 @@ public class FamilyEntity extends BaseEntity implements Family {
         this.name = name;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see Family#getOwner()
-     */
-    public FfeeAccount getOwner() {
-        return owner;
+    @Override
+    public String getDescription() {
+        return desc;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see Family#setOwner(FfeeAccount)
-     */
-    public void setOwner(FfeeAccount owner) {
-        this.owner = owner;
+    @Override
+    public void setDescription(String desc) {
+        this.desc = desc;
+    }
+
+    @Override
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    @Override
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     /**

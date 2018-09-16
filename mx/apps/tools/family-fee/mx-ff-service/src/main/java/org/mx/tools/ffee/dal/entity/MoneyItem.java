@@ -9,9 +9,9 @@ import org.mx.dal.entity.Base;
  *         Date time 2018/2/17 下午5:26
  */
 public interface MoneyItem extends Base {
-    Course getCource();
+    Course getCourse();
 
-    void setCource(Course course);
+    void setCourse(Course course);
 
     double getMoney();
 

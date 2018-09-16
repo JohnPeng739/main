@@ -1,0 +1,79 @@
+/**app.wxss**/
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx;
+  box-sizing: border-box;
+}
+
+.important {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: red;
+}
+
+.unimportant {
+  font-weight: 400;
+  color: darkgray;
+}
+
+.notice {
+  font-weight: 300;
+  color: red;
+}
+
+.title {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+.avatar-normal {
+  width: 256rpx;
+  height: 256rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.avatar-small {
+  width: 48rpx;
+  height: 48rpx;
+  margin: 5rpx;
+  border-radius: 50%;
+}
+
+.section {
+  padding: 10rpx 0 25rpx 0;
+}
+
+.row-gap {
+  margin-bottom: 10rpx;
+}
+
+.section-row {
+  display: flex;
+  flex-direction: row;
+  vertical-align: middle;
+}
+
+.input-text {
+  border: 1rpx solid black;
+  padding: 5rpx;
+}
+
+.combox {
+  border: 1rpx solid black;
+  margin-left: 5rpx;
+  margin-right: 5rpx;
+  padding: 10rpx 25rpx;
+  font-weight: 500;
+}
+
+.button-gap {
+  width: 100%;
+  margin-top: 50rpx;
+}

@@ -1,0 +1,22 @@
+<!--pages/create-family/create-family.wxml-->
+<view class="content">
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <view class="section">
+      <view class="title" class="row-gap">家庭名称</view>
+      <input name="familyName" placeholder="请输入家庭名称..." class="input-text" />
+    </view>
+    <view class="section">
+      <view class="title" class="row-gap">家主大人</view>
+      <view class="section-row">
+        <image src="{{userInfo.avatarUrl}}" class="avatar-small"></image>
+        <span class="content-value">{{userInfo.nickName}}</span>
+        <span class="unimportant">是我家的</span>
+        <picker name="role" value="{{role}}" range="{{roles}}" bindchange="bindRoleChange">
+          <span class="combox">{{roles[role]}}</span>!
+        </picker>
+      </view>
+    </view>
+    <button type="primary" form-type="submit" class="button-gap">创建家庭</button>
+    <button form-type="reset" class="button-gap">重置</button>
+  </form>
+</view>

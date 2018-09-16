@@ -4,55 +4,48 @@ import org.mx.dal.entity.BaseDictTreeEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
  * 描述： 科目明细信息实体类，基于Hibernate实现。
  *
  * @author John.Peng
- *         Date time 2018/2/17 下午5:30
+ * Date time 2018/2/17 下午5:30
  */
 @Entity
 @Table(name = "TB_COURSE")
 public class CourseEntity extends BaseDictTreeEntity implements Course {
     @Column(name = "COURSE_TYPE")
-    private BudgetItem.Type type;
-    @Column(name = "IS_PUBLIC")
-    private boolean isPublic;
+    private CourseType type = CourseType.INCOME;
+    @ManyToOne(targetEntity = FfeeAccountEntity.class)
+    private FfeeAccount owner;
 
     /**
      * {@inheritDoc}
      *
      * @see Course#getType()
      */
-    public BudgetItem.Type getType() {
+    public CourseType getType() {
         return type;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see Course#setType(BudgetItem.Type)
+     * @see Course#setType(CourseType)
      */
-    public void setType(BudgetItem.Type type) {
+    public void setType(CourseType type) {
         this.type = type;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see Course#isPublic()
-     */
-    public boolean isPublic() {
-        return isPublic;
+    @Override
+    public FfeeAccount getOwner() {
+        return owner;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @see Course#setPublic(boolean)
-     */
-    public void setPublic(boolean isPublic) {
-        this.isPublic = isPublic;
+    @Override
+    public void setOwner(FfeeAccount owner) {
+        this.owner = owner;
     }
 }

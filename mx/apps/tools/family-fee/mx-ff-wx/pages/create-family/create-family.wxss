@@ -1,0 +1,9 @@
+/* pages/create-family/create-family.wxss */
+.content {
+  padding: 20rpx;
+}
+
+.content-value {
+  font-weight: 500;
+  padding: 0 10rpx;
+}

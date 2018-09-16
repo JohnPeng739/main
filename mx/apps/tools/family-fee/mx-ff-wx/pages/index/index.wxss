@@ -1,0 +1,20 @@
+/**index.wxss**/
+.view {
+  width: 100%;
+}
+
+.rich-text {
+  line-height: 70rpx;
+}
+
+.p{
+  text-indent: 2em;
+  margin-top: 30rpx;
+}
+
+.user-info-block {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}

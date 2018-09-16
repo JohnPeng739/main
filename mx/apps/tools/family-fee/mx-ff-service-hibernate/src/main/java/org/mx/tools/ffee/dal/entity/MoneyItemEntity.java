@@ -26,18 +26,18 @@ public class MoneyItemEntity extends BaseEntity implements MoneyItem {
     /**
      * {@inheritDoc}
      *
-     * @see MoneyItem#getCource()
+     * @see MoneyItem#getCourse()
      */
-    public Course getCource() {
+    public Course getCourse() {
         return course;
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see MoneyItem#setCource(Course)
+     * @see MoneyItem#setCourse(Course)
      */
-    public void setCource(Course course) {
+    public void setCourse(Course course) {
         this.course = course;
     }
 

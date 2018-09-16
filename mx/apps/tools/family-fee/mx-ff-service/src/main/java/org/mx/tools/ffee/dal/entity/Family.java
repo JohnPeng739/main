@@ -25,19 +25,13 @@ public interface Family extends Base {
      */
     void setName(String name);
 
-    /**
-     * 获取家主
-     *
-     * @return 家主的账户
-     */
-    FfeeAccount getOwner();
+    String getAvatarUrl();
 
-    /**
-     * 设置家主
-     *
-     * @param account 家主的账户
-     */
-    void setOwner(FfeeAccount account);
+    void setAvatarUrl(String avatarUrl);
+
+    String getDescription();
+
+    void setDescription(String description);
 
     /**
      * 获取家庭成员集合
