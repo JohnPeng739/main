@@ -30,6 +30,16 @@ public interface GeneralAccessor {
     /**
      * 对指定的实体类型进行计数，实体接口必须继承Base接口。
      *
+     * @param group 条件组
+     * @param clazz 实体接口类型
+     * @param <T>   实现Base接口的泛型对象类型
+     * @return 指定实体的数量
+     */
+    <T extends Base> long count(ConditionGroup group, Class<T> clazz);
+
+    /**
+     * 对指定的实体类型进行计数，实体接口必须继承Base接口。
+     *
      * @param clazz   实体接口类型
      * @param isValid 如果设置为true，仅返回有效的记录；否则对所有记录计数。
      * @param <T>     实现Base接口的泛型对象类型
@@ -99,6 +109,18 @@ public interface GeneralAccessor {
     <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz);
 
     /**
+     * 根据指定的条件组查询数据
+     *
+     * @param group      条件组
+     * @param pagination 分页对象
+     * @param clazz      实体接口类
+     * @param <T>        实现Base接口的泛型对象类型
+     * @return 实体对象集合
+     * @see ConditionGroup
+     */
+    <T extends Base> List<T> find(ConditionGroup group, Pagination pagination, Class<T> clazz);
+
+    /**
      * 根据指定字段的值获取一条数据记录，多个条件采用and组合。
      *
      * @param tuples 条件元组（包括字段名和字段值）
@@ -106,8 +128,20 @@ public interface GeneralAccessor {
      * @param <T>    实现Base接口的泛型对象类型
      * @return 实体对象，如果不存在则返回null
      * @see ConditionTuple
+     * @deprecated 尽可能使用 {@link #findOne(ConditionGroup, Class)} 来替代。
      */
     <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz);
+
+    /**
+     * 根据指定字段的值获取一条数据记录，多个条件采用and组合。
+     *
+     * @param group 条件组
+     * @param clazz 实体接口类
+     * @param <T>   实现Base接口的泛型对象类型
+     * @return 实体对象，如果不存在则返回null
+     * @see ConditionGroup
+     */
+    <T extends Base> T findOne(ConditionGroup group, Class<T> clazz);
 
     /**
      * 保存指定的实体。

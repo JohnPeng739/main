@@ -54,20 +54,34 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(Class<T> clazz, boolean isValid) {
-        try {
-            if (clazz.isInterface()) {
+        return count(isValid ? ConditionTuple.eq("valid", true) : null, clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#count(ConditionGroup, Class)
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public <T extends Base> long count(ConditionGroup group, Class<T> clazz) {
+        if (clazz.isInterface()) {
+            try {
                 clazz = EntityFactory.getEntityClass(clazz);
+            } catch (ClassNotFoundException ex) {
+                throw new UserInterfaceDalErrorException(
+                        UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL
+                );
             }
-            Query query = entityManager.createQuery(String.format("SELECT COUNT(entity) FROM %s entity %s",
-                    clazz.getName(), isValid ? "WHERE entity.valid = TRUE" : ""));
-            long count = (long) query.getSingleResult();
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Count %d %s entity[%s].", count, isValid ? "valid" : "", clazz.getName()));
-            }
-            return count;
-        } catch (ClassNotFoundException ex) {
-            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<T> rootCount = countQuery.from(clazz);
+        countQuery.select(cb.count(rootCount));
+        if (group != null) {
+            countQuery.where(createGroupPredicate(cb, rootCount, group));
+        }
+        return entityManager.createQuery(countQuery).getSingleResult();
     }
 
     /**
@@ -224,18 +238,48 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      *
      * @see GeneralAccessor#find(ConditionGroup, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
+        return find(group, null, clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#find(ConditionGroup, Pagination, Class)
+     */
+    @Transactional(readOnly = true)
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Base> List<T> find(ConditionGroup group, Pagination pagination, Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
             }
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+
+            if (pagination != null) {
+                CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+                Root<T> rootCount = countQuery.from(clazz);
+                countQuery.select(cb.count(rootCount));
+                if (group != null) {
+                    countQuery.where(createGroupPredicate(cb, rootCount, group));
+                }
+                pagination.setTotal(entityManager.createQuery(countQuery).getSingleResult().intValue());
+            }
+
             CriteriaQuery<T> criteriaQuery = cb.createQuery(clazz);
             Root<T> root = criteriaQuery.from(clazz);
-            criteriaQuery.where(createGroupPredicate(cb, root, group));
+            if (group != null) {
+                criteriaQuery.where(createGroupPredicate(cb, root, group));
+            }
             Query query = entityManager.createQuery(criteriaQuery);
+            if (pagination != null) {
+                query.setFirstResult((pagination.getPage() - 1) * pagination.getSize());
+                query.setMaxResults(pagination.getSize());
+            }
             return query.getResultList();
         } catch (ClassNotFoundException ex) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
@@ -263,6 +307,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
      * {@inheritDoc}
      *
      * @see GeneralAccessor#findOne(List, Class)
+     * @deprecated 尽可能使用 {@link #findOne(ConditionGroup, Class)} 来替代。
      */
     @Transactional(readOnly = true)
     @Override
@@ -271,6 +316,17 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         if (tuples != null && !tuples.isEmpty()) {
             tuples.forEach(group::add);
         }
+        return findOne(group, clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#findOne(ConditionGroup, Class)
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public <T extends Base> T findOne(ConditionGroup group, Class<T> clazz) {
         List<T> result = find(group, clazz);
         if (result != null && result.size() > 0) {
             return result.get(0);

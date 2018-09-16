@@ -50,7 +50,7 @@ project(':mx-jwt-utils') {
 }
 
 project(':mx-dal') {
-    version = '2.0.1'
+    version = '2.0.2'
     description = 'data access layer abstract classes and interfaces.'
 
     dependencies {
@@ -87,7 +87,7 @@ project(':mx-service-utils') {
 }
 
 project(':mx-dal-hibernate') {
-    version = '2.0.1'
+    version = '2.0.2'
     description = 'Dal with hibernate JPA.'
 
     dependencies {
