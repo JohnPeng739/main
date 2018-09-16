@@ -56,9 +56,17 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> long count(Class<T> clazz, boolean isValid) {
-        SearchResponse response = elasticUtil.search(
-                isValid ? ConditionGroup.and(ConditionTuple.eq("valid", true)) : null,
-                clazz, null);
+        return count(isValid ? ConditionGroup.and(ConditionTuple.eq("valid", true)) : null, clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#count(ConditionGroup, Class)
+     */
+    @Override
+    public <T extends Base> long count(ConditionGroup group, Class<T> clazz) {
+        SearchResponse response = elasticUtil.search(group, clazz, null);
         return response.getHits().getTotalHits();
     }
 
@@ -140,9 +148,22 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
         SearchResponse response = elasticUtil.search(group, classes, pagination);
         List<T> list = new ArrayList<>();
         if (response.status() == RestStatus.OK) {
+            if (pagination != null) {
+                pagination.setTotal((int) response.getHits().getTotalHits());
+            }
             response.getHits().forEach(hit -> dowithRow(hit, list));
         }
         return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#find(ConditionGroup, Pagination, Class)
+     */
+    @Override
+    public <T extends Base> List<T> find(ConditionGroup group, Pagination pagination, Class<T> clazz) {
+        return find(group, Collections.singletonList(clazz), pagination);
     }
 
     /**
@@ -175,6 +196,16 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
         for (ConditionTuple tuple : tuples) {
             group.add(tuple);
         }
+        return findOne(group, clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#findOne(ConditionGroup, Class)
+     */
+    @Override
+    public <T extends Base> T findOne(ConditionGroup group, Class<T> clazz) {
         List<T> result = find(group, clazz);
         if (result != null && result.size() > 0) {
             return result.get(0);
