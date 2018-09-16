@@ -356,18 +356,6 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see ElasticUtil#search(org.mx.dal.service.GeneralAccessor.ConditionGroup, Class, Pagination)
-     */
-    @Override
-    public <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
-                                                  Pagination pagination)
-            throws UserInterfaceDalErrorException {
-        return search(group, Collections.singletonList(clazz), pagination);
-    }
-
-    /**
      * 对条件组创建查询
      *
      * @param group 条件组
@@ -503,17 +491,30 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     }
 
     /**
-     * {@inheritDoc} <br>
-     * 在没有传入分页对象的情况下，最多返回前1000条记录。
+     * {@inheritDoc}
      *
      * @see ElasticUtil#search(org.mx.dal.service.GeneralAccessor.ConditionGroup, Class, Pagination)
      */
     @Override
-    public <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes,
+    public <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
                                                   Pagination pagination)
             throws UserInterfaceDalErrorException {
+        return search(group, null, Collections.singletonList(clazz), pagination);
+    }
+
+    /**
+     * {@inheritDoc} <br>
+     * 在没有传入分页对象的情况下，最多返回前1000条记录。
+     *
+     * @see ElasticUtil#search(GeneralAccessor.ConditionGroup, GeneralAccessor.RecordOrderGroup, List, Pagination)
+     */
+    @Override
+    public <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group,
+                                                  GeneralAccessor.RecordOrderGroup orderGroup,
+                                                  List<Class<? extends Base>> classes,
+                                                  Pagination pagination) {
         SearchSourceBuilder builder = new SearchSourceBuilder();
-        if (group == null || group.getItems().isEmpty()) {
+        if (group == null) {
             builder.query(QueryBuilders.matchAllQuery());
         } else {
             builder.query(createQueryGroupBuilder(group, classes.get(0)));
@@ -525,10 +526,23 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             // 默认不分页的情况下，返回前1000条记录
             builder.size(1000);
         }
+        if (orderGroup != null && !orderGroup.getOrders().isEmpty()) {
+            orderGroup.getOrders().forEach(order -> {
+                if (order.getType() == GeneralAccessor.RecordOrder.OrderType.ASC) {
+                    builder.sort(order.getField(), SortOrder.ASC);
+                } else {
+                    builder.sort(order.getField(), SortOrder.DESC);
+                }
+            });
+        }
         SearchRequest request = new SearchRequest(getIndices(classes));
         request.source(builder);
         try {
-            return client.search(request);
+            SearchResponse response = client.search(request);
+            if (pagination != null) {
+                pagination.setTotal((int)response.getHits().getTotalHits());
+            }
+            return response;
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error("Search fail from elastic.", ex);

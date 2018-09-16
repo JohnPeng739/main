@@ -87,33 +87,11 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#list(Pagination, Class, boolean)
+     * @see GeneralAccessor#find(Pagination, ConditionGroup, RecordOrderGroup, Class)
      */
-    @Transactional(readOnly = true)
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) {
-        try {
-            if (clazz.isInterface()) {
-                clazz = EntityFactory.getEntityClass(clazz);
-            }
-            if (pagination == null) {
-                pagination = new Pagination();
-            }
-            pagination.setTotal((int) count(clazz, isValid));
-            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity %s ", clazz.getName(),
-                    isValid ? "WHERE entity.valid = TRUE" : ""));
-            query.setFirstResult((pagination.getPage() - 1) * pagination.getSize());
-            query.setMaxResults(pagination.getSize());
-            List<T> result = query.getResultList();
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Pagination list %d %s entity[%s], pagination: %s",
-                        result.size(), isValid ? "valid" : "", clazz.getName(), pagination));
-            }
-            return result;
-        } catch (ClassNotFoundException ex) {
-            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
-        }
+        return find(pagination, isValid ? ConditionTuple.eq("valid", true) : null, null, clazz);
     }
 
     /**
@@ -242,18 +220,19 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
-        return find(group, null, clazz);
+        return find(null, group, null, clazz);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#find(ConditionGroup, Pagination, Class)
+     * @see GeneralAccessor#find(Pagination, ConditionGroup, RecordOrderGroup, Class)
      */
     @Transactional(readOnly = true)
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Base> List<T> find(ConditionGroup group, Pagination pagination, Class<T> clazz) {
+    public <T extends Base> List<T> find(Pagination pagination, ConditionGroup group, RecordOrderGroup orderGroup,
+                                         Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -274,6 +253,15 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             Root<T> root = criteriaQuery.from(clazz);
             if (group != null) {
                 criteriaQuery.where(createGroupPredicate(cb, root, group));
+            }
+            if (orderGroup != null && !orderGroup.getOrders().isEmpty()) {
+                orderGroup.getOrders().forEach(order -> {
+                    if (order.getType() == RecordOrder.OrderType.ASC) {
+                        criteriaQuery.orderBy(cb.asc(root.get(order.getField())));
+                    } else {
+                        criteriaQuery.orderBy(cb.desc(root.get(order.getField())));
+                    }
+                });
             }
             Query query = entityManager.createQuery(criteriaQuery);
             if (pagination != null) {

@@ -56,7 +56,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> long count(Class<T> clazz, boolean isValid) {
-        return count(isValid ? ConditionGroup.and(ConditionTuple.eq("valid", true)) : null, clazz);
+        return count(isValid ? ConditionTuple.eq("valid", true) : null, clazz);
     }
 
     /**
@@ -83,7 +83,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#list(Class, boolean)
+     * @see GeneralAccessor#list(Pagination, Class, boolean)
      */
     @Override
     public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) {
@@ -93,7 +93,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#list(Pagination, Class)
+     * @see GeneralAccessor#list(Pagination, Class, boolean)
      */
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz) {
@@ -103,16 +103,13 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#list(Pagination, Class, boolean)
+     * @see GeneralAccessor#find(Pagination, ConditionGroup, RecordOrderGroup, Class)
      */
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) {
-        if (pagination == null) {
-            pagination = new Pagination();
-        }
-        return find(
+        return find(pagination,
                 isValid ? ConditionGroup.and(ConditionTuple.eq("valid", true)) : null,
-                Collections.singletonList(clazz), pagination);
+                null, clazz);
     }
 
     /**
@@ -132,38 +129,38 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
-        return find(group, Collections.singletonList(clazz), null);
-    }
-
-    /**
-     * 根据条件组进行分页查询
-     *
-     * @param group      条件组
-     * @param classes    实体类定义列表
-     * @param pagination 分页对象
-     * @param <T>        实体泛型
-     * @return 符合条件的实体列表
-     */
-    public <T extends Base> List<T> find(ConditionGroup group, List<Class<? extends Base>> classes, Pagination pagination) {
-        SearchResponse response = elasticUtil.search(group, classes, pagination);
-        List<T> list = new ArrayList<>();
-        if (response.status() == RestStatus.OK) {
-            if (pagination != null) {
-                pagination.setTotal((int) response.getHits().getTotalHits());
-            }
-            response.getHits().forEach(hit -> dowithRow(hit, list));
-        }
-        return list;
+        return find(null, group, null, Collections.singletonList(clazz));
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#find(ConditionGroup, Pagination, Class)
+     * @see GeneralAccessor#find(Pagination, ConditionGroup, RecordOrderGroup, Class)
      */
     @Override
-    public <T extends Base> List<T> find(ConditionGroup group, Pagination pagination, Class<T> clazz) {
-        return find(group, Collections.singletonList(clazz), pagination);
+    public <T extends Base> List<T> find(Pagination pagination, ConditionGroup group, RecordOrderGroup orderGroup,
+                                         Class<T> clazz) {
+        return find(pagination, group, orderGroup, Collections.singletonList(clazz));
+    }
+
+    /**
+     * 根据条件组进行分页查询
+     *
+     * @param pagination 分页对象
+     * @param group      条件组
+     * @param orderGroup 排序组
+     * @param classes    实体类定义列表
+     * @param <T>        实体泛型
+     * @return 符合条件的实体列表
+     */
+    public <T extends Base> List<T> find(Pagination pagination, ConditionGroup group, RecordOrderGroup orderGroup,
+                                         List<Class<? extends Base>> classes) {
+        SearchResponse response = elasticUtil.search(group, orderGroup, classes, pagination);
+        List<T> list = new ArrayList<>();
+        if (response.status() == RestStatus.OK) {
+            response.getHits().forEach(hit -> dowithRow(hit, list));
+        }
+        return list;
     }
 
     /**
@@ -175,7 +172,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Base> List<T> find(ConditionGroup group, List<Class<? extends Base>> classes) {
-        return find(group, classes, null);
+        return find(null, group, null, classes);
     }
 
     @SuppressWarnings("unchecked")

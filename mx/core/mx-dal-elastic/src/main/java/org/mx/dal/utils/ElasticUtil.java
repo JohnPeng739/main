@@ -68,12 +68,15 @@ public interface ElasticUtil {
      * 根据输入的条件进行检索
      *
      * @param group      条件组
+     * @param orderGroup 排序组
      * @param classes    对应的实体类集合，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
      * @param pagination 分页对象
      * @param <T>        泛型定义
      * @return 查询响应对象
      */
-    <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes,
+    <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group,
+                                           GeneralAccessor.RecordOrderGroup orderGroup,
+                                           List<Class<? extends Base>> classes,
                                            Pagination pagination);
 
     /**

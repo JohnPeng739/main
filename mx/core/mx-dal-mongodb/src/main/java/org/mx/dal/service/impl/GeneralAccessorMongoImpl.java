@@ -15,6 +15,7 @@ import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralTextSearchAccessor;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mapping.MappingException;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -238,6 +239,21 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         return criteria;
     }
 
+    private Query withSortOrder(Query query, RecordOrderGroup orderGroup) {
+        if (orderGroup != null && !orderGroup.getOrders().isEmpty()) {
+            List<Sort.Order> orders = new ArrayList<>();
+            orderGroup.getOrders().forEach(order -> {
+                if (order.getType() == RecordOrder.OrderType.ASC) {
+                    orders.add(Sort.Order.asc(order.getField()));
+                } else {
+                    orders.add(Sort.Order.desc(order.getField()));
+                }
+            });
+            query.with(Sort.by(orders));
+        }
+        return query;
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -245,16 +261,16 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      */
     @Override
     public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
-        return find(group, null, clazz);
+        return find(null, group, null, clazz);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#find(ConditionGroup, Pagination, Class)
+     * @see GeneralAccessor#find(Pagination, ConditionGroup, RecordOrderGroup, Class)
      */
     @Override
-    public <T extends Base> List<T> find(ConditionGroup group, Pagination pagination, Class<T> clazz) {
+    public <T extends Base> List<T> find(Pagination pagination, ConditionGroup group, RecordOrderGroup orderGroup, Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -268,6 +284,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
                 query.skip((pagination.getPage() - 1) * pagination.getSize());
                 query.limit(pagination.getSize());
             }
+            query = withSortOrder(query, orderGroup);
             return template.find(query, clazz);
         } catch (ClassNotFoundException ex) {
             if (logger.isErrorEnabled()) {

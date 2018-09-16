@@ -30,22 +30,22 @@ public interface GeneralAccessor {
     /**
      * 对指定的实体类型进行计数，实体接口必须继承Base接口。
      *
-     * @param group 条件组
-     * @param clazz 实体接口类型
-     * @param <T>   实现Base接口的泛型对象类型
-     * @return 指定实体的数量
-     */
-    <T extends Base> long count(ConditionGroup group, Class<T> clazz);
-
-    /**
-     * 对指定的实体类型进行计数，实体接口必须继承Base接口。
-     *
      * @param clazz   实体接口类型
      * @param isValid 如果设置为true，仅返回有效的记录；否则对所有记录计数。
      * @param <T>     实现Base接口的泛型对象类型
      * @return 指定实体的数量
      */
     <T extends Base> long count(Class<T> clazz, boolean isValid);
+
+    /**
+     * 对指定的实体类型进行计数，实体接口必须继承Base接口。
+     *
+     * @param group 条件组
+     * @param clazz 实体接口类型
+     * @param <T>   实现Base接口的泛型对象类型
+     * @return 指定实体的数量
+     */
+    <T extends Base> long count(ConditionGroup group, Class<T> clazz);
 
     /**
      * 获取指定实体类型的数据集合，实体接口必须继承Base接口。
@@ -109,16 +109,17 @@ public interface GeneralAccessor {
     <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz);
 
     /**
-     * 根据指定的条件组查询数据
+     * 根据指定的条件组查询数据，采用分页方式
      *
-     * @param group      条件组
      * @param pagination 分页对象
+     * @param group      条件组
+     * @param orderGroup 排序组
      * @param clazz      实体接口类
      * @param <T>        实现Base接口的泛型对象类型
      * @return 实体对象集合
      * @see ConditionGroup
      */
-    <T extends Base> List<T> find(ConditionGroup group, Pagination pagination, Class<T> clazz);
+    <T extends Base> List<T> find(Pagination pagination, ConditionGroup group, RecordOrderGroup orderGroup, Class<T> clazz);
 
     /**
      * 根据指定字段的值获取一条数据记录，多个条件采用and组合。
@@ -555,6 +556,106 @@ public interface GeneralAccessor {
          */
         public enum OperateType {
             AND, OR
+        }
+    }
+
+    /**
+     * 记录排序定义
+     */
+    class RecordOrder {
+        private String field;
+        private OrderType type;
+
+        private RecordOrder(String field, OrderType type) {
+            super();
+            this.field = field;
+            this.type = type;
+        }
+
+        /**
+         * 创建一个正序排序
+         *
+         * @param field 排序字段
+         * @return 正序排序
+         */
+        public static RecordOrder asc(String field) {
+            return new RecordOrder(field, RecordOrder.OrderType.ASC);
+        }
+
+        /**
+         * 创建一个降序排序
+         *
+         * @param field 排序字段
+         * @return 降序排序
+         */
+        public static RecordOrder desc(String field) {
+            return new RecordOrder(field, RecordOrder.OrderType.DESC);
+        }
+
+        /**
+         * 获取排序字段
+         *
+         * @return 排序字段
+         */
+        public String getField() {
+            return field;
+        }
+
+        /**
+         * 获取排序类型
+         *
+         * @return 排序枚举
+         */
+        public OrderType getType() {
+            return type;
+        }
+
+        /**
+         * 排序枚举
+         */
+        public enum OrderType {
+            ASC, DESC
+        }
+    }
+
+    /**
+     * 排序组定义
+     */
+    class RecordOrderGroup {
+        private List<RecordOrder> orders = new ArrayList<>();
+
+        /**
+         * 创建一个排序组
+         *
+         * @param orders 排序定义数组
+         * @return 排序组
+         */
+        public static RecordOrderGroup group(RecordOrder... orders) {
+            RecordOrderGroup group = new RecordOrderGroup();
+            if (orders != null && orders.length > 0) {
+                group.orders.addAll(Arrays.asList(orders));
+            }
+            return group;
+        }
+
+        /**
+         * 添加一个排序定义
+         *
+         * @param order 排序定义
+         * @return 排序组
+         */
+        public RecordOrderGroup addOrder(RecordOrder order) {
+            orders.add(order);
+            return this;
+        }
+
+        /**
+         * 获取排序定义列表
+         *
+         * @return 排序定义列表
+         */
+        public List<RecordOrder> getOrders() {
+            return orders;
         }
     }
 }
