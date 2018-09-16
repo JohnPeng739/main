@@ -56,23 +56,33 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      */
     @Override
     public <T extends Base> long count(Class<T> clazz, boolean isValid) {
-        try {
-            if (clazz.isInterface()) {
+        return count(isValid ? ConditionTuple.eq("valid", true) : null, clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#count(ConditionGroup, Class)
+     */
+    @Override
+    public <T extends Base> long count(ConditionGroup group, Class<T> clazz) {
+        if (clazz.isInterface()) {
+            try {
                 clazz = EntityFactory.getEntityClass(clazz);
+            } catch (ClassNotFoundException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The class[%s] not found.", clazz.getName()));
+                }
+                throw new UserInterfaceDalErrorException(
+                        UserInterfaceDalErrorException.DalErrors.ENTITY_NOT_FOUND
+                );
             }
-            long count;
-            if (isValid) {
-                count = template.count(query(where("valid").is(true)), clazz);
-            } else {
-                count = template.count(new Query(), clazz);
-            }
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Count %d %s entity[%s].", count, isValid ? "valid" : "", clazz.getName()));
-            }
-            return count;
-        } catch (ClassNotFoundException ex) {
-            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
+        Query query = new Query();
+        if (group != null && !group.getItems().isEmpty()) {
+            query.addCriteria(createGroupCriteria(group));
+        }
+        return template.count(query, clazz);
     }
 
     /**
@@ -235,6 +245,16 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      */
     @Override
     public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
+        return find(group, null, clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#find(ConditionGroup, Pagination, Class)
+     */
+    @Override
+    public <T extends Base> List<T> find(ConditionGroup group, Pagination pagination, Class<T> clazz) {
         try {
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
@@ -242,6 +262,11 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             Query query = new Query();
             if (group != null && !group.getItems().isEmpty()) {
                 query.addCriteria(createGroupCriteria(group));
+            }
+            if (pagination != null) {
+                pagination.setTotal((int) template.count(query, clazz));
+                query.skip((pagination.getPage() - 1) * pagination.getSize());
+                query.limit(pagination.getSize());
             }
             return template.find(query, clazz);
         } catch (ClassNotFoundException ex) {
@@ -257,6 +282,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      * {@inheritDoc}
      *
      * @see GeneralAccessor#findOne(List, Class)
+     * @deprecated 尽可能使用 {@link #findOne(ConditionGroup, Class)} 来替代。
      */
     @Override
     public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
@@ -264,6 +290,16 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         if (tuples != null && !tuples.isEmpty()) {
             tuples.forEach(group::add);
         }
+        return findOne(group, clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#findOne(ConditionGroup, Class)
+     */
+    @Override
+    public <T extends Base> T findOne(ConditionGroup group, Class<T> clazz) {
         List<T> list = find(group, clazz);
         if (list.isEmpty()) {
             return null;
