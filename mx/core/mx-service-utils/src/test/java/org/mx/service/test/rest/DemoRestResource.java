@@ -1,5 +1,7 @@
 package org.mx.service.test.rest;
 
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.rest.auth.RestAuthenticate;
 import org.mx.service.rest.vo.DataVO;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.InputStream;
 
 /**
  * Created by john on 2017/11/4.
@@ -59,5 +62,16 @@ public class DemoRestResource {
     @RestAuthenticate
     public DataVO<String> authenticate() {
         return new DataVO<>("ok");
+    }
+
+    @Path("upload")
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public DataVO<String> upload(@FormDataParam("file") InputStream in,
+                                 @FormDataParam("file")FormDataContentDisposition detail) {
+        System.out.println(detail.getFileName());
+        System.out.println(detail.getSize());
+        System.out.println(detail.getType());
+        return new DataVO<>(detail.getFileName());
     }
 }

@@ -3,6 +3,9 @@ subprojects { subprj ->
 //    maven {
 //      url 'http://localhost:8081/repository/jcenter/'
 //    }
+//    maven {
+//        url 'http://192.168.2.170:8088/repository/maven-public/'
+//    }
     mavenCentral()
 //    maven {
 //      url 'http://repo.clojars.org/'

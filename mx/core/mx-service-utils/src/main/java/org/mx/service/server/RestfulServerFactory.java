@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.server.Handler;
 import org.glassfish.jersey.jetty.JettyHttpContainer;
 import org.glassfish.jersey.jetty.JettyHttpContainerProvider;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.UriConnegFilter;
@@ -85,6 +86,8 @@ public class RestfulServerFactory extends HttpServerFactory {
             config.register(RestAuthenticateFilter.class);
             // 注册通用的UserInterface异常处理类
             config.register(UserInterfaceExceptionMapper.class);
+            // 注册Multipart
+            config.register(MultiPartFeature.class);
             /*
              * 为了使用Spring IoC注入，需要将ApplicationContext事先注入
              */
