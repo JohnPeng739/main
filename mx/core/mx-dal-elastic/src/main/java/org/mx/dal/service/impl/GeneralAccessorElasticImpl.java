@@ -1,9 +1,7 @@
 package org.mx.dal.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.elasticsearch.search.SearchHit;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.ElasticBaseEntity;
@@ -164,13 +162,6 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     @SuppressWarnings("unchecked")
     public <T extends Base> List<T> find(ConditionGroup group, List<Class<? extends Base>> classes) {
         return find(null, group, null, classes);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends Base> void dowithRow(SearchHit hit, List<T> list) {
-        T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) elasticUtil.getIndexClass(hit.getIndex()));
-        ((ElasticBaseEntity) t).setScore(hit.getScore());
-        list.add(t);
     }
 
     /**
