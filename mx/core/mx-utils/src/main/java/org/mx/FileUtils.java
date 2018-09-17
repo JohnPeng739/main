@@ -148,7 +148,7 @@ public class FileUtils {
      * @throws IOException 保存过程中发生的异常
      */
     public static String saveFile(String filePath, String fileName, InputStream is) throws IOException {
-        Path path = Paths.get(fileName, fileName);
+        Path path = Paths.get(filePath, fileName);
         Path parent = path.getParent();
         if (!Files.exists(parent)) {
             Files.createDirectories(parent);
