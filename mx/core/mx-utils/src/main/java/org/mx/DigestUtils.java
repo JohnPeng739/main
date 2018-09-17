@@ -13,6 +13,8 @@ import java.util.Base64;
 import java.util.UUID;
 import java.util.zip.CRC32;
 
+import static org.mx.DigestUtils.EncodeType.BASE64;
+
 /**
  * 数据摘要工具类
  *
@@ -82,16 +84,16 @@ public class DigestUtils {
      * 使用选定的摘要算法对数据进行处理
      *
      * @param digestAlgorithm 摘要算法
-     * @param encodeAlgorithm 编码算法，比如：BASE，HEX等
+     * @param encodeType      编码算法，比如：BASE，HEX等
      * @param input           待摘要的数据
      * @return 摘要后的数据
-     * @see #encodeString(String, byte[])
+     * @see #encodeString(EncodeType, byte[])
      */
-    private static String digest(String digestAlgorithm, String encodeAlgorithm, String input) {
+    private static String digest(String digestAlgorithm, EncodeType encodeType, String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance(digestAlgorithm);
             digest.update(input.getBytes());
-            return encodeString(encodeAlgorithm, digest.digest());
+            return encodeString(encodeType, digest.digest());
         } catch (NoSuchAlgorithmException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The encode algorithm['%s'] not supported.", digestAlgorithm));
@@ -104,19 +106,19 @@ public class DigestUtils {
     /**
      * 对二进制数据进行编码，输出为字符串。
      *
-     * @param algorithm 编码算法，目前仅支持：BASE64和HEX两种算法
-     * @param input     待编码的数据
+     * @param encodeType 编码算法，目前仅支持：BASE64和HEX两种算法
+     * @param input      待编码的数据
      * @return 编码后的数据
      */
-    private static String encodeString(String algorithm, byte[] input) {
-        switch (algorithm) {
-            case "BASE64":
+    private static String encodeString(EncodeType encodeType, byte[] input) {
+        switch (encodeType) {
+            case BASE64:
                 return Base64.getEncoder().encodeToString(input);
-            case "HEX":
+            case HEX:
                 return TypeUtils.byteArray2HexString(input);
             default:
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The encode algorithm['%s'] not supported.", algorithm));
+                    logger.error(String.format("The encode algorithm['%s'] not supported.", encodeType));
                 }
                 throw new UserInterfaceSystemErrorException(
                         UserInterfaceSystemErrorException.SystemErrors.SYSTEM_NO_SUCH_ALGORITHM);
@@ -209,10 +211,21 @@ public class DigestUtils {
      *
      * @param src 待摘要的字符串
      * @return 摘要并编码后的字符串
-     * @see #digest(String, String, String)
+     * @see #md5(String, EncodeType)
      */
     public static String md5(String src) {
-        return digest("MD5", "BASE64", src);
+        return md5(src, BASE64);
+    }
+
+    /**
+     * 采用MD5算法进行摘要，并进行Base64编码
+     *
+     * @param src        待摘要的字符串
+     * @param encodeType 摘要后的编码算法
+     * @return 摘要并编码后的字符串
+     */
+    public static String md5(String src, EncodeType encodeType) {
+        return digest("MD5", encodeType, src);
     }
 
     /**
@@ -220,10 +233,21 @@ public class DigestUtils {
      *
      * @param src 待摘要的字符串
      * @return 摘要并编码后的字符串
-     * @see #digest(String, String, String)
+     * @see #sha1(String, EncodeType)
      */
     public static String sha1(String src) {
-        return digest("SHA-1", "BASE64", src);
+        return sha1(src, BASE64);
+    }
+
+    /**
+     * 采用SHA－1算法进行摘要，并进行Base64编码
+     *
+     * @param src        待摘要的字符串
+     * @param encodeType 摘要后的编码算法
+     * @return 摘要并编码后的字符串
+     */
+    public static String sha1(String src, EncodeType encodeType) {
+        return digest("SHA1", encodeType, src);
     }
 
     /**
@@ -231,10 +255,28 @@ public class DigestUtils {
      *
      * @param src 待摘要的字符串
      * @return 摘要并编码后的字符串
-     * @see #digest(String, String, String)
+     * @see #sha1(String, EncodeType)
      */
     public static String sha256(String src) {
-        return digest("SHA-256", "BASE64", src);
+        return sha256(src, BASE64);
+    }
+
+    /**
+     * 采用SHA－256算法进行摘要，并进行Base64编码。
+     *
+     * @param src        待摘要的字符串
+     * @param encodeType 摘要后的编码算法
+     * @return 摘要并编码后的字符串
+     */
+    public static String sha256(String src, EncodeType encodeType) {
+        return digest("SHA256", encodeType, src);
+    }
+
+    /**
+     * 编码算法枚举
+     */
+    public enum EncodeType {
+        BASE64, HEX
     }
 
     private static class SavingTrustManager implements X509TrustManager {
