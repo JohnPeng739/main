@@ -1,6 +1,5 @@
 package org.mx.dal.utils;
 
-import org.elasticsearch.action.search.SearchResponse;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
 import org.mx.dal.entity.ElasticGeoPointBaseEntity;
@@ -59,10 +58,10 @@ public interface ElasticUtil {
      * @param clazz      对应的实体类，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
      * @param pagination 分页对象
      * @param <T>        泛型定义
-     * @return 查询响应对象
+     * @return 查询响应对象列表
      */
-    <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
-                                           Pagination pagination);
+    <T extends Base> List<T> search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
+                                    Pagination pagination);
 
     /**
      * 根据输入的条件进行检索
@@ -72,12 +71,23 @@ public interface ElasticUtil {
      * @param classes    对应的实体类集合，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
      * @param pagination 分页对象
      * @param <T>        泛型定义
-     * @return 查询响应对象
+     * @return 查询响应对象列表
      */
-    <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group,
-                                           GeneralAccessor.RecordOrderGroup orderGroup,
-                                           List<Class<? extends Base>> classes,
-                                           Pagination pagination);
+    <T extends Base> List<T> search(GeneralAccessor.ConditionGroup group,
+                                    GeneralAccessor.RecordOrderGroup orderGroup,
+                                    List<Class<? extends Base>> classes,
+                                    Pagination pagination);
+
+    /**
+     * 根据条件进行计数
+     *
+     * @param group   条件组
+     * @param classes 对应的的实体类集合
+     * @param <T>     泛型定义
+     * @return 符合条件的记录总数
+     */
+    <T extends Base> long count(GeneralAccessor.ConditionGroup group,
+                                List<Class<? extends Base>> classes);
 
     /**
      * 根据输入的中心点和距离，搜索出符合条件的点位数据

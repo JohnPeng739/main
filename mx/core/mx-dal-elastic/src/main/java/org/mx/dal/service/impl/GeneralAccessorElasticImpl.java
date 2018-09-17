@@ -3,8 +3,6 @@ package org.mx.dal.service.impl;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
@@ -14,7 +12,6 @@ import org.mx.dal.service.ElasticAccessor;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.utils.ElasticUtil;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,8 +63,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> long count(ConditionGroup group, Class<T> clazz) {
-        SearchResponse response = elasticUtil.search(group, clazz, null);
-        return response.getHits().getTotalHits();
+        return elasticUtil.count(group, Collections.singletonList(clazz));
     }
 
     /**
@@ -155,12 +151,7 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     public <T extends Base> List<T> find(Pagination pagination, ConditionGroup group, RecordOrderGroup orderGroup,
                                          List<Class<? extends Base>> classes) {
-        SearchResponse response = elasticUtil.search(group, orderGroup, classes, pagination);
-        List<T> list = new ArrayList<>();
-        if (response.status() == RestStatus.OK) {
-            response.getHits().forEach(hit -> dowithRow(hit, list));
-        }
-        return list;
+        return elasticUtil.search(group, orderGroup, classes, pagination);
     }
 
     /**

@@ -119,7 +119,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-dal-elastic') {
-    version = '2.2.4'
+    version = '2.2.5'
     description = 'dal with elasticsearch.'
 
     dependencies {

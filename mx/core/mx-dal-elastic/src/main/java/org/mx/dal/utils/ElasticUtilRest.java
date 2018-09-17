@@ -15,19 +15,20 @@ import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.*;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.unit.DistanceUnit;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -496,23 +497,16 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
      * @see ElasticUtil#search(org.mx.dal.service.GeneralAccessor.ConditionGroup, Class, Pagination)
      */
     @Override
-    public <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
-                                                  Pagination pagination)
+    public <T extends Base> List<T> search(GeneralAccessor.ConditionGroup group, Class<? extends Base> clazz,
+                                           Pagination pagination)
             throws UserInterfaceDalErrorException {
         return search(group, null, Collections.singletonList(clazz), pagination);
     }
 
-    /**
-     * {@inheritDoc} <br>
-     * 在没有传入分页对象的情况下，最多返回前1000条记录。
-     *
-     * @see ElasticUtil#search(GeneralAccessor.ConditionGroup, GeneralAccessor.RecordOrderGroup, List, Pagination)
-     */
-    @Override
-    public <T extends Base> SearchResponse search(GeneralAccessor.ConditionGroup group,
-                                                  GeneralAccessor.RecordOrderGroup orderGroup,
-                                                  List<Class<? extends Base>> classes,
-                                                  Pagination pagination) {
+    private SearchRequest createSearchRequest(GeneralAccessor.ConditionGroup group,
+                                              GeneralAccessor.RecordOrderGroup orderGroup,
+                                              List<Class<? extends Base>> classes,
+                                              Pagination pagination) {
         SearchSourceBuilder builder = new SearchSourceBuilder();
         if (group == null) {
             builder.query(QueryBuilders.matchAllQuery());
@@ -537,17 +531,77 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         }
         SearchRequest request = new SearchRequest(getIndices(classes));
         request.source(builder);
+        return request;
+    }
+
+    /**
+     * {@inheritDoc} <br>
+     *
+     * @see ElasticUtil#search(GeneralAccessor.ConditionGroup, GeneralAccessor.RecordOrderGroup, List, Pagination)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T extends Base> List<T> search(GeneralAccessor.ConditionGroup group,
+                                           GeneralAccessor.RecordOrderGroup orderGroup,
+                                           List<Class<? extends Base>> classes,
+                                           Pagination pagination) {
+        SearchRequest request = createSearchRequest(group, orderGroup, classes, pagination);
         try {
+            // 设置滚动操作
+            Scroll scroll = new Scroll(TimeValue.timeValueHours(1L));
+            request.scroll(scroll);
             SearchResponse response = client.search(request);
+            String scrollId = response.getScrollId();
             if (pagination != null) {
-                pagination.setTotal((int)response.getHits().getTotalHits());
+                pagination.setTotal((int) response.getHits().getTotalHits());
             }
-            return response;
+            ArrayList<T> result = new ArrayList<>();
+            while(response != null && response.getHits() != null && response.getHits().getHits() != null &&
+                    response.getHits().getHits().length > 0) {
+                response.getHits().forEach(hit -> {
+                    T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) getIndexClass(hit.getIndex()));
+                    ((ElasticBaseEntity) t).setScore(hit.getScore());
+                    result.add(t);
+                });
+                SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+                scrollRequest.scroll(scroll);
+                response = client.searchScroll(scrollRequest);
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Search successfully, total: %d.", result.size()));
+            }
+            // 清理滚动操作
+            ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+            clearScrollRequest.addScrollId(scrollId);
+            ClearScrollResponse clearScrollResponse = client.clearScroll(clearScrollRequest);
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Clear the scroll search %s.",
+                        clearScrollResponse.isSucceeded() ? "successfully" : "fail"));
+            }
+            return result;
         } catch (Exception ex) {
             if (logger.isErrorEnabled()) {
                 logger.error("Search fail from elastic.", ex);
             }
-            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_REST_FAIL);
+        }
+    }
+
+    @Override
+    public <T extends Base> long count(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes) {
+        SearchRequest request = createSearchRequest(group, null, classes, null);
+        try {
+            SearchResponse response = client.search(request);
+            if (response != null && response.getHits() != null) {
+                return response.getHits().getTotalHits();
+            } else {
+                return 0;
+            }
+        } catch (Exception ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Search fail from elastic.", ex);
+            }
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_REST_FAIL);
         }
     }
 
