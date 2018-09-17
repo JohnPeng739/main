@@ -7,7 +7,7 @@ apply from: '../../dependencies.gradle'
 apply from: '../../allprojects.gradle'
 
 project(':mx-utils') {
-    version = '2.1.22'
+    version = '2.1.23'
     description = 'Many utility java class, such as : DateUtils, StringUtils, etc.'
 
     dependencies {
@@ -63,7 +63,7 @@ project(':mx-dal') {
 }
 
 project(':mx-service-utils') {
-    version = '1.9.0'
+    version = '1.9.2'
     description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
     dependencies {
@@ -74,6 +74,7 @@ project(':mx-service-utils') {
                 project(':mx-jwt-utils'),
                 libs.'jersey-server',
                 libs.'jersey-media-jackson',
+                libs.'jersey-media-multi',
                 libs.'jersey-jetty-http',
                 libs.'jersey-jetty-servlet',
                 libs.'jersey-spring4',

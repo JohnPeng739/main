@@ -130,6 +130,10 @@ public class FileUtils {
     public static String saveFile(String filePath, InputStream is) throws IOException {
         String date = DateUtils.get8TimeNow(), fileName = DigestUtils.uuid().replaceAll("-", "");
         Path path = Paths.get(filePath, date, fileName);
+        Path parent = path.getParent();
+        if (!Files.exists(parent)) {
+            Files.createDirectories(parent);
+        }
         Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
         return path.toFile().getAbsolutePath();
     }
@@ -145,6 +149,10 @@ public class FileUtils {
      */
     public static String saveFile(String filePath, String fileName, InputStream is) throws IOException {
         Path path = Paths.get(fileName, fileName);
+        Path parent = path.getParent();
+        if (!Files.exists(parent)) {
+            Files.createDirectories(parent);
+        }
         Files.copy(is, path, StandardCopyOption.REPLACE_EXISTING);
         return path.toFile().getAbsolutePath();
     }
@@ -160,7 +168,12 @@ public class FileUtils {
         if (StringUtils.isBlank(source) || StringUtils.isBlank(target) || source.equals(target)) {
             throw new IllegalArgumentException(String.format("source: %s, target: %s. ", source, target));
         }
-        copyFile(Paths.get(source), Paths.get(target));
+        Path path = Paths.get(target);
+        Path parent = path.getParent();
+        if (!Files.exists(parent)) {
+            Files.createDirectories(parent);
+        }
+        copyFile(Paths.get(source), path);
     }
 
     /**

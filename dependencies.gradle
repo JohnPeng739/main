@@ -32,7 +32,7 @@ ext.versions = [
   'mongodb-driver'	: '3.5.0',
   'mongodb-embed'	: '2.0.0',
   zookeeper	: '3.4.9',
-  'mx-utils'    	: '2.1.22',
+  'mx-utils'    	: '2.1.23',
   'mx-spring'		: '1.2.1',
   'mx-jwt-utils'	: '1.0.0',
   'mx-service-utils'	: '1.9.0',
@@ -84,6 +84,7 @@ ext.libs = [
 
   "jersey-server"	: "org.glassfish.jersey.core:jersey-server:${versions.jersey}",
   "jersey-media-jackson": "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}",
+  "jersey-media-multi"  : "org.glassfish.jersey.media:jersey-media-multipart:${versions.jersey}",
   "jersey-jetty-http"	: "org.glassfish.jersey.containers:jersey-container-jetty-http:${versions.jersey}",
   "jersey-jetty-servlet"   : "org.glassfish.jersey.containers:jersey-container-jetty-servlet:${versions.jersey}",
   "jersey-spring4"	: "org.glassfish.jersey.ext:jersey-spring4:${versions.jersey}",
