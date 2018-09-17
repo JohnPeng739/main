@@ -94,11 +94,13 @@ public interface ElasticUtil {
      *
      * @param centerPoint    中心点
      * @param distanceMeters 距离（单位为米）
+     * @param group          条件组
      * @param classes        实体类列表
      * @param <T>            泛型定义
      * @return 符合条件的点位数据列表，并计算了具体距离（distance属性）
      */
     <T extends ElasticGeoPointBaseEntity> List<T> geoNearBy(GeoPointLocation centerPoint, double distanceMeters,
+                                                            GeneralAccessor.ConditionGroup group,
                                                             List<Class<? extends Base>> classes);
 
     /**
@@ -106,12 +108,14 @@ public interface ElasticUtil {
      *
      * @param centerPoint 中心点，可以为空
      * @param polygon     多边形点位列表
+     * @param group       条件组
      * @param classes     实体类列表
      * @param <T>         泛型定义
      * @return 符合条件的点位数据列表，如果设置了中心点的话，还将计算具体距离（distance属性）
      */
     <T extends ElasticGeoPointBaseEntity> List<T> geoWithInPolygon(GeoPointLocation centerPoint,
                                                                    List<GeoPointLocation> polygon,
+                                                                   GeneralAccessor.ConditionGroup group,
                                                                    List<Class<? extends Base>> classes);
 
     /**
