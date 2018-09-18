@@ -790,7 +790,9 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             }
         }
         t.setUpdatedTime(System.currentTimeMillis());
-        t.setOperator(sessionDataStore.getCurrentUserCode());
+        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
+            t.setOperator(sessionDataStore.getCurrentUserCode());
+        }
         String index = getIndex(clazz);
         if (isNew) {
             IndexRequest request = new IndexRequest(index, index, t.getId());

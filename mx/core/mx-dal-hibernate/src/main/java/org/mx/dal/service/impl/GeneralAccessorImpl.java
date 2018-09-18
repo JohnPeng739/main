@@ -339,7 +339,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         if (t.getUpdatedTime() <= 0) {
             t.setUpdatedTime(new Date().getTime());
         }
-        if (StringUtils.isBlank(t.getOperator())) {
+        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
             t.setOperator(sessionDataStore.getCurrentUserCode());
         }
         Class<T> clazz = (Class<T>) t.getClass();

@@ -407,7 +407,9 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             }
         }
         t.setUpdatedTime(new Date().getTime());
-        t.setOperator(sessionDataStore.getCurrentUserCode());
+        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
+            t.setOperator(sessionDataStore.getCurrentUserCode());
+        }
         template.save(t);
         if (t instanceof BaseDictTree) {
             // 处理父级节点
@@ -473,7 +475,9 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
                 }
             }
             t.setUpdatedTime(new Date().getTime());
-            t.setOperator(sessionDataStore.getCurrentUserCode());
+            if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
+                t.setOperator(sessionDataStore.getCurrentUserCode());
+            }
             if (isNew) {
                 bulk.insert(t);
             } else {
