@@ -395,6 +395,108 @@ public class DateUtils {
             return new DatetimeRange(calMin.getTimeInMillis(), calMax.getTimeInMillis());
         }
 
+        /**
+         * 返回上周时间段，周一～周日
+         *
+         * @return 时间段
+         */
+        public static DatetimeRange lastWeek() {
+            Calendar calendar = Calendar.getInstance();
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            // 周日为0， 周六为6
+            calendar.add(Calendar.DAY_OF_MONTH, dayOfWeek * -1);
+            int year1 = calendar.get(Calendar.YEAR);
+            int month1 = calendar.get(Calendar.MONTH);
+            int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+            DatetimeRange range1 = range(year1, month1, day1);
+            calendar.add(Calendar.DAY_OF_MONTH, -7);
+            int year0 = calendar.get(Calendar.YEAR);
+            int month0 = calendar.get(Calendar.MONTH);
+            int day0 = calendar.get(Calendar.DAY_OF_MONTH);
+            DatetimeRange range0 = range(year0, month0, day0);
+            return new DatetimeRange(range0.getLowerLimit(), range1.getUpperLimit());
+        }
+
+        public static DatetimeRange lastMonth() {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) - 1;
+            if (month < 0) {
+                month += 1;
+                year -= 1;
+            }
+            return range(year, month);
+        }
+
+        public static DatetimeRange lastYear() {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR) - 1;
+            return range(year);
+        }
+
+        public static DatetimeRange currentWeek() {
+            Calendar calendar = Calendar.getInstance();
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            // 周日为0， 周六为6
+            calendar.add(Calendar.DAY_OF_MONTH, dayOfWeek * -1 + 1);
+            int year0 = calendar.get(Calendar.YEAR);
+            int month0 = calendar.get(Calendar.MONTH);
+            int day0 = calendar.get(Calendar.DAY_OF_MONTH);
+            DatetimeRange range0 = range(year0, month0, day0);
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+            int year1 = calendar.get(Calendar.YEAR);
+            int month1 = calendar.get(Calendar.MONTH);
+            int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+            DatetimeRange range1 = range(year1, month1, day1);
+            return new DatetimeRange(range0.getLowerLimit(), range1.getUpperLimit());
+        }
+
+        public static DatetimeRange currentMonth() {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            return range(year, month);
+        }
+        public static DatetimeRange currentYear() {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            return range(year);
+        }
+
+        public static DatetimeRange nextWeek() {
+            Calendar calendar = Calendar.getInstance();
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            // 周日为0， 周六为6
+            calendar.add(Calendar.DAY_OF_MONTH, dayOfWeek * -1 + 7);
+            int year0 = calendar.get(Calendar.YEAR);
+            int month0 = calendar.get(Calendar.MONTH);
+            int day0 = calendar.get(Calendar.DAY_OF_MONTH);
+            DatetimeRange range0 = range(year0, month0, day0);
+            calendar.add(Calendar.DAY_OF_MONTH, 7);
+            int year1 = calendar.get(Calendar.YEAR);
+            int month1 = calendar.get(Calendar.MONTH);
+            int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+            DatetimeRange range1 = range(year1, month1, day1);
+            return new DatetimeRange(range0.getLowerLimit(), range1.getUpperLimit());
+        }
+
+        public static DatetimeRange nextMonth() {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            if (month > 11) {
+                month -= 1;
+                year += 1;
+            }
+            return range(year, month);
+        }
+
+        public static DatetimeRange nextYear() {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR) + 1;
+            return range(year);
+        }
+
         public static DatetimeRange range(int year) {
             return calendar(year);
         }
