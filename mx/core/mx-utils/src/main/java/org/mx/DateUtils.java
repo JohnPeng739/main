@@ -1,5 +1,7 @@
 package org.mx;
 
+import org.mx.error.UserInterfaceSystemErrorException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -211,6 +213,7 @@ public class DateUtils {
      *
      * @param date 指定的日期对象
      * @return 日期对象
+     * @deprecated 推荐使用 {@link DatetimeRange#range(int, int, int, int, int, int)} 替代使用。
      */
     public static Date getMaxTime(Date date) {
         Calendar calendar = Calendar.getInstance();
@@ -226,6 +229,7 @@ public class DateUtils {
      * 获取当天最大的时间，包括年月日时分秒和毫秒，如：2009/10/10 23:59:59.999
      *
      * @return 日期对象
+     * @deprecated 推荐使用 {@link DatetimeRange#range(int, int, int, int, int, int)} 替代使用。
      */
     public static Date getMaxTimeNow() {
         return getMaxTime(new Date());
@@ -236,6 +240,7 @@ public class DateUtils {
      *
      * @param date 指定的日期对象
      * @return 日期对象
+     * @deprecated 推荐使用 {@link DatetimeRange#range(int, int, int, int, int, int)} 替代使用。
      */
     public static Date getMinTime(Date date) {
         Calendar calendar = Calendar.getInstance();
@@ -252,6 +257,7 @@ public class DateUtils {
      *
      * @return 日期对象
      * @see #getMinTime(Date)
+     * @deprecated 推荐使用 {@link DatetimeRange#range(int, int, int, int, int, int)} 替代使用。
      */
     public static Date getMinTimeNow() {
         return getMinTime(new Date());
@@ -308,7 +314,6 @@ public class DateUtils {
     /**
      * 字段类型枚举定义
      *
-     *
      * @author : john.peng date : 2017/9/15
      */
     public enum FieldType {
@@ -349,4 +354,95 @@ public class DateUtils {
         }
     }
 
+    /**
+     * 时间段定义
+     */
+    public static class DatetimeRange {
+        private long lowerLimit, upperLimit;
+
+        /**
+         * 构造函数
+         *
+         * @param lowerLimit 时间下限
+         * @param upperLimit 时间上限
+         */
+        public DatetimeRange(long lowerLimit, long upperLimit) {
+            super();
+            this.lowerLimit = lowerLimit;
+            this.upperLimit = upperLimit;
+        }
+
+        private static DatetimeRange calendar(int... params) {
+            if (params == null || params.length <= 0) {
+                throw new UserInterfaceSystemErrorException(
+                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+                );
+            }
+            int[] units = new int[]{Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY,
+                    Calendar.MINUTE, Calendar.SECOND, Calendar.MILLISECOND};
+            int[] min = new int[]{1970, 0, 1, 0, 0, 0, 0},
+                    max = new int[]{5000, 11, 31, 23, 59, 59, 999};
+            int length = params.length;
+            Calendar calMin = Calendar.getInstance(), calMax = Calendar.getInstance();
+            for (int index = 0; index < length; index++) {
+                calMin.set(units[index], params[index]);
+                calMax.set(units[index], params[index]);
+            }
+            for (int index = length; index < units.length; index++) {
+                calMin.set(units[index], min[index]);
+                calMax.set(units[index], max[index]);
+            }
+            return new DatetimeRange(calMin.getTimeInMillis(), calMax.getTimeInMillis());
+        }
+
+        public static DatetimeRange range(int year) {
+            return calendar(year);
+        }
+
+        public static DatetimeRange range(int year, int month) {
+            return calendar(year, month);
+        }
+
+        public static DatetimeRange range(int year, int month, int day) {
+            return calendar(year, month, day);
+        }
+
+        public static DatetimeRange range(int year, int month, int day, int hour) {
+            return calendar(year, month, day, hour);
+        }
+
+        public static DatetimeRange range(int year, int month, int day, int hour, int minute) {
+            return calendar(year, month, day, hour, minute);
+        }
+
+        public static DatetimeRange range(int year, int month, int day, int hour, int minute, int second) {
+            return calendar(year, month, day, hour, minute, second);
+        }
+
+        /**
+         * 获取时间下限
+         *
+         * @return 时间下限
+         */
+        public long getLowerLimit() {
+            return lowerLimit;
+        }
+
+        /**
+         * 获取时间上限
+         *
+         * @return 时间上限
+         */
+        public long getUpperLimit() {
+            return upperLimit;
+        }
+
+        @Override
+        public String toString() {
+            return "DatetimeRange{" +
+                    "lowerLimit=" + lowerLimit +
+                    ", upperLimit=" + upperLimit +
+                    '}';
+        }
+    }
 }
