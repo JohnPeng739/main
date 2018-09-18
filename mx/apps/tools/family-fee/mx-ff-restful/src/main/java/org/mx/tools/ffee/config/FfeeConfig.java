@@ -2,10 +2,7 @@ package org.mx.tools.ffee.config;
 
 import org.mx.dal.config.DalConfig;
 import org.mx.service.server.config.ServerConfig;
-import org.mx.tools.ffee.rest.AccountManageResource;
-import org.mx.tools.ffee.rest.CourseManageResource;
-import org.mx.tools.ffee.rest.FamilyManageResource;
-import org.mx.tools.ffee.rest.WxAuthorizationResource;
+import org.mx.tools.ffee.rest.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -39,7 +36,9 @@ public class FfeeConfig {
                 WxAuthorizationResource.class,
                 AccountManageResource.class,
                 FamilyManageResource.class,
-                CourseManageResource.class
+                CourseManageResource.class,
+                BudgetManageResource.class,
+                MoneyManageResource.class
         );
     }
 }

@@ -1,5 +1,6 @@
 package org.mx.tools.ffee.config;
 
+import org.mx.dal.config.DalHibernateConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.PropertySource;
         "classpath:ffee.properties"
 })
 @Import({
+        DalHibernateConfig.class,
         FfeeConfig.class
 })
 public class FfeeAppConfig {

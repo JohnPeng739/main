@@ -9,7 +9,7 @@
       <image src="{{userInfo.avatarUrl}}" mode="cover" class="avatar-normal"></image>
       <view style="flex-direction:row;">
         <span class="unimportant">欢迎您 </span>
-        <text class="title">{{userInfo.nickName}}</text>
+        <text class="title">{{userInfo.nickname}}</text>
       </view>
     </view>
     <button type="primary" bindtap="onCreateFamily" class="button-gap">创建家庭</button>

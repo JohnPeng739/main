@@ -26,6 +26,7 @@ ext.versions = [
   activemq	: '5.15.2',
   h2database	: '1.4.196',
   mysql		: '5.1.34',
+  mysql8	: '8.0.12',
   ojdbc14	: '10.2.0.1',
   c3p0		: '0.9.1.2',
   junit		: '4.12',
@@ -119,6 +120,7 @@ ext.libs = [
   "h2database"		: "com.h2database:h2:${versions.h2database}",
 
   "mysql"		: "mysql:mysql-connector-java:${versions.mysql}",
+  "mysql8"		: "mysql:mysql-connector-java:${versions.mysql8}",
 
   "ojdbc14"		: "com.oracle:ojdbc14:${versions.ojdbc14}",
 

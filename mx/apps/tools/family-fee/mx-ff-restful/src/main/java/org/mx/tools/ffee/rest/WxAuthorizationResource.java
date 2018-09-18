@@ -8,7 +8,6 @@ import org.mx.service.client.rest.RestClientInvoke;
 import org.mx.service.client.rest.RestInvokeException;
 import org.mx.tools.ffee.config.FfeeConfigBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,7 +21,6 @@ import java.util.List;
  * @author john peng
  * Date time 2018/9/10 下午6:46
  */
-@Component("wxAuthorizationResource")
 @Path("rest/v1/wx")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -39,8 +37,10 @@ public class WxAuthorizationResource {
 
     @Path("echo")
     @GET
-    public String wxEcho(@QueryParam("signature") String signature, @QueryParam("timestamp") String timestamp,
-                         @QueryParam("nonce") String nonce, @QueryParam("echostr") String echostr) {
+    public String wxEcho(@QueryParam("signature") String signature,
+                         @QueryParam("timestamp") String timestamp,
+                         @QueryParam("nonce") String nonce,
+                         @QueryParam("echostr") String echostr) {
         String token = ffeeConfigBean.getToken();
         List<String> list = Arrays.asList(timestamp, nonce, token);
         Collections.sort(list);

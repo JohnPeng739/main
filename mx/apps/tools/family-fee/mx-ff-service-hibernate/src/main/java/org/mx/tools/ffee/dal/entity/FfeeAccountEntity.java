@@ -39,6 +39,8 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     private String province;
     @Column(name = "CITY")
     private String city;
+    @Column(name = "GENDER")
+    private Gender gender = Gender.MALE;
 
     @Override
     public String getOpenId() {
@@ -158,5 +160,15 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     @Override
     public void setCity(String city) {
         this.city = city;
+    }
+
+    @Override
+    public Gender getGender() {
+        return gender;
+    }
+
+    @Override
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 }

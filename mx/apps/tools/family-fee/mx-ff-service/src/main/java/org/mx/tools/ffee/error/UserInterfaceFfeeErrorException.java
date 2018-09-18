@@ -35,6 +35,7 @@ public class UserInterfaceFfeeErrorException extends UserInterfaceException {
         ACCOUNT_NOT_EXISTED("指定的账户不存在。"),
 
         COURSE_NOT_EXISTED("指定的科目不存在。"),
+        COURSE_HAS_EXISTED("指定的科目代码已经存在，不能重复。"),
 
         INCOME_NOT_EXISTED("指定的收入不存在。"),
 

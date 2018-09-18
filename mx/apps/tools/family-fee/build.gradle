@@ -62,7 +62,8 @@ project(':mx-ff-allinone') {
     compile(
             project(':mx-ff-service'),
             project(':mx-ff-service-hibernate'),
-            project(':mx-ff-restful')
+            project(':mx-ff-restful'),
+            libs.'mysql8'
     )
   }
 }

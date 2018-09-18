@@ -4,13 +4,13 @@ import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 
 public class AccountRegistryVO {
-    private String openId, unionId, nickName, mobile, avatarUrl, country, province, city;
+    private String openId, unionId, nickname, mobile, avatarUrl, country, province, city;
 
     public FfeeAccount get() {
         FfeeAccount account = EntityFactory.createEntity(FfeeAccount.class);
         account.setOpenId(openId);
         account.setUnionId(unionId);
-        account.setNickname(nickName);
+        account.setNickname(nickname);
         account.setMobile(mobile);
         account.setAvatarUrl(avatarUrl);
         account.setCountry(country);
@@ -27,8 +27,8 @@ public class AccountRegistryVO {
         return unionId;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getMobile() {
@@ -59,8 +59,8 @@ public class AccountRegistryVO {
         this.unionId = unionId;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void setMobile(String mobile) {

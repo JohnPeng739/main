@@ -10,18 +10,42 @@ import javax.persistence.MappedSuperclass;
  * 描述： 收入或支持的明细信息实体超类，基于Hibernate实现。
  *
  * @author John.Peng
- *         Date time 2018/2/18 上午11:02
+ * Date time 2018/2/18 上午11:02
  */
 @MappedSuperclass
 public class MoneyItemEntity extends BaseEntity implements MoneyItem {
-    @ManyToOne(targetEntity = Course.class)
+    @ManyToOne(targetEntity = FamilyEntity.class)
+    private Family family;
+    @ManyToOne(targetEntity = CourseEntity.class)
     private Course course;
     @Column(name = "MONEY")
     private double money;
+    @Column(name = "OCCUR_TIME")
+    private long occurTime = System.currentTimeMillis();
     @Column(name = "DESCRIPTION")
     private String desc;
     @ManyToOne(targetEntity = FfeeAccountEntity.class)
     private FfeeAccount owner;
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see MoneyItem#getFamily()
+     */
+    @Override
+    public Family getFamily() {
+        return family;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see MoneyItem#setFamily(Family)
+     */
+    @Override
+    public void setFamily(Family family) {
+        this.family = family;
+    }
 
     /**
      * {@inheritDoc}
@@ -57,6 +81,26 @@ public class MoneyItemEntity extends BaseEntity implements MoneyItem {
      */
     public void setMoney(double money) {
         this.money = money;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see MoneyItem#getOccurTime()
+     */
+    @Override
+    public long getOccurTime() {
+        return occurTime;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see MoneyItem#setOccurTime(long)
+     */
+    @Override
+    public void setOccurTime(long time) {
+        this.occurTime = time;
     }
 
     /**

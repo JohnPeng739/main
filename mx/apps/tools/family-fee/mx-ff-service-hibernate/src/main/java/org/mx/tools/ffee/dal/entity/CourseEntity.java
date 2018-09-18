@@ -1,6 +1,6 @@
 package org.mx.tools.ffee.dal.entity;
 
-import org.mx.dal.entity.BaseDictTreeEntity;
+import org.mx.dal.entity.BaseDictEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "TB_COURSE")
-public class CourseEntity extends BaseDictTreeEntity implements Course {
+public class CourseEntity extends BaseDictEntity implements Course {
     @Column(name = "COURSE_TYPE")
     private CourseType type = CourseType.INCOME;
     @ManyToOne(targetEntity = FfeeAccountEntity.class)

@@ -9,6 +9,10 @@ import org.mx.dal.entity.Base;
  * Date time 2018/2/17 下午4:44
  */
 public interface BudgetItem extends Base {
+    Family getFamily();
+
+    void setFamily(Family family);
+
     int getYear();
 
     void setYear(int year);

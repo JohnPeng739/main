@@ -4,13 +4,13 @@ import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 
 public class AccountModifyVO {
-    private String id, nickName, mobile, email, wx, qq, wb, avatarUrl, country, province, city;
+    private String id, nickname, mobile, email, wx, qq, wb, avatarUrl, country, province, city;
     private FfeeAccount.Gender gender = FfeeAccount.Gender.MALE;
 
     public FfeeAccount get() {
         FfeeAccount account = EntityFactory.createEntity(FfeeAccount.class);
         account.setId(id);
-        account.setNickname(nickName);
+        account.setNickname(nickname);
         account.setMobile(mobile);
         account.setEmail(email);
         account.setWx(wx);
@@ -27,8 +27,8 @@ public class AccountModifyVO {
         return id;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getMobile() {
@@ -75,8 +75,8 @@ public class AccountModifyVO {
         this.id = id;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void setMobile(String mobile) {

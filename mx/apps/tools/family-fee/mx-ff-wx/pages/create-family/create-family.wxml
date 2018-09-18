@@ -9,7 +9,7 @@
       <view class="title" class="row-gap">家主大人</view>
       <view class="section-row">
         <image src="{{userInfo.avatarUrl}}" class="avatar-small"></image>
-        <span class="content-value">{{userInfo.nickName}}</span>
+        <span class="content-value">{{userInfo.nickname}}</span>
         <span class="unimportant">是我家的</span>
         <picker name="role" value="{{role}}" range="{{roles}}" bindchange="bindRoleChange">
           <span class="combox">{{roles[role]}}</span>!

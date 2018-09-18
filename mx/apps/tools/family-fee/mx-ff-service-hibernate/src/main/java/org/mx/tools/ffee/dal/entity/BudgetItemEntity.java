@@ -11,11 +11,13 @@ import javax.persistence.Table;
  * 描述： 预算明细信息实体类，基于hibernate实现。
  *
  * @author John.Peng
- *         Date time 2018/2/18 上午10:22
+ * Date time 2018/2/18 上午10:22
  */
 @Entity
 @Table(name = "TB_BUDGET_ITEM")
 public class BudgetItemEntity extends BaseEntity implements BudgetItem {
+    @ManyToOne(targetEntity = FamilyEntity.class)
+    private Family family;
     @Column(name = "BUDGET_YEAR")
     private int year;
     @Column(name = "MONEY")
@@ -24,6 +26,26 @@ public class BudgetItemEntity extends BaseEntity implements BudgetItem {
     private String desc;
     @ManyToOne(targetEntity = CourseEntity.class)
     private Course course;
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see BudgetItem#getFamily()
+     */
+    @Override
+    public Family getFamily() {
+        return family;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see BudgetItem#setFamily(Family)
+     */
+    @Override
+    public void setFamily(Family family) {
+        this.family = family;
+    }
 
     /**
      * {@inheritDoc}

@@ -9,6 +9,10 @@ import org.mx.dal.entity.Base;
  *         Date time 2018/2/17 下午5:26
  */
 public interface MoneyItem extends Base {
+    Family getFamily();
+
+    void setFamily(Family family);
+
     Course getCourse();
 
     void setCourse(Course course);
@@ -16,6 +20,10 @@ public interface MoneyItem extends Base {
     double getMoney();
 
     void setMoney(double money);
+
+    long getOccurTime();
+
+    void setOccurTime(long time);
 
     String getDesc();
 

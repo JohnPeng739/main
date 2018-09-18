@@ -21,7 +21,6 @@ public class FamilyEntity extends BaseEntity implements Family {
     private String desc;
     @Column(name = "AVATAR_URL")
     private String avatarUrl;
-    @ManyToOne(targetEntity = FfeeAccount.class)
     @OneToMany(targetEntity = FamilyMemberEntity.class, cascade = {CascadeType.REFRESH},
             mappedBy = "family", fetch = FetchType.EAGER)
     private Set<FamilyMember> members;
