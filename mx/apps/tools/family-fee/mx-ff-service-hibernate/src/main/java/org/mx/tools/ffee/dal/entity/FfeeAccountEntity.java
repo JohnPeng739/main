@@ -10,36 +10,36 @@ import javax.persistence.Table;
  * 描述： FFEE应用中的账户实体类，基于Hibernate实现，依赖RBAC中的Account。
  *
  * @author John.Peng
- *         Date time 2018/2/18 上午10:29
+ * Date time 2018/2/18 上午10:29
  */
 @Entity
 @Table(name = "TB_FFEE_ACCOUNT")
 public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
-    @Column(name = "OPEN_ID")
+    @Column(name = "OPEN_ID", length = 50)
     private String openId;
-    @Column(name = "UNION_ID")
+    @Column(name = "UNION_ID", length = 50)
     private String unionId;
-    @Column(name = "NICKNAME")
+    @Column(name = "NICKNAME", length = 20)
     private String nickname;
-    @Column(name = "MOBILE")
+    @Column(name = "MOBILE", length = 20)
     private String mobile;
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", length = 30)
     private String email;
-    @Column(name = "WX")
+    @Column(name = "WX", length = 20)
     private String wx;
-    @Column(name = "QQ")
+    @Column(name = "QQ", length = 20)
     private String qq;
-    @Column(name = "WB")
+    @Column(name = "WB", length = 20)
     private String wb;
-    @Column(name = "AVATAR_URL")
+    @Column(name = "AVATAR_URL", length = 200)
     private String avatarUrl;
-    @Column(name = "COUNTRY")
+    @Column(name = "COUNTRY", length = 20)
     private String country;
-    @Column(name = "PROVINCE")
+    @Column(name = "PROVINCE", length = 20)
     private String province;
-    @Column(name = "CITY")
+    @Column(name = "CITY", length = 20)
     private String city;
-    @Column(name = "GENDER")
+    @Column(name = "GENDER", length = 10)
     private Gender gender = Gender.MALE;
 
     @Override
@@ -48,63 +48,13 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     }
 
     @Override
-    public String getUnionId() {
-        return unionId;
-    }
-
-    @Override
-    public String getNickname() {
-        return nickname;
-    }
-
-    @Override
-    public String getMobile() {
-        return mobile;
-    }
-
-    @Override
-    public String getEmail() {
-        return email;
-    }
-
-    @Override
-    public String getWx() {
-        return wx;
-    }
-
-    @Override
-    public String getQq() {
-        return qq;
-    }
-
-    @Override
-    public String getWb() {
-        return wb;
-    }
-
-    @Override
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    @Override
-    public String getCountry() {
-        return country;
-    }
-
-    @Override
-    public String getProvince() {
-        return province;
-    }
-
-    @Override
-    public String getCity() {
-        return city;
-    }
-
-    @Override
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    @Override
+    public String getUnionId() {
+        return unionId;
     }
 
     @Override
@@ -113,8 +63,18 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     }
 
     @Override
+    public String getNickname() {
+        return nickname;
+    }
+
+    @Override
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    @Override
+    public String getMobile() {
+        return mobile;
     }
 
     @Override
@@ -123,8 +83,18 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     }
 
     @Override
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String getWx() {
+        return wx;
     }
 
     @Override
@@ -133,8 +103,18 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     }
 
     @Override
+    public String getQq() {
+        return qq;
+    }
+
+    @Override
     public void setQq(String qq) {
         this.qq = qq;
+    }
+
+    @Override
+    public String getWb() {
+        return wb;
     }
 
     @Override
@@ -143,8 +123,18 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     }
 
     @Override
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    @Override
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    @Override
+    public String getCountry() {
+        return country;
     }
 
     @Override
@@ -153,8 +143,18 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     }
 
     @Override
+    public String getProvince() {
+        return province;
+    }
+
+    @Override
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    @Override
+    public String getCity() {
+        return city;
     }
 
     @Override

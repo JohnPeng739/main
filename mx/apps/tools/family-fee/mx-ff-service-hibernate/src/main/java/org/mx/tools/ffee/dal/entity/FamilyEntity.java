@@ -15,14 +15,14 @@ import java.util.Set;
 @Entity
 @Table(name = "TB_FAMILY")
 public class FamilyEntity extends BaseEntity implements Family {
-    @Column(name = "NAME", unique = true)
+    @Column(name = "NAME", unique = true, length = 100)
     private String name;
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", length = 500)
     private String desc;
-    @Column(name = "AVATAR_URL")
+    @Column(name = "AVATAR_URL", length = 200)
     private String avatarUrl;
-    @OneToMany(targetEntity = FamilyMemberEntity.class, cascade = {CascadeType.REFRESH},
-            mappedBy = "family", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = FamilyMemberEntity.class, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "FAMILY_ID")
     private Set<FamilyMember> members;
 
     /**
@@ -52,12 +52,12 @@ public class FamilyEntity extends BaseEntity implements Family {
     }
 
     @Override
-    public String getDescription() {
+    public String getDesc() {
         return desc;
     }
 
     @Override
-    public void setDescription(String desc) {
+    public void setDesc(String desc) {
         this.desc = desc;
     }
 

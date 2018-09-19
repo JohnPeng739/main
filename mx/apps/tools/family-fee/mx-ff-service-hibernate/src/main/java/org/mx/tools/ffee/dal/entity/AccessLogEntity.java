@@ -2,10 +2,7 @@ package org.mx.tools.ffee.dal.entity;
 
 import org.mx.dal.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 描述： 账户操作日志实体类定义，基于Hibernate JPA实现
@@ -17,8 +14,9 @@ import javax.persistence.Table;
 @Table(name = "TB_ACCESS_LOG")
 public class AccessLogEntity extends BaseEntity implements AccessLog {
     @ManyToOne(targetEntity = FfeeAccountEntity.class)
+    @JoinColumn(name = "ACCOUNT_ID")
     private FfeeAccount account;
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", length = 500)
     private String content;
     @Column(name = "LATITUDE")
     private double latitude;

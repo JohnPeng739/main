@@ -3,6 +3,7 @@ package org.mx.tools.ffee.dal.entity;
 import org.mx.dal.entity.BaseEntity;
 
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
@@ -15,16 +16,19 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class MoneyItemEntity extends BaseEntity implements MoneyItem {
     @ManyToOne(targetEntity = FamilyEntity.class)
+    @JoinColumn(name = "FAMILY_ID")
     private Family family;
     @ManyToOne(targetEntity = CourseEntity.class)
+    @JoinColumn(name = "COURSE_ID")
     private Course course;
     @Column(name = "MONEY")
     private double money;
     @Column(name = "OCCUR_TIME")
     private long occurTime = System.currentTimeMillis();
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", length = 300)
     private String desc;
     @ManyToOne(targetEntity = FfeeAccountEntity.class)
+    @JoinColumn(name = "ACCOUNT_ID")
     private FfeeAccount owner;
 
     /**

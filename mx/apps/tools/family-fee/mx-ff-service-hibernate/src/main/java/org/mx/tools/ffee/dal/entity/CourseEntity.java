@@ -2,10 +2,7 @@ package org.mx.tools.ffee.dal.entity;
 
 import org.mx.dal.entity.BaseDictEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 描述： 科目明细信息实体类，基于Hibernate实现。
@@ -16,9 +13,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TB_COURSE")
 public class CourseEntity extends BaseDictEntity implements Course {
-    @Column(name = "COURSE_TYPE")
+    @Column(name = "COURSE_TYPE", length = 30)
     private CourseType type = CourseType.INCOME;
     @ManyToOne(targetEntity = FfeeAccountEntity.class)
+    @JoinColumn(name = "ACCOUNT_ID")
     private FfeeAccount owner;
 
     /**

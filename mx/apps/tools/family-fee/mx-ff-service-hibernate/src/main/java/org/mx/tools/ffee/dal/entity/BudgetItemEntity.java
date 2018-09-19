@@ -2,10 +2,7 @@ package org.mx.tools.ffee.dal.entity;
 
 import org.mx.dal.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 描述： 预算明细信息实体类，基于hibernate实现。
@@ -17,14 +14,16 @@ import javax.persistence.Table;
 @Table(name = "TB_BUDGET_ITEM")
 public class BudgetItemEntity extends BaseEntity implements BudgetItem {
     @ManyToOne(targetEntity = FamilyEntity.class)
+    @JoinColumn(name = "FAMILY_ID")
     private Family family;
     @Column(name = "BUDGET_YEAR")
     private int year;
     @Column(name = "MONEY")
     private double money;
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", length = 500)
     private String desc;
     @ManyToOne(targetEntity = CourseEntity.class)
+    @JoinColumn(name = "COURSE_ID")
     private Course course;
 
     /**

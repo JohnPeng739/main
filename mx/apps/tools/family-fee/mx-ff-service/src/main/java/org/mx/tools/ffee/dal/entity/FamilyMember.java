@@ -9,10 +9,6 @@ import org.mx.dal.entity.Base;
  * Date time 2018/2/18 下午7:47
  */
 public interface FamilyMember extends Base {
-    Family getFamily();
-
-    void setFamily(Family family);
-
     String getRole();
 
     void setRole(String role);

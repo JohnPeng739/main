@@ -30,7 +30,62 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Transactional
     @Override
-    public Family saveFamily(Family family) {
+    public Family createFamily(Family family, String openId) {
+        if (family == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The family is null.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        FfeeAccount owner = generalAccessor.findOne(GeneralAccessor.ConditionTuple.eq("openId", openId),
+                FfeeAccount.class);
+        if (owner == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The account[%s] not found.", openId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
+            );
+        }
+        // 采用家庭名称来判定是否存在
+        if (!StringUtils.isBlank(family.getName())) {
+            Family checked = generalAccessor.findOne(
+                    GeneralAccessor.ConditionTuple.eq("name", family.getName()),
+                    Family.class);
+            if (checked != null) {
+                // 家庭已经存在
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The family[%s] has existed.", family.getName()));
+                }
+                throw new UserInterfaceFfeeErrorException(
+                        UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+                );
+            }
+        }
+        // 新增家庭
+        FamilyMember member = EntityFactory.createEntity(FamilyMember.class);
+        member.setFfeeAccount(owner);
+        member.setRole("");
+        member.setIsOwner(true);
+        member = generalAccessor.save(member);
+
+        family.setId(null);
+        family.getMembers().add(member);
+        family = generalAccessor.save(family);
+        if (logger.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("Create a new family successfully, id: %s, name: %s.",
+                        family.getId(), family.getName()));
+            }
+        }
+        return family;
+    }
+
+    @Transactional
+    @Override
+    public Family modifyFamily(Family family) {
         if (family == null) {
             if (logger.isErrorEnabled()) {
                 logger.error("The family is null.");
@@ -44,22 +99,17 @@ public class FamilyServiceImpl implements FamilyService {
             if (checked != null) {
                 // 修改家庭
                 checked.setAvatarUrl(family.getAvatarUrl());
-                checked.setDescription(family.getDescription());
+                checked.setDesc(family.getDesc());
                 checked.setName(family.getName());
-                family = checked;
-            } else {
-                // 新增家庭
-                family.setId(null);
+                return generalAccessor.save(checked);
             }
         }
-        family = generalAccessor.save(family);
-        if (logger.isDebugEnabled()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Save family successfully, id: %s, name: %s.",
-                        family.getId(), family.getName()));
-            }
+        if (logger.isErrorEnabled()) {
+            logger.error(String.format("The family[%s] not found.", family.getId()));
         }
-        return family;
+        throw new UserInterfaceFfeeErrorException(
+                UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+        );
     }
 
     @Transactional(readOnly = true)
@@ -78,10 +128,10 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Transactional
     @Override
-    public Family joinFamily(String familyId, String openId) {
-        if (StringUtils.isBlank(familyId) || StringUtils.isBlank(openId)) {
+    public Family joinFamily(String familyId, String role, String accountId) {
+        if (StringUtils.isBlank(familyId) || StringUtils.isBlank(accountId)) {
             if (logger.isErrorEnabled()) {
-                logger.error("The family's id or open id is blank.");
+                logger.error("The family's id or account id is blank.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
@@ -96,11 +146,10 @@ public class FamilyServiceImpl implements FamilyService {
                     UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
             );
         }
-        FfeeAccount account = generalAccessor.findOne(
-                GeneralAccessor.ConditionTuple.eq("openId", openId), FfeeAccount.class);
+        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
         if (account == null) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("The account not found, open id: %s.", openId));
+                logger.error(String.format("The account[%s] not found.", account));
             }
             throw new UserInterfaceFfeeErrorException(
                     UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
@@ -113,13 +162,15 @@ public class FamilyServiceImpl implements FamilyService {
             }
         }
         FamilyMember member = EntityFactory.createEntity(FamilyMember.class);
-        member.setFamily(family);
         member.setFfeeAccount(account);
+        member.setRole(role);
         member.setIsOwner(false);
-        generalAccessor.save(member);
+        member = generalAccessor.save(member);
+        family.getMembers().add(member);
+        family = generalAccessor.save(family);
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("The account[%s] join the family[%s] successfully.", openId, familyId));
+            logger.debug(String.format("The account[%s] join the family[%s] successfully.", accountId, familyId));
         }
-        return generalAccessor.getById(familyId, Family.class);
+        return family;
     }
 }

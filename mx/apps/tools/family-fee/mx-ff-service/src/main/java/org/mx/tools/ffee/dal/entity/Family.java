@@ -29,9 +29,9 @@ public interface Family extends Base {
 
     void setAvatarUrl(String avatarUrl);
 
-    String getDescription();
+    String getDesc();
 
-    void setDescription(String description);
+    void setDesc(String desc);
 
     /**
      * 获取家庭成员集合

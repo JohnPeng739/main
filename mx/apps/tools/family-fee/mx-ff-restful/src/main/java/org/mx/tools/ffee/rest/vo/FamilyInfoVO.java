@@ -10,7 +10,7 @@ public class FamilyInfoVO {
         Family family = EntityFactory.createEntity(Family.class);
         family.setId(id);
         family.setName(name);
-        family.setDescription(desc);
+        family.setDesc(desc);
         family.setAvatarUrl(avatarUrl);
         return family;
     }

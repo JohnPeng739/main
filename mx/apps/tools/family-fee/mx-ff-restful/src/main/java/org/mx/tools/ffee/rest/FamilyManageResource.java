@@ -5,6 +5,7 @@ import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.rest.vo.FamilyInfoVO;
+import org.mx.tools.ffee.rest.vo.FamilyJoinInfoVO;
 import org.mx.tools.ffee.service.FamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -37,15 +38,22 @@ public class FamilyManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         Family family = familyInfoVO.get();
         family.setId(null);
-        return new DataVO<>(familyService.saveFamily(family));
+        return new DataVO<>(familyService.createFamily(family, userCode));
     }
 
     @Path("families/{familyId}/join")
     @PUT
     public DataVO<Family> joinFamily(@PathParam("familyId") String familyId,
-                                     @QueryParam("userCode") String userCode) {
+                                     @QueryParam("userCode") String userCode,
+                                     FamilyJoinInfoVO familyJoinInfoVO) {
+        if (familyJoinInfoVO == null) {
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
         sessionDataStore.setCurrentUserCode(userCode);
-        return new DataVO<>(familyService.joinFamily(familyId, userCode));
+        return new DataVO<>(familyService.joinFamily(familyId, familyJoinInfoVO.getRole(),
+                familyJoinInfoVO.getAccountId()));
     }
 
     @Path("families/{familyId}")
@@ -60,7 +68,8 @@ public class FamilyManageResource {
         }
         sessionDataStore.setCurrentUserCode(userCode);
         Family family = familyInfoVO.get();
-        return new DataVO<>(familyService.saveFamily(family));
+        family.setId(familyId);
+        return new DataVO<>(familyService.modifyFamily(family));
     }
 
     @Path("families/{familyId}")

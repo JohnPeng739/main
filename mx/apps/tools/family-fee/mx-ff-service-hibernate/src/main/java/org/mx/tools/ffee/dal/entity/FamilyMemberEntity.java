@@ -13,19 +13,13 @@ import javax.persistence.*;
 @Entity
 @Table(name = "TB_FAMILY_MEMBER")
 public class FamilyMemberEntity extends BaseEntity implements FamilyMember {
-    @ManyToOne(targetEntity = FamilyEntity.class)
-    private Family family;
-    @Column(name = "MEMBER_ROLE")
+    @Column(name = "MEMBER_ROLE", length = 20)
     private String role;
     @OneToOne(targetEntity = FfeeAccountEntity.class)
+    @JoinColumn(name = "ACCOUNT_ID")
     private FfeeAccount ffeeAccount;
     @Column(name = "IS_OWNER")
     private boolean isOwner;
-
-    @Override
-    public Family getFamily() {
-        return family;
-    }
 
     @Override
     public String getRole() {
@@ -40,11 +34,6 @@ public class FamilyMemberEntity extends BaseEntity implements FamilyMember {
     @Override
     public boolean isOwner() {
         return isOwner;
-    }
-
-    @Override
-    public void setFamily(Family family) {
-        this.family = family;
     }
 
     @Override
