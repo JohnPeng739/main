@@ -10,6 +10,7 @@ import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FamilyMember;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
+import org.mx.tools.ffee.repository.FamilyRepository;
 import org.mx.tools.ffee.service.FamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,11 +22,14 @@ public class FamilyServiceImpl implements FamilyService {
     private static final Log logger = LogFactory.getLog(FamilyServiceImpl.class);
 
     private GeneralAccessor generalAccessor;
+    private FamilyRepository familyRepository;
 
     @Autowired
-    public FamilyServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor) {
+    public FamilyServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor,
+                             FamilyRepository familyRepository) {
         super();
         this.generalAccessor = generalAccessor;
+        this.familyRepository = familyRepository;
     }
 
     @Transactional
@@ -172,5 +176,29 @@ public class FamilyServiceImpl implements FamilyService {
             logger.debug(String.format("The account[%s] join the family[%s] successfully.", accountId, familyId));
         }
         return family;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Family getFamilyByOpenId(String openId) {
+        if (StringUtils.isBlank(openId)) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The account's open id is blank.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        String familyId = familyRepository.findFamilyIdByOpenId(openId);
+        if (StringUtils.isBlank(familyId)) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The family not found, open id: %s.", openId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
+        } else {
+            return getFamily(familyId);
+        }
     }
 }

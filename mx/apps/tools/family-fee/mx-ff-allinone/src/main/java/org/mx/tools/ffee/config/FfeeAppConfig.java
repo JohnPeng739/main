@@ -4,6 +4,7 @@ import org.mx.dal.config.DalHibernateConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * 描述：
@@ -16,6 +17,9 @@ import org.springframework.context.annotation.PropertySource;
         "classpath:database.properties",
         "classpath:jpa.properties",
         "classpath:ffee.properties"
+})
+@EnableJpaRepositories({
+        "org.mx.tools.ffee.repository"
 })
 @Import({
         DalHibernateConfig.class,

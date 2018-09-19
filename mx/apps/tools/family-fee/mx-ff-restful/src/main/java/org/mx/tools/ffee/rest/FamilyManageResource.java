@@ -77,4 +77,10 @@ public class FamilyManageResource {
     public DataVO<Family> getFamily(@PathParam("familyId") String familyId) {
         return new DataVO<>(familyService.getFamily(familyId));
     }
+
+    @Path("family")
+    @GET
+    public DataVO<Family> getFamilyByOpenId(@QueryParam("userCode") String userCode) {
+        return new DataVO<>(familyService.getFamilyByOpenId(userCode));
+    }
 }

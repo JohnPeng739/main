@@ -4,7 +4,12 @@ import org.mx.tools.ffee.dal.entity.Family;
 
 public interface FamilyService {
     Family createFamily(Family family, String openId);
+
     Family modifyFamily(Family family);
+
     Family getFamily(String familyId);
+
+    Family getFamilyByOpenId(String openId);
+
     Family joinFamily(String familyId, String role, String accountId);
 }
