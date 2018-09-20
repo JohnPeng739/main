@@ -1,6 +1,6 @@
 package org.mx.tools.ffee.rest.vo;
 
-public class FamilyJoinInfoVO {
+public class FamilyJoinInfoVO extends BaseParamsVO {
     private String familyId, role, accountId;
 
     public String getFamilyId() {

@@ -1,6 +1,5 @@
 package org.mx.tools.ffee.rest;
 
-import org.mx.StringUtils;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.rest.vo.DataVO;
@@ -44,14 +43,13 @@ public class AccountManageResource {
     @Path("accounts/{accountId}")
     @PUT
     public DataVO<FfeeAccount> modifyAccount(@PathParam("accountId") String accountId,
-                                             @QueryParam("userCode") String userCode,
                                              AccountModifyVO accountModifyVO) {
         if (accountModifyVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(accountModifyVO.getOpenId());
         FfeeAccount account = accountModifyVO.get();
         account.setId(accountId);
         return new DataVO<>(accountService.modifyAccount(account));
@@ -60,22 +58,18 @@ public class AccountManageResource {
     @Path("accounts/{accountId}")
     @GET
     public DataVO<FfeeAccount> getAccountById(@PathParam("accountId") String accountId) {
-        if (StringUtils.isBlank(accountId)) {
-            throw new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
-            );
-        }
         return new DataVO<>(accountService.getAccountById(accountId));
+    }
+
+    @Path("account/summary")
+    @GET
+    public DataVO<AccountService.AccountSummary> getAccountSummary(@QueryParam("userCode") String userCode) {
+        return new DataVO<>(accountService.getAccountSummaryByOpenId(userCode));
     }
 
     @Path("accounts/{accountId}/logs")
     @GET
     public DataVO<List<AccessLog>> getLogsByAccount(@PathParam("accountId") String accountId) {
-        if (StringUtils.isBlank(accountId)) {
-            throw new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
-            );
-        }
         return new DataVO<>(accountService.getLogsByAccount(accountId));
     }
 }

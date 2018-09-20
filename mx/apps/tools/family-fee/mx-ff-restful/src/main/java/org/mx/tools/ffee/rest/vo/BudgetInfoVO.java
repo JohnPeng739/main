@@ -6,7 +6,7 @@ import org.mx.tools.ffee.dal.entity.BudgetItem;
 import org.mx.tools.ffee.dal.entity.Course;
 import org.mx.tools.ffee.dal.entity.Family;
 
-public class BudgetInfoVO {
+public class BudgetInfoVO extends BaseParamsVO {
     private String id, desc, courseId, familyId;
     private int year;
     private double money;

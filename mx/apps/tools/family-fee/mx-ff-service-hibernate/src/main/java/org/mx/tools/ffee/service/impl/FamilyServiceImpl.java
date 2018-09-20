@@ -178,8 +178,6 @@ public class FamilyServiceImpl implements FamilyService {
         return family;
     }
 
-    @Transactional(readOnly = true)
-    @Override
     public Family getFamilyByOpenId(String openId) {
         if (StringUtils.isBlank(openId)) {
             if (logger.isErrorEnabled()) {

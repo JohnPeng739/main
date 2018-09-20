@@ -45,8 +45,10 @@ public class WxAuthorizationResource {
         List<String> list = Arrays.asList(timestamp, nonce, token);
         Collections.sort(list);
         String checked = DigestUtils.sha1(StringUtils.merge(list, ""), DigestUtils.EncodeType.HEX);
-        logger.info(String.format("signature: %s\nchecked: %s\ntimestamp: %s\nnonce: %s\nechostr: %s",
-                signature, checked, timestamp, nonce, echostr));
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Response echo from WeiXin,\nsignature: %s\nchecked: %s\ntimestamp: %s\n" +
+                            "nonce: %s\nechostr: %s", signature, checked, timestamp, nonce, echostr));
+        }
         return signature.equals(checked) ? echostr : "";
     }
 
@@ -61,7 +63,9 @@ public class WxAuthorizationResource {
         try {
             RestClientInvoke invoke = new RestClientInvoke();
             String result = invoke.get(url, String.class);
-            logger.info(String.format("decode: %s.", result));
+            if (logger.isDebugEnabled()) {
+                logger.debug(String.format("decode: %s.", result));
+            }
             return result;
         } catch (RestInvokeException ex) {
             logger.error("decode fail.", ex);

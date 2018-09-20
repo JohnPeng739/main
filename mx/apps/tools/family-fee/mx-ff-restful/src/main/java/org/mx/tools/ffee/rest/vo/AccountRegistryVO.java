@@ -3,12 +3,12 @@ package org.mx.tools.ffee.rest.vo;
 import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 
-public class AccountRegistryVO {
-    private String openId, unionId, nickname, mobile, avatarUrl, country, province, city;
+public class AccountRegistryVO extends BaseParamsVO {
+    private String unionId, nickname, mobile, avatarUrl, country, province, city;
 
     public FfeeAccount get() {
         FfeeAccount account = EntityFactory.createEntity(FfeeAccount.class);
-        account.setOpenId(openId);
+        account.setOpenId(super.getOpenId());
         account.setUnionId(unionId);
         account.setNickname(nickname);
         account.setMobile(mobile);
@@ -17,10 +17,6 @@ public class AccountRegistryVO {
         account.setProvince(province);
         account.setCity(city);
         return account;
-    }
-
-    public String getOpenId() {
-        return openId;
     }
 
     public String getUnionId() {
@@ -49,10 +45,6 @@ public class AccountRegistryVO {
 
     public String getCity() {
         return city;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
     }
 
     public void setUnionId(String unionId) {

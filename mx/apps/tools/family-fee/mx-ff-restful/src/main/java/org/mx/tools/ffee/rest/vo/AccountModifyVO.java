@@ -3,7 +3,7 @@ package org.mx.tools.ffee.rest.vo;
 import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 
-public class AccountModifyVO {
+public class AccountModifyVO extends BaseParamsVO {
     private String id, nickname, mobile, email, wx, qq, wb, avatarUrl, country, province, city;
     private FfeeAccount.Gender gender = FfeeAccount.Gender.MALE;
 

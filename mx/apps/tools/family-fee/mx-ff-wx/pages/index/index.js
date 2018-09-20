@@ -91,7 +91,34 @@ Page({
     }
   },
   getUserInfo: function (e) {
-    this.setUserInfo(e.detail.userInfo)
+    let me = this
+    let userInfo = e.detail.userInfo
+    this.setUserInfo(userInfo)
+    wx.request({
+      url: 'https://mx-john.cn/rest/v1/accounts/registry',
+      data: {
+        openId: app.globalData.openId,
+        unionId: '',
+        nickname: userInfo.nickname,
+        avatarUrl: userInfo.avatarUrl,
+        country: userInfo.country,
+        province: userInfo.province,
+        city: userInfo.city
+      },
+      method: 'POST',
+      success: function(res) {
+        console.log(res)
+        if (res.data.errorCode === 0) {
+          let family = res.data.data
+          app.globalData.family = family
+          me.setData({
+            family: family,
+            hasFamily: true
+          })
+        }
+      }
+    })
+    console.log(e.detail.userInfo)
   },
   setUserInfo: function(userInfo) {
     if (userInfo) {

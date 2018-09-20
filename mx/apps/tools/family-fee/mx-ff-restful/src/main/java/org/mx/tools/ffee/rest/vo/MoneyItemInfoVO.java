@@ -7,7 +7,7 @@ import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 import org.mx.tools.ffee.dal.entity.MoneyItem;
 
-public class MoneyItemInfoVO {
+public class MoneyItemInfoVO extends BaseParamsVO {
     private String id, familyId, courseId, desc, ownerId;
     private double money;
     private long occurTime = System.currentTimeMillis();

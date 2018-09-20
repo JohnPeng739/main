@@ -3,7 +3,7 @@ package org.mx.tools.ffee.rest.vo;
 import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.Family;
 
-public class FamilyInfoVO {
+public class FamilyInfoVO extends BaseParamsVO {
     private String id, name, desc, avatarUrl;
 
     public Family get() {

@@ -1,6 +1,5 @@
 package org.mx.tools.ffee.rest;
 
-import org.mx.StringUtils;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.rest.vo.DataVO;
@@ -35,14 +34,13 @@ public class CourseManageResource {
 
     @Path("courses/new")
     @POST
-    public DataVO<Course> newCourse(@QueryParam("userCode") String userCode,
-                                    CourseInfoVO courseInfoVO) {
+    public DataVO<Course> newCourse(CourseInfoVO courseInfoVO) {
         if (courseInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(courseInfoVO.getOpenId());
         Course course = courseInfoVO.get();
         course.setId(null);
         return new DataVO<>(courseService.saveCourse(course));
@@ -51,14 +49,13 @@ public class CourseManageResource {
     @Path("courses/{courseId}")
     @PUT
     public DataVO<Course> modifyCourse(@PathParam("courseId") String courseId,
-                                       @QueryParam("userCode") String userCode,
                                        CourseInfoVO courseInfoVO) {
-        if (StringUtils.isBlank(courseId) || courseInfoVO == null) {
+        if (courseInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(courseInfoVO.getOpenId());
         Course course = courseInfoVO.get();
         course.setId(courseId);
         return new DataVO<>(courseService.saveCourse(course));

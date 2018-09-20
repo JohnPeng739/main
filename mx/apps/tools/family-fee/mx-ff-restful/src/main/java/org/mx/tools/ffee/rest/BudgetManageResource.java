@@ -28,19 +28,20 @@ public class BudgetManageResource {
 
     @Path("budgets/families/{familyId}")
     @GET
-    public DataVO<List<BudgetItem>> getBudgets(@PathParam("familyId") String familyId, @QueryParam("year") int year) {
+    public DataVO<List<BudgetItem>> getBudgets(@PathParam("familyId") String familyId,
+                                               @QueryParam("year") int year) {
         return new DataVO<>(budgetService.getBudgets(familyId, year));
     }
 
     @Path("budgets/new")
     @POST
-    public DataVO<BudgetItem> newBudget(@QueryParam("userCode") String userCode, BudgetInfoVO budgetInfoVO) {
+    public DataVO<BudgetItem> newBudget(BudgetInfoVO budgetInfoVO) {
         if (budgetInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(budgetInfoVO.getOpenId());
         BudgetItem budget = budgetInfoVO.get();
         budget.setId(null);
         return new DataVO<>(budgetService.saveBudget(budget));
@@ -48,20 +49,21 @@ public class BudgetManageResource {
 
     @Path("budgets/{budgetId}")
     @PUT
-    public DataVO<BudgetItem> modifyBudget(@QueryParam("userCode") String userCode, BudgetInfoVO budgetInfoVO) {
+    public DataVO<BudgetItem> modifyBudget(BudgetInfoVO budgetInfoVO) {
         if (budgetInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(budgetInfoVO.getOpenId());
         BudgetItem budget = budgetInfoVO.get();
         return new DataVO<>(budgetService.saveBudget(budget));
     }
 
     @Path("budgets/{budgetId}")
     @DELETE
-    public DataVO<BudgetItem> deleteBudget(@PathParam("budgetId") String budgetId, @QueryParam("userCode") String userCode) {
+    public DataVO<BudgetItem> deleteBudget(@PathParam("budgetId") String budgetId,
+                                           @QueryParam("openId") String userCode) {
         sessionDataStore.setCurrentUserCode(userCode);
         return new DataVO<>(budgetService.deleteBudget(budgetId));
     }

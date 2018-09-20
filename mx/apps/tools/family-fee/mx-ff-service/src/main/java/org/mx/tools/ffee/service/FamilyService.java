@@ -9,7 +9,5 @@ public interface FamilyService {
 
     Family getFamily(String familyId);
 
-    Family getFamilyByOpenId(String openId);
-
     Family joinFamily(String familyId, String role, String accountId);
 }

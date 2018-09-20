@@ -28,13 +28,13 @@ public class FamilyManageResource {
 
     @Path("families/new")
     @POST
-    public DataVO<Family> createFamily(@QueryParam("userCode") String userCode,
-                                       FamilyInfoVO familyInfoVO) {
+    public DataVO<Family> createFamily(FamilyInfoVO familyInfoVO) {
         if (familyInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
+        String userCode = familyInfoVO.getOpenId();
         sessionDataStore.setCurrentUserCode(userCode);
         Family family = familyInfoVO.get();
         family.setId(null);
@@ -44,14 +44,13 @@ public class FamilyManageResource {
     @Path("families/{familyId}/join")
     @PUT
     public DataVO<Family> joinFamily(@PathParam("familyId") String familyId,
-                                     @QueryParam("userCode") String userCode,
                                      FamilyJoinInfoVO familyJoinInfoVO) {
         if (familyJoinInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(familyJoinInfoVO.getOpenId());
         return new DataVO<>(familyService.joinFamily(familyId, familyJoinInfoVO.getRole(),
                 familyJoinInfoVO.getAccountId()));
     }
@@ -59,14 +58,13 @@ public class FamilyManageResource {
     @Path("families/{familyId}")
     @PUT
     public DataVO<Family> modifyFamily(@PathParam("familyId") String familyId,
-                                       @QueryParam("userCode") String userCode,
                                        FamilyInfoVO familyInfoVO) {
         if (familyInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(familyInfoVO.getOpenId());
         Family family = familyInfoVO.get();
         family.setId(familyId);
         return new DataVO<>(familyService.modifyFamily(family));
@@ -76,11 +74,5 @@ public class FamilyManageResource {
     @GET
     public DataVO<Family> getFamily(@PathParam("familyId") String familyId) {
         return new DataVO<>(familyService.getFamily(familyId));
-    }
-
-    @Path("family")
-    @GET
-    public DataVO<Family> getFamilyByOpenId(@QueryParam("userCode") String userCode) {
-        return new DataVO<>(familyService.getFamilyByOpenId(userCode));
     }
 }

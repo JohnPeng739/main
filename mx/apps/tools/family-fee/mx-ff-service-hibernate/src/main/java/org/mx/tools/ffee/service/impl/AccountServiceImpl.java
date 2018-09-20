@@ -4,9 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.dal.service.GeneralAccessor;
+import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.tools.ffee.dal.entity.AccessLog;
+import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
+import org.mx.tools.ffee.repository.FamilyRepository;
 import org.mx.tools.ffee.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,11 +23,14 @@ public class AccountServiceImpl implements AccountService {
     private static final Log logger = LogFactory.getLog(AccountServiceImpl.class);
 
     private GeneralAccessor generalAccessor;
+    private FamilyRepository familyRepository;
 
     @Autowired
-    public AccountServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor) {
+    public AccountServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor,
+                              FamilyRepository familyRepository) {
         super();
         this.generalAccessor = generalAccessor;
+        this.familyRepository = familyRepository;
     }
 
     @Transactional
@@ -83,6 +89,27 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public FfeeAccount getAccountById(String accountId) {
         return generalAccessor.getById(accountId, FfeeAccount.class);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public AccountSummary getAccountSummaryByOpenId(String openId) {
+        if (StringUtils.isBlank(openId)) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The account's open id is blank.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        FfeeAccount account = generalAccessor.findOne(
+                GeneralAccessor.ConditionTuple.eq("openId", openId), FfeeAccount.class);
+        Family family = null;
+        if (account != null) {
+            String familyId = familyRepository.findFamilyIdByOpenId(openId);
+            family = generalAccessor.getById(familyId, Family.class);
+        }
+        return new AccountSummary(account, family);
     }
 
     @Transactional(readOnly = true)

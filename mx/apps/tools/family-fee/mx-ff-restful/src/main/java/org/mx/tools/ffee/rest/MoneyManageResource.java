@@ -37,13 +37,13 @@ public class MoneyManageResource {
 
     @Path("incomes/new")
     @POST
-    public DataVO<Income> newIncome(MoneyItemInfoVO moneyItemInfoVO, @QueryParam("userCode") String userCode) {
+    public DataVO<Income> newIncome(MoneyItemInfoVO moneyItemInfoVO) {
         if (moneyItemInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(moneyItemInfoVO.getOpenId());
         Income income = (Income) moneyItemInfoVO.get();
         income.setId(null);
         return new DataVO<>(moneyService.saveIncome(income));
@@ -51,14 +51,14 @@ public class MoneyManageResource {
 
     @Path("incomes/{incomeId}")
     @PUT
-    public DataVO<Income> modifyIncome(MoneyItemInfoVO moneyItemInfoVO, @PathParam("incomeId") String incomeId,
-                                       @QueryParam("userCode") String userCode) {
+    public DataVO<Income> modifyIncome(MoneyItemInfoVO moneyItemInfoVO,
+                                       @PathParam("incomeId") String incomeId) {
         if (moneyItemInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(moneyItemInfoVO.getOpenId());
         Income income = (Income) moneyItemInfoVO.get();
         income.setId(incomeId);
         return new DataVO<>(moneyService.saveIncome(income));
@@ -66,7 +66,8 @@ public class MoneyManageResource {
 
     @Path("incomes/{incomeId}")
     @DELETE
-    public DataVO<Income> deleteIncome(@PathParam("incomeId") String incomeId, @QueryParam("userCode") String userCode) {
+    public DataVO<Income> deleteIncome(@PathParam("incomeId") String incomeId,
+                                       @QueryParam("userCode") String userCode) {
         sessionDataStore.setCurrentUserCode(userCode);
         return new DataVO<>(moneyService.deleteIncome(incomeId));
     }
@@ -74,8 +75,10 @@ public class MoneyManageResource {
     @Path("spendings/families/{familyId}")
     @GET
     public DataVO<List<Spending>> getAllSpendings(@PathParam("familyId") String familyId,
-                                                  @QueryParam("userCode") String userCode, @QueryParam("year") int year,
-                                                  @QueryParam("month") int month, @QueryParam("week") String week) {
+                                                  @QueryParam("userCode") String userCode,
+                                                  @QueryParam("year") int year,
+                                                  @QueryParam("month") int month,
+                                                  @QueryParam("week") String week) {
         if (!StringUtils.isBlank(week)) {
             return new DataVO<>(moneyService.getSpendingsLastWeek(familyId));
         } else {
@@ -85,13 +88,13 @@ public class MoneyManageResource {
 
     @Path("spending/new")
     @POST
-    public DataVO<Spending> newSpending(MoneyItemInfoVO moneyItemInfoVO, @QueryParam("userCode") String userCode) {
+    public DataVO<Spending> newSpending(MoneyItemInfoVO moneyItemInfoVO) {
         if (moneyItemInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(moneyItemInfoVO.getOpenId());
         Spending spending = (Spending) moneyItemInfoVO.get();
         spending.setId(null);
         return new DataVO<>(moneyService.saveSpending(spending));
@@ -99,14 +102,14 @@ public class MoneyManageResource {
 
     @Path("spendings/{spendingId}")
     @PUT
-    public DataVO<Spending> modifySpending(MoneyItemInfoVO moneyItemInfoVO, @PathParam("spendingId") String spendingId,
-                                           @QueryParam("userCode") String userCode) {
+    public DataVO<Spending> modifySpending(MoneyItemInfoVO moneyItemInfoVO,
+                                           @PathParam("spendingId") String spendingId) {
         if (moneyItemInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        sessionDataStore.setCurrentUserCode(userCode);
+        sessionDataStore.setCurrentUserCode(moneyItemInfoVO.getOpenId());
         Spending spending = (Spending) moneyItemInfoVO.get();
         spending.setId(spendingId);
         return new DataVO<>(moneyService.saveSpending(spending));
@@ -114,7 +117,8 @@ public class MoneyManageResource {
 
     @Path("spendings/{spendingId}")
     @DELETE
-    public DataVO<Spending> deleteSpending(@PathParam("spendingId") String spendingId, @QueryParam("userCode") String userCode) {
+    public DataVO<Spending> deleteSpending(@PathParam("spendingId") String spendingId,
+                                           @QueryParam("userCode") String userCode) {
         sessionDataStore.setCurrentUserCode(userCode);
         return new DataVO<>(moneyService.deleteSpending(spendingId));
     }

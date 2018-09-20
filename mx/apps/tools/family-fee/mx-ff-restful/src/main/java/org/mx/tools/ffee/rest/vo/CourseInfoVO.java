@@ -5,7 +5,7 @@ import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.Course;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 
-public class CourseInfoVO {
+public class CourseInfoVO extends BaseParamsVO {
     private String id, code, name, desc;
     private Course.CourseType type = Course.CourseType.INCOME;
     private String ownerId;
