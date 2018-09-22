@@ -137,6 +137,16 @@ public class NotifyProcessor {
      * @param message 通知消息数据
      */
     public final void notifyProcess(JSONObject message) {
+        notifyProcess(message, null);
+    }
+
+    /**
+     * 处理通知指令
+     *
+     * @param message    通知消息数据
+     * @param retPayload 返回给前端的负载对象
+     */
+    public final void notifyProcess(JSONObject message, JSONObject retPayload) {
         if (listener != null) {
             listener.before(message);
         }
@@ -177,6 +187,9 @@ public class NotifyProcessor {
                     res.put("deviceId", deviceId);
                     res.put("status", success ? "ok" : "error");
                     res.put("error", success ? null : "Notify process has any error.");
+                    if (retPayload != null) {
+                        res.put("payload", retPayload);
+                    }
                     try {
                         session.getRemote().sendString(JSON.toJSONString(res));
                         if (logger.isDebugEnabled()) {
