@@ -88,7 +88,7 @@ public class InitialBaseDataTask extends BaseTask {
 
     private void initialPublicCourses() {
         try (InputStream in = InitialBaseDataTask.class.getResourceAsStream(
-                "/org/mx/tools/ffee/task/public-courses.json")) {
+                "/public-courses.json")) {
             importCourses(JSON.parseObject(in, JSONArray.class), null);
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
