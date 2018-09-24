@@ -1,12 +1,23 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/create-family/create-family"
+    "pages/create-family/create-family",
+    "pages/my-family/my-family",
+    "pages/income/income",
+    "pages/spending/spending",
+    "pages/course/course"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
+    "navigationBarTitleText": "家庭账单",
     "navigationBarTextStyle": "black"
-  }
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 10000,
+    "uploadFile": 10000,
+    "downloadFile": 10000
+  },
+  "debug": false
 }

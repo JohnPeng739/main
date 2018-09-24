@@ -1,0 +1,24 @@
+<!--pages/my-family/my-family.wxml-->
+<import src="../../components/tabBar/tabBar.wxml"/>
+<template is="tabBar" data="{{tabBar}}"/>
+<view class="page__bd">
+  <view class="page__hd">
+    <view class="page__title view__gap">家主大人</view>
+    <view class="">
+      <image src="{{owner.ffeeAccount.avatarUrl}}" class="avatar-small"></image>
+      <span class="page__title cell_gap">{{owner.ffeeAccount.nickname}}</span>
+      <span class="unimportant cell__gap">是</span>
+      <span class="page__title cell__gap">{{owner.role}}</span>
+    </view>
+    <view class="page__title view__gap">家庭成员</view>
+    <view wx:if="{{members.length > 0}}" class="view__wrap">
+      <view wx:for="{{members}}" wx:key="owner.ffeeAccount.id" class="view-avatar">
+        <image src="{{item.ffeeAccount.avatarUrl}}" class="avatar-normal"></image>
+        <span class="unimportant content-value">{{item.role}}</span>
+      </view>
+    </view>
+    <view wx:else>
+      <span class="unimportant cell__gap">暂无其他成员！</span>
+    </view>
+  </view>
+</view>

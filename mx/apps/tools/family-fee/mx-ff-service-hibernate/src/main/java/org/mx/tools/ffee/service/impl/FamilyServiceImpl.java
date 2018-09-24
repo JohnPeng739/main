@@ -34,7 +34,7 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Transactional
     @Override
-    public Family createFamily(Family family, String openId) {
+    public Family createFamily(Family family, String openId, String ownerRole) {
         if (family == null) {
             if (logger.isErrorEnabled()) {
                 logger.error("The family is null.");
@@ -71,7 +71,7 @@ public class FamilyServiceImpl implements FamilyService {
         // 新增家庭
         FamilyMember member = EntityFactory.createEntity(FamilyMember.class);
         member.setFfeeAccount(owner);
-        member.setRole("");
+        member.setRole(ownerRole);
         member.setIsOwner(true);
         member = generalAccessor.save(member);
 

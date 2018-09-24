@@ -2,14 +2,62 @@ package org.mx.tools.ffee.service;
 
 import org.mx.tools.ffee.dal.entity.Course;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface CourseService {
-    List<Course> getAllCourses();
+    List<CourseBean> getAllCourses();
 
-    Course getCourse(String courseId);
+    List<CourseBean> getAllCoursesByFamily(String familyId);
 
-    Course saveCourse(Course course);
+    CourseBean getCourse(String courseId);
 
-    Course deleteCourse(String courseId);
+    CourseBean saveCourse(Course course);
+
+    CourseBean deleteCourse(String courseId);
+
+    class CourseBean {
+        private String id, code, name, desc;
+        private Course.CourseType type;
+        private float order;
+        private List<CourseBean> children = new ArrayList<>();
+
+        @SuppressWarnings("unchecked")
+        public CourseBean(Course course) {
+            super();
+            this.id = course.getId();
+            this.code = course.getCode();
+            this.name = course.getName();
+            this.desc = course.getDesc();
+            this.type = course.getType();
+            this.order = course.getOrder();
+            if (course.getChildren() != null && !course.getChildren().isEmpty()) {
+                course.getChildren().forEach(child -> this.children.add(new CourseBean((Course)child)));
+            }
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public Course.CourseType getType() {
+            return type;
+        }
+
+        public float getOrder() {
+            return order;
+        }
+    }
 }

@@ -1,0 +1,4 @@
+/* pages/course/course.wxss */
+.parent-course-checkbox {
+  margin: 0 20rpx;
+}

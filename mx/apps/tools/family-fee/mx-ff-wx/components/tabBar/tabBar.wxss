@@ -1,0 +1,70 @@
+/* components/tabBar/tabBar.wxss */
+
+.tabbar_box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  height: 120rpx;
+  /* border-top: 1rpx solid gray; */
+  animation: rightIn 0.1s;
+  -webkit-animation: rightIn 0.1s; /* Safari 与 Chrome */
+}
+
+.tabbar_nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 28rpx;
+  height: 100%;
+}
+
+.tabbar_icon {
+  width: 61rpx;
+  height: 61rpx;
+}
+
+@keyframes rightIn {
+  from {
+    left: 100%;
+  }
+
+  to {
+    left: 0;
+  }
+}
+
+@-webkit-keyframes rightIn {
+  from {
+    left: 100%;
+  }
+
+  to {
+    left: 0;
+  }
+}
+
+@keyframes backgroundIn {
+  from {
+    background: transparent;
+  }
+
+  to {
+    background: white;
+  }
+}
+
+@-webkit-keyframes backgroundIn {
+  from {
+    background: transparent;
+  }
+
+  to {
+    background: white;
+  }
+}

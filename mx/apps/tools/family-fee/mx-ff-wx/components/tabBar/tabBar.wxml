@@ -1,0 +1,11 @@
+<!--components/tabBar/tabBar.wxml-->
+<template name="tabBar">
+  <view class="tabbar_box" style="background-color:{{tabBar.backgroundColor}};border-top-color:{{tabBar.borderStyle}};{{tabBar.position === 'top' ? 'top:0;' : 'bottom:0;'}}">
+    <block wx:for="{{tabBar.list}}" wx:for-item="item" wx:key="index">
+      <view class="tabbar_nav" data-url='{{item.pagePath}}' bindtap="tapTabItem" style="width:{{1 / tabBar.list.length * 100}}%;color:{{item.selected ? tabBar.selectedColor : tabBar.color}}">
+        <image class="tabbar_icon" src="{{item.selected ? item.selectedIconPath : item.iconPath}}"></image>
+        <text>{{item.text}}</text>
+      </view>
+    </block>
+  </view>
+</template>

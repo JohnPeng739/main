@@ -6,14 +6,16 @@ import org.mx.StringUtils;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.tools.ffee.dal.entity.Course;
-import org.mx.tools.ffee.dal.entity.FfeeAccount;
+import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
+import org.mx.tools.ffee.repository.CourseRepository;
 import org.mx.tools.ffee.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component("courseService")
@@ -21,21 +23,40 @@ public class CourseServiceImpl implements CourseService {
     private static final Log logger = LogFactory.getLog(CourseServiceImpl.class);
 
     private GeneralDictAccessor generalDictAccessor;
+    private CourseRepository courseRepository;
 
     @Autowired
-    public CourseServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor generalDictAccessor) {
+    public CourseServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor generalDictAccessor,
+                             CourseRepository courseRepository) {
         super();
         this.generalDictAccessor = generalDictAccessor;
+        this.courseRepository = courseRepository;
     }
 
-    @Override
-    public List<Course> getAllCourses() {
-        return generalDictAccessor.list(Course.class);
+    private List<CourseBean> transform(List<Course> courses) {
+        List<CourseBean> list = new ArrayList<>();
+        if (courses != null && !courses.isEmpty()) {
+            courses.forEach(course -> list.add(new CourseBean(course)));
+        }
+        list.sort((o1, o2) -> (int)((o1.getOrder() - o2.getOrder()) * 1000));
+        return list;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Course getCourse(String courseId) {
+    public List<CourseBean> getAllCourses() {
+        return transform(courseRepository.findCourses());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<CourseBean> getAllCoursesByFamily(String familyId) {
+        return transform(courseRepository.findCoursesByFamily(familyId));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public CourseBean getCourse(String courseId) {
         if (StringUtils.isBlank(courseId)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The course's id is blank.");
@@ -44,12 +65,12 @@ public class CourseServiceImpl implements CourseService {
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        return generalDictAccessor.getById(courseId, Course.class);
+        return new CourseBean(generalDictAccessor.getById(courseId, Course.class));
     }
 
     @Transactional
     @Override
-    public Course saveCourse(Course course) {
+    public CourseBean saveCourse(Course course) {
         if (course == null) {
             if (logger.isErrorEnabled()) {
                 logger.error("The course is null.");
@@ -58,15 +79,15 @@ public class CourseServiceImpl implements CourseService {
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        FfeeAccount owner = null;
+        Family owner = null;
         if (course.getOwner() != null && !StringUtils.isBlank(course.getOwner().getId())) {
-            owner = generalDictAccessor.getById(course.getOwner().getId(), FfeeAccount.class);
+            owner = generalDictAccessor.getById(course.getOwner().getId(), Family.class);
             if (owner == null) {
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The account[%s] not found.", course.getOwner().getId()));
+                    logger.error(String.format("The family[%s] not found.", course.getOwner().getId()));
                 }
                 throw new UserInterfaceFfeeErrorException(
-                        UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
+                        UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
                 );
             }
         }
@@ -97,7 +118,7 @@ public class CourseServiceImpl implements CourseService {
                 logger.debug(String.format("Save course[%s] successfully, code: %s, name: %s, desc: %s.",
                         course.getId(), course.getCode(), course.getName(), course.getDesc()));
             }
-            return course;
+            return new CourseBean(course);
         } else {
             if (logger.isErrorEnabled()) {
                 logger.error("The course's code is blank.");
@@ -110,7 +131,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Transactional
     @Override
-    public Course deleteCourse(String courseId) {
+    public CourseBean deleteCourse(String courseId) {
         if (StringUtils.isBlank(courseId)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The course's id is blank.");
@@ -123,6 +144,6 @@ public class CourseServiceImpl implements CourseService {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Logical remove the course[%s] successfully.", courseId));
         }
-        return course;
+        return new CourseBean(course);
     }
 }

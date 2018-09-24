@@ -1,10 +1,11 @@
 /**index.wxss**/
-.view {
-  width: 100%;
+.view_mid {
+  text-align: center;
 }
 
-.rich-text {
-  line-height: 70rpx;
+.welcome {
+  width: 100vw;
+  height: 100vh;
 }
 
 .p{
@@ -12,9 +13,7 @@
   margin-top: 30rpx;
 }
 
-.user-info-block {
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  align-items: center;
+.notice {
+  font-weight: 300;
+  color: red;
 }

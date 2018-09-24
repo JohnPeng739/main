@@ -1,0 +1,54 @@
+<!--pages/spending/spending.wxml-->
+<import src="../../components/tabBar/tabBar.wxml"/>
+<template is="tabBar" data="{{tabBar}}"/>
+<view class="page__bd">
+  <form>
+    <view class="weui-cells__title">腐败项目</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_select">
+        <view class="weui-cell__hd weui-cell__hd_in-select-after">
+          <view class="unimportant weui-label">选择了</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker bindchange="bindCourseChange" value="{{courseIndex}}" range="{{courses}}">
+            <view class="weui-select weui-select_in-select-after">{{courses[courseIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">腐败金额</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__bd">
+          <input class="weui-input" type="digit" name="money" placeholder="请输入腐败金额..." />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">腐败成员</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_select">
+        <view class="weui-cell__hd weui-cell__hd_in-select-after">
+          <view class="unimportant weui-label">选择了</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker bindchange="bindMemberChange" value="{{memberIndex}}" range="{{members}}">
+            <view class="weui-select weui-select_in-select-after">{{members[memberIndex]}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">腐败描述</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <textarea name="desc" placeholder="请输入腐败描述..." class="weui-textarea" style="height: 3.3em" />
+          <view class="weui-textarea-counter">0/200</view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area btn-view_gap">
+      <button type="primary" form-type="submit" class="weui-btn btn-gap">记入家庭</button>
+      <button form-type="reset" class="weui-btn">重置</button>
+    </view>
+  </form>
+</view>

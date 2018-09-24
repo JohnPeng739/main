@@ -3,7 +3,7 @@ package org.mx.tools.ffee.service;
 import org.mx.tools.ffee.dal.entity.Family;
 
 public interface FamilyService {
-    Family createFamily(Family family, String openId);
+    Family createFamily(Family family, String openId, String ownerRole);
 
     Family modifyFamily(Family family);
 

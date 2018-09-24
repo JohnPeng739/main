@@ -1,4 +1,6 @@
 // pages/create-family/create-family.js
+import utils from '../../utils/util.js'
+
 let app = getApp()
 
 Page({
@@ -7,19 +9,31 @@ Page({
    * 页面的初始数据
    */
   data: {
-    userInfo: {},
+    account: {},
     role: 0,
     roles: ["皇帝", "皇后", "王子", "公主", "太上皇", "其他"]
   },
 
   formSubmit: function(e) {
     let form = e.detail.value
-    let family = {familyName: form.familyName, role: this.data.roles[form.role]}
-    console.log(family)
-    app.globalData.family = family
-    // TODO 保存家庭
-    wx.reLaunch({
-      url: '../index/index'
+    utils.post('families/new', {
+      openId: app.globalData.openId,
+      name: form.familyName,
+      desc: form.familyDesc,
+      // ownerRole: this.data.roles[form.role], 
+      avatarUrl: ''
+    }, res => {
+      if (res.data.errorCode === 0) {
+        app.globalData.family = res.data.data
+        wx.reLaunch({
+          url: '../index/index'
+        })
+        utils.info('创建家庭[' + res.data.data.name + ']成功！')
+      } else {
+        utils.error(res.data.errorMessage)
+      }
+    }, () => {
+      utils.error('创建家庭失败。')
     })
   },
 
@@ -40,56 +54,7 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      userInfo: app.globalData.userInfo
+      account: getApp().globalData.account
     })
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
   }
 })

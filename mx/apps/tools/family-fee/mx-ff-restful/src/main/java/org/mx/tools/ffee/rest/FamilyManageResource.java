@@ -38,7 +38,7 @@ public class FamilyManageResource {
         sessionDataStore.setCurrentUserCode(userCode);
         Family family = familyInfoVO.get();
         family.setId(null);
-        return new DataVO<>(familyService.createFamily(family, userCode));
+        return new DataVO<>(familyService.createFamily(family, userCode, familyInfoVO.getOwnerRole()));
     }
 
     @Path("families/{familyId}/join")

@@ -28,13 +28,20 @@ public class CourseManageResource {
 
     @Path("courses")
     @GET
-    public DataVO<List<Course>> getAllCourse() {
+    public DataVO<List<CourseService.CourseBean>> getAllCourse() {
         return new DataVO<>(courseService.getAllCourses());
+    }
+
+    @Path("courses/families/{familyId}")
+    @GET
+    public DataVO<List<CourseService.CourseBean>> getAllCoursesByFamily(@PathParam("familyId") String familyId) {
+        List<CourseService.CourseBean> courses = courseService.getAllCoursesByFamily(familyId);
+        return new DataVO<>(courses);
     }
 
     @Path("courses/new")
     @POST
-    public DataVO<Course> newCourse(CourseInfoVO courseInfoVO) {
+    public DataVO<CourseService.CourseBean> newCourse(CourseInfoVO courseInfoVO) {
         if (courseInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
@@ -48,8 +55,8 @@ public class CourseManageResource {
 
     @Path("courses/{courseId}")
     @PUT
-    public DataVO<Course> modifyCourse(@PathParam("courseId") String courseId,
-                                       CourseInfoVO courseInfoVO) {
+    public DataVO<CourseService.CourseBean> modifyCourse(@PathParam("courseId") String courseId,
+                                                         CourseInfoVO courseInfoVO) {
         if (courseInfoVO == null) {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
@@ -63,15 +70,15 @@ public class CourseManageResource {
 
     @Path("courses/{courseId}")
     @DELETE
-    public DataVO<Course> deleteCourse(@PathParam("courseId") String courseId,
-                                       @QueryParam("userCode") String userCode) {
+    public DataVO<CourseService.CourseBean> deleteCourse(@PathParam("courseId") String courseId,
+                                                         @QueryParam("userCode") String userCode) {
         sessionDataStore.setCurrentUserCode(userCode);
         return new DataVO<>(courseService.deleteCourse(courseId));
     }
 
     @Path("courses/{courseId}")
     @GET
-    public DataVO<Course> getCourse(@PathParam("courseId") String courseId) {
+    public DataVO<CourseService.CourseBean> getCourse(@PathParam("courseId") String courseId) {
         return new DataVO<>(courseService.getCourse(courseId));
     }
 }

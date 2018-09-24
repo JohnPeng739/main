@@ -4,7 +4,7 @@ import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.Family;
 
 public class FamilyInfoVO extends BaseParamsVO {
-    private String id, name, desc, avatarUrl;
+    private String id, name, desc, avatarUrl, ownerRole;
 
     public Family get() {
         Family family = EntityFactory.createEntity(Family.class);
@@ -45,5 +45,13 @@ public class FamilyInfoVO extends BaseParamsVO {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getOwnerRole() {
+        return ownerRole;
+    }
+
+    public void setOwnerRole(String ownerRole) {
+        this.ownerRole = ownerRole;
     }
 }

@@ -2,7 +2,9 @@ package org.mx.tools.ffee.config;
 
 import org.mx.dal.config.DalConfig;
 import org.mx.service.server.config.ServerConfig;
+import org.mx.spring.task.TaskFactory;
 import org.mx.tools.ffee.rest.*;
+import org.mx.tools.ffee.task.InitialBaseDataTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -22,6 +24,7 @@ import java.util.List;
 })
 @ComponentScan({
         "org.mx.tools.ffee.restful",
+        "org.mx.tools.ffee.task",
         "org.mx.tools.ffee.service.impl"
 })
 public class FfeeConfig {
@@ -40,5 +43,12 @@ public class FfeeConfig {
                 BudgetManageResource.class,
                 MoneyManageResource.class
         );
+    }
+
+    @Bean
+    public TaskFactory taskFactory(InitialBaseDataTask initialBaseDataTask) {
+        TaskFactory taskFactory = new TaskFactory();
+        taskFactory.addSingleAsyncTask(initialBaseDataTask);
+        return taskFactory;
     }
 }

@@ -3,7 +3,7 @@ package org.mx.tools.ffee.rest.vo;
 import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.Course;
-import org.mx.tools.ffee.dal.entity.FfeeAccount;
+import org.mx.tools.ffee.dal.entity.Family;
 
 public class CourseInfoVO extends BaseParamsVO {
     private String id, code, name, desc;
@@ -18,7 +18,7 @@ public class CourseInfoVO extends BaseParamsVO {
         course.setDesc(desc);
         course.setType(type);
         if (!StringUtils.isBlank(ownerId)) {
-            FfeeAccount owner = EntityFactory.createEntity(FfeeAccount.class);
+            Family owner = EntityFactory.createEntity(Family.class);
             owner.setId(ownerId);
             course.setOwner(owner);
         }

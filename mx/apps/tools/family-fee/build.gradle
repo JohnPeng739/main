@@ -22,7 +22,7 @@ project(':mx-ff-service') {
 }
 
 project(':mx-ff-service-hibernate') {
-  version = '1.0.0.'
+  version = '1.0.0'
   description = 'Mx Tools (Family Fee) Service for hibernate based mx-dal-hibernate &amp; mx-rbac-service-hibernate.'
 
   dependencies {

@@ -1,21 +1,24 @@
 <!--index.wxml-->
-<view class="container">
-  <view wx:if="{{!hasUserInfo}}" class="view">
-    <rich-text nodes="{{nodes}}" class="rich-text"></rich-text>
-    <button type="primary" open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="button-gap">开始使用 家庭账单 微信版</button>
+<view class="page">
+  <view wx:if="{{!hasReady}}" class="view_mid">
+    <image src="../../images/welcome.jpg" class="welcome"></image>
   </view>
-  <view wx:elif="{{!hasFamily}}" class="view">
-    <view class="user-info-block">
-      <image src="{{userInfo.avatarUrl}}" mode="cover" class="avatar-normal"></image>
-      <view style="flex-direction:row;">
+  <view wx:elif="{{!hasAccount}}" class="page__hd">
+    <view class="page__title">授权</view>
+    <rich-text nodes="{{nodes}}" class="page__desc"></rich-text>
+    <button type="primary" open-type="getUserInfo" bindgetuserinfo="getUserInfo" class="weui-btn btn_gap">开始使用 家庭账单</button>
+  </view>
+  <view wx:elif="{{!hasFamily}}" class="page__hd">
+    <view class="view_mid">
+      <image src="{{account.avatarUrl}}" mode="cover" class="avatar-big"></image>
+      <view>
         <span class="unimportant">欢迎您 </span>
-        <text class="title">{{userInfo.nickname}}</text>
+        <text class="page__title">{{account.nickname}}</text>
       </view>
     </view>
-    <button type="primary" bindtap="onCreateFamily" class="button-gap">创建家庭</button>
-    <button bindtap="onJoinFamily" class="button-gap">加入家庭</button>
-  </view>
-  <view wx:else>
-    has family
+    <view class="weui-btn btn-view_gap">
+      <button type="primary" bindtap="onCreateFamily" class="weui-btn btn_gap">创建新家</button>
+      <button bindtap="onJoinFamily" class="weui-btn">加入某家</button>
+    </view>
   </view>
 </view>

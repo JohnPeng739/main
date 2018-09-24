@@ -1,22 +1,39 @@
 <!--pages/create-family/create-family.wxml-->
-<view class="content">
+<view class="page__bd">
   <form bindsubmit="formSubmit" bindreset="formReset">
-    <view class="section">
-      <view class="title" class="row-gap">家庭名称</view>
-      <input name="familyName" placeholder="请输入家庭名称..." class="input-text" />
-    </view>
-    <view class="section">
-      <view class="title" class="row-gap">家主大人</view>
-      <view class="section-row">
-        <image src="{{userInfo.avatarUrl}}" class="avatar-small"></image>
-        <span class="content-value">{{userInfo.nickname}}</span>
-        <span class="unimportant">是我家的</span>
-        <picker name="role" value="{{role}}" range="{{roles}}" bindchange="bindRoleChange">
-          <span class="combox">{{roles[role]}}</span>!
-        </picker>
+    <view class="weui-cells__title">家庭名称</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__bd">
+          <input name="familyName" placeholder="请输入家庭名称..." />
+        </view>
       </view>
     </view>
-    <button type="primary" form-type="submit" class="button-gap">创建家庭</button>
-    <button form-type="reset" class="button-gap">重置</button>
+    <view class="weui-cells__title">家庭描述</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <textarea name="familyName" placeholder="请输入家庭描述..." class="weui-textarea" style="height: 3.3em" />
+          <view class="weui-textarea-counter">0/200</view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">家主大人</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_select">
+        <view class="weui-cell__hd weui-cell__hd_in-select-after">
+          <view class="weui-label">咱家的</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker name="role" value="{{role}}" range="{{roles}}" bindchange="bindRoleChange">
+            <view class="weui-select weui-select_in-select-after">{{roles[role]}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+    <view class="weui-btn-area btn-view_gap">
+      <button type="primary" form-type="submit" class="weui-btn btn-gap">创建家庭</button>
+      <button form-type="reset" class="weui-btn">重置</button>
+    </view>
   </form>
 </view>

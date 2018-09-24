@@ -107,7 +107,9 @@ public class AccountServiceImpl implements AccountService {
         Family family = null;
         if (account != null) {
             String familyId = familyRepository.findFamilyIdByOpenId(openId);
-            family = generalAccessor.getById(familyId, Family.class);
+            if (!StringUtils.isBlank(familyId)) {
+                family = generalAccessor.getById(familyId, Family.class);
+            }
         }
         return new AccountSummary(account, family);
     }
