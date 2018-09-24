@@ -21,6 +21,7 @@ public interface CourseService {
         private Course.CourseType type;
         private float order;
         private List<CourseBean> children = new ArrayList<>();
+        private boolean isPublic = true;
 
         @SuppressWarnings("unchecked")
         public CourseBean(Course course) {
@@ -34,6 +35,7 @@ public interface CourseService {
             if (course.getChildren() != null && !course.getChildren().isEmpty()) {
                 course.getChildren().forEach(child -> this.children.add(new CourseBean((Course)child)));
             }
+            this.isPublic = (course.getOwner() == null);
         }
 
         public String getId() {
@@ -58,6 +60,14 @@ public interface CourseService {
 
         public float getOrder() {
             return order;
+        }
+
+        public List<CourseBean> getChildren() {
+            return children;
+        }
+
+        public boolean isPublic() {
+            return isPublic;
         }
     }
 }
