@@ -21,6 +21,8 @@ ext.versions = [
   jgit		: '4.11.0.201803080745-r',
   elastic	: '6.2.3',
 
+  zxing		: '3.3.3',
+
   activiti	: '6.0.0',
   storm		: '1.1.1',
   activemq	: '5.15.2',
@@ -98,6 +100,9 @@ ext.libs = [
 
   "elasticsearch-rest"	: "org.elasticsearch.client:elasticsearch-rest-high-level-client:${versions.elastic}",
   "elasticsearch-thrift": "org.elasticsearch.client:transport:${versions.elastic}",
+
+  "zxing-core"		: "com.google.zxing:core:${versions.zxing}",
+  "zxing-javase"	: "com.google.zxing:javase:${versions.zxing}",
 
   "java-websocket"	: "org.java-websocket:Java-WebSocket:${versions.'java-websocket'}",
 

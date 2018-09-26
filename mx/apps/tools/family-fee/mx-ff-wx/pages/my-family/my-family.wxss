@@ -1,1 +1,6 @@
 /* pages/my-family/my-family.wxss */
+.qr-code {
+  width: 300rpx;
+  height: 300rpx;
+  border: 1px solid red;
+}

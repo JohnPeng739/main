@@ -43,6 +43,10 @@ public class UserInterfaceFfeeErrorException extends UserInterfaceException {
 
         FAMILY_MEMBER_SAVE_FAIL("保存家庭成员信息失败。"),
 
+        QRCODE_ENCODE_FAIL("二维码编码发生错误。"),
+        QRCODE_DECODE_FAIL("二维码解码发生错误。"),
+        QRCODE_IO_FAIL("二维码读写发生错误。"),
+
         FFEE_OTHER_FAIL("未知家庭账簿错误。");
 
         public static final int BASE_ORDINAL = 10000;

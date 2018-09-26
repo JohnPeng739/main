@@ -11,7 +11,8 @@ Page({
   data: {
     family: {},
     owner: {},
-    members: []
+    members: [],
+    qrCodeUrl: ''
   },
   tapTabItem: function(e) {
     utils.switchTabBar(app.globalData.tabBar.list, this.route, e)
@@ -22,8 +23,10 @@ Page({
   onLoad: function(options) {
     let family = app.globalData.family
     this.setData({
-      family: family
+      family: family,
+      qrCodeUrl: 'https://mx-john.cn/rest/v1/families/' + family.id + '/qrcode'
     })
+    console.log(this.data)
     wx.setNavigationBarTitle({
       title: family.name,
     })

@@ -28,8 +28,7 @@ Page({
       wx.redirectTo({
         url: '/pages/my-family/my-family',
       })
-      // TODO 暂时关闭后台访问科目
-      /*
+      // 暂时关闭后台访问科目
       utils.get('courses/families/' + family.id, {userCode: app.globalData.openId}, res => {
         if (res.data.errorCode === 0) {
           app.globalData.courses = res.data.data
@@ -37,7 +36,6 @@ Page({
           utils.error(res.data.errorMessage)
         }
       })
-      */
     }
     if (account) {
       // do nothing

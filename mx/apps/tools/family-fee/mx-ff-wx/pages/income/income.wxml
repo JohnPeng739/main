@@ -5,14 +5,12 @@
   <form>
     <view class="weui-cells__title">创收项目</view>
     <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_select">
+      <view class="weui-cell weui-cell_select view-wrap" style="height: 44px;">
         <view class="weui-cell__hd weui-cell__hd_in-select-after">
           <view class="unimportant weui-label">选择了</view>
         </view>
         <view class="weui-cell__bd">
-          <picker bindchange="bindCourseChange" value="{{courseIndex}}" range="{{coures}}">
-            <view class="weui-select weui-select_in-select-after">{{courses[courseIndex]}}</view>
-          </picker>
+          <multi-selector selector-index="{{courseIndex}}" selector-data="{{courses}}" columns="{{3}}" bindchange="bindCourseChange" />
         </view>
       </view>
     </view>

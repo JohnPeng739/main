@@ -1,0 +1,4 @@
+.selector-text {
+  width: 220px;
+  padding: 10rpx;
+}

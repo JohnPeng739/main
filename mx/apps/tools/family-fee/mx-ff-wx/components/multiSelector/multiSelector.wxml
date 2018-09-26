@@ -1,0 +1,9 @@
+<!--components/multiSelector/multiSelector.wxml-->
+<picker mode="multiSelector" bindchange="bindSelectorChange" bindcolumnchange="bindColumnChange" value="{{selectorIndex}}" range="{{dataArray}}" disabled="{{disabled}}">
+  <view wx:if="{{!disabled}}" class="selector-text">
+    {{dataArray[0][selectorIndex[0]]}} {{dataArray[1] && dataArray[1].length > 0 ? ('> ' + dataArray[1][selectorIndex[1]]) : ''}} {{dataArray[2] && dataArray[2].length > 0 ? ('> ' + dataArray[2][selectorIndex[2]]) : ''}}
+  </view>
+  <view wx:else class="selector-text unimportant">
+    {{dataArray[0][selectorIndex[0]]}} {{dataArray[1] && dataArray[1].length > 0 ? ('> ' + dataArray[1][selectorIndex[1]]) : ''}} {{dataArray[2] && dataArray[2].length > 0 ? ('> ' + dataArray[2][selectorIndex[2]]) : ''}}
+  </view>
+</picker>

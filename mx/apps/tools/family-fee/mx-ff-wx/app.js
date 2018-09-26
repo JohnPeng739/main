@@ -6,119 +6,7 @@ App({
     openId: null,
     family: null,
     account: null,
-    courses: [{
-      code: 'gz',
-      name: '工资',
-      type: 'INCOME',
-      desc: '',
-      isPublic: true,
-      children: [{
-        code: 'gz',
-        name: '工资',
-        type: 'INCOME',
-        desc: '',
-        isPublic: true
-      }, {
-        code: 'jj',
-        name: '奖金',
-        type: 'INCOME',
-        desc: '',
-        isPublic: true,
-        children: [{
-          code: 'yd',
-          name: '月度',
-          type: 'INCOME',
-          desc: '',
-          isPublic: true
-        }, {
-          code: 'jd',
-          name: '季度',
-          type: 'INCOME',
-          desc: '',
-          isPublic: true
-        }, {
-          code: 'nd',
-          name: '年终',
-          type: 'INCOME',
-          desc: '',
-          isPublic: true
-        }]
-      }, {
-        code: 'bt',
-        name: '补贴',
-        type: 'INCOME',
-        desc: '',
-        isPublic: true
-      }, {
-        code: 'qt',
-        name: '其他',
-        type: '',
-        desc: '',
-        isPublic: true
-      }]
-    }, {
-      code: 'fz',
-      name: '房租',
-      type: 'INCOME',
-      desc: '',
-      isPublic: true
-    }, {
-      code: 'trz',
-      name: '投融资',
-      type: 'INCOME',
-      desc: '',
-      isPublic: true
-    }, {
-      code: 'qt',
-      name: '其他',
-      type: '',
-      desc: '',
-      isPublic: true
-    }, {
-      code: 'sc',
-      name: '私车',
-      type: 'SPENDING',
-      desc: '',
-      isPublic: true,
-      children: [{
-        code: 'sj',
-        name: '税金',
-        type: 'SPENDING',
-        desc: '',
-        isPublic: true,
-      }, {
-        code: 'yf',
-        name: '油费',
-        type: 'SPENDING',
-        desc: '',
-        isPublic: true,
-      }]
-    }, {
-      code: 'rckx',
-      name: '日常开销',
-      type: 'SPENDING',
-      desc: '',
-      isPublic: true,
-      children: [{
-        code: 'sdmq',
-        name: '水电煤气',
-        type: 'SPENDING',
-        desc: '',
-        isPublic: true,
-      }, {
-        code: 'shf',
-        name: '生活费',
-        type: 'SPENDING',
-        desc: '',
-        isPublic: true,
-      }]
-    }, {
-      code: 'ly',
-      name: '旅游',
-      type: 'SPENDING',
-      desc: '',
-      isPublic: true
-    }],
+    courses: [],
     tabBar: {
       color: "#999999",
       selectedColor: "#0ABA07",
@@ -192,7 +80,6 @@ App({
         }, decodeRes => {
           let openId = decodeRes.data.openid
           me.globalData.openId = openId
-          console.log(openId)
         }, () => {
           utils.error('使用login代码解码失败。')
         })

@@ -1,5 +1,6 @@
 package org.mx.tools.ffee.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
@@ -12,10 +13,15 @@ import org.mx.tools.ffee.dal.entity.FfeeAccount;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.repository.FamilyRepository;
 import org.mx.tools.ffee.service.FamilyService;
+import org.mx.tools.ffee.utils.QrCodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Component("familyService")
 public class FamilyServiceImpl implements FamilyService {
@@ -197,6 +203,36 @@ public class FamilyServiceImpl implements FamilyService {
             );
         } else {
             return getFamily(familyId);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public File getFamilyQrCode(String familyId) {
+        Family family = getFamily(familyId);
+        if (family == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The family[%s] not found.", familyId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
+        }
+        JSONObject json = new JSONObject();
+        json.put("id", family.getId());
+        json.put("name", family.getName());
+        try {
+            File tmpFile = Files.createTempFile("qrcode", "png").toFile();
+            QrCodeUtils.createQrCode(300, 300, json.toJSONString(), tmpFile.getAbsolutePath());
+            tmpFile.deleteOnExit();
+            return tmpFile;
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Create a temple file fail.", ex);
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.QRCODE_IO_FAIL
+            );
         }
     }
 }

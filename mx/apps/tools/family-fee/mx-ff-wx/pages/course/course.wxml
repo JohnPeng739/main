@@ -19,19 +19,12 @@
       <switch type="checkbox" checked="{{enableParentCourse}}" bindchange="bindEnableParentCourseChange" class="parent-course-checkbox"></switch>
     </view>
     <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell weui-cell_select">
+      <view class="weui-cell weui-cell_select view-wrap" style="height: 44px;">
         <view class="weui-cell__hd weui-cell__hd_in-select-after">
           <view class="unimportant weui-label">选择了</view>
         </view>
         <view class="weui-cell__bd">
-          <picker mode="multiSelector" bindchange="bindCourseChange" bindcolumnchange="bindColumnChange" value="{{courseIndex}}" range="{{courses}}" disabled="{{!enableParentCourse}}">
-            <view wx:if="{{enableParentCourse}}" class="weui-select weui-select_in-select-after">
-              {{courses[0][courseIndex[0]]}} {{courses[1] && courses[1].length > 0 ? ('> ' + courses[1][courseIndex[1]]) : ''}} {{courses[2] && courses[2].length > 0 ? ('> ' + courses[2][courseIndex[2]]) : ''}}
-            </view>
-            <view wx:else class="weui-select weui-select_in-select-after unimportant">
-              {{courses[0][courseIndex[0]]}} {{courses[1] && courses[1].length > 0 ? ('> ' + courses[1][courseIndex[1]]) : ''}} {{courses[2] && courses[2].length > 0 ? ('> ' + courses[2][courseIndex[2]]) : ''}}
-            </view>
-          </picker>
+          <multi-selector selector-index="{{courseIndex}}" selector-data="{{courses}}" columns="{{3}}" disabled="{{!enableParentCourse}}" bindchange="bindCourseChange" />
         </view>
       </view>
     </view>

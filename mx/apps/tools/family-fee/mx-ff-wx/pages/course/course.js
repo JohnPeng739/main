@@ -7,7 +7,6 @@ Page({
    * 页面的初始数据
    */
   data: {
-    allCourses: [],
     types: ['腐败', '创收'],
     typeIndex: 0,
     enableParentCourse: false,
@@ -18,7 +17,7 @@ Page({
     this.setData({
       typeIndex: e.detail.value
     })
-    this.initData(0, 0)
+    this.initData()
   },
   bindEnableParentCourseChange: function(e) {
     this.setData({
@@ -26,20 +25,8 @@ Page({
     })
   },
   bindCourseChange: function(e) {
-    this.setData({
-      courseIndex: e.detail.value
-    })
-  },
-  bindColumnChange: function(e) {
-    let {
-      column,
-      value
-    } = e.detail
-    let {
-      courseIndex
-    } = this.data
-    courseIndex[column] = value
-    this.initData(column, value)
+    let select = e.detail.value
+    console.log(select)
   },
   filterCourse: function(courses, filterType) {
     let result = []
@@ -47,14 +34,16 @@ Page({
       if (course.type !== filterType) {
         if (course.children && course.children.length > 0) {
           let children = this.filterCourse(course.children)
+          children.sort((o1, o2) => o1.order - o2.order)
           course.children = children
         }
         result.push(course)
       }
     })
+    result.sort((o1, o2) => o1.order - o2.order)
     return result
   },
-  initData: function(column, value) {
+  initData: function() {
     let allCourses = app.globalData.courses
     let {
       typeIndex,
@@ -63,28 +52,17 @@ Page({
     } = this.data
     let filterType = ('' + typeIndex !== '1' ? 'INCOME' : 'SPENDING')
     allCourses = this.filterCourse(allCourses, filterType)
-    let list = allCourses
-    let item = null
-    let result = []
-    // 最多支持3级科目
-    for (let index = 0; index <= 2; index++) {
-      let col = []
-      if (list && list.length > 0) {
-        list.forEach(course => col.push(course.name))
-        item = list[courseIndex[index]]
-        list = item.children
-      }
-      result.push(col)
-    }
     this.setData({
-      courses: result
+      courses: allCourses
     })
   },
   onLoad: function(e) {
-    let {family} = app.globalData
+    let {
+      family
+    } = app.globalData
     wx.setNavigationBarTitle({
       title: family.name + ' > 项目设置',
     })
-    this.initData(0, 0)
+    this.initData()
   }
 })

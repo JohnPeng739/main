@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.File;
 
 @Path("rest/v1")
 @Produces(MediaType.APPLICATION_JSON)
@@ -74,5 +76,21 @@ public class FamilyManageResource {
     @GET
     public DataVO<Family> getFamily(@PathParam("familyId") String familyId) {
         return new DataVO<>(familyService.getFamily(familyId));
+    }
+
+    @Path("families/{familyId}/qrcode")
+    @GET
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.MULTIPART_FORM_DATA)
+    public Response getFamilyQrCode(@PathParam("familyId") String familyId) {
+        File qrCodeFile = familyService.getFamilyQrCode(familyId);
+        if (qrCodeFile != null) {
+            return Response.ok(qrCodeFile)
+                    .header("Content-disposition", "attachment;filename=qrcode.png")
+                    .header("Cache-Control", "no-cache")
+                    .build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }
