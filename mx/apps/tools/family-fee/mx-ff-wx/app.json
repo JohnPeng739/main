@@ -5,7 +5,9 @@
     "pages/my-family/my-family",
     "pages/income/income",
     "pages/spending/spending",
-    "pages/course/course"
+    "pages/course/course",
+    "pages/setting/setting",
+    "pages/budget/budget"
   ],
   "window": {
     "backgroundTextStyle": "light",

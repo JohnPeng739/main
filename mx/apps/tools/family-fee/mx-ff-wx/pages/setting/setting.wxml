@@ -1,0 +1,98 @@
+<!--pages/setting/setting.wxml-->
+<view class="page__bd">
+  <form bindsubmit="formSubmit" bindreset="formReset">
+    <scroll-view scroll-y="{{true}}" class="scroll-height">
+      <view class="weui-cells__title">昵称</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd" style="width:90vw;">
+            <input class="weui-input" name="nickname" value="{{account.nickname}}" placeholder="请输入昵称..." />
+          </view>
+          <view class="weui-cell_bd weui-cell__bd_in-input-after">
+            <image bindtap="bindAvatarChange" src="{{account.avatarUrl}}" alt="头像" class="avatar-small align-right"></image>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">性别</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_radio">
+          <view class="weui-cell__bd">
+            <radio-group bindchange="genderChange" value="{{account.gender}}">
+              <radio value="MALE" checked="{{gender === 'MALE'}}" class="radio-item">男</radio>
+              <radio value="FEMALE" checked="{{gender === 'FEMALE'}}" class="radio-item">女</radio>
+              <radio value="NA" checked="{{gender === 'NA'}}" class="radio-item">未知</radio>
+            </radio-group>
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">手机</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <input class="weui-input" type="number" name="mobile" value="{{account.mobile}}" placeholder="请输入手机号码..." />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">邮件</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <input class="weui-input" name="email" value="{{account.email}}" placeholder="请输入电子邮件..." />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">微信</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <input class="weui-input" name="wx" value="{{account.wx}}" placeholder="请输入微信..." />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">QQ</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <input class="weui-input" name="qq" value="{{account.qq}}" placeholder="请输入QQ..." />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">微博</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <input class="weui-input" name="wb" value="{{account.wb}}" placeholder="请输入微博..." />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">国家/地区</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <input class="weui-input" name="country" value="{{account.country}}" placeholder="请输入国家和地区..." />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">省份</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <input class="weui-input" name="province" value="{{account.province}}" placeholder="请输入省份..." />
+          </view>
+        </view>
+      </view>
+      <view class="weui-cells__title">城市</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+            <input class="weui-input" name="city" value="{{account.city}}" placeholder="请输入城市..." />
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="weui-btn-area btn-view_gap">
+      <button type="primary" form-type="submit" class="weui-btn btn-gap">保存</button>
+      <button form-type="reset" class="weui-btn">重置</button>
+    </view>
+  </form>
+</view>

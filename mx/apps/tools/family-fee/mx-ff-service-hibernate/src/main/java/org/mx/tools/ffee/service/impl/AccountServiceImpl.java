@@ -11,11 +11,16 @@ import org.mx.tools.ffee.dal.entity.FfeeAccount;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.repository.FamilyRepository;
 import org.mx.tools.ffee.service.AccountService;
+import org.mx.tools.ffee.service.FileTransportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Component("accountService")
@@ -24,13 +29,16 @@ public class AccountServiceImpl implements AccountService {
 
     private GeneralAccessor generalAccessor;
     private FamilyRepository familyRepository;
+    private FileTransportService fileTransportService;
 
     @Autowired
     public AccountServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor,
-                              FamilyRepository familyRepository) {
+                              FamilyRepository familyRepository,
+                              FileTransportService fileTransportService) {
         super();
         this.generalAccessor = generalAccessor;
         this.familyRepository = familyRepository;
+        this.fileTransportService = fileTransportService;
     }
 
     @Transactional
@@ -124,5 +132,41 @@ public class AccountServiceImpl implements AccountService {
             );
         }
         return generalAccessor.find(GeneralAccessor.ConditionTuple.eq("account", account), AccessLog.class);
+    }
+
+    @Transactional
+    @Override
+    public String changeAccountAvatar(String accountId, InputStream in) {
+        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
+        if (account == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The account[%s] not found.", accountId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
+        }
+        String root = System.getProperty("user.dir");
+        Path path = Paths.get(String.format("%s/account/avatar-%s.png", root, accountId));
+        String filePath = fileTransportService.uploadFile(path.toString(), in);
+        account.setAvatarUrl(filePath.substring(root.length()));
+        account = generalAccessor.save(account);
+        return account.getAvatarUrl();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public File getAccountAvatar(String accountId) {
+        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
+        if (account == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The account[%s] not found.", accountId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
+        }
+        Path path = Paths.get(String.format("%s/account/avatar-%s.png", System.getProperty("user.dir"), accountId));
+        return fileTransportService.downloadFile(path.toString());
     }
 }

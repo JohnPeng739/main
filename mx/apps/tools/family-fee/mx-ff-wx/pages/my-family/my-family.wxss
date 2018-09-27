@@ -2,5 +2,6 @@
 .qr-code {
   width: 300rpx;
   height: 300rpx;
-  border: 1px solid red;
+  margin: 10rpx auto;
+  border: 1rpx solid red;
 }

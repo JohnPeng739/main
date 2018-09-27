@@ -43,6 +43,10 @@ public class UserInterfaceFfeeErrorException extends UserInterfaceException {
 
         FAMILY_MEMBER_SAVE_FAIL("保存家庭成员信息失败。"),
 
+        PATH_DELETE_FAIL("删除指定的目录/文件失败。"),
+        PATH_CREATE_FAIL("创建指定的文件失败。"),
+        WRITE_FILE_FAIL("文件写入失败。"),
+
         QRCODE_ENCODE_FAIL("二维码编码发生错误。"),
         QRCODE_DECODE_FAIL("二维码解码发生错误。"),
         QRCODE_IO_FAIL("二维码读写发生错误。"),

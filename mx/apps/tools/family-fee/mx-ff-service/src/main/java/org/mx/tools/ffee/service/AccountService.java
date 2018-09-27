@@ -4,6 +4,8 @@ import org.mx.tools.ffee.dal.entity.AccessLog;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 public interface AccountService {
@@ -16,6 +18,10 @@ public interface AccountService {
     AccountSummary getAccountSummaryByOpenId(String openId);
 
     List<AccessLog> getLogsByAccount(String accountId);
+
+    String changeAccountAvatar(String accountId, InputStream in);
+
+    File getAccountAvatar(String accountId);
 
     class AccountSummary {
         private FfeeAccount account;

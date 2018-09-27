@@ -1,0 +1,4 @@
+/* pages/setting/setting.wxss */
+.scroll-height {
+  height: 70vh;
+}

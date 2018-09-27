@@ -1,5 +1,6 @@
 package org.mx.tools.ffee.rest;
 
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.rest.vo.DataVO;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 @Path("rest/v1")
@@ -71,5 +75,30 @@ public class AccountManageResource {
     @GET
     public DataVO<List<AccessLog>> getLogsByAccount(@PathParam("accountId") String accountId) {
         return new DataVO<>(accountService.getLogsByAccount(accountId));
+    }
+
+    @Path("accounts/{accountId}/avatar")
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public DataVO<String> changeFamilyAvatar(@FormDataParam("file") InputStream in,
+                                             @PathParam("accountId") String accountId) {
+        return new DataVO<>(accountService.changeAccountAvatar(accountId, in));
+    }
+
+    @Path("accounts/{accountId}/avatar")
+    @GET
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.MULTIPART_FORM_DATA)
+    public Response getFamilyAvatar(@PathParam("accountId") String accountId) {
+        File avatarFile = accountService.getAccountAvatar(accountId);
+        if (avatarFile != null) {
+            return Response.ok(avatarFile)
+                    .header("Content-disposition", "attachment;filename=account-avatar.png")
+                    .header("Cache-Control", "no-cache")
+                    .build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }

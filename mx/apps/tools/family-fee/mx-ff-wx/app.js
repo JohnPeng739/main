@@ -32,8 +32,8 @@ App({
         selected: false
       }, {
         tabFunc: function() {
-          let items = ['编项目', '做预算']
-          let pages = ['/pages/course/course', '/pages/budget/budget']
+          let items = ['项目', '预算', '设置']
+          let pages = ['/pages/course/course', '/pages/budget/budget', '/pages/setting/setting']
           wx.showActionSheet({
             itemList: items,
             success: function(res) {

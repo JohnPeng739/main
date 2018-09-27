@@ -1,11 +1,11 @@
 <!--pages/my-family/my-family.wxml-->
-<import src="../../components/tabBar/tabBar.wxml"/>
-<template is="tabBar" data="{{tabBar}}"/>
+<import src="../../components/tabBar/tabBar.wxml" />
+<template is="tabBar" data="{{tabBar}}" />
 <view class="page__bd">
   <view class="page__hd">
-    <image src="{{qrCodeUrl}}" class="qr-code"></image>
-  </view>
-  <view class="page__hd">
+    <view class="view__wrap">
+      <image src="{{qrCodeUrl}}" class="qr-code"></image>
+    </view>
     <view class="page__title view__gap">家主大人</view>
     <view class="">
       <image src="{{owner.ffeeAccount.avatarUrl}}" class="avatar-small"></image>
