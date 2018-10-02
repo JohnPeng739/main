@@ -532,23 +532,13 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         return request;
     }
 
-    /**
-     * {@inheritDoc} <br>
-     *
-     * @see ElasticUtil#search(GeneralAccessor.ConditionGroup, GeneralAccessor.RecordOrderGroup, List, Pagination)
-     */
     @SuppressWarnings("unchecked")
-    @Override
-    public <T extends Base> List<T> search(GeneralAccessor.ConditionGroup group,
-                                           GeneralAccessor.RecordOrderGroup orderGroup,
-                                           List<Class<? extends Base>> classes,
-                                           Pagination pagination) {
-        SearchRequest request = createSearchRequest(group, orderGroup, classes, pagination);
+    public <T extends Base> List<T> search(SearchRequest searchRequest, Pagination pagination) {
         try {
             // 设置滚动操作
             Scroll scroll = new Scroll(TimeValue.timeValueHours(1L));
-            request.scroll(scroll);
-            SearchResponse response = client.search(request);
+            searchRequest.scroll(scroll);
+            SearchResponse response = client.search(searchRequest);
             String scrollId = response.getScrollId();
             if (pagination != null) {
                 pagination.setTotal((int) response.getHits().getTotalHits());
@@ -591,6 +581,20 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         }
     }
 
+    /**
+     * {@inheritDoc} <br>
+     *
+     * @see ElasticUtil#search(GeneralAccessor.ConditionGroup, GeneralAccessor.RecordOrderGroup, List, Pagination)
+     */
+    @Override
+    public <T extends Base> List<T> search(GeneralAccessor.ConditionGroup group,
+                                           GeneralAccessor.RecordOrderGroup orderGroup,
+                                           List<Class<? extends Base>> classes,
+                                           Pagination pagination) {
+        SearchRequest request = createSearchRequest(group, orderGroup, classes, pagination);
+        return search(request, pagination);
+    }
+
     @Override
     public <T extends Base> long count(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes) {
         SearchRequest request = createSearchRequest(group, null, classes, null);
@@ -612,37 +616,17 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     /**
      * 执行一次空间查询
      *
-     * @param builder 查询源构建器
-     * @param indices 索引列表
-     * @param <T>     泛型定义
+     * @param builder    查询源构建器
+     * @param pagination 分页对象
+     * @param indices    索引列表
+     * @param <T>        泛型定义
      * @return 符合条件的实体列表
      */
-    @SuppressWarnings("unchecked")
-    private <T extends ElasticGeoPointBaseEntity> List<T> geoQuery(SearchSourceBuilder builder, String... indices) {
+    private <T extends ElasticGeoPointBaseEntity> List<T> geoQuery(SearchSourceBuilder builder, Pagination pagination,
+                                                                   String... indices) {
         SearchRequest request = new SearchRequest(indices);
         request.source(builder);
-        try {
-            SearchResponse response = client.search(request);
-            List<T> list = new ArrayList<>();
-            if (response.status() == RestStatus.OK) {
-                response.getHits().forEach(hit -> {
-                    T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) getIndexClass(hit.getIndex()));
-                    if (hit.getSortValues() != null && hit.getSortValues().length > 0) {
-                        t.setDistance((double) hit.getSortValues()[0]);
-                    }
-                    if (!Float.isNaN(hit.getScore())) {
-                        t.setScore(hit.getScore());
-                    }
-                    list.add(t);
-                });
-            }
-            return list;
-        } catch (Exception ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Search fail from elastic.", ex);
-            }
-            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
-        }
+        return search(request, pagination);
     }
 
     /**
@@ -654,6 +638,19 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     public <T extends ElasticGeoPointBaseEntity> List<T> geoNearBy(GeoPointLocation centerPoint, double distanceMeters,
                                                                    GeneralAccessor.ConditionGroup group,
                                                                    List<Class<? extends Base>> classes) {
+        return geoNearBy(centerPoint, distanceMeters, group, classes, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#geoNearBy(GeoPointLocation, double, GeneralAccessor.ConditionGroup, List, Pagination)
+     */
+    @Override
+    public <T extends ElasticGeoPointBaseEntity> List<T> geoNearBy(GeoPointLocation centerPoint, double distanceMeters,
+                                                                   GeneralAccessor.ConditionGroup group,
+                                                                   List<Class<? extends Base>> classes,
+                                                                   Pagination pagination) {
         if (centerPoint == null) {
             if (logger.isErrorEnabled()) {
                 logger.error("The center point is null.");
@@ -674,11 +671,15 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
                 .geoDistance(GeoDistance.ARC);
         ((BoolQueryBuilder) boolBuilder).must(geoBuilder);
         builder.query(boolBuilder);
+        if (pagination != null) {
+            builder.from((pagination.getPage() - 1) * pagination.getSize());
+            builder.size(pagination.getSize());
+        }
         builder.sort(new GeoDistanceSortBuilder("location", centerPoint.getLat(), centerPoint.getLon())
                 .unit(DistanceUnit.METERS)
                 .order(SortOrder.ASC)
                 .geoDistance(GeoDistance.ARC));
-        return geoQuery(builder, getIndices(classes));
+        return geoQuery(builder, pagination, getIndices(classes));
     }
 
     /**
@@ -691,6 +692,20 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
                                                                           List<GeoPointLocation> polygon,
                                                                           GeneralAccessor.ConditionGroup group,
                                                                           List<Class<? extends Base>> classes) {
+        return geoWithInPolygon(centerPoint, polygon, group, classes, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#geoWithInPolygon(GeoPointLocation, List, GeneralAccessor.ConditionGroup, List, Pagination)
+     */
+    @Override
+    public <T extends ElasticGeoPointBaseEntity> List<T> geoWithInPolygon(GeoPointLocation centerPoint,
+                                                                          List<GeoPointLocation> polygon,
+                                                                          GeneralAccessor.ConditionGroup group,
+                                                                          List<Class<? extends Base>> classes,
+                                                                          Pagination pagination) {
         if (polygon == null || polygon.size() < 3) {
             if (logger.isErrorEnabled()) {
                 logger.error("The polygon's point is less than 3.");
@@ -710,13 +725,17 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         QueryBuilder geoBuilder = QueryBuilders.geoPolygonQuery("location", points);
         ((BoolQueryBuilder) boolBuilder).must(geoBuilder);
         builder.query(boolBuilder);
+        if (pagination != null) {
+            builder.from((pagination.getPage() - 1) * pagination.getSize());
+            builder.size(pagination.getSize());
+        }
         if (centerPoint != null) {
             builder.sort(new GeoDistanceSortBuilder("location", centerPoint.getLat(), centerPoint.getLon())
                     .unit(DistanceUnit.METERS)
                     .order(SortOrder.ASC)
                     .geoDistance(GeoDistance.ARC));
         }
-        return geoQuery(builder, getIndices(classes));
+        return geoQuery(builder, pagination, getIndices(classes));
     }
 
     /**

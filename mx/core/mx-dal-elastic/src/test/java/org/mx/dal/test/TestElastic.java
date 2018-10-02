@@ -73,10 +73,10 @@ public class TestElastic {
             Thread.sleep(1000);
 
             List<WeatherEntityElastic> list = elasticUtil.geoNearBy(new GeoPointLocation(1, 1),
-                    200 * 1000, Collections.singletonList(WeatherEntityElastic.class));
+                    200 * 1000, null, Collections.singletonList(WeatherEntityElastic.class));
             assertEquals(1, list.size());
             list = elasticUtil.geoNearBy(new GeoPointLocation(1, 1),
-                    5000 * 1000, Collections.singletonList(WeatherEntityElastic.class));
+                    5000 * 1000, null, Collections.singletonList(WeatherEntityElastic.class));
             assertEquals(2, list.size());
 
             list = elasticUtil.geoWithInPolygon(null, Arrays.asList(
@@ -84,14 +84,14 @@ public class TestElastic {
                     new GeoPointLocation(20, 0),
                     new GeoPointLocation(20, 30),
                     new GeoPointLocation(0, 30)
-            ), Collections.singletonList(WeatherEntityElastic.class));
+            ), null, Collections.singletonList(WeatherEntityElastic.class));
             assertEquals(1, list.size());
             list = elasticUtil.geoWithInPolygon(new GeoPointLocation(10, 25), Arrays.asList(
                     new GeoPointLocation(0,0),
                     new GeoPointLocation(20, 0),
                     new GeoPointLocation(20, 50),
                     new GeoPointLocation(0, 50)
-            ), Collections.singletonList(WeatherEntityElastic.class));
+            ), null, Collections.singletonList(WeatherEntityElastic.class));
             assertEquals(2, list.size());
         } catch (Exception ex) {
             ex.printStackTrace();
