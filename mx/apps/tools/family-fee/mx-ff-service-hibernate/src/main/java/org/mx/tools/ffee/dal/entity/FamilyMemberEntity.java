@@ -20,7 +20,7 @@ public class FamilyMemberEntity extends BaseEntity implements FamilyMember {
     private FfeeAccount account;
     @Column(name = "IS_OWNER")
     private boolean isOwner;
-    @ManyToOne(targetEntity = FamilyEntity.class, cascade = {CascadeType.REFRESH})
+    @ManyToOne(targetEntity = FamilyEntity.class, cascade = {CascadeType.ALL})
     @JoinColumn(name = "FAMILY_ID")
     private Family family;
 

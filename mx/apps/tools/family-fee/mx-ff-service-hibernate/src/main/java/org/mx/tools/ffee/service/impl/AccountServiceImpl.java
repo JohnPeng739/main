@@ -3,6 +3,7 @@ package org.mx.tools.ffee.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
+import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.tools.ffee.dal.entity.AccessLog;
@@ -12,6 +13,7 @@ import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.repository.FamilyRepository;
 import org.mx.tools.ffee.service.AccountService;
 import org.mx.tools.ffee.service.FileTransportService;
+import org.mx.tools.ffee.service.bean.AccountInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -43,54 +45,89 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public FfeeAccount registry(FfeeAccount account) {
+    public AccountSummary registry(AccountInfoBean accountInfoBean) {
+        if (accountInfoBean == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The account info is null.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
         // 通过微信的openId和注册Mobile号码判定是否已经有注册过
-        if (!StringUtils.isBlank(account.getOpenId()) || !StringUtils.isBlank(account.getMobile())) {
+        String openId = accountInfoBean.getOpenId(),
+                mobile = accountInfoBean.getMobile();
+        FfeeAccount saved = null;
+        if (!StringUtils.isBlank(openId) || !StringUtils.isBlank(mobile)) {
             FfeeAccount checked = generalAccessor.findOne(GeneralAccessor.ConditionGroup.or(
-                    GeneralAccessor.ConditionTuple.eq("openId", account.getOpenId()),
-                    GeneralAccessor.ConditionTuple.eq("mobile", account.getMobile())
+                    GeneralAccessor.ConditionTuple.eq("openId", openId),
+                    GeneralAccessor.ConditionTuple.eq("mobile", mobile)
             ), FfeeAccount.class);
             if (checked != null) {
                 if (logger.isWarnEnabled()) {
-                    logger.warn(String.format("The account has registry, open id: %s, mobile: %s.",
-                            account.getOpenId(), account.getMobile()));
+                    logger.warn(String.format("The account has registry, open id: %s, mobile: %s.", openId, mobile));
                 }
-                checked.setNickname(account.getNickname());
-                checked.setMobile(account.getMobile());
-                checked.setEmail(account.getEmail());
-                checked.setWx(account.getWx());
-                checked.setQq(account.getQq());
-                checked.setWb(account.getWb());
-                checked.setAvatarUrl(account.getAvatarUrl());
-                checked.setCountry(account.getCountry());
-                checked.setProvince(account.getProvince());
-                checked.setCity(account.getCity());
-                account = checked;
+                saved = checked;
             }
         }
-        return generalAccessor.save(account);
+        if (saved == null) {
+            saved = EntityFactory.createEntity(FfeeAccount.class);
+        }
+        saved.setNickname(accountInfoBean.getNickname());
+        saved.setMobile(accountInfoBean.getMobile());
+        saved.setEmail(accountInfoBean.getEmail());
+        saved.setWx(accountInfoBean.getWx());
+        saved.setQq(accountInfoBean.getQq());
+        saved.setWb(accountInfoBean.getWb());
+        saved.setAvatarUrl(accountInfoBean.getAvatarUrl());
+        saved.setCountry(accountInfoBean.getCountry());
+        saved.setProvince(accountInfoBean.getProvince());
+        saved.setCity(accountInfoBean.getCity());
+        saved = generalAccessor.save(saved);
+        return getAccountSummaryById(saved.getId());
     }
 
     @Transactional
     @Override
-    public FfeeAccount modifyAccount(FfeeAccount account) {
-        FfeeAccount checked = generalAccessor.getById(account.getId(), FfeeAccount.class);
+    public AccountSummary saveAccount(AccountInfoBean accountInfoBean) {
+        if (accountInfoBean == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The account info is null.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        String id = accountInfoBean.getId();
+        if (StringUtils.isBlank(id)) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The account's id is blank.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        FfeeAccount checked = generalAccessor.getById(id, FfeeAccount.class);
         if (checked == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The account[%s] not found.", id));
+            }
             throw new UserInterfaceFfeeErrorException(
                     UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
             );
         }
-        checked.setNickname(account.getNickname());
-        checked.setMobile(account.getMobile());
-        checked.setEmail(account.getEmail());
-        checked.setWx(account.getWx());
-        checked.setQq(account.getQq());
-        checked.setWb(account.getWb());
-        checked.setAvatarUrl(account.getAvatarUrl());
-        checked.setCountry(account.getCountry());
-        checked.setProvince(account.getProvince());
-        checked.setCity(account.getCity());
-        return generalAccessor.save(checked);
+        checked.setNickname(accountInfoBean.getNickname());
+        checked.setMobile(accountInfoBean.getMobile());
+        checked.setEmail(accountInfoBean.getEmail());
+        checked.setWx(accountInfoBean.getWx());
+        checked.setQq(accountInfoBean.getQq());
+        checked.setWb(accountInfoBean.getWb());
+        checked.setAvatarUrl(accountInfoBean.getAvatarUrl());
+        checked.setCountry(accountInfoBean.getCountry());
+        checked.setProvince(accountInfoBean.getProvince());
+        checked.setCity(accountInfoBean.getCity());
+        checked = generalAccessor.save(checked);
+        return getAccountSummaryById(checked.getId());
     }
 
     @Transactional(readOnly = true)

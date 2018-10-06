@@ -1,6 +1,7 @@
 package org.mx.tools.ffee.service;
 
 import org.mx.tools.ffee.dal.entity.BudgetItem;
+import org.mx.tools.ffee.service.bean.BudgetItemInfoBean;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface BudgetService {
 
     List<BudgetItem> getBudgets(String familyId, int year);
 
-    BudgetItem saveBudget(BudgetItem budgetItem);
+    BudgetItem saveBudget(BudgetItemInfoBean budgetItemInfoBean);
 
-    BudgetItem deleteBudget(String budgetId);
+    BudgetItem deleteBudget(BudgetItemInfoBean budgetItemInfoBean);
 }

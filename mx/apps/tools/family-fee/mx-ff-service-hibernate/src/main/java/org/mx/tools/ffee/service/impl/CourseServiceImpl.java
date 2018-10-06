@@ -3,6 +3,7 @@ package org.mx.tools.ffee.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
+import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.tools.ffee.dal.entity.Course;
@@ -10,6 +11,7 @@ import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.repository.CourseRepository;
 import org.mx.tools.ffee.service.CourseService;
+import org.mx.tools.ffee.service.bean.CourseInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -38,7 +40,7 @@ public class CourseServiceImpl implements CourseService {
         if (courses != null && !courses.isEmpty()) {
             courses.forEach(course -> list.add(new CourseBean(course)));
         }
-        list.sort((o1, o2) -> (int)((o1.getOrder() - o2.getOrder()) * 1000));
+        list.sort((o1, o2) -> (int) ((o1.getOrder() - o2.getOrder()) * 1000));
         return list;
     }
 
@@ -73,55 +75,62 @@ public class CourseServiceImpl implements CourseService {
 
     @Transactional
     @Override
-    public CourseBean saveCourse(Course course) {
-        if (course == null) {
+    public CourseBean saveCourse(CourseInfoBean courseInfoBean) {
+        if (courseInfoBean == null) {
             if (logger.isErrorEnabled()) {
-                logger.error("The course is null.");
+                logger.error("The course info bean is null.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
+        String ownerId = courseInfoBean.getOwnerId();
         Family owner = null;
-        if (course.getOwner() != null && !StringUtils.isBlank(course.getOwner().getId())) {
-            owner = generalDictAccessor.getById(course.getOwner().getId(), Family.class);
+        if (!StringUtils.isBlank(ownerId)) {
+            owner = generalDictAccessor.getById(ownerId, Family.class);
             if (owner == null) {
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The family[%s] not found.", course.getOwner().getId()));
+                    logger.error(String.format("The family[%s] not found.", ownerId));
                 }
                 throw new UserInterfaceFfeeErrorException(
                         UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
                 );
             }
         }
-        if (!StringUtils.isBlank(course.getCode())) {
+        String id = courseInfoBean.getId(),
+                code = courseInfoBean.getCode();
+        Course saved = null;
+        if (!StringUtils.isBlank(code)) {
             // 根据代码来判定科目是否已经存在
-            Course checked = generalDictAccessor.getByCode(course.getCode(), Course.class);
-            if (checked != null && StringUtils.isBlank(course.getId()) && checked.isValid()) {
+            Course checked = generalDictAccessor.getByCode(code, Course.class);
+            if (checked != null && StringUtils.isBlank(id) && checked.isValid()) {
                 // 如果ID为空而checked不为null，表示新增了同样代码的科目
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The course[%s] has existed, code: %s.",
-                            course.getId(), course.getCode()));
+                    logger.error(String.format("The course[%s] has existed, code: %s.", id, code));
                 }
                 throw new UserInterfaceFfeeErrorException(
                         UserInterfaceFfeeErrorException.FfeeErrors.COURSE_HAS_EXISTED
                 );
             } else if (checked != null) {
                 // 修改科目
-                checked.setType(course.getType());
-                checked.setCode(course.getCode());
-                checked.setName(course.getName());
-                checked.setDesc(course.getDesc());
-                course = checked;
+                saved = checked;
+
             }
-            course.setOwner(owner);
-            course.setValid(true);
-            course = generalDictAccessor.save(course);
+            if (saved == null) {
+                saved = EntityFactory.createEntity(Course.class);
+            }
+            saved.setType(courseInfoBean.getType());
+            saved.setCode(courseInfoBean.getCode());
+            saved.setName(courseInfoBean.getName());
+            saved.setDesc(courseInfoBean.getDesc());
+            saved.setOwner(owner);
+            saved.setValid(true);
+            saved = generalDictAccessor.save(saved);
             if (logger.isDebugEnabled()) {
                 logger.debug(String.format("Save course[%s] successfully, code: %s, name: %s, desc: %s.",
-                        course.getId(), course.getCode(), course.getName(), course.getDesc()));
+                        saved.getId(), saved.getCode(), saved.getName(), saved.getDesc()));
             }
-            return new CourseBean(course);
+            return new CourseBean(saved);
         } else {
             if (logger.isErrorEnabled()) {
                 logger.error("The course's code is blank.");
@@ -134,7 +143,16 @@ public class CourseServiceImpl implements CourseService {
 
     @Transactional
     @Override
-    public CourseBean deleteCourse(String courseId) {
+    public CourseBean deleteCourse(CourseInfoBean courseInfoBean) {
+        if (courseInfoBean == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The course info bean is null.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        String courseId = courseInfoBean.getId();
         if (StringUtils.isBlank(courseId)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The course's id is blank.");

@@ -1,12 +1,14 @@
 package org.mx.tools.ffee.repository;
 
 import org.mx.tools.ffee.dal.entity.Income;
+import org.mx.tools.ffee.dal.entity.MoneyItemEntity;
 import org.mx.tools.ffee.dal.entity.Spending;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 
 import java.util.List;
 
-public interface MoneyRepository {
+public interface MoneyRepository extends Repository<MoneyItemEntity, String> {
     @Query("SELECT i FROM IncomeEntity i WHERE i.owner.id = ?1 AND i.occurTime >= ?2 AND i.occurTime <= ?3")
     List<Income> findIncomesByAccountId(String accountId, long beginTime, long endTime);
 

@@ -1,6 +1,7 @@
 package org.mx.tools.ffee.service;
 
 import org.mx.tools.ffee.dal.entity.Course;
+import org.mx.tools.ffee.service.bean.CourseInfoBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +13,9 @@ public interface CourseService {
 
     CourseBean getCourse(String courseId);
 
-    CourseBean saveCourse(Course course);
+    CourseBean saveCourse(CourseInfoBean courseInfoBean);
 
-    CourseBean deleteCourse(String courseId);
+    CourseBean deleteCourse(CourseInfoBean courseInfoBean);
 
     class CourseBean {
         private String id, code, name, desc;

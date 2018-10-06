@@ -2,7 +2,9 @@ package org.mx.tools.ffee.service;
 
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.Income;
+import org.mx.tools.ffee.dal.entity.MoneyItem;
 import org.mx.tools.ffee.dal.entity.Spending;
+import org.mx.tools.ffee.service.bean.MoneyInfoBean;
 
 import java.util.List;
 
@@ -21,17 +23,13 @@ public interface MoneyService {
 
     List<Income> getIncomes(String familyId, int year);
 
-    Income saveIncome(Income income);
-
-    Income deleteIncome(String incomeId);
-
     List<Spending> getSpendings(String familyId, int year, int month);
 
     List<Spending> getSpendingsLastWeek(String familyId);
 
-    Spending saveSpending(Spending spending);
+    MoneyItem saveMoney(MoneyInfoBean moneyInfoBean, Class<? extends MoneyItem> clazz);
 
-    Spending deleteSpending(String spendingId);
+    MoneyItem deleteMoney(MoneyInfoBean moneyInfoBean, Class<? extends MoneyItem> clazz);
 
     class AccountMoneySummary {
         private String id, openId, nickname, avatarUrl;

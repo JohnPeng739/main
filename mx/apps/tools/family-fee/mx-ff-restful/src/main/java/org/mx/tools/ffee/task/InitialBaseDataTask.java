@@ -9,16 +9,20 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.spring.task.BaseTask;
 import org.mx.tools.ffee.dal.entity.Course;
-import org.mx.tools.ffee.dal.entity.Family;
-import org.mx.tools.ffee.dal.entity.FfeeAccount;
+import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.service.AccountService;
 import org.mx.tools.ffee.service.FamilyService;
+import org.mx.tools.ffee.service.bean.AccountInfoBean;
+import org.mx.tools.ffee.service.bean.FamilyInfoBean;
+import org.mx.tools.ffee.service.bean.FamilyMemberInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component("initialBaseDataTask")
 public class InitialBaseDataTask extends BaseTask {
@@ -42,21 +46,36 @@ public class InitialBaseDataTask extends BaseTask {
         String openId = "oZmYI0Yr31LJDlDqTaE9gpm6OTPQ";
         AccountService.AccountSummary summary = accountService.getAccountSummaryByOpenId(openId);
         if (summary == null || summary.getAccount() == null) {
-            FfeeAccount account = EntityFactory.createEntity(FfeeAccount.class);
-            account.setNickname("上善若水");
-            account.setOpenId(openId);
-            account.setMobile("13701760212");
-            account.setEmail("josh_73_9@hotmail");
-            accountService.registry(account);
+            AccountInfoBean accountInfoBean = new AccountInfoBean();
+            accountInfoBean.setNickname("上善若水");
+            accountInfoBean.setOpenId(openId);
+            accountInfoBean.setMobile("13701760212");
+            accountInfoBean.setEmail("josh_73_9@hotmail");
+            summary = accountService.registry(accountInfoBean);
             if (logger.isDebugEnabled()) {
                 logger.debug("Create the default account successfully.");
             }
         }
-        if (summary == null || summary.getFamily() == null) {
-            Family family = EntityFactory.createEntity(Family.class);
-            family.setName("我爱我家");
-            family.setDesc("这是一个相亲相爱的家庭。");
-            familyService.createFamily(family, openId, "爸爸");
+        if (summary.getAccount() == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The account[%s] not found.", openId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
+            );
+        }
+        if (summary.getFamily() == null) {
+            FamilyInfoBean familyInfoBean = new FamilyInfoBean();
+            familyInfoBean.setName("我爱我家");
+            familyInfoBean.setDesc("这是一个相亲相爱的家庭。");
+            List<FamilyMemberInfoBean> members = new ArrayList<>();
+            FamilyMemberInfoBean member = new FamilyMemberInfoBean();
+            member.setAccountId(summary.getAccount().getId());
+            member.setOwner(true);
+            member.setRole("爸爸");
+            members.add(member);
+            familyInfoBean.setMembers(members);
+            familyService.saveFamily(familyInfoBean);
             if (logger.isDebugEnabled()) {
                 logger.debug("Create the default family successfully.");
             }

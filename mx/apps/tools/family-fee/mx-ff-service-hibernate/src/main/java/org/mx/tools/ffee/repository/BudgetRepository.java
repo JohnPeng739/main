@@ -1,10 +1,12 @@
 package org.mx.tools.ffee.repository;
 
+import org.mx.tools.ffee.dal.entity.BudgetItemEntity;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.Repository;
 
 import java.util.List;
 
-public interface BudgetRepository {
+public interface BudgetRepository extends Repository<BudgetItemEntity, String> {
     @Query("SELECT SUM(bi.money) FROM BudgetItemEntity bi WHERE bi.family.id = ?1 AND bi.year = ?2")
     double findBudgetTotalByFamily(String familyId, int year);
 

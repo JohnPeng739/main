@@ -1,30 +1,22 @@
-package org.mx.tools.ffee.rest.vo;
+package org.mx.tools.ffee.service.bean;
 
-import org.mx.dal.EntityFactory;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 
-public class AccountModifyVO extends BaseParamsVO {
-    private String id, nickname, mobile, email, wx, qq, wb, avatarUrl, country, province, city;
-    private FfeeAccount.Gender gender = FfeeAccount.Gender.MALE;
-
-    public FfeeAccount get() {
-        FfeeAccount account = EntityFactory.createEntity(FfeeAccount.class);
-        account.setId(id);
-        account.setNickname(nickname);
-        account.setMobile(mobile);
-        account.setEmail(email);
-        account.setWx(wx);
-        account.setQq(qq);
-        account.setWb(wb);
-        account.setAvatarUrl(avatarUrl);
-        account.setCountry(country);
-        account.setProvince(province);
-        account.setCity(city);
-        return account;
-    }
+public class AccountInfoBean {
+    private String id, openId, unionId, nickname, mobile, email, wx, qq, wb, avatarUrl, country, province, city;
+    private FfeeAccount.Gender gender;
+    private boolean valid;
 
     public String getId() {
         return id;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public String getUnionId() {
+        return unionId;
     }
 
     public String getNickname() {
@@ -71,8 +63,20 @@ public class AccountModifyVO extends BaseParamsVO {
         return gender;
     }
 
+    public boolean isValid() {
+        return valid;
+    }
+
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 
     public void setNickname(String nickname) {
@@ -117,5 +121,9 @@ public class AccountModifyVO extends BaseParamsVO {
 
     public void setGender(FfeeAccount.Gender gender) {
         this.gender = gender;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
     }
 }

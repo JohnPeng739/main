@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.DateUtils;
 import org.mx.StringUtils;
+import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.tools.ffee.dal.entity.*;
@@ -13,6 +14,7 @@ import org.mx.tools.ffee.service.AccountService;
 import org.mx.tools.ffee.service.BudgetService;
 import org.mx.tools.ffee.service.FamilyService;
 import org.mx.tools.ffee.service.MoneyService;
+import org.mx.tools.ffee.service.bean.MoneyInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -343,91 +345,114 @@ public class MoneyServiceImpl implements MoneyService {
 
     @Transactional
     @Override
-    public Income saveIncome(Income income) {
-        return saveMoney(income, Income.class);
-    }
-
-    private <T extends MoneyItem> T saveMoney(T moneyItem, Class<T> clazz) {
-        // 检查家庭，家庭必须要有
-        if (moneyItem.getFamily() == null || StringUtils.isBlank(moneyItem.getFamily().getId())) {
+    public MoneyItem deleteMoney(MoneyInfoBean moneyInfoBean, Class<? extends MoneyItem> clazz) {
+        if (moneyInfoBean == null) {
             if (logger.isErrorEnabled()) {
-                logger.error("The family is null or the family's id is blank.");
+                logger.error("The money item object is null.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        Family family = generalAccessor.getById(moneyItem.getFamily().getId(), Family.class);
+        String id = moneyInfoBean.getId();
+        if (StringUtils.isBlank(id)) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The money item[%s]'s id is blank. ", clazz.getName()));
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED
+            );
+        }
+        return generalAccessor.remove(id, clazz);
+    }
+
+    @Transactional
+    @Override
+    public MoneyItem saveMoney(MoneyInfoBean moneyInfoBean, Class<? extends MoneyItem> clazz) {
+        if (moneyInfoBean == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The money item object is null.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        // 检查家庭，家庭必须要有
+        String familyId = moneyInfoBean.getFamilyId();
+        if (StringUtils.isBlank(familyId)) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The family's id is blank.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        Family family = generalAccessor.getById(familyId, Family.class);
         if (family == null) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("The family[%s] not found.", moneyItem.getFamily().getId()));
+                logger.error(String.format("The family[%s] not found.", familyId));
             }
             throw new UserInterfaceFfeeErrorException(
                     UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
             );
         }
         // 检查科目，科目必须要有
-        if (moneyItem.getCourse() == null || StringUtils.isBlank(moneyItem.getCourse().getId())) {
+        String courseId = moneyInfoBean.getCourseId();
+        if (StringUtils.isBlank(courseId)) {
             if (logger.isErrorEnabled()) {
-                logger.error("The course is null or the course's id is blank.");
+                logger.error("The course's id is blank.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        Course course = generalAccessor.getById(moneyItem.getCourse().getId(), Course.class);
+        Course course = generalAccessor.getById(courseId, Course.class);
         if (course == null) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("The course[%s] not found.", moneyItem.getCourse().getId()));
+                logger.error(String.format("The course[%s] not found.", courseId));
             }
             throw new UserInterfaceFfeeErrorException(
                     UserInterfaceFfeeErrorException.FfeeErrors.COURSE_NOT_EXISTED
             );
         }
         // 检查收入所有者，可以为空，表示公共收入
+        String ownerId = moneyInfoBean.getOwnerId();
         FfeeAccount owner = null;
-        if (moneyItem.getOwner() != null && !StringUtils.isBlank(moneyItem.getOwner().getId())) {
-            owner = generalAccessor.getById(moneyItem.getOwner().getId(), FfeeAccount.class);
+        if (!StringUtils.isBlank(ownerId)) {
+            owner = generalAccessor.getById(ownerId, FfeeAccount.class);
             if (owner == null) {
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The owner account[%s] not found.", moneyItem.getOwner().getId()));
+                    logger.error(String.format("The owner account[%s] not found.", ownerId));
                 }
                 throw new UserInterfaceFfeeErrorException(
                         UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
                 );
             }
         }
-        if (!StringUtils.isBlank(moneyItem.getId())) {
-            T checked = generalAccessor.getById(moneyItem.getId(), clazz);
+        String id = moneyInfoBean.getId();
+        MoneyItem saved = null;
+        if (!StringUtils.isBlank(id)) {
+            MoneyItem checked = generalAccessor.getById(id, clazz);
             if (checked != null) {
-                checked.setDesc(moneyItem.getDesc());
-                checked.setMoney(moneyItem.getMoney());
-                checked.setOccurTime(moneyItem.getOccurTime());
-                moneyItem = checked;
-            } else {
-                moneyItem.setId(null);
+                saved = checked;
             }
         }
-        moneyItem.setFamily(family);
-        moneyItem.setCourse(course);
-        moneyItem.setOwner(owner);
-        moneyItem = generalAccessor.save(moneyItem);
+        if (saved == null) {
+            saved = EntityFactory.createEntity(clazz);
+        }
+        saved.setDesc(moneyInfoBean.getDesc());
+        saved.setMoney(moneyInfoBean.getMoney());
+        saved.setOccurTime(moneyInfoBean.getOccurTime());
+        saved.setFamily(family);
+        saved.setCourse(course);
+        saved.setOwner(owner);
+        saved = generalAccessor.save(saved);
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save the %s successfully, family: %s, course: %s, money: %10.2f.",
-                    moneyItem instanceof Income ? "income" : "spending", family.getName(), course.getName(),
-                    moneyItem.getMoney()));
+                    saved instanceof Income ? "income" : "spending", family.getName(), course.getName(),
+                    saved.getMoney()));
         }
-        return moneyItem;
-    }
-
-    @Transactional
-    @Override
-    public Income deleteIncome(String incomeId) {
-        Income income = generalAccessor.remove(incomeId, Income.class);
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Logical remove the income[%s] successfully.", incomeId));
-        }
-        return income;
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -491,22 +516,6 @@ public class MoneyServiceImpl implements MoneyService {
                 GeneralAccessor.ConditionTuple.gte("occurTime", range.getLowerLimit()),
                 GeneralAccessor.ConditionTuple.lte("occurTime", range.getUpperLimit())
         ), Spending.class);
-    }
-
-    @Transactional
-    @Override
-    public Spending saveSpending(Spending spending) {
-        return saveMoney(spending, Spending.class);
-    }
-
-    @Transactional
-    @Override
-    public Spending deleteSpending(String spendingId) {
-        Spending spending = generalAccessor.remove(spendingId, Spending.class);
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Logical remove the spending[%s] successfully.", spendingId));
-        }
-        return spending;
     }
 
     private class IntKeyDoubleValue {

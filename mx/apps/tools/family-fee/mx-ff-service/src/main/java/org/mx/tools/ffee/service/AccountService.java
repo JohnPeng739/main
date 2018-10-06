@@ -3,15 +3,16 @@ package org.mx.tools.ffee.service;
 import org.mx.tools.ffee.dal.entity.AccessLog;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
+import org.mx.tools.ffee.service.bean.AccountInfoBean;
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
 public interface AccountService {
-    FfeeAccount registry(FfeeAccount account);
+    AccountSummary registry(AccountInfoBean accountInfoBean);
 
-    FfeeAccount modifyAccount(FfeeAccount account);
+    AccountSummary saveAccount(AccountInfoBean accountInfoBean);
 
     AccountSummary getAccountSummaryById(String accountId);
 

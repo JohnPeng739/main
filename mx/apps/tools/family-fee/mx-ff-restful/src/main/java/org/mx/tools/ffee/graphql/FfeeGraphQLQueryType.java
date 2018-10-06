@@ -30,8 +30,8 @@ import java.util.Map;
  * Date time 2018/10/5 下午3:45
  */
 @Component("ffeeGraphQLTypeExecution")
-public class FfeeGraphQLTypeExecution extends GraphQLTypeExecution implements InitializingBean {
-    private static final Log logger = LogFactory.getLog(FfeeGraphQLTypeExecution.class);
+public class FfeeGraphQLQueryType extends GraphQLTypeExecution implements InitializingBean {
+    private static final Log logger = LogFactory.getLog(FfeeGraphQLQueryType.class);
 
     private GeneralDictAccessor dictAccessor;
     private AccountService accountService;
@@ -41,12 +41,12 @@ public class FfeeGraphQLTypeExecution extends GraphQLTypeExecution implements In
     private MoneyService moneyService;
 
     @Autowired
-    public FfeeGraphQLTypeExecution(@Qualifier("generalDictAccessor") GeneralDictAccessor dictAccessor,
-                                    AccountService accountService,
-                                    CourseService courseService,
-                                    FamilyService familyService,
-                                    BudgetService budgetService,
-                                    MoneyService moneyService) {
+    public FfeeGraphQLQueryType(@Qualifier("generalDictAccessor") GeneralDictAccessor dictAccessor,
+                                AccountService accountService,
+                                CourseService courseService,
+                                FamilyService familyService,
+                                BudgetService budgetService,
+                                MoneyService moneyService) {
         super("QueryType");
         this.dictAccessor = dictAccessor;
         this.accountService = accountService;

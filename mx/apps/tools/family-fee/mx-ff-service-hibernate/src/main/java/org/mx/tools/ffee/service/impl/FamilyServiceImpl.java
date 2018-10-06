@@ -15,6 +15,8 @@ import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.repository.FamilyRepository;
 import org.mx.tools.ffee.service.FamilyService;
 import org.mx.tools.ffee.service.FileTransportService;
+import org.mx.tools.ffee.service.bean.FamilyInfoBean;
+import org.mx.tools.ffee.service.bean.FamilyMemberInfoBean;
 import org.mx.tools.ffee.utils.QrCodeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -48,86 +50,29 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Transactional
     @Override
-    public Family createFamily(Family family, String openId, String ownerRole) {
-        if (family == null) {
+    public Family saveFamily(FamilyInfoBean familyInfoBean) {
+        if (familyInfoBean == null) {
             if (logger.isErrorEnabled()) {
-                logger.error("The family is null.");
+                logger.error("The family info is null.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        FfeeAccount owner = generalAccessor.findOne(GeneralAccessor.ConditionTuple.eq("openId", openId),
-                FfeeAccount.class);
-        if (owner == null) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("The account[%s] not found.", openId));
-            }
-            throw new UserInterfaceFfeeErrorException(
-                    UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
-            );
+        String familyId = familyInfoBean.getId();
+        Family family = null;
+        if (!StringUtils.isBlank(familyId)) {
+            family = generalAccessor.getById(familyId, Family.class);
         }
-        // 采用家庭名称来判定是否存在
-        if (!StringUtils.isBlank(family.getName())) {
-            Family checked = generalAccessor.findOne(
-                    GeneralAccessor.ConditionTuple.eq("name", family.getName()),
-                    Family.class);
-            if (checked != null) {
-                // 家庭已经存在
-                if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The family[%s] has existed.", family.getName()));
-                }
-                throw new UserInterfaceFfeeErrorException(
-                        UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
-                );
-            }
+        if (family == null) {
+            // 建立新家庭
+            family = EntityFactory.createEntity(Family.class);
         }
-        // 新增家庭
-        FamilyMember member = EntityFactory.createEntity(FamilyMember.class);
-        member.setAccount(owner);
-        member.setRole(ownerRole);
-        member.setIsOwner(true);
-        member = generalAccessor.save(member);
-
-        family.setId(null);
-        family.getMembers().add(member);
+        family.setAvatarUrl(familyInfoBean.getAvatarUrl());
+        family.setDesc(familyInfoBean.getDesc());
+        family.setName(familyInfoBean.getName());
         family = generalAccessor.save(family);
-        if (logger.isDebugEnabled()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Create a new family successfully, id: %s, name: %s.",
-                        family.getId(), family.getName()));
-            }
-        }
-        return family;
-    }
-
-    @Transactional
-    @Override
-    public Family modifyFamily(Family family) {
-        if (family == null) {
-            if (logger.isErrorEnabled()) {
-                logger.error("The family is null.");
-            }
-            throw new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
-            );
-        }
-        if (!StringUtils.isBlank(family.getId())) {
-            Family checked = generalAccessor.getById(family.getId(), Family.class);
-            if (checked != null) {
-                // 修改家庭
-                checked.setAvatarUrl(family.getAvatarUrl());
-                checked.setDesc(family.getDesc());
-                checked.setName(family.getName());
-                return generalAccessor.save(checked);
-            }
-        }
-        if (logger.isErrorEnabled()) {
-            logger.error(String.format("The family[%s] not found.", family.getId()));
-        }
-        throw new UserInterfaceFfeeErrorException(
-                UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
-        );
+        return saveFamilyMember(family, familyInfoBean.getMembers());
     }
 
     @Transactional(readOnly = true)
@@ -144,12 +89,65 @@ public class FamilyServiceImpl implements FamilyService {
         return generalAccessor.getById(familyId, Family.class);
     }
 
+    private Family saveFamilyMember(Family family, List<FamilyMemberInfoBean> members) {
+        if (members == null || members.isEmpty()) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The family member list is null or empty.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED
+            );
+        }
+        for (FamilyMemberInfoBean member : members) {
+            String id = member.getId(),
+                    role = member.getRole(),
+                    accountId = member.getAccountId();
+            boolean isOwner = member.isOwner();
+            if (StringUtils.isBlank(accountId)) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("The family member's account id is blank.");
+                }
+                throw new UserInterfaceSystemErrorException(
+                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+                );
+            }
+            FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
+            if (account == null) {
+                if (logger.isErrorEnabled()) {
+                    logger.error(String.format("The account[%s] not found.", accountId));
+                }
+            }
+            FamilyMember familyMember = null;
+            if (!StringUtils.isBlank(id)) {
+                familyMember = generalAccessor.getById(id, FamilyMember.class);
+            }
+            if (familyMember == null) {
+                familyMember = EntityFactory.createEntity(FamilyMember.class);
+            }
+            familyMember.setRole(role);
+            familyMember.setFamily(family);
+            familyMember.setAccount(account);
+            familyMember.setIsOwner(isOwner);
+            generalAccessor.save(familyMember);
+        }
+        return getFamily(family.getId());
+    }
+
     @Transactional
     @Override
-    public Family joinFamily(String familyId, String role, String accountId) {
-        if (StringUtils.isBlank(familyId) || StringUtils.isBlank(accountId)) {
+    public Family joinFamily(FamilyInfoBean familyInfoBean) {
+        if (familyInfoBean == null) {
             if (logger.isErrorEnabled()) {
-                logger.error("The family's id or account id is blank.");
+                logger.error("The family info is null.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        String familyId = familyInfoBean.getId();
+        if (StringUtils.isBlank(familyId)) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The family's id is blank.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
@@ -164,32 +162,7 @@ public class FamilyServiceImpl implements FamilyService {
                     UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
             );
         }
-        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
-        if (account == null) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("The account[%s] not found.", accountId));
-            }
-            throw new UserInterfaceFfeeErrorException(
-                    UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
-            );
-        }
-        for (FamilyMember member : family.getMembers()) {
-            if (member.getAccount().getId().equals(account.getId())) {
-                // 已经是家庭成员了，忽略
-                return family;
-            }
-        }
-        FamilyMember member = EntityFactory.createEntity(FamilyMember.class);
-        member.setAccount(account);
-        member.setRole(role);
-        member.setIsOwner(false);
-        member = generalAccessor.save(member);
-        family.getMembers().add(member);
-        family = generalAccessor.save(family);
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("The account[%s] join the family[%s] successfully.", accountId, familyId));
-        }
-        return family;
+        return saveFamilyMember(family, familyInfoBean.getMembers());
     }
 
     @Override

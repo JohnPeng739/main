@@ -1,5 +1,6 @@
 schema {
     query: QueryType
+    mutation: MutationType
 }
 
 type QueryType {
@@ -25,6 +26,83 @@ type QueryType {
 
     accountMoneySummary(accountId: String!): AccountMoneySummary
     familyMoneySummary(familyId: String!): FamilyMoneySummary
+}
+
+type MutationType {
+    saveAccount(op: OperateType!, input: AccountInfoInput!): AccountSummary
+    saveBudgetItem(op: OperateType!, input: BudgetItemInfoInput): BudgetItem
+    saveCourse(op: OperateType!, input: CourseInfoInput): Course
+    saveFamily(op: OperateType!, input: FamilyInfoInput): Family
+    saveIncome(op: OperateType!, input: MoneyInfoInput): Income
+    saveSpending(op: OperateType!, input: MoneyInfoInput): Spending
+}
+
+enum OperateType {
+    SAVE, DELETE, REGISTRY, JOIN_FAMILY
+}
+
+input AccountInfoInput {
+    id: String
+    openId: String
+    unionId: String
+    nickname: String
+    gender: Gender
+    mobile: String
+    email: String
+    wx: String
+    qq: String
+    wb: String
+    avatarUrl: String
+    country: String
+    province: String
+    city: String
+    valid: Boolean
+}
+
+input BudgetItemInfoInput {
+    id: String
+    courseId: String
+    familyId: String
+    desc: String
+    year: Int
+    money: Float
+    valid: Boolean
+}
+
+input CourseInfoInput {
+    id: String
+    code: String
+    name: String
+    desc: String
+    ownerId: String
+    type: CourseType
+    valid: Boolean
+}
+
+input FamilyInfoInput {
+    id: String
+    name: String
+    avatarUrl: String
+    desc: String
+    members:[FamilyMemberInfo]
+    valid: Boolean
+}
+
+input FamilyMemberInfo {
+    id: String
+    role: String
+    accountId: String
+    isOwner: Boolean
+}
+
+input MoneyInfoInput {
+    id: String
+    familyId: String
+    courseId: String
+    ownerId: String
+    desc: String
+    money: Float
+    occurTime: Int
 }
 
 input AccountQueryInput {

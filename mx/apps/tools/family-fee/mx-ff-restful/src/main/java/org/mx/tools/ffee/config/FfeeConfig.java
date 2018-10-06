@@ -45,9 +45,6 @@ public class FfeeConfig {
                 WxAuthorizationResource.class,
                 AccountManageResource.class,
                 FamilyManageResource.class,
-                CourseManageResource.class,
-                BudgetManageResource.class,
-                MoneyManageResource.class,
                 GraphQLResource.class
         );
     }
