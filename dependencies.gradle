@@ -21,6 +21,7 @@ ext.versions = [
   jgit		: '4.11.0.201803080745-r',
   elastic	: '6.2.3',
 
+  graphql	: '9.3',
   zxing		: '3.3.3',
 
   activiti	: '6.0.0',
@@ -38,7 +39,7 @@ ext.versions = [
   'mx-utils'    	: '2.1.24',
   'mx-spring'		: '1.2.1',
   'mx-jwt-utils'	: '1.0.1',
-  'mx-service-utils'	: '1.9.2',
+  'mx-service-utils'	: '1.9.3',
   'mx-hanlp-utils'	: '1.0.12',
   'mx-dal'      	: '2.0.3',
   'mx-dal-hibernate'    : '2.0.4',
@@ -100,6 +101,8 @@ ext.libs = [
 
   "elasticsearch-rest"	: "org.elasticsearch.client:elasticsearch-rest-high-level-client:${versions.elastic}",
   "elasticsearch-thrift": "org.elasticsearch.client:transport:${versions.elastic}",
+
+  "graphql"		: "com.graphql-java:graphql-java:${versions.graphql}",
 
   "zxing-core"		: "com.google.zxing:core:${versions.zxing}",
   "zxing-javase"	: "com.google.zxing:javase:${versions.zxing}",

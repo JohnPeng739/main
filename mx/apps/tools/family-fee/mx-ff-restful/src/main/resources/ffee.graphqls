@@ -1,0 +1,242 @@
+schema {
+    query: QueryType
+}
+
+type QueryType {
+    account(input: AccountQueryInput!): AccountSummary
+
+    courseList(familyId: String): [Course]
+    course(id: String!): Course
+
+    accessLogList(input: AccessLogQueryInput!): [AccessLog]
+
+    budgetItemList(input: BudgetQueryInput!): [BudgetItem]
+    budgetItem(id: String!): BudgetItem
+
+    family(id: String!): Family
+
+    accountIncomeList(input: AccountMoneyQueryInput!): [Income]
+    familyIncomeList(input: FamilyMoneyQueryInput!): [Income]
+    income(id: String!): Income
+
+    accountSpendingList(input: AccountMoneyQueryInput!): [Spending]
+    familySpendingList(input: FamilyMoneyQueryInput!): [Spending]
+    spending(id: String!): Spending
+
+    accountMoneySummary(accountId: String!): AccountMoneySummary
+    familyMoneySummary(familyId: String!): FamilyMoneySummary
+}
+
+input AccountQueryInput {
+    id: String
+    openId: String
+}
+
+input BudgetQueryInput {
+    familyId: String!
+    year: Int
+}
+
+input AccessLogQueryInput {
+    familyId: String
+    accountId: String
+}
+
+input AccountMoneyQueryInput {
+    accountId: String!
+    year: Int
+    month: Int
+    week: Int
+}
+
+input FamilyMoneyQueryInput {
+    familyId: String!
+    year: Int
+    month: Int
+    week: Int
+}
+
+enum Gender {
+    MALE, FEMALE, NA
+}
+
+enum CourseType {
+    INCOME, SPENDING, ALL
+}
+
+type AccountSummary {
+    account: FfeeAccount
+    family: Family
+}
+
+type FfeeAccount {
+    id: String
+    valid: Boolean
+    createdTime: Int
+    updatedTime: Int
+    operator: String
+    openId: String
+    unionId: String
+    nickname: String
+    mobile: String
+    email: String
+    wx: String
+    qq: String
+    wb: String
+    avatarUrl: String
+    country: String
+    province: String
+    city: String
+    gender: Gender!
+}
+
+type AccessLog {
+    id: String
+    valid: Boolean
+    createdTime: Int
+    updatedTime: Int
+    operator: String
+    account: FfeeAccount
+    content: String
+    latitude: Float
+    longitude: Float
+}
+
+type Course {
+    id: String
+    code: String
+    name: String
+    desc: String
+    type: CourseType
+    order: Float
+    isPublic: Boolean
+    children: [Course]
+}
+
+type BudgetItem {
+    id: String
+    valid: Boolean
+    createdTime: Int
+    updatedTime: Int
+    operator: String
+    family: Family
+    year: Int
+    total: Float
+    desc: String
+    course: Course
+}
+
+type Family {
+    id: String
+    valid: Boolean
+    createdTime: Int
+    updatedTime: Int
+    operator: String
+    name: String
+    desc: String
+    avatarUrl: String
+    members:[FamilyMember]
+}
+
+type FamilyMember {
+    id: String
+    valid: Boolean
+    createdTime: Int
+    updatedTime: Int
+    operator: String
+    role: String
+    account: FfeeAccount
+    isOwner: Boolean
+}
+
+type Income {
+    id: String
+    valid: Boolean
+    createdTime: Int
+    updatedTime: Int
+    operator: String
+    family: Family
+    course: Course
+    total: Float
+    occurTime: Int
+    desc: String
+    owner: FfeeAccount
+}
+
+type Spending {
+    id: String
+    valid: Boolean
+    createdTime: Int
+    updatedTime: Int
+    operator: String
+    family: Family
+    course: Course
+    total: Float
+    occurTime: Int
+    desc: String
+    owner: FfeeAccount
+}
+
+type AccountMoneySummary {
+    id: String
+    openId: String
+    nickname: String
+    avatarUrl: String
+    family: Family
+    recent: RecentMoneySummary
+    current: CurrentMoneySummary
+}
+
+type FamilyMoneySummary {
+    id: String
+    name: String
+    avatarUrl: String
+    recent: RecentMoneySummary
+    current: CurrentMoneySummary
+}
+
+type RecentMoneySummary {
+    budgets: [YearMoneyItem]
+    incomes: [YearMoneyItem]
+    spendings: [YearMoneyItem]
+}
+
+type CurrentMoneySummary {
+    budget: Float
+    income: MoneySummary
+    spending: MoneySummary
+}
+
+type MoneySummary {
+    total: Float
+    byMonth: [YearMonthMoneyItem]
+    byMember: [MemberMoneyItem]
+}
+
+type YearMoneyItem {
+    year: Int
+    count: Int
+    total: Float
+    min: Float
+    max: Float
+    avg: Float
+}
+
+type YearMonthMoneyItem {
+    year: Int
+    month: Int
+    count: Int
+    total: Float
+    min: Float
+    max: Float
+    avg: Float
+}
+
+type MemberMoneyItem {
+    nickname: String
+    count: Int
+    total: Float
+    min: Float
+    max: Float
+    avg: Float
+}

@@ -7,6 +7,7 @@ import org.mx.StringUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.service.FileTransportService;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Component("fileTransportService")
 public class FileTransportServiceImpl implements FileTransportService {
     private static final Log logger = LogFactory.getLog(FileTransportServiceImpl.class);
 

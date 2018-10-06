@@ -95,8 +95,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional(readOnly = true)
     @Override
-    public FfeeAccount getAccountById(String accountId) {
-        return generalAccessor.getById(accountId, FfeeAccount.class);
+    public AccountSummary getAccountSummaryById(String accountId) {
+        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
+        Family family = null;
+        String familyId = familyRepository.findFamilyIdByOpenId(accountId);
+        if (!StringUtils.isBlank(familyId)) {
+            family = generalAccessor.getById(familyId, Family.class);
+        }
+        return new AccountSummary(account, family);
     }
 
     @Transactional(readOnly = true)

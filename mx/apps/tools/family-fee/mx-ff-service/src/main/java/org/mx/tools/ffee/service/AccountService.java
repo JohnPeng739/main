@@ -13,7 +13,7 @@ public interface AccountService {
 
     FfeeAccount modifyAccount(FfeeAccount account);
 
-    FfeeAccount getAccountById(String accountId);
+    AccountSummary getAccountSummaryById(String accountId);
 
     AccountSummary getAccountSummaryByOpenId(String openId);
 

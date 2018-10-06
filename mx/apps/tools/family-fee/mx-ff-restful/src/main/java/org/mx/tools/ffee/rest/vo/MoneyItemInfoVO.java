@@ -2,18 +2,14 @@ package org.mx.tools.ffee.rest.vo;
 
 import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
-import org.mx.tools.ffee.dal.entity.Course;
-import org.mx.tools.ffee.dal.entity.Family;
-import org.mx.tools.ffee.dal.entity.FfeeAccount;
-import org.mx.tools.ffee.dal.entity.MoneyItem;
+import org.mx.tools.ffee.dal.entity.*;
 
 public class MoneyItemInfoVO extends BaseParamsVO {
     private String id, familyId, courseId, desc, ownerId;
     private double money;
     private long occurTime = System.currentTimeMillis();
 
-    public MoneyItem get() {
-        MoneyItem moneyItem = EntityFactory.createEntity(MoneyItem.class);
+    private void transform(MoneyItem moneyItem) {
         moneyItem.setId(id);
         moneyItem.setDesc(desc);
         moneyItem.setMoney(money);
@@ -33,7 +29,18 @@ public class MoneyItemInfoVO extends BaseParamsVO {
             account.setId(ownerId);
             moneyItem.setOwner(account);
         }
-        return moneyItem;
+    }
+
+    public Income getIncome() {
+        Income income = EntityFactory.createEntity(Income.class);
+        transform(income);
+        return income;
+    }
+
+    public Spending getSpending() {
+        Spending spending = EntityFactory.createEntity(Spending.class);
+        transform(spending);
+        return spending;
     }
 
     public String getId() {

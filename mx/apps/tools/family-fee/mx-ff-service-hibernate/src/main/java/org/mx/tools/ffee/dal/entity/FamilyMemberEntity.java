@@ -17,9 +17,12 @@ public class FamilyMemberEntity extends BaseEntity implements FamilyMember {
     private String role;
     @OneToOne(targetEntity = FfeeAccountEntity.class)
     @JoinColumn(name = "ACCOUNT_ID")
-    private FfeeAccount ffeeAccount;
+    private FfeeAccount account;
     @Column(name = "IS_OWNER")
     private boolean isOwner;
+    @ManyToOne(targetEntity = FamilyEntity.class, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "FAMILY_ID")
+    private Family family;
 
     @Override
     public String getRole() {
@@ -27,8 +30,8 @@ public class FamilyMemberEntity extends BaseEntity implements FamilyMember {
     }
 
     @Override
-    public FfeeAccount getFfeeAccount() {
-        return ffeeAccount;
+    public FfeeAccount getAccount() {
+        return account;
     }
 
     @Override
@@ -37,17 +40,27 @@ public class FamilyMemberEntity extends BaseEntity implements FamilyMember {
     }
 
     @Override
+    public Family getFamily() {
+        return family;
+    }
+
+    @Override
     public void setRole(String role) {
         this.role = role;
     }
 
     @Override
-    public void setFfeeAccount(FfeeAccount ffeeAccount) {
-        this.ffeeAccount = ffeeAccount;
+    public void setAccount(FfeeAccount account) {
+        this.account = account;
     }
 
     @Override
     public void setIsOwner(boolean owner) {
         isOwner = owner;
+    }
+
+    @Override
+    public void setFamily(Family family) {
+        this.family = family;
     }
 }

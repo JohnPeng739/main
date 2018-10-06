@@ -1,5 +1,6 @@
 package org.mx.tools.ffee.rest;
 
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -85,6 +86,7 @@ public class FamilyManageResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public DataVO<String> changeFamilyAvatar(@FormDataParam("file") InputStream in,
+                                     @FormDataParam("file") FormDataContentDisposition detail,
                                      @PathParam("familyId") String familyId) {
         return new DataVO<>(familyService.changeFamilyAvatar(familyId, in));
     }

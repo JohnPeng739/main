@@ -44,7 +44,7 @@ public class MoneyManageResource {
             );
         }
         sessionDataStore.setCurrentUserCode(moneyItemInfoVO.getOpenId());
-        Income income = (Income) moneyItemInfoVO.get();
+        Income income = moneyItemInfoVO.getIncome();
         income.setId(null);
         return new DataVO<>(moneyService.saveIncome(income));
     }
@@ -59,7 +59,7 @@ public class MoneyManageResource {
             );
         }
         sessionDataStore.setCurrentUserCode(moneyItemInfoVO.getOpenId());
-        Income income = (Income) moneyItemInfoVO.get();
+        Income income = moneyItemInfoVO.getIncome();
         income.setId(incomeId);
         return new DataVO<>(moneyService.saveIncome(income));
     }
@@ -86,7 +86,7 @@ public class MoneyManageResource {
         }
     }
 
-    @Path("spending/new")
+    @Path("spendings/new")
     @POST
     public DataVO<Spending> newSpending(MoneyItemInfoVO moneyItemInfoVO) {
         if (moneyItemInfoVO == null) {
@@ -95,7 +95,7 @@ public class MoneyManageResource {
             );
         }
         sessionDataStore.setCurrentUserCode(moneyItemInfoVO.getOpenId());
-        Spending spending = (Spending) moneyItemInfoVO.get();
+        Spending spending = moneyItemInfoVO.getSpending();
         spending.setId(null);
         return new DataVO<>(moneyService.saveSpending(spending));
     }
@@ -110,7 +110,7 @@ public class MoneyManageResource {
             );
         }
         sessionDataStore.setCurrentUserCode(moneyItemInfoVO.getOpenId());
-        Spending spending = (Spending) moneyItemInfoVO.get();
+        Spending spending = moneyItemInfoVO.getSpending();
         spending.setId(spendingId);
         return new DataVO<>(moneyService.saveSpending(spending));
     }

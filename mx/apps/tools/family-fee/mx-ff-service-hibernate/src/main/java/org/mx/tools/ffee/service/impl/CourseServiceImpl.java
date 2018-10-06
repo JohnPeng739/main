@@ -51,6 +51,9 @@ public class CourseServiceImpl implements CourseService {
     @Transactional(readOnly = true)
     @Override
     public List<CourseBean> getAllCoursesByFamily(String familyId) {
+        if (StringUtils.isBlank(familyId)) {
+            familyId = "";
+        }
         return transform(courseRepository.findCoursesByFamily(familyId));
     }
 

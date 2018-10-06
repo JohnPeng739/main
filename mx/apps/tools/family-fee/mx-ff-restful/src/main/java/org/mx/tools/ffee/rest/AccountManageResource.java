@@ -1,5 +1,6 @@
 package org.mx.tools.ffee.rest;
 
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -61,8 +62,8 @@ public class AccountManageResource {
 
     @Path("accounts/{accountId}")
     @GET
-    public DataVO<FfeeAccount> getAccountById(@PathParam("accountId") String accountId) {
-        return new DataVO<>(accountService.getAccountById(accountId));
+    public DataVO<AccountService.AccountSummary> getAccountById(@PathParam("accountId") String accountId) {
+        return new DataVO<>(accountService.getAccountSummaryById(accountId));
     }
 
     @Path("account/summary")
@@ -82,6 +83,7 @@ public class AccountManageResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public DataVO<String> changeFamilyAvatar(@FormDataParam("file") InputStream in,
+                                             @FormDataParam("file") FormDataContentDisposition detail,
                                              @PathParam("accountId") String accountId) {
         return new DataVO<>(accountService.changeAccountAvatar(accountId, in));
     }
@@ -90,7 +92,7 @@ public class AccountManageResource {
     @GET
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    public Response getFamilyAvatar(@PathParam("accountId") String accountId) {
+    public Response getAccountAvatar(@PathParam("accountId") String accountId) {
         File avatarFile = accountService.getAccountAvatar(accountId);
         if (avatarFile != null) {
             return Response.ok(avatarFile)

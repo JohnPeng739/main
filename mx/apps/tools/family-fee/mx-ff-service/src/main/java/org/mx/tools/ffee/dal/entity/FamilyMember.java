@@ -13,9 +13,13 @@ public interface FamilyMember extends Base {
 
     void setRole(String role);
 
-    FfeeAccount getFfeeAccount();
+    FfeeAccount getAccount();
 
-    void setFfeeAccount(FfeeAccount ffeeAccount);
+    void setAccount(FfeeAccount account);
+
+    Family getFamily();
+
+    void setFamily(Family family);
 
     boolean isOwner();
 

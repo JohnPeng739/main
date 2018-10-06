@@ -7,6 +7,7 @@ import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
+import org.mx.tools.ffee.dal.entity.AccessLog;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FamilyMember;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
@@ -26,6 +27,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Component("familyService")
 public class FamilyServiceImpl implements FamilyService {
@@ -82,7 +84,7 @@ public class FamilyServiceImpl implements FamilyService {
         }
         // 新增家庭
         FamilyMember member = EntityFactory.createEntity(FamilyMember.class);
-        member.setFfeeAccount(owner);
+        member.setAccount(owner);
         member.setRole(ownerRole);
         member.setIsOwner(true);
         member = generalAccessor.save(member);
@@ -172,13 +174,13 @@ public class FamilyServiceImpl implements FamilyService {
             );
         }
         for (FamilyMember member : family.getMembers()) {
-            if (member.getFfeeAccount().getId().equals(account.getId())) {
+            if (member.getAccount().getId().equals(account.getId())) {
                 // 已经是家庭成员了，忽略
                 return family;
             }
         }
         FamilyMember member = EntityFactory.createEntity(FamilyMember.class);
-        member.setFfeeAccount(account);
+        member.setAccount(account);
         member.setRole(role);
         member.setIsOwner(false);
         member = generalAccessor.save(member);
@@ -188,6 +190,19 @@ public class FamilyServiceImpl implements FamilyService {
             logger.debug(String.format("The account[%s] join the family[%s] successfully.", accountId, familyId));
         }
         return family;
+    }
+
+    @Override
+    public List<AccessLog> getAccessLogsByFamilyId(String familyId) {
+        if (StringUtils.isBlank(familyId)) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The family's id is blank.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        return familyRepository.findAccessLogByFamilyId(familyId);
     }
 
     private Family getFamilyByOpenId(String openId) {
