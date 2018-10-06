@@ -39,6 +39,8 @@ public class UserInterfaceServiceErrorException extends UserInterfaceException {
         COMM_INITIALIZE_ERROR("通信服务初始化错误。"),
         COMM_DATA_TOO_MORE("传输数据超出设置大小。"),
 
+        GRAPHQL_EXECUTE_FAIL("执行GraphQL发生错误。"),
+
         SERVICE_OTHER_FAIL("其他服务访问错误。");
         public static final int BASE_ORDINAL = 60;
         private String errorMessage;
