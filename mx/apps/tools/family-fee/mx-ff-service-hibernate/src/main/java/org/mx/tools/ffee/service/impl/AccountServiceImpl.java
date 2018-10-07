@@ -1,11 +1,13 @@
 package org.mx.tools.ffee.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
+import org.mx.spring.session.SessionDataStore;
 import org.mx.tools.ffee.dal.entity.AccessLog;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
@@ -24,6 +26,7 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @Component("accountService")
 public class AccountServiceImpl implements AccountService {
@@ -31,15 +34,18 @@ public class AccountServiceImpl implements AccountService {
 
     private GeneralAccessor generalAccessor;
     private FamilyRepository familyRepository;
+    private SessionDataStore sessionDataStore;
     private FileTransportService fileTransportService;
 
     @Autowired
     public AccountServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor,
                               FamilyRepository familyRepository,
+                              SessionDataStore sessionDataStore,
                               FileTransportService fileTransportService) {
         super();
         this.generalAccessor = generalAccessor;
         this.familyRepository = familyRepository;
+        this.sessionDataStore = sessionDataStore;
         this.fileTransportService = fileTransportService;
     }
 
@@ -86,6 +92,8 @@ public class AccountServiceImpl implements AccountService {
         saved.setProvince(accountInfoBean.getProvince());
         saved.setCity(accountInfoBean.getCity());
         saved = generalAccessor.save(saved);
+        writeAccessLog(String.format("注册了新账户，open id：%s，昵称：%s，Mobile：%s。",
+                saved.getOpenId(), saved.getNickname(), saved.getMobile()));
         return getAccountSummaryById(saved.getId());
     }
 
@@ -149,6 +157,8 @@ public class AccountServiceImpl implements AccountService {
             checked.setCity(accountInfoBean.getCity());
         }
         checked = generalAccessor.save(checked);
+        writeAccessLog(String.format("修改了账户信息，open id：%s，昵称：%s，Mobile：%s。",
+                checked.getOpenId(), checked.getNickname(), checked.getMobile()));
         return getAccountSummaryById(checked.getId());
     }
 
@@ -161,6 +171,7 @@ public class AccountServiceImpl implements AccountService {
         if (!StringUtils.isBlank(familyId)) {
             family = generalAccessor.getById(familyId, Family.class);
         }
+        writeAccessLog(String.format("获取过家庭信息，昵称：%s。", account.getNickname()));
         return new AccountSummary(account, family);
     }
 
@@ -183,8 +194,30 @@ public class AccountServiceImpl implements AccountService {
             if (!StringUtils.isBlank(familyId)) {
                 family = generalAccessor.getById(familyId, Family.class);
             }
+            writeAccessLog(String.format("获取过家庭信息，昵称：%s。", account.getNickname()));
         }
         return new AccountSummary(account, family);
+    }
+
+    @Transactional
+    @Override
+    public void writeAccessLog(String content) {
+        if (StringUtils.isBlank(content)) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The access log's content is blank.");
+            }
+            return;
+        }
+        AccessLog log = EntityFactory.createEntity(AccessLog.class);
+        log.setContent(content);
+        Map<String, Object> store = sessionDataStore.get();
+        log.setAccountCode((String) store.get("currentCode"));
+        log.setLatitude((Double) store.get("latitude"));
+        log.setLongitude((Double) store.get("longitude"));
+        generalAccessor.save(log);
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Save access log successfully, log: %s.", JSON.toJSONString(log)));
+        }
     }
 
     @Transactional(readOnly = true)
@@ -216,6 +249,7 @@ public class AccountServiceImpl implements AccountService {
         String filePath = fileTransportService.uploadFile(path.toString(), in);
         account.setAvatarUrl(filePath.substring(root.length()));
         account = generalAccessor.save(account);
+        writeAccessLog(String.format("重新上传了头像，昵称：%s。", account.getNickname()));
         return account.getAvatarUrl();
     }
 

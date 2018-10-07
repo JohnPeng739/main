@@ -8,7 +8,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.DigestUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.session.SessionDataStore;
+import org.mx.spring.session.SessionDataStore;
 import org.mx.spring.task.BaseTask;
 import org.mx.tools.ffee.dal.entity.Course;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
@@ -108,8 +108,8 @@ public class InitialBaseDataTask extends BaseTask {
             logger.info("Initialize the public courses......");
         }
         sessionDataStore.setCurrentUserCode("System");
-        initialAdminAccount();
-        initialPublicCourses();
+        //initialAdminAccount();
+        //initialPublicCourses();
         sessionDataStore.removeCurrentUserCode();
         if (logger.isInfoEnabled()) {
             logger.info("Initialize the public courses successfully.");

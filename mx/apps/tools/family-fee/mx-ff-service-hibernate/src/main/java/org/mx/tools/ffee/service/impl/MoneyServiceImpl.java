@@ -84,6 +84,16 @@ public class MoneyServiceImpl implements MoneyService {
             );
         }
         DateUtils.DatetimeRange range = range(year, month, week);
+        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
+        if (account == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The account[%s] not found.", accountId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
+            );
+        }
+        accountService.writeAccessLog(String.format("获取%s账户的收入数据。", account.getNickname()));
         return moneyRepository.findIncomesByAccountId(accountId, range.getLowerLimit(), range.getUpperLimit());
     }
 
@@ -99,6 +109,16 @@ public class MoneyServiceImpl implements MoneyService {
             );
         }
         DateUtils.DatetimeRange range = range(year, month, week);
+        Family family = generalAccessor.getById(familyId, Family.class);
+        if (family == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The family[%s] not found.", familyId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
+        }
+        accountService.writeAccessLog(String.format("获取%s家庭的收入数据。", family.getName()));
         return moneyRepository.findIncomesByFamilyId(familyId, range.getLowerLimit(), range.getUpperLimit());
     }
 
@@ -114,6 +134,16 @@ public class MoneyServiceImpl implements MoneyService {
             );
         }
         DateUtils.DatetimeRange range = range(year, month, week);
+        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
+        if (account == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The account[%s] not found.", accountId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
+            );
+        }
+        accountService.writeAccessLog(String.format("获取%s账户的支出数据。", account.getNickname()));
         return moneyRepository.findSpendingsByAccountId(accountId, range.getLowerLimit(), range.getUpperLimit());
     }
 
@@ -129,6 +159,16 @@ public class MoneyServiceImpl implements MoneyService {
             );
         }
         DateUtils.DatetimeRange range = range(year, month, week);
+        Family family = generalAccessor.getById(familyId, Family.class);
+        if (family == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The family[%s] not found.", familyId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
+        }
+        accountService.writeAccessLog(String.format("获取%s家庭的支出数据。", family.getName()));
         return moneyRepository.findSpendingsByFamilyId(familyId, range.getLowerLimit(), range.getUpperLimit());
     }
 
@@ -239,6 +279,8 @@ public class MoneyServiceImpl implements MoneyService {
         List<MemberMoneyItem> byMemberSpending = computeMemberMoney(spendings);
         MoneySummary currentSpendings = new MoneySummary(totalSpending, byMonthSpending, byMemberSpending);
         CurrentMoneySummary current = new CurrentMoneySummary(0.0, currentIncomes, currentSpendings);
+
+        accountService.writeAccessLog(String.format("获取%s账户的收入总览数据。", account.getNickname()));
         return new AccountMoneySummary(account.getId(), account.getOpenId(), account.getNickname(),
                 account.getAvatarUrl(), family, recent, current);
     }
@@ -307,6 +349,7 @@ public class MoneyServiceImpl implements MoneyService {
         List<MemberMoneyItem> byMemberSpending = computeMemberMoney(spendings);
         MoneySummary currentSpendings = new MoneySummary(totalSpending, byMonthSpending, byMemberSpending);
         CurrentMoneySummary current = new CurrentMoneySummary(budget, currentIncomes, currentSpendings);
+        accountService.writeAccessLog(String.format("获取%s家庭的收入总览数据。", family.getName()));
         return new FamilyMoneySummary(family.getId(), family.getName(), family.getAvatarUrl(), recent, current);
     }
 
@@ -330,6 +373,7 @@ public class MoneyServiceImpl implements MoneyService {
                     UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
             );
         }
+        accountService.writeAccessLog(String.format("获取%s家庭的收入数据。", family.getName()));
         GeneralAccessor.ConditionTuple familyCond = GeneralAccessor.ConditionTuple.eq("family", family);
         if (year > 0) {
             DateUtils.DatetimeRange range = DateUtils.DatetimeRange.range(year);
@@ -363,6 +407,7 @@ public class MoneyServiceImpl implements MoneyService {
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED
             );
         }
+        accountService.writeAccessLog("删除一笔收入/支出数据。");
         return generalAccessor.remove(id, clazz);
     }
 
@@ -452,6 +497,7 @@ public class MoneyServiceImpl implements MoneyService {
                     saved instanceof Income ? "income" : "spending", family.getName(), course.getName(),
                     saved.getMoney()));
         }
+        accountService.writeAccessLog("保存一笔收入/支出数据。");
         return saved;
     }
 
@@ -476,6 +522,7 @@ public class MoneyServiceImpl implements MoneyService {
             );
         }
         GeneralAccessor.ConditionTuple familyCond = GeneralAccessor.ConditionTuple.eq("family", family);
+        accountService.writeAccessLog(String.format("获取%s家庭的支出数据。", family.getName()));
         if (year > 0) {
             DateUtils.DatetimeRange range = month > 0 ?
                     DateUtils.DatetimeRange.range(year, month) : DateUtils.DatetimeRange.range(year);
@@ -511,6 +558,7 @@ public class MoneyServiceImpl implements MoneyService {
             );
         }
         DateUtils.DatetimeRange range = DateUtils.DatetimeRange.lastWeek();
+        accountService.writeAccessLog(String.format("获取%s家庭的支出数据。", family.getName()));
         return generalAccessor.find(GeneralAccessor.ConditionGroup.and(
                 GeneralAccessor.ConditionTuple.eq("family", family),
                 GeneralAccessor.ConditionTuple.gte("occurTime", range.getLowerLimit()),

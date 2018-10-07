@@ -18,6 +18,8 @@ public interface AccountService {
 
     AccountSummary getAccountSummaryByOpenId(String openId);
 
+    void writeAccessLog(String content);
+
     List<AccessLog> getLogsByAccount(String accountId);
 
     String changeAccountAvatar(String accountId, InputStream in);

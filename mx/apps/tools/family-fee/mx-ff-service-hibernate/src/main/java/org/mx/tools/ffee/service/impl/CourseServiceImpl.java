@@ -10,6 +10,7 @@ import org.mx.tools.ffee.dal.entity.Course;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.repository.CourseRepository;
+import org.mx.tools.ffee.service.AccountService;
 import org.mx.tools.ffee.service.CourseService;
 import org.mx.tools.ffee.service.bean.CourseInfoBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,16 @@ public class CourseServiceImpl implements CourseService {
 
     private GeneralDictAccessor generalDictAccessor;
     private CourseRepository courseRepository;
+    private AccountService accountService;
 
     @Autowired
     public CourseServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor generalDictAccessor,
-                             CourseRepository courseRepository) {
+                             CourseRepository courseRepository,
+                             AccountService accountService) {
         super();
         this.generalDictAccessor = generalDictAccessor;
         this.courseRepository = courseRepository;
+        this.accountService = accountService;
     }
 
     private List<CourseBean> transform(List<Course> courses) {
@@ -47,15 +51,22 @@ public class CourseServiceImpl implements CourseService {
     @Transactional(readOnly = true)
     @Override
     public List<CourseBean> getAllCourses() {
+        accountService.writeAccessLog("获取所有科目数据。");
         return transform(courseRepository.findCourses());
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<CourseBean> getAllCoursesByFamily(String familyId) {
-        if (StringUtils.isBlank(familyId)) {
+        Family family = null;
+        if (!StringUtils.isBlank(familyId)) {
+            family = generalDictAccessor.getById(familyId, Family.class);
+        }
+        if (family == null) {
             familyId = "";
         }
+        accountService.writeAccessLog(String.format("获取%s科目数据。",
+                family == null ? "全部" : (family.getName() + "家庭")));
         return transform(courseRepository.findCoursesByFamily(familyId));
     }
 
@@ -70,7 +81,9 @@ public class CourseServiceImpl implements CourseService {
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        return new CourseBean(generalDictAccessor.getById(courseId, Course.class));
+        Course course = generalDictAccessor.getById(courseId, Course.class);
+        accountService.writeAccessLog(String.format("获取%s科目数据。", course.getName()));
+        return new CourseBean(course);
     }
 
     @Transactional
@@ -130,6 +143,7 @@ public class CourseServiceImpl implements CourseService {
                 logger.debug(String.format("Save course[%s] successfully, code: %s, name: %s, desc: %s.",
                         saved.getId(), saved.getCode(), saved.getName(), saved.getDesc()));
             }
+            accountService.writeAccessLog(String.format("新增或修改%s科目数据。", saved.getName()));
             return new CourseBean(saved);
         } else {
             if (logger.isErrorEnabled()) {
@@ -165,6 +179,7 @@ public class CourseServiceImpl implements CourseService {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Logical remove the course[%s] successfully.", courseId));
         }
+        accountService.writeAccessLog(String.format("删除%s科目数据。", course.getName()));
         return new CourseBean(course);
     }
 }

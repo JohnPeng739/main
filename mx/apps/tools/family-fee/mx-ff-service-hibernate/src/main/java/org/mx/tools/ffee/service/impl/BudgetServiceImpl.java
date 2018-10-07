@@ -11,6 +11,7 @@ import org.mx.tools.ffee.dal.entity.Course;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.repository.BudgetRepository;
+import org.mx.tools.ffee.service.AccountService;
 import org.mx.tools.ffee.service.BudgetService;
 import org.mx.tools.ffee.service.MoneyService;
 import org.mx.tools.ffee.service.bean.BudgetItemInfoBean;
@@ -29,13 +30,16 @@ public class BudgetServiceImpl implements BudgetService {
 
     private GeneralAccessor generalAccessor;
     private BudgetRepository budgetRepository;
+    private AccountService accountService;
 
     @Autowired
     public BudgetServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor,
-                             BudgetRepository budgetRepository) {
+                             BudgetRepository budgetRepository,
+                             AccountService accountService) {
         super();
         this.generalAccessor = generalAccessor;
         this.budgetRepository = budgetRepository;
+        this.accountService = accountService;
     }
 
     @Transactional(readOnly = true)
@@ -52,6 +56,16 @@ public class BudgetServiceImpl implements BudgetService {
         if (year == null || year <= 0) {
             year = Calendar.getInstance().get(Calendar.YEAR);
         }
+        Family family = generalAccessor.getById(familyId, Family.class);
+        if (family == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The family[%s] not found.", familyId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
+        }
+        accountService.writeAccessLog(String.format("获取%s家庭的预算数据。", family.getName()));
         return budgetRepository.findBudgetTotalByFamily(familyId, year);
     }
 
@@ -75,6 +89,16 @@ public class BudgetServiceImpl implements BudgetService {
                 result.add(new MoneyService.YearMoneyItem(year, 1, money, 0, 0, 0));
             });
         }
+        Family family = generalAccessor.getById(familyId, Family.class);
+        if (family == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The family[%s] not found.", familyId));
+            }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
+        }
+        accountService.writeAccessLog(String.format("获取%s家庭的预算数据。", family.getName()));
         return result;
     }
 
@@ -98,6 +122,7 @@ public class BudgetServiceImpl implements BudgetService {
                     UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
             );
         }
+        accountService.writeAccessLog(String.format("获取%s家庭的预算数据。", family.getName()));
         if (year <= 0) {
             return generalAccessor.find(GeneralAccessor.ConditionTuple.eq("family", family), BudgetItem.class);
         } else {
@@ -142,6 +167,9 @@ public class BudgetServiceImpl implements BudgetService {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The family[%s] not found.", familyId));
             }
+            throw new UserInterfaceFfeeErrorException(
+                    UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
+            );
         }
         Course course = generalAccessor.getById(courseId, Course.class);
         if (course == null) {
@@ -173,6 +201,7 @@ public class BudgetServiceImpl implements BudgetService {
             logger.debug(String.format("Save the budget successfully, course: %s, year: %d, money: %10.2f.",
                     course.getCode(), saved.getYear(), saved.getMoney()));
         }
+        accountService.writeAccessLog(String.format("修改%s家庭的预算数据。", family.getName()));
         return saved;
     }
 
@@ -200,6 +229,7 @@ public class BudgetServiceImpl implements BudgetService {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Logical delete budget item[%s] successfully.", budgetId));
         }
+        accountService.writeAccessLog(String.format("删除%s家庭的预算数据。", budgetItem.getFamily().getName()));
         return budgetItem;
     }
 }

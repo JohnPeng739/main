@@ -13,6 +13,7 @@ import org.mx.tools.ffee.dal.entity.FamilyMember;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
 import org.mx.tools.ffee.repository.FamilyRepository;
+import org.mx.tools.ffee.service.AccountService;
 import org.mx.tools.ffee.service.FamilyService;
 import org.mx.tools.ffee.service.FileTransportService;
 import org.mx.tools.ffee.service.bean.FamilyInfoBean;
@@ -37,14 +38,18 @@ public class FamilyServiceImpl implements FamilyService {
 
     private GeneralAccessor generalAccessor;
     private FamilyRepository familyRepository;
+    private AccountService accountService;
     private FileTransportService fileTransportService;
 
     @Autowired
     public FamilyServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor,
-                             FamilyRepository familyRepository, FileTransportService fileTransportService) {
+                             FamilyRepository familyRepository,
+                             AccountService accountService,
+                             FileTransportService fileTransportService) {
         super();
         this.generalAccessor = generalAccessor;
         this.familyRepository = familyRepository;
+        this.accountService = accountService;
         this.fileTransportService = fileTransportService;
     }
 
@@ -72,6 +77,7 @@ public class FamilyServiceImpl implements FamilyService {
         family.setDesc(familyInfoBean.getDesc());
         family.setName(familyInfoBean.getName());
         family = generalAccessor.save(family);
+        accountService.writeAccessLog(String.format("新增或修改%s家庭数据。", family.getName()));
         return saveFamilyMember(family, familyInfoBean.getMembers());
     }
 
@@ -86,7 +92,9 @@ public class FamilyServiceImpl implements FamilyService {
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        return generalAccessor.getById(familyId, Family.class);
+        Family family = generalAccessor.getById(familyId, Family.class);
+        accountService.writeAccessLog(String.format("新增或修改%s家庭数据。", family.getName()));
+        return family;
     }
 
     private Family saveFamilyMember(Family family, List<FamilyMemberInfoBean> members) {
@@ -162,7 +170,9 @@ public class FamilyServiceImpl implements FamilyService {
                     UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
             );
         }
-        return saveFamilyMember(family, familyInfoBean.getMembers());
+        family = saveFamilyMember(family, familyInfoBean.getMembers());
+        accountService.writeAccessLog(String.format("加入%s家庭。", family.getName()));
+        return family;
     }
 
     @Override
@@ -217,6 +227,7 @@ public class FamilyServiceImpl implements FamilyService {
         String filePath = fileTransportService.uploadFile(path.toString(), in);
         family.setAvatarUrl(filePath.substring(root.length()));
         family = generalAccessor.save(family);
+        accountService.writeAccessLog(String.format("重新上传%s家庭头像。", family.getName()));
         return family.getAvatarUrl();
     }
 
@@ -257,6 +268,7 @@ public class FamilyServiceImpl implements FamilyService {
                 Files.createDirectories(path.getParent());
             }
             QrCodeUtils.createQrCode(300, 300, json.toJSONString(), path.toString());
+            accountService.writeAccessLog(String.format("获取%s家庭二维码数据。", family.getName()));
             return fileTransportService.downloadFile(path.toString());
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
