@@ -59,7 +59,7 @@ public class FfeeGraphQLMutationType extends GraphQLTypeExecution implements Ini
     private class AccountFieldExecution implements GraphQLFieldSingleResult {
         @Override
         public AccountService.AccountSummary executeForSingle(DataFetchingEnvironment environment) {
-            OperateType op = environment.getArgument("op");
+            OperateType op = OperateType.valueOf(environment.getArgument("op"));
             Map<String, Object> input = environment.getArgument("input");
             AccountInfoBean accountInfoBean = GraphQLUtils.parse(input, AccountInfoBean.class);
             if (op == OperateType.REGISTRY) {
@@ -85,7 +85,7 @@ public class FfeeGraphQLMutationType extends GraphQLTypeExecution implements Ini
     private class BudgetItemFieldExecution implements GraphQLFieldSingleResult {
         @Override
         public Object executeForSingle(DataFetchingEnvironment environment) {
-            OperateType op = environment.getArgument("op");
+            OperateType op = OperateType.valueOf(environment.getArgument("op"));
             Map<String, Object> input = environment.getArgument("input");
             BudgetItemInfoBean budgetItemInfoBean = GraphQLUtils.parse(input, BudgetItemInfoBean.class);
             if (op == OperateType.DELETE) {
@@ -111,7 +111,7 @@ public class FfeeGraphQLMutationType extends GraphQLTypeExecution implements Ini
     private class CourseFieldExecution implements GraphQLFieldSingleResult {
         @Override
         public Object executeForSingle(DataFetchingEnvironment environment) {
-            OperateType op = environment.getArgument("op");
+            OperateType op = OperateType.valueOf(environment.getArgument("op"));
             Map<String, Object> input = environment.getArgument("input");
             CourseInfoBean courseInfoBean = GraphQLUtils.parse(input, CourseInfoBean.class);
             if (op == OperateType.DELETE) {
@@ -137,7 +137,7 @@ public class FfeeGraphQLMutationType extends GraphQLTypeExecution implements Ini
     private class FamilyFieldExecution implements GraphQLFieldSingleResult {
         @Override
         public Object executeForSingle(DataFetchingEnvironment environment) {
-            OperateType op = environment.getArgument("op");
+            OperateType op = OperateType.valueOf(environment.getArgument("op"));
             Map<String, Object> input = environment.getArgument("input");
             FamilyInfoBean familyInfoBean = GraphQLUtils.parse(input, FamilyInfoBean.class);
             if (op == OperateType.JOIN_FAMILY) {
@@ -172,7 +172,7 @@ public class FfeeGraphQLMutationType extends GraphQLTypeExecution implements Ini
 
         @Override
         public Object executeForSingle(DataFetchingEnvironment environment) {
-            OperateType op = environment.getArgument("op");
+            OperateType op = OperateType.valueOf(environment.getArgument("op"));
             Map<String, Object> input = environment.getArgument("input");
             MoneyInfoBean moneyInfoBean = GraphQLUtils.parse(input, MoneyInfoBean.class);
             if (op == OperateType.DELETE) {

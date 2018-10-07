@@ -41,6 +41,8 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     private String city;
     @Column(name = "GENDER", length = 10)
     private Gender gender = Gender.MALE;
+    @Column(name = "PASSWORD", length = 40)
+    private String password;
 
     @Override
     public String getOpenId() {
@@ -170,5 +172,15 @@ public class FfeeAccountEntity extends BaseEntity implements FfeeAccount {
     @Override
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

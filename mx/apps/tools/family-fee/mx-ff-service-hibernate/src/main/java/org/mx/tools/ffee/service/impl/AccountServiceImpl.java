@@ -73,7 +73,9 @@ public class AccountServiceImpl implements AccountService {
         if (saved == null) {
             saved = EntityFactory.createEntity(FfeeAccount.class);
         }
+        saved.setOpenId(openId);
         saved.setNickname(accountInfoBean.getNickname());
+        saved.setPassword(accountInfoBean.getPassword());
         saved.setMobile(accountInfoBean.getMobile());
         saved.setEmail(accountInfoBean.getEmail());
         saved.setWx(accountInfoBean.getWx());
@@ -116,16 +118,36 @@ public class AccountServiceImpl implements AccountService {
                     UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
             );
         }
-        checked.setNickname(accountInfoBean.getNickname());
-        checked.setMobile(accountInfoBean.getMobile());
-        checked.setEmail(accountInfoBean.getEmail());
-        checked.setWx(accountInfoBean.getWx());
-        checked.setQq(accountInfoBean.getQq());
-        checked.setWb(accountInfoBean.getWb());
-        checked.setAvatarUrl(accountInfoBean.getAvatarUrl());
-        checked.setCountry(accountInfoBean.getCountry());
-        checked.setProvince(accountInfoBean.getProvince());
-        checked.setCity(accountInfoBean.getCity());
+        if (accountInfoBean.getNickname() != null) {
+            checked.setNickname(accountInfoBean.getNickname());
+        }
+        if (accountInfoBean.getMobile() != null) {
+            checked.setMobile(accountInfoBean.getMobile());
+        }
+        if (accountInfoBean.getEmail() != null) {
+            checked.setEmail(accountInfoBean.getEmail());
+        }
+        if (accountInfoBean.getWx() != null) {
+            checked.setWx(accountInfoBean.getWx());
+        }
+        if (accountInfoBean.getQq() != null) {
+            checked.setQq(accountInfoBean.getQq());
+        }
+        if (accountInfoBean.getWb() != null) {
+            checked.setWb(accountInfoBean.getWb());
+        }
+        if (accountInfoBean.getAvatarUrl() != null) {
+            checked.setAvatarUrl(accountInfoBean.getAvatarUrl());
+        }
+        if (accountInfoBean.getCountry() != null) {
+            checked.setCountry(accountInfoBean.getCountry());
+        }
+        if (accountInfoBean.getProvince() != null) {
+            checked.setProvince(accountInfoBean.getProvince());
+        }
+        if (accountInfoBean.getCity() != null) {
+            checked.setCity(accountInfoBean.getCity());
+        }
         checked = generalAccessor.save(checked);
         return getAccountSummaryById(checked.getId());
     }

@@ -61,6 +61,10 @@ public interface FfeeAccount extends Base {
 
     void setCity(String city);
 
+    String getPassword();
+
+    void setPassword(String password);
+
     enum Gender {
         MALE, FEMALE, NA
     }

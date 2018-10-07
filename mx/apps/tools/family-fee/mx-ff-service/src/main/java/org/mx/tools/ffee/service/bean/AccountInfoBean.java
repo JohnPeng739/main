@@ -3,7 +3,7 @@ package org.mx.tools.ffee.service.bean;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 
 public class AccountInfoBean {
-    private String id, openId, unionId, nickname, mobile, email, wx, qq, wb, avatarUrl, country, province, city;
+    private String id, openId, unionId, nickname, mobile, email, wx, qq, wb, avatarUrl, country, province, city, password;
     private FfeeAccount.Gender gender;
     private boolean valid;
 
@@ -67,6 +67,10 @@ public class AccountInfoBean {
         return valid;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -125,5 +129,9 @@ public class AccountInfoBean {
 
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -235,7 +235,7 @@ type Income {
     operator: String
     family: Family
     course: Course
-    total: Float
+    money: Float
     occurTime: Int
     desc: String
     owner: FfeeAccount
@@ -249,7 +249,7 @@ type Spending {
     operator: String
     family: Family
     course: Course
-    total: Float
+    money: Float
     occurTime: Int
     desc: String
     owner: FfeeAccount

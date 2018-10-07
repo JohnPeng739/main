@@ -240,23 +240,15 @@ public class FfeeGraphQLQueryType extends GraphQLTypeExecution implements Initia
 
     private class CourseFieldExecution implements GraphQLFieldSingleResult, GraphQLFieldListResult {
         @Override
-        public List executeForList(DataFetchingEnvironment environment) {
+        public List<CourseService.CourseBean> executeForList(DataFetchingEnvironment environment) {
             String familyId = environment.getArgument("familyId");
             // 如果familyId为blank，则返回所有公共科目
             return courseService.getAllCoursesByFamily(familyId);
         }
 
         @Override
-        public Object executeForSingle(DataFetchingEnvironment environment) {
+        public CourseService.CourseBean executeForSingle(DataFetchingEnvironment environment) {
             String id = environment.getArgument("id");
-            if (StringUtils.isBlank(id)) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("The course's id is blank.");
-                }
-                throw new UserInterfaceSystemErrorException(
-                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
-                );
-            }
             return courseService.getCourse(id);
         }
 
