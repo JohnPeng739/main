@@ -11,8 +11,8 @@ import org.mx.dal.entity.BaseDict;
 import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
-import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
+import org.mx.spring.session.SessionDataStore;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -289,22 +289,6 @@ public class GeneralAccessorImpl implements GeneralAccessor {
             result = result.get(p);
         }
         return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see GeneralAccessor#findOne(List, Class)
-     * @deprecated 尽可能使用 {@link #findOne(ConditionGroup, Class)} 来替代。
-     */
-    @Transactional(readOnly = true)
-    @Override
-    public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
-        ConditionGroup group = ConditionGroup.and();
-        if (tuples != null && !tuples.isEmpty()) {
-            tuples.forEach(group::add);
-        }
-        return findOne(group, clazz);
     }
 
     /**

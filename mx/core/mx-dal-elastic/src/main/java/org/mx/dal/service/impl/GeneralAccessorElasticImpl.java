@@ -167,20 +167,6 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
     /**
      * {@inheritDoc}
      *
-     * @see GeneralAccessor#findOne(List, Class)
-     */
-    @Override
-    public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
-        ConditionGroup group = ConditionGroup.and();
-        for (ConditionTuple tuple : tuples) {
-            group.add(tuple);
-        }
-        return findOne(group, clazz);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
      * @see GeneralAccessor#findOne(ConditionGroup, Class)
      */
     @Override

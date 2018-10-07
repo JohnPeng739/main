@@ -13,8 +13,8 @@ import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralTextSearchAccessor;
-import org.mx.dal.session.SessionDataStore;
 import org.mx.error.UserInterfaceSystemErrorException;
+import org.mx.spring.session.SessionDataStore;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mapping.MappingException;
 import org.springframework.data.mongodb.core.BulkOperations;
@@ -293,21 +293,6 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
             }
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see GeneralAccessor#findOne(List, Class)
-     * @deprecated 尽可能使用 {@link #findOne(ConditionGroup, Class)} 来替代。
-     */
-    @Override
-    public <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz) {
-        ConditionGroup group = ConditionGroup.and();
-        if (tuples != null && !tuples.isEmpty()) {
-            tuples.forEach(group::add);
-        }
-        return findOne(group, clazz);
     }
 
     /**

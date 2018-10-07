@@ -7,7 +7,7 @@ import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.impl.GeneralAccessorMongoImpl;
 import org.mx.dal.service.impl.GeneralDictAccessorMongoImpl;
-import org.mx.dal.session.SessionDataStore;
+import org.mx.spring.session.SessionDataStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

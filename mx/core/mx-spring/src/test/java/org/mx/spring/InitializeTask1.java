@@ -1,11 +1,13 @@
 package org.mx.spring;
 
-public class InitializeTask1 extends InitializeTask {
+import org.mx.spring.task.BaseTask;
+
+public class InitializeTask1 extends BaseTask {
     public InitializeTask1() {
         super("Initialize task1", false);
     }
 
-    public void invokeTask() {
+    public void invoke() {
         System.out.println("Invoke task: ***********.");
     }
 }

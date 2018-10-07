@@ -6,7 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.session.SessionDataStore;
+import org.mx.spring.session.SessionDataStore;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

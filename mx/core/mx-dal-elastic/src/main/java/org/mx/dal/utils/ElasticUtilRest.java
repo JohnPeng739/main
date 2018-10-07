@@ -42,10 +42,10 @@ import org.mx.dal.annotation.ElasticIndex;
 import org.mx.dal.entity.*;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
-import org.mx.dal.session.SessionDataStore;
 import org.mx.dal.utils.bean.IndicesInfoBean;
 import org.mx.dal.utils.bean.NodeInfoBean;
 import org.mx.error.UserInterfaceSystemErrorException;
+import org.mx.spring.session.SessionDataStore;
 
 import java.io.BufferedReader;
 import java.io.IOException;

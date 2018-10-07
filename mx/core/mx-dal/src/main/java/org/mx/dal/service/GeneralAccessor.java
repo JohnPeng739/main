@@ -124,18 +124,6 @@ public interface GeneralAccessor {
     /**
      * 根据指定字段的值获取一条数据记录，多个条件采用and组合。
      *
-     * @param tuples 条件元组（包括字段名和字段值）
-     * @param clazz  实体接口类
-     * @param <T>    实现Base接口的泛型对象类型
-     * @return 实体对象，如果不存在则返回null
-     * @see ConditionTuple
-     * @deprecated 尽可能使用 {@link #findOne(ConditionGroup, Class)} 来替代。
-     */
-    <T extends Base> T findOne(List<ConditionTuple> tuples, Class<T> clazz);
-
-    /**
-     * 根据指定字段的值获取一条数据记录，多个条件采用and组合。
-     *
      * @param group 条件组
      * @param clazz 实体接口类
      * @param <T>   实现Base接口的泛型对象类型

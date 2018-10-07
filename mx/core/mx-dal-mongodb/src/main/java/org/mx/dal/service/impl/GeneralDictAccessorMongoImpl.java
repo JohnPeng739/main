@@ -4,7 +4,7 @@ import org.mx.dal.EntityFactory;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
-import org.mx.dal.session.SessionDataStore;
+import org.mx.spring.session.SessionDataStore;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.Collections;
@@ -39,7 +39,7 @@ public class GeneralDictAccessorMongoImpl extends GeneralAccessorMongoImpl imple
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
             }
-            return super.findOne(Collections.singletonList(ConditionTuple.eq("code", code)), clazz);
+            return super.findOne(ConditionTuple.eq("code", code), clazz);
         } catch (ClassNotFoundException ex) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }

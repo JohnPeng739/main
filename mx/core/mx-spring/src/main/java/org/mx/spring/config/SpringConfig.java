@@ -1,5 +1,7 @@
 package org.mx.spring.config;
 
+import org.mx.spring.session.SessionDataStore;
+import org.mx.spring.session.impl.SessionDataThreadLocal;
 import org.mx.spring.utils.SpringContextHolder;
 import org.springframework.context.annotation.Bean;
 
@@ -12,5 +14,15 @@ public class SpringConfig {
     @Bean
     public SpringContextHolder springContextHolder() {
         return new SpringContextHolder();
+    }
+
+    /**
+     * 基于线程局部堆方式创建SessionDataStore
+     *
+     * @return SessionDataStore对象
+     */
+    @Bean(name = "sessionDataStore")
+    public SessionDataStore sessionDataThreadLocal() {
+        return new SessionDataThreadLocal();
     }
 }
