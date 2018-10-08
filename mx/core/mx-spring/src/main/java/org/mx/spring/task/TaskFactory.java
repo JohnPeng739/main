@@ -160,8 +160,7 @@ public class TaskFactory {
                 ((BaseTask) task).setFuture(future);
             }
             if (logger.isInfoEnabled()) {
-                logger.info(String.format("Submit a async task successfully, name: %s, state: %s, start: %s.",
-                        task.getName(), task.getState(), DateUtils.get23Date(new Date(task.getStartTime()))));
+                logger.info(String.format("Submit a async task successfully, name: %s.", task.getName()));
             }
         } catch (Exception ex) {
             if (logger.isWarnEnabled()) {
@@ -187,8 +186,7 @@ public class TaskFactory {
         scheduledConfigs.put(task.getName(), config);
         this.schedule(task);
         if (logger.isInfoEnabled()) {
-            logger.info(String.format("Submit a scheduled task successfully, name: %s, state: %s, start: %s.",
-                    task.getName(), task.getState(), DateUtils.get23Date(new Date(task.getStartTime()))));
+            logger.info(String.format("Submit a scheduled task successfully, name: %s.", task.getName()));
         }
         return this;
     }
@@ -199,24 +197,27 @@ public class TaskFactory {
      * @param task 任务
      */
     private void runTask(Task task) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Start invoke the task[%s]......", task.getName()));
-        }
         ((BaseTask) task).setStartTime(System.currentTimeMillis());
         ((BaseTask) task).setState(Task.TaskState.RUNNING);
+        if (logger.isDebugEnabled()) {
+            logger.debug(String.format("Start invoke the task[%s], state: %s, start time: %s.", task.getName(),
+                    task.getState(), DateUtils.get23Date(new Date(task.getStartTime()))));
+        }
         try {
             task.invoke();
             ((BaseTask) task).setState(Task.TaskState.FINISHED);
             ((BaseTask) task).setFinishTime(System.currentTimeMillis());
             if (logger.isDebugEnabled()) {
-                logger.debug(String.format("The task[%s] invoke successfully.", task.getName()));
+                logger.debug(String.format("The task[%s] invoke successfully, state: %s, finish time: %s.",
+                        task.getName(), task.getState(), DateUtils.get23Date(new Date(task.getFinishTime()))));
             }
         } catch (Exception ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("Invoke the task[%s] fail.", task.getName()), ex);
-            }
             ((BaseTask) task).setFinishTime(System.currentTimeMillis());
             ((BaseTask) task).setState(Task.TaskState.ERROR);
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Invoke the task[%s] fail, state: %s, finish time: %s.", task.getName(),
+                        task.getState(), DateUtils.get23Date(new Date(task.getFinishTime()))), ex);
+            }
         }
     }
 
@@ -236,12 +237,16 @@ public class TaskFactory {
         }
         if (task instanceof BaseTask) {
             ((BaseTask) task).setFuture(future);
+            ((BaseTask) task).setState(Task.TaskState.RUNNING);
+            ((BaseTask) task).setStartTime(System.currentTimeMillis());
         }
     }
 
     private void cancelTask(Task task) {
         if (task instanceof BaseTask && ((BaseTask) task).getFuture() != null &&
                 task.getState() == Task.TaskState.RUNNING) {
+            ((BaseTask) task).setState(Task.TaskState.ERROR);
+            ((BaseTask) task).setFinishTime(System.currentTimeMillis());
             ((BaseTask) task).getFuture().cancel(true);
             if (logger.isWarnEnabled()) {
                 logger.warn(String.format("The task[%s] will be canceled.", task.getName()));
