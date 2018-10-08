@@ -16,6 +16,14 @@ public interface SessionDataStore {
     Map<String, Object> get();
 
     /**
+     * 向当前会话关联的数据集合中添加键值对集合
+     *
+     * @param map 待添加的键值对集合
+     * @return 添加后的集合
+     */
+    Map<String, Object> set(Map<String, Object> map);
+
+    /**
      * 向当前会话关联的数据集合中添加键值对
      *
      * @param key   键

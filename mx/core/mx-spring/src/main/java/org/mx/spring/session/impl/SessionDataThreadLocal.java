@@ -27,6 +27,19 @@ public class SessionDataThreadLocal implements SessionDataStore {
     /**
      * {@inheritDoc}
      *
+     * @see SessionDataStore#set(Map)
+     */
+    @Override
+    public Map<String, Object> set(Map<String, Object> map) {
+        Map<String, Object> old = get();
+        old.putAll(map);
+        threadLocal.set(old);
+        return old;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @see SessionDataStore#set(String, Object)
      */
     @Override
