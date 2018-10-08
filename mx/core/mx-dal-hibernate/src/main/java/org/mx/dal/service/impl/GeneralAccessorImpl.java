@@ -364,8 +364,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save entity success, entity: %s.", t));
         }
-        // return getById(t.getId(), (Class<T>) t.getClass(), false);
-        // 为了提高性能，直接返回
+        entityManager.refresh(t);
         return t;
     }
 

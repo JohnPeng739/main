@@ -42,7 +42,7 @@ ext.versions = [
   'mx-service-utils'	: '2.0.0',
   'mx-hanlp-utils'	: '1.0.12',
   'mx-dal'      	: '3.0.0',
-  'mx-dal-hibernate'    : '3.0.0',
+  'mx-dal-hibernate'    : '3.0.1',
   'mx-dal-mongodb'      : '3.0.0',
   'mx-dal-elastic'	: '3.0.0',
 
