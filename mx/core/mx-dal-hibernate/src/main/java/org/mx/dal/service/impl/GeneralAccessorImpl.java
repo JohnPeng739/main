@@ -19,6 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -255,13 +256,15 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 criteriaQuery.where(createGroupPredicate(cb, root, group));
             }
             if (orderGroup != null && !orderGroup.getOrders().isEmpty()) {
+                List<Order> orders = new ArrayList<>();
                 orderGroup.getOrders().forEach(order -> {
                     if (order.getType() == RecordOrder.OrderType.ASC) {
-                        criteriaQuery.orderBy(cb.asc(root.get(order.getField())));
-                    } else {
-                        criteriaQuery.orderBy(cb.desc(root.get(order.getField())));
+                        orders.add(cb.asc(root.get(order.getField())))
+;                    } else {
+                        orders.add(cb.desc(root.get(order.getField())));
                     }
                 });
+                criteriaQuery.orderBy(orders);
             }
             Query query = entityManager.createQuery(criteriaQuery);
             if (pagination != null) {
@@ -364,6 +367,7 @@ public class GeneralAccessorImpl implements GeneralAccessor {
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save entity success, entity: %s.", t));
         }
+        // 为了防止管理对象没有及时更新状态，这里强制刷新一次
         entityManager.refresh(t);
         return t;
     }
