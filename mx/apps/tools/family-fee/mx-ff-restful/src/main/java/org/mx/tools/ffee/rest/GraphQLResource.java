@@ -8,6 +8,7 @@ import org.mx.StringUtils;
 import org.mx.service.rest.graphql.GraphQLUtils;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.spring.session.SessionDataStore;
+import org.mx.tools.ffee.rest.bean.ClientRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ws.rs.Consumes;
@@ -17,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 @Path("rest/v1")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -38,16 +40,19 @@ public class GraphQLResource {
         if (!StringUtils.isBlank(clientRequest)) {
             try {
                 ClientRequest request = JSON.parseObject(clientRequest, ClientRequest.class);
-                if (!StringUtils.isBlank(request.getAccountCode())) {
-                    sessionDataStore.setCurrentUserCode(request.getAccountCode());
-                }
-                sessionDataStore.set("longitude", request.getLongitude());
-                sessionDataStore.set("latitude", request.getLatitude());
+                Map<String, Object> map = sessionDataStore.get();
+                map.put("currentUser", request.getAccountId());
+                map.put("latitude", request.getLatitude());
+                map.put("longitude", request.getLongitude());
+                sessionDataStore.set(map);
             } catch (Exception ex) {
                 if (logger.isErrorEnabled()) {
-                    logger.error(String.format("Parse the json fail: %s.", clientRequest));
+                    logger.error(String.format("Parse the json fail: %s.", clientRequest), ex);
                 }
             }
+        }
+        if (StringUtils.isBlank(sessionDataStore.getCurrentUserCode())) {
+            sessionDataStore.setCurrentUserCode("System");
         }
     }
 
@@ -58,34 +63,5 @@ public class GraphQLResource {
         JSONObject result = graphQLUtils.execute(request);
         sessionDataStore.removeCurrentUserCode();
         return new DataVO<>(result);
-    }
-
-    private class ClientRequest {
-        private String accountCode;
-        private double latitude, longitude;
-
-        public String getAccountCode() {
-            return accountCode;
-        }
-
-        public double getLatitude() {
-            return latitude;
-        }
-
-        public double getLongitude() {
-            return longitude;
-        }
-
-        public void setAccountCode(String accountCode) {
-            this.accountCode = accountCode;
-        }
-
-        public void setLatitude(double latitude) {
-            this.latitude = latitude;
-        }
-
-        public void setLongitude(double longitude) {
-            this.longitude = longitude;
-        }
     }
 }

@@ -11,7 +11,8 @@ Page({
     typeIndex: 0,
     enableParentCourse: false,
     courses: [],
-    courseIndex: [0, 0, 0]
+    courseIndex: [0, 0, 0],
+    parentCourse: {}
   },
   bindTypeChange: function(e) {
     this.setData({
@@ -25,8 +26,9 @@ Page({
     })
   },
   bindCourseChange: function(e) {
-    let select = e.detail.value
-    console.log(select)
+    this.setData({
+      course: e.detail.value
+    })
   },
   filterCourse: function(courses, filterType) {
     let result = []
@@ -56,10 +58,48 @@ Page({
       courses: allCourses
     })
   },
+  formSubmit: function (e) {
+    let form = e.detail.value
+    let {
+      parentCourse,
+      typeIndex,
+      enableParentCourse
+    } = this.data
+    let data = {
+      type: typeIndex === 0 ? 'SPENDING' : 'INCOME',
+      parentCourseId: enableParentCourse ? parentCourse.id : '',
+      code: form.code,
+      name: form.name,
+      desc: form.desc
+    }
+    if (!code || code.length <= 0) {
+      utils.error('必须输入项目代码！')
+      return
+    }
+    if (!name || name.length <= 0) {
+      utils.error('必须输入项目名称！')
+      return
+    }
+    utils.post('courses/new', data, function (res) {
+      if (res.data.errorCode === 0) {
+        console.log(res.data.data)
+        utils.info('保存一个项目。')
+      } else {
+        utils.error(res.data.errorMessage)
+      }
+    })
+  },
+  formReset: function () {
+    //
+  },
   onLoad: function(e) {
     let {
       family
     } = app.globalData
+    let course = utils.getMultiColumnData(courses, this.data.courseIndex)
+    this.setData({
+      parentCourse: course
+    })
     wx.setNavigationBarTitle({
       title: family.name + ' > 项目设置',
     })

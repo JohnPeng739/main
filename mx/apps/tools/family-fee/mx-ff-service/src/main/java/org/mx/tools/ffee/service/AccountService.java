@@ -20,7 +20,7 @@ public interface AccountService {
 
     void writeAccessLog(String content);
 
-    List<AccessLog> getLogsByAccount(String accountId);
+    List<AccessLog> getLogsByAccountId(String accountId);
 
     String changeAccountAvatar(String accountId, InputStream in);
 

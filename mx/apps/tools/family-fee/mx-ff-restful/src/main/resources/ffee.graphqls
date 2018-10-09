@@ -30,15 +30,16 @@ type QueryType {
 
 type MutationType {
     saveAccount(op: OperateType!, input: AccountInfoInput!): AccountSummary
-    saveBudgetItem(op: OperateType!, input: BudgetItemInfoInput): BudgetItem
-    saveCourse(op: OperateType!, input: CourseInfoInput): Course
-    saveFamily(op: OperateType!, input: FamilyInfoInput): Family
-    saveIncome(op: OperateType!, input: MoneyInfoInput): Income
-    saveSpending(op: OperateType!, input: MoneyInfoInput): Spending
+    saveBudgetItem(op: OperateType!, input: BudgetItemInfoInput!): BudgetItem
+    saveCourse(op: OperateType!, input: CourseInfoInput!): Course
+    saveFamily(input: FamilyInfoInput!): Family
+    saveFamilyMember(input: FamilyMemberInfoInput!): Family
+    saveIncome(op: OperateType!, input: MoneyInfoInput!): Income
+    saveSpending(op: OperateType!, input: MoneyInfoInput!): Spending
 }
 
 enum OperateType {
-    SAVE, DELETE, REGISTRY, JOIN_FAMILY
+    SAVE, DELETE, REGISTRY
 }
 
 input AccountInfoInput {
@@ -61,48 +62,51 @@ input AccountInfoInput {
 
 input BudgetItemInfoInput {
     id: String
-    courseId: String
-    familyId: String
+    courseId: String!
+    familyId: String!
     desc: String
-    year: Int
-    money: Float
+    year: Int!
+    money: Float!
     valid: Boolean
 }
 
 input CourseInfoInput {
+    parentId: String
     id: String
-    code: String
-    name: String
+    code: String!
+    name: String!
     desc: String
     ownerId: String
-    type: CourseType
+    type: CourseType!
     valid: Boolean
 }
 
 input FamilyInfoInput {
     id: String
-    name: String
+    name: String!
     avatarUrl: String
     desc: String
-    members:[FamilyMemberInfo]
+    ownerId: String
+    role: String
     valid: Boolean
 }
 
-input FamilyMemberInfo {
+input FamilyMemberInfoInput {
+    familyId: String!
     id: String
-    role: String
-    accountId: String
+    role: String!
+    accountId: String!
     isOwner: Boolean
 }
 
 input MoneyInfoInput {
     id: String
-    familyId: String
-    courseId: String
+    familyId: String!
+    courseId: String!
     ownerId: String
     desc: String
-    money: Float
-    occurTime: Int
+    money: Float!
+    occurTime: Long!
 }
 
 input AccountQueryInput {
@@ -150,8 +154,8 @@ type AccountSummary {
 type FfeeAccount {
     id: String
     valid: Boolean
-    createdTime: Int
-    updatedTime: Int
+    createdTime: Long
+    updatedTime: Long
     operator: String
     openId: String
     unionId: String
@@ -171,10 +175,10 @@ type FfeeAccount {
 type AccessLog {
     id: String
     valid: Boolean
-    createdTime: Int
-    updatedTime: Int
+    createdTime: Long
+    updatedTime: Long
     operator: String
-    account: FfeeAccount
+    accountId: String
     content: String
     latitude: Float
     longitude: Float
@@ -194,12 +198,12 @@ type Course {
 type BudgetItem {
     id: String
     valid: Boolean
-    createdTime: Int
-    updatedTime: Int
+    createdTime: Long
+    updatedTime: Long
     operator: String
     family: Family
     year: Int
-    total: Float
+    money: Float
     desc: String
     course: Course
 }
@@ -207,8 +211,8 @@ type BudgetItem {
 type Family {
     id: String
     valid: Boolean
-    createdTime: Int
-    updatedTime: Int
+    createdTime: Long
+    updatedTime: Long
     operator: String
     name: String
     desc: String
@@ -219,8 +223,8 @@ type Family {
 type FamilyMember {
     id: String
     valid: Boolean
-    createdTime: Int
-    updatedTime: Int
+    createdTime: Long
+    updatedTime: Long
     operator: String
     role: String
     account: FfeeAccount
@@ -230,13 +234,13 @@ type FamilyMember {
 type Income {
     id: String
     valid: Boolean
-    createdTime: Int
-    updatedTime: Int
+    createdTime: Long
+    updatedTime: Long
     operator: String
     family: Family
     course: Course
     money: Float
-    occurTime: Int
+    occurTime: Long
     desc: String
     owner: FfeeAccount
 }
@@ -244,13 +248,13 @@ type Income {
 type Spending {
     id: String
     valid: Boolean
-    createdTime: Int
-    updatedTime: Int
+    createdTime: Long
+    updatedTime: Long
     operator: String
     family: Family
     course: Course
     money: Float
-    occurTime: Int
+    occurTime: Long
     desc: String
     owner: FfeeAccount
 }
@@ -293,7 +297,7 @@ type MoneySummary {
 
 type YearMoneyItem {
     year: Int
-    count: Int
+    count: Long
     total: Float
     min: Float
     max: Float
@@ -303,7 +307,7 @@ type YearMoneyItem {
 type YearMonthMoneyItem {
     year: Int
     month: Int
-    count: Int
+    count: Long
     total: Float
     min: Float
     max: Float
@@ -312,7 +316,7 @@ type YearMonthMoneyItem {
 
 type MemberMoneyItem {
     nickname: String
-    count: Int
+    count: Long
     total: Float
     min: Float
     max: Float

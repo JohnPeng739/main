@@ -12,21 +12,29 @@ Page({
     courses: [],
     courseIndex: [0, 0, 0],
     members: [],
-    memberIndex: 0
+    memberIndex: 0,
+    course: {},
+    occurDate: utils.dateString(new Date())
   },
   tapTabItem: function(e) {
     utils.switchTabBar(app.globalData.tabBar.list, this.route, e)
   },
   bindCourseChange: function(e) {
-    console.log(e.detail.value)
+    this.setData({
+      course: e.detail.value
+    })
   },
   bindMemberChange: function(e) {
-    console.log(e.detail.value)
     this.setData({
       memberIndex: e.detail.value
     })
   },
-  filterCourse: function (courses, filterType) {
+  bindDateChange: function(e) {
+    this.setData({
+      occurDate: e.detail.value
+    })
+  },
+  filterCourse: function(courses, filterType) {
     let result = []
     courses.forEach(course => {
       if (course.type !== filterType) {
@@ -40,6 +48,39 @@ Page({
     })
     result.sort((o1, o2) => o1.order - o2.order)
     return result
+  },
+  formSubmit: function(e) {
+    let form = e.detail.value
+    let {
+      course,
+      memberIndex,
+      family,
+      occurDate
+    } = this.data
+    let data = {
+      openId: app.globalData.openId,
+      familyId: family.id,
+      courseId: course.id,
+      desc: form.desc,
+      ownerId: memberIndex > 0 ? family.members[memberIndex - 1].ffeeAccount.id : '',
+      money: form.money,
+      occurTime: Date.parse(occurDate)
+    }
+    if (!(data.money >= 0)) {
+      utils.error('必须输入消费金额！')
+      return
+    }
+    utils.post('spendings/new', data, function(res) {
+      if (res.data.errorCode === 0) {
+        console.log(res.data.data)
+        utils.info('保存一笔支出成功。')
+      } else {
+        utils.error(res.data.errorMessage)
+      }
+    })
+  },
+  formReset: function() {
+    //
   },
   /**
    * 生命周期函数--监听页面加载
@@ -55,10 +96,12 @@ Page({
     let members = ['公共']
     family.members.forEach(member => members.push(member.role))
     courses = this.filterCourse(courses, 'INCOME')
+    let course = utils.getMultiColumnData(courses, this.data.courseIndex)
     this.setData({
       courses: courses,
       family: family,
-      members: members
+      members: members,
+      course: course
     })
     app.editTabBar()
   }

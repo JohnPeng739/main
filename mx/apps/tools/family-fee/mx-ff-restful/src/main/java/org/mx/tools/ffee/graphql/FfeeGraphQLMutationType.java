@@ -48,6 +48,7 @@ public class FfeeGraphQLMutationType extends GraphQLTypeExecution implements Ini
         super.addExecution(new BudgetItemFieldExecution());
         super.addExecution(new CourseFieldExecution());
         super.addExecution(new FamilyFieldExecution());
+        super.addExecution(new FamilyMemberFieldExecution());
         super.addExecution(new MoneyFieldExecution("saveIncome", Income.class));
         super.addExecution(new MoneyFieldExecution("saveSpending", Spending.class));
     }
@@ -137,26 +138,28 @@ public class FfeeGraphQLMutationType extends GraphQLTypeExecution implements Ini
     private class FamilyFieldExecution implements GraphQLFieldSingleResult {
         @Override
         public Object executeForSingle(DataFetchingEnvironment environment) {
-            OperateType op = OperateType.valueOf(environment.getArgument("op"));
             Map<String, Object> input = environment.getArgument("input");
             FamilyInfoBean familyInfoBean = GraphQLUtils.parse(input, FamilyInfoBean.class);
-            if (op == OperateType.JOIN_FAMILY) {
-                return familyService.joinFamily(familyInfoBean);
-            } else if (op == OperateType.SAVE) {
-                return familyService.saveFamily(familyInfoBean);
-            } else {
-                if (logger.isErrorEnabled()) {
-                    logger.error(String.format("Unsupported operate type: %s.", op));
-                }
-                throw new UserInterfaceSystemErrorException(
-                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED
-                );
-            }
+            return familyService.saveFamily(familyInfoBean);
         }
 
         @Override
         public String getFieldName() {
             return "saveFamily";
+        }
+    }
+
+    private class FamilyMemberFieldExecution implements GraphQLFieldSingleResult {
+        @Override
+        public Object executeForSingle(DataFetchingEnvironment environment) {
+            Map<String, Object> input = environment.getArgument("input");
+            FamilyMemberInfoBean familyMemberInfoBean = GraphQLUtils.parse(input, FamilyMemberInfoBean.class);
+            return familyService.saveFamilyMember(familyMemberInfoBean);
+        }
+
+        @Override
+        public String getFieldName() {
+            return "saveFamilyMember";
         }
     }
 

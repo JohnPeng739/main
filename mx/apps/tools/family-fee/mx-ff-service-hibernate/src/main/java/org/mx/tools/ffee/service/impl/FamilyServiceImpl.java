@@ -12,6 +12,7 @@ import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FamilyMember;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
+import org.mx.tools.ffee.repository.AccessLogRepository;
 import org.mx.tools.ffee.repository.FamilyRepository;
 import org.mx.tools.ffee.service.AccountService;
 import org.mx.tools.ffee.service.FamilyService;
@@ -38,17 +39,20 @@ public class FamilyServiceImpl implements FamilyService {
 
     private GeneralAccessor generalAccessor;
     private FamilyRepository familyRepository;
+    private AccessLogRepository accessLogRepository;
     private AccountService accountService;
     private FileTransportService fileTransportService;
 
     @Autowired
     public FamilyServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor,
                              FamilyRepository familyRepository,
+                             AccessLogRepository accessLogRepository,
                              AccountService accountService,
                              FileTransportService fileTransportService) {
         super();
         this.generalAccessor = generalAccessor;
         this.familyRepository = familyRepository;
+        this.accessLogRepository = accessLogRepository;
         this.accountService = accountService;
         this.fileTransportService = fileTransportService;
     }
@@ -77,11 +81,14 @@ public class FamilyServiceImpl implements FamilyService {
         family.setDesc(familyInfoBean.getDesc());
         family.setName(familyInfoBean.getName());
         family = generalAccessor.save(family);
+        if (!StringUtils.isBlank(familyInfoBean.getOwnerId()) && !StringUtils.isBlank(familyInfoBean.getRole())) {
+            family = saveFamilyMember(family, null, familyInfoBean.getRole(), familyInfoBean.getOwnerId(), true);
+        }
         accountService.writeAccessLog(String.format("新增或修改%s家庭数据。", family.getName()));
-        return saveFamilyMember(family, familyInfoBean.getMembers());
+        return family;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public Family getFamily(String familyId) {
         if (StringUtils.isBlank(familyId)) {
@@ -97,62 +104,51 @@ public class FamilyServiceImpl implements FamilyService {
         return family;
     }
 
-    private Family saveFamilyMember(Family family, List<FamilyMemberInfoBean> members) {
-        if (members == null || members.isEmpty()) {
+    private Family saveFamilyMember(Family family, String id, String role, String accountId, boolean isOwner) {
+        if (StringUtils.isBlank(accountId)) {
             if (logger.isErrorEnabled()) {
-                logger.error("The family member list is null or empty.");
-            }
-            throw new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_UNSUPPORTED
-            );
-        }
-        for (FamilyMemberInfoBean member : members) {
-            String id = member.getId(),
-                    role = member.getRole(),
-                    accountId = member.getAccountId();
-            boolean isOwner = member.isOwner();
-            if (StringUtils.isBlank(accountId)) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("The family member's account id is blank.");
-                }
-                throw new UserInterfaceSystemErrorException(
-                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
-                );
-            }
-            FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
-            if (account == null) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(String.format("The account[%s] not found.", accountId));
-                }
-            }
-            FamilyMember familyMember = null;
-            if (!StringUtils.isBlank(id)) {
-                familyMember = generalAccessor.getById(id, FamilyMember.class);
-            }
-            if (familyMember == null) {
-                familyMember = EntityFactory.createEntity(FamilyMember.class);
-            }
-            familyMember.setRole(role);
-            familyMember.setFamily(family);
-            familyMember.setAccount(account);
-            familyMember.setIsOwner(isOwner);
-            generalAccessor.save(familyMember);
-        }
-        return getFamily(family.getId());
-    }
-
-    @Transactional
-    @Override
-    public Family joinFamily(FamilyInfoBean familyInfoBean) {
-        if (familyInfoBean == null) {
-            if (logger.isErrorEnabled()) {
-                logger.error("The family info is null.");
+                logger.error("The family member's account id is blank.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        String familyId = familyInfoBean.getId();
+        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
+        if (account == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("The account[%s] not found.", accountId));
+            }
+        }
+        FamilyMember familyMember = null;
+        if (!StringUtils.isBlank(id)) {
+            familyMember = generalAccessor.getById(id, FamilyMember.class);
+        }
+        if (familyMember == null) {
+            familyMember = familyRepository.findFamilyMemberByAccountId(accountId);
+        }
+        if (familyMember == null) {
+            familyMember = EntityFactory.createEntity(FamilyMember.class);
+        }
+        familyMember.setRole(role);
+        familyMember.setFamily(family);
+        familyMember.setAccount(account);
+        familyMember.setIsOwner(isOwner);
+        generalAccessor.save(familyMember);
+        return familyMember.getFamily();
+    }
+
+    @Transactional
+    @Override
+    public Family saveFamilyMember(FamilyMemberInfoBean familyMemberInfoBean) {
+        if (familyMemberInfoBean == null) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The family member info is null.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+            );
+        }
+        String familyId = familyMemberInfoBean.getFamilyId();
         if (StringUtils.isBlank(familyId)) {
             if (logger.isErrorEnabled()) {
                 logger.error("The family's id is blank.");
@@ -170,7 +166,11 @@ public class FamilyServiceImpl implements FamilyService {
                     UserInterfaceFfeeErrorException.FfeeErrors.FAMILY_NOT_EXISTED
             );
         }
-        family = saveFamilyMember(family, familyInfoBean.getMembers());
+        String id = familyMemberInfoBean.getId(),
+                role = familyMemberInfoBean.getRole(),
+                accountId = familyMemberInfoBean.getAccountId();
+        boolean isOwner = familyMemberInfoBean.isOwner();
+        family = saveFamilyMember(family, id, role, accountId, isOwner);
         accountService.writeAccessLog(String.format("加入%s家庭。", family.getName()));
         return family;
     }
@@ -185,7 +185,7 @@ public class FamilyServiceImpl implements FamilyService {
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        return familyRepository.findAccessLogByFamilyId(familyId);
+        return accessLogRepository.findAccessLogByFamilyId(familyId);
     }
 
     private Family getFamilyByOpenId(String openId) {
@@ -231,7 +231,7 @@ public class FamilyServiceImpl implements FamilyService {
         return family.getAvatarUrl();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public File getFamilyAvatar(String familyId) {
         Family family = getFamily(familyId);
@@ -247,7 +247,7 @@ public class FamilyServiceImpl implements FamilyService {
         return fileTransportService.downloadFile(path.toString());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public File getFamilyQrCode(String familyId) {
         Family family = getFamily(familyId);

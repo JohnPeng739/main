@@ -1,11 +1,13 @@
 package org.mx.tools.ffee.config;
 
-import org.mx.dal.config.DalConfig;
 import org.mx.service.rest.graphql.GraphQLTypeExecution;
 import org.mx.service.rest.graphql.GraphQLUtils;
 import org.mx.service.server.config.ServerConfig;
 import org.mx.spring.task.TaskFactory;
-import org.mx.tools.ffee.rest.*;
+import org.mx.tools.ffee.rest.AccountManageResource;
+import org.mx.tools.ffee.rest.FamilyManageResource;
+import org.mx.tools.ffee.rest.GraphQLResource;
+import org.mx.tools.ffee.rest.WxAuthorizationResource;
 import org.mx.tools.ffee.task.InitialBaseDataTask;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +26,6 @@ import java.util.List;
  * Date time 2018/2/18 上午11:57
  */
 @Import({
-        DalConfig.class,
         ServerConfig.class
 })
 @ComponentScan({

@@ -11,12 +11,22 @@ Page({
   data: {
     family: {},
     account: {},
-    allCourses: [], 
     courses: [],
-    courseIndex: [0, 0, 0]
+    courseIndex: [0, 0, 0],
+    members: [],
+    memberIndex: 0,
+    course: {},
+    occurDate: utils.dateString(new Date())
   },
   bindCourseChange: function(e) {
-    console.log(e.detail.value)
+    this.setData({
+      course: e.detail.value
+    })
+  },
+  bindDateChange: function (e) {
+    this.setData({
+      occurDate: e.detail.value
+    })
   },
   tapTabItem: function (e) {
     utils.switchTabBar(app.globalData.tabBar.list, this.route, e)
@@ -36,20 +46,59 @@ Page({
     result.sort((o1, o2) => o1.order - o2.order)
     return result
   },
+  formSubmit: function (e) {
+    let form = e.detail.value
+    let {
+      course,
+      memberIndex,
+      family,
+      occurDate
+    } = this.data
+    let data = {
+      openId: app.globalData.openId,
+      familyId: family.id,
+      courseId: course.id,
+      desc: form.desc,
+      ownerId: memberIndex > 0 ? family.members[memberIndex - 1].ffeeAccount.id : '',
+      money: form.money,
+      occurTime: Date.parse(occurDate)
+    }
+    if (!(data.money >= 0)) {
+      utils.error('必须输入收入金额！')
+      return
+    }
+    utils.post('incomes/new', data, function (res) {
+      if (res.data.errorCode === 0) {
+        console.log(res.data.data)
+        utils.info('保存一笔收入成功。')
+      } else {
+        utils.error(res.data.errorMessage)
+      }
+    })
+  },
+  formReset: function () {
+    //
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    let {family, account, courses} = app.globalData
+    let {
+      family,
+      courses
+    } = app.globalData
     wx.setNavigationBarTitle({
       title: family.name,
     })
-    let allCourses = app.globalData.courses
-    allCourses = this.filterCourse(allCourses, 'SPENDING')
+    let members = ['公共']
+    family.members.forEach(member => members.push(member.role))
+    courses = this.filterCourse(courses, 'SPENDING')
+    let course = utils.getMultiColumnData(courses, this.data.courseIndex)
     this.setData({
-      courses: allCourses,
+      courses: courses,
       family: family,
-      account: account
+      members: members,
+      course: course
     })
     app.editTabBar()
   }

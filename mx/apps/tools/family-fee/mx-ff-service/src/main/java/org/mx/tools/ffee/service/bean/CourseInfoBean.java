@@ -8,9 +8,13 @@ import org.mx.tools.ffee.dal.entity.Course;
  * @author : john date : 2018/10/6 下午4:48
  */
 public class CourseInfoBean {
-    private String id, code, name, desc, ownerId;
+    private String parentId, id, code, name, desc, ownerId;
     private Course.CourseType type;
     private boolean valid;
+
+    public String getParentId() {
+        return parentId;
+    }
 
     public String getId() {
         return id;
@@ -38,6 +42,10 @@ public class CourseInfoBean {
 
     public boolean isValid() {
         return valid;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 
     public void setId(String id) {

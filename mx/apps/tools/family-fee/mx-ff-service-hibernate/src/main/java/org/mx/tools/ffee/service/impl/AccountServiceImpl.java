@@ -12,6 +12,7 @@ import org.mx.tools.ffee.dal.entity.AccessLog;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.dal.entity.FfeeAccount;
 import org.mx.tools.ffee.error.UserInterfaceFfeeErrorException;
+import org.mx.tools.ffee.repository.AccessLogRepository;
 import org.mx.tools.ffee.repository.FamilyRepository;
 import org.mx.tools.ffee.service.AccountService;
 import org.mx.tools.ffee.service.FileTransportService;
@@ -34,17 +35,20 @@ public class AccountServiceImpl implements AccountService {
 
     private GeneralAccessor generalAccessor;
     private FamilyRepository familyRepository;
+    private AccessLogRepository accessLogRepository;
     private SessionDataStore sessionDataStore;
     private FileTransportService fileTransportService;
 
     @Autowired
     public AccountServiceImpl(@Qualifier("generalAccessor") GeneralAccessor generalAccessor,
                               FamilyRepository familyRepository,
+                              AccessLogRepository accessLogRepository,
                               SessionDataStore sessionDataStore,
                               FileTransportService fileTransportService) {
         super();
         this.generalAccessor = generalAccessor;
         this.familyRepository = familyRepository;
+        this.accessLogRepository = accessLogRepository;
         this.sessionDataStore = sessionDataStore;
         this.fileTransportService = fileTransportService;
     }
@@ -162,7 +166,7 @@ public class AccountServiceImpl implements AccountService {
         return getAccountSummaryById(checked.getId());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public AccountSummary getAccountSummaryById(String accountId) {
         FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
@@ -175,7 +179,7 @@ public class AccountServiceImpl implements AccountService {
         return new AccountSummary(account, family);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public AccountSummary getAccountSummaryByOpenId(String openId) {
         if (StringUtils.isBlank(openId)) {
@@ -211,9 +215,12 @@ public class AccountServiceImpl implements AccountService {
         AccessLog log = EntityFactory.createEntity(AccessLog.class);
         log.setContent(content);
         Map<String, Object> store = sessionDataStore.get();
-        log.setAccountCode((String) store.get("currentCode"));
-        log.setLatitude((Double) store.get("latitude"));
-        log.setLongitude((Double) store.get("longitude"));
+        String currentCode = (String)store.get("currentUser");
+        Double latitude = (Double)store.get("latitude");
+        Double longitude = (Double)store.get("longitude");
+        log.setAccountId(currentCode == null ? "System" : currentCode);
+        log.setLatitude(latitude == null ? 0.0 : latitude);
+        log.setLongitude(longitude == null ? 0.0 : longitude);
         generalAccessor.save(log);
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save access log successfully, log: %s.", JSON.toJSONString(log)));
@@ -222,14 +229,24 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<AccessLog> getLogsByAccount(String accountId) {
-        FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
-        if (account == null) {
-            throw new UserInterfaceFfeeErrorException(
-                    UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
+    public List<AccessLog> getLogsByAccountId(String accountId) {
+        if (StringUtils.isBlank(accountId)) {
+            if (logger.isErrorEnabled()) {
+                logger.error("The account's id is blank.");
+            }
+            throw new UserInterfaceSystemErrorException(
+                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        return generalAccessor.find(GeneralAccessor.ConditionTuple.eq("account", account), AccessLog.class);
+        if (!"System".equalsIgnoreCase(accountId)) {
+            FfeeAccount account = generalAccessor.getById(accountId, FfeeAccount.class);
+            if (account == null) {
+                throw new UserInterfaceFfeeErrorException(
+                        UserInterfaceFfeeErrorException.FfeeErrors.ACCOUNT_NOT_EXISTED
+                );
+            }
+        }
+        return accessLogRepository.findAccessLogByAccountId(accountId);
     }
 
     @Transactional

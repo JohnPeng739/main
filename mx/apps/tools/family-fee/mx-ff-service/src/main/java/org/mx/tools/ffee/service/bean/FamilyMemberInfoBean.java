@@ -1,13 +1,12 @@
 package org.mx.tools.ffee.service.bean;
 
-/**
- * 描述：
- *
- * @author : john date : 2018/10/6 下午4:50
- */
 public class FamilyMemberInfoBean {
-    private String id, role, accountId;
+    private String familyId, id, role, accountId;
     private boolean isOwner;
+
+    public String getFamilyId() {
+        return familyId;
+    }
 
     public String getId() {
         return id;
@@ -23,6 +22,10 @@ public class FamilyMemberInfoBean {
 
     public boolean isOwner() {
         return isOwner;
+    }
+
+    public void setFamilyId(String familyId) {
+        this.familyId = familyId;
     }
 
     public void setId(String id) {

@@ -72,7 +72,7 @@ public class MoneyServiceImpl implements MoneyService {
         return range;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Income> getAccountIncomes(String accountId, Integer year, Integer month, Integer week) {
         if (StringUtils.isBlank(accountId)) {
@@ -97,7 +97,7 @@ public class MoneyServiceImpl implements MoneyService {
         return moneyRepository.findIncomesByAccountId(accountId, range.getLowerLimit(), range.getUpperLimit());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Income> getFamilyIncomes(String familyId, Integer year, Integer month, Integer week) {
         if (StringUtils.isBlank(familyId)) {
@@ -122,7 +122,7 @@ public class MoneyServiceImpl implements MoneyService {
         return moneyRepository.findIncomesByFamilyId(familyId, range.getLowerLimit(), range.getUpperLimit());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Spending> getAccountSpendings(String accountId, Integer year, Integer month, Integer week) {
         if (StringUtils.isBlank(accountId)) {
@@ -147,7 +147,7 @@ public class MoneyServiceImpl implements MoneyService {
         return moneyRepository.findSpendingsByAccountId(accountId, range.getLowerLimit(), range.getUpperLimit());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Spending> getFamilySpendings(String familyId, Integer year, Integer month, Integer week) {
         if (StringUtils.isBlank(familyId)) {
@@ -205,7 +205,7 @@ public class MoneyServiceImpl implements MoneyService {
         }).collect(Collectors.groupingBy(IntKeyDoubleValue::getK, Collectors.summarizingDouble(IntKeyDoubleValue::getV)));
         List<YearMoneyItem> result = new ArrayList<>();
         if (map != null && !map.isEmpty()) {
-            map.forEach((k, v) -> result.add(new YearMoneyItem(k, (int) v.getCount(), v.getSum(), v.getMin(),
+            map.forEach((k, v) -> result.add(new YearMoneyItem(k, v.getCount(), v.getSum(), v.getMin(),
                     v.getMax(), v.getAverage())));
         }
         return result;
@@ -221,7 +221,7 @@ public class MoneyServiceImpl implements MoneyService {
         }).collect(Collectors.groupingBy(IntKeyDoubleValue::getK, Collectors.summarizingDouble(IntKeyDoubleValue::getV)));
         List<YearMonthMoneyItem> result = new ArrayList<>();
         if (map != null && !map.isEmpty()) {
-            map.forEach((k, v) -> result.add(new YearMonthMoneyItem(k / 100, k % 100, (int) v.getCount(),
+            map.forEach((k, v) -> result.add(new YearMonthMoneyItem(k / 100, k % 100, v.getCount(),
                     v.getSum(), v.getMin(), v.getMax(), v.getAverage())));
         }
         return result;
@@ -235,13 +235,13 @@ public class MoneyServiceImpl implements MoneyService {
         }).collect(Collectors.groupingBy(StringKeyDoubleValue::getK, Collectors.summarizingDouble(StringKeyDoubleValue::getV)));
         List<MemberMoneyItem> result = new ArrayList<>();
         if (map != null && !map.isEmpty()) {
-            map.forEach((k, v) -> result.add(new MemberMoneyItem(k, (int) v.getCount(), v.getSum(), v.getMin(),
+            map.forEach((k, v) -> result.add(new MemberMoneyItem(k, v.getCount(), v.getSum(), v.getMin(),
                     v.getMax(), v.getAverage())));
         }
         return result;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public AccountMoneySummary getAccountMoneySummary(String accountId) {
         if (StringUtils.isBlank(accountId)) {
@@ -309,7 +309,7 @@ public class MoneyServiceImpl implements MoneyService {
         return computeYearMoney(items);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public FamilyMoneySummary getFamilyMoneySummary(String familyId) {
         if (StringUtils.isBlank(familyId)) {
@@ -353,7 +353,7 @@ public class MoneyServiceImpl implements MoneyService {
         return new FamilyMoneySummary(family.getId(), family.getName(), family.getAvatarUrl(), recent, current);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Income> getIncomes(String familyId, int year) {
         if (StringUtils.isBlank(familyId)) {
@@ -501,7 +501,7 @@ public class MoneyServiceImpl implements MoneyService {
         return saved;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Spending> getSpendings(String familyId, int year, int month) {
         if (StringUtils.isBlank(familyId)) {
@@ -537,7 +537,7 @@ public class MoneyServiceImpl implements MoneyService {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<Spending> getSpendingsLastWeek(String familyId) {
         if (StringUtils.isBlank(familyId)) {

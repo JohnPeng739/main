@@ -42,7 +42,7 @@ public class BudgetServiceImpl implements BudgetService {
         this.accountService = accountService;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public double getBudgetTotal(String familyId, Integer year) {
         if (StringUtils.isBlank(familyId)) {
@@ -69,7 +69,7 @@ public class BudgetServiceImpl implements BudgetService {
         return budgetRepository.findBudgetTotalByFamily(familyId, year);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<MoneyService.YearMoneyItem> getBudgetTotalByFamily(String familyId) {
         if (StringUtils.isBlank(familyId)) {
@@ -102,7 +102,7 @@ public class BudgetServiceImpl implements BudgetService {
         return result;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<BudgetItem> getBudgets(String familyId, int year) {
         if (StringUtils.isBlank(familyId)) {
@@ -192,6 +192,7 @@ public class BudgetServiceImpl implements BudgetService {
         if (saved == null) {
             saved = EntityFactory.createEntity(BudgetItem.class);
         }
+        saved.setYear(budgetItemInfoBean.getYear());
         saved.setMoney(budgetItemInfoBean.getMoney());
         saved.setDesc(budgetItemInfoBean.getDesc());
         saved.setFamily(family);

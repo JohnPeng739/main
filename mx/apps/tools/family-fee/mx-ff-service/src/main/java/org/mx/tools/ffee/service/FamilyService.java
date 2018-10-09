@@ -3,6 +3,7 @@ package org.mx.tools.ffee.service;
 import org.mx.tools.ffee.dal.entity.AccessLog;
 import org.mx.tools.ffee.dal.entity.Family;
 import org.mx.tools.ffee.service.bean.FamilyInfoBean;
+import org.mx.tools.ffee.service.bean.FamilyMemberInfoBean;
 
 import java.io.File;
 import java.io.InputStream;
@@ -13,7 +14,7 @@ public interface FamilyService {
 
     Family getFamily(String familyId);
 
-    Family joinFamily(FamilyInfoBean familyInfoBean);
+    Family saveFamilyMember(FamilyMemberInfoBean familyMemberInfoBean);
 
     List<AccessLog> getAccessLogsByFamilyId(String familyId);
 

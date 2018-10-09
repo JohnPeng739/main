@@ -1,10 +1,7 @@
 package org.mx.tools.ffee.service.bean;
 
-import java.util.List;
-
 public class FamilyInfoBean {
-    private String id, name, avatarUrl, desc;
-    private List<FamilyMemberInfoBean> members;
+    private String id, name, avatarUrl, desc, ownerId, role;
     private boolean valid;
 
     public String getId() {
@@ -23,8 +20,12 @@ public class FamilyInfoBean {
         return desc;
     }
 
-    public List<FamilyMemberInfoBean> getMembers() {
-        return members;
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public boolean isValid() {
@@ -47,11 +48,15 @@ public class FamilyInfoBean {
         this.desc = desc;
     }
 
-    public void setMembers(List<FamilyMemberInfoBean> members) {
-        this.members = members;
-    }
-
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

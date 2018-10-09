@@ -1,11 +1,9 @@
 package org.mx.tools.ffee.repository;
 
-import org.mx.tools.ffee.dal.entity.AccessLog;
 import org.mx.tools.ffee.dal.entity.FamilyEntity;
+import org.mx.tools.ffee.dal.entity.FamilyMember;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
-
-import java.util.List;
 
 public interface FamilyRepository extends Repository<FamilyEntity, String> {
     @Query(value = "SELECT f.id " +
@@ -18,8 +16,6 @@ public interface FamilyRepository extends Repository<FamilyEntity, String> {
             "WHERE f.ID = m.FAMILY_ID AND m.ACCOUNT_ID = ?1", nativeQuery = true)
     String findFamilyIdByAccountId(String accountId);
 
-    @Query("SELECT al " +
-            "FROM AccessLogEntity al, FamilyMemberEntity fm " +
-            "WHERE al.account.id = fm.account.id AND fm.family.id = ?1")
-    List<AccessLog> findAccessLogByFamilyId(String familyId);
+    @Query("SELECT fm FROM FamilyMemberEntity fm WHERE fm.account.id = ?1")
+    FamilyMember findFamilyMemberByAccountId(String accountId);
 }

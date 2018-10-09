@@ -264,7 +264,7 @@ public class FfeeGraphQLQueryType extends GraphQLTypeExecution implements Initia
             Map<String, Object> input = environment.getArgument("input");
             String accountId = (String) input.get("accountId"), familyId = (String) input.get("familyId");
             if (!StringUtils.isBlank(accountId)) {
-                return accountService.getLogsByAccount(accountId);
+                return accountService.getLogsByAccountId(accountId);
             } else if (!StringUtils.isBlank(familyId)) {
                 return familyService.getAccessLogsByFamilyId(familyId);
             }

@@ -188,10 +188,11 @@ public interface MoneyService {
     }
 
     class YearMoneyItem {
-        private int year, count;
+        private int year;
+        private long count;
         private double total, min, max, avg;
 
-        public YearMoneyItem(int year, int count, double total, double min, double max, double avg) {
+        public YearMoneyItem(int year, long count, double total, double min, double max, double avg) {
             super();
             this.year = year;
             this.count = count;
@@ -205,7 +206,7 @@ public interface MoneyService {
             return year;
         }
 
-        public int getCount() {
+        public long getCount() {
             return count;
         }
 
@@ -227,10 +228,11 @@ public interface MoneyService {
     }
 
     class YearMonthMoneyItem {
-        private int year, month, count;
+        private int year, month;
+        private long count;
         private double total, min, max, avg;
 
-        public YearMonthMoneyItem(int year, int month, int count, double total, double min, double max, double avg) {
+        public YearMonthMoneyItem(int year, int month, long count, double total, double min, double max, double avg) {
             super();
             this.year = year;
             this.month = month;
@@ -249,7 +251,7 @@ public interface MoneyService {
             return month;
         }
 
-        public int getCount() {
+        public long getCount() {
             return count;
         }
 
@@ -272,10 +274,10 @@ public interface MoneyService {
 
     class MemberMoneyItem {
         private String nickname;
-        private int count;
+        private long count;
         private double total, min, max, avg;
 
-        public MemberMoneyItem(String nickname, int count, double total, double min, double max, double avg) {
+        public MemberMoneyItem(String nickname, long count, double total, double min, double max, double avg) {
             super();
             this.nickname = nickname;
             this.count = count;
@@ -289,7 +291,7 @@ public interface MoneyService {
             return nickname;
         }
 
-        public int getCount() {
+        public long getCount() {
             return count;
         }
 

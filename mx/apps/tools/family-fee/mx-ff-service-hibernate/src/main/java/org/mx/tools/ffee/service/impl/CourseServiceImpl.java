@@ -48,14 +48,14 @@ public class CourseServiceImpl implements CourseService {
         return list;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<CourseBean> getAllCourses() {
         accountService.writeAccessLog("获取所有科目数据。");
         return transform(courseRepository.findCourses());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public List<CourseBean> getAllCoursesByFamily(String familyId) {
         Family family = null;
@@ -70,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
         return transform(courseRepository.findCoursesByFamily(familyId));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public CourseBean getCourse(String courseId) {
         if (StringUtils.isBlank(courseId)) {
@@ -96,6 +96,17 @@ public class CourseServiceImpl implements CourseService {
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
+        }
+        String parentId = courseInfoBean.getParentId();
+        Course parent = null;
+        if (!StringUtils.isBlank(parentId)) {
+            parent = generalDictAccessor.getById(parentId, Course.class);
+            if (parent == null && logger.isErrorEnabled()) {
+                logger.error(String.format("The parent course[%s] not found.", parentId));
+                throw new UserInterfaceFfeeErrorException(
+                        UserInterfaceFfeeErrorException.FfeeErrors.COURSE_NOT_EXISTED
+                );
+            }
         }
         String ownerId = courseInfoBean.getOwnerId();
         Family owner = null;
@@ -132,6 +143,7 @@ public class CourseServiceImpl implements CourseService {
             if (saved == null) {
                 saved = EntityFactory.createEntity(Course.class);
             }
+            saved.setParent(parent);
             saved.setType(courseInfoBean.getType());
             saved.setCode(courseInfoBean.getCode());
             saved.setName(courseInfoBean.getName());

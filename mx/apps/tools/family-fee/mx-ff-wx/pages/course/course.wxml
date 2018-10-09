@@ -1,6 +1,6 @@
 <!--pages/course/course.wxml-->
 <view class="page_bd">
-  <form>
+  <form bindsubmit="formSubmit" bindreset="formReset">
     <view class="weui-cells__title">项目类别</view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_select">

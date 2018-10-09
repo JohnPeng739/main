@@ -9,9 +9,9 @@ import org.mx.dal.entity.Base;
  * Date time 2018/9/15 下午9:00
  */
 public interface AccessLog extends Base {
-    String getAccountCode();
+    String getAccountId();
 
-    void setAccountCode(String accountCode);
+    void setAccountId(String accountId);
 
     String getContent();
 

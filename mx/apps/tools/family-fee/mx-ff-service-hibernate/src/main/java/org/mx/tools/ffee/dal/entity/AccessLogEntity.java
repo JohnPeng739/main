@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "TB_ACCESS_LOG")
 public class AccessLogEntity extends BaseEntity implements AccessLog {
-    @Column(name = "ACCOUNT_CODE")
-    private String accountCode;
+    @Column(name = "ACCOUNT_ID")
+    private String accountId;
     @Column(name = "CONTENT", length = 500)
     private String content;
     @Column(name = "LATITUDE")
@@ -23,13 +23,13 @@ public class AccessLogEntity extends BaseEntity implements AccessLog {
     private double longitude;
 
     @Override
-    public String getAccountCode() {
-        return accountCode;
+    public String getAccountId() {
+        return accountId;
     }
 
     @Override
-    public void setAccountCode(String accountCode) {
-        this.accountCode = accountCode;
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     @Override

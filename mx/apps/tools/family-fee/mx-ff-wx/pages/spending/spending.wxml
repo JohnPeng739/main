@@ -2,7 +2,7 @@
 <import src="../../components/tabBar/tabBar.wxml"/>
 <template is="tabBar" data="{{tabBar}}"/>
 <view class="page__bd">
-  <form>
+  <form bindsubmit="formSubmit" bindreset="formReset">
     <view class="weui-cells__title">腐败项目</view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_select view-wrap" style="height: 44px;">
@@ -18,7 +18,20 @@
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
         <view class="weui-cell__bd">
-          <input class="weui-input" type="digit" name="money" placeholder="请输入腐败金额..." />
+          <input class="weui-input" type="digit" name="total" placeholder="请输入腐败金额..." />
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">腐败日期</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_select">
+        <view class="weui-cell__hd weui-cell__hd_in-select-after">
+          <view class="unimportant weui-label">选择了</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" value="{{occurDate}}" start="2015-09-01" end="2030-12-31" bindchange="bindDateChange">
+            <view class="weui-select weui-select_in-select-after">{{occurDate}}</view>
+          </picker>
         </view>
       </view>
     </view>

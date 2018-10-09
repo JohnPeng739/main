@@ -40,6 +40,13 @@ const info = message => {
   })
 }
 
+const dateString = (date) => {
+  let year = date.getFullYear()
+  let month = date.getMonth() + 1
+  let day = date.getDate()
+  return year + '-' + month + '-' + day
+}
+
 const switchTabBar = (tabBarItems, currRoute, e) => {
   var currUrl = currRoute;
   var url = e.currentTarget.dataset.url;
@@ -59,6 +66,20 @@ const switchTabBar = (tabBarItems, currRoute, e) => {
   }
 }
 
+const getMultiColumnData = (data, selectIndex) => {
+  let list = data
+  let item = null
+  for (let index in selectIndex) {
+    if (list && list.length > selectIndex[index]) {
+      item = list[selectIndex[index]]
+      if (item) {
+        list = item.children
+      }
+    }
+  }
+  return item
+}
+
 module.exports = {
   formatTime: formatTime,
   get: get,
@@ -67,5 +88,7 @@ module.exports = {
   del: del,
   error: error,
   info: info,
-  switchTabBar: switchTabBar
+  dateString: dateString,
+  switchTabBar: switchTabBar,
+  getMultiColumnData: getMultiColumnData
 }
