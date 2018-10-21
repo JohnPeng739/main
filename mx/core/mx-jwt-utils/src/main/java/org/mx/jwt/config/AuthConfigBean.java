@@ -1,6 +1,5 @@
 package org.mx.jwt.config;
 
-import org.mx.TypeUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
@@ -17,8 +16,6 @@ public class AuthConfigBean {
     private String issuer;
     @Value("${auth.subject:Account authenticate}")
     private String subject;
-    @Value("${auth.expired:1 day}")
-    private String expired;
 
     private Environment env;
 
@@ -57,15 +54,6 @@ public class AuthConfigBean {
      */
     public String getSubject() {
         return subject;
-    }
-
-    /**
-     * 获取令牌过期时间期限，默认为签发令牌时的一天内有效
-     *
-     * @return 过期时间期限
-     */
-    public long getExpired() {
-        return TypeUtils.string2TimePeriod(expired, TypeUtils.DAY);
     }
 
     /**

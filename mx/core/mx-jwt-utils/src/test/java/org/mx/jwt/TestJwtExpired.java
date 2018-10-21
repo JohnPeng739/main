@@ -35,7 +35,7 @@ public class TestJwtExpired {
 
         try {
             String accountCode = "john.peng";
-            String token = jwtService.signToken(accountCode);
+            String token = jwtService.signToken(accountCode, "3sec");
             assertFalse(StringUtils.isBlank(token));
             Thread.sleep(5000);
             JwtService.JwtVerifyResult result = jwtService.verifyToken(token);
@@ -45,7 +45,7 @@ public class TestJwtExpired {
             Map<String, Object> claims = new HashMap<>();
             claims.put("accountCode", accountCode);
             claims.put("login", true);
-            token = jwtService.signToken(claims);
+            token = jwtService.signToken(claims, "3sec");
             assertFalse(StringUtils.isBlank(token));
             Thread.sleep(5000);
             result = jwtService.verifyToken(token);

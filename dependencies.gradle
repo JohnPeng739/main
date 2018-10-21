@@ -38,7 +38,7 @@ ext.versions = [
   zookeeper	: '3.4.9',
   'mx-utils'    	: '2.1.24',
   'mx-spring'		: '2.0.1',
-  'mx-jwt-utils'	: '1.0.1',
+  'mx-jwt-utils'	: '1.1.0',
   'mx-service-utils'	: '2.0.1',
   'mx-hanlp-utils'	: '1.0.12',
   'mx-dal'      	: '3.0.0',

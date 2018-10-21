@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
+import org.mx.TypeUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.jwt.config.AuthConfigBean;
 import org.mx.jwt.error.UserInterfaceJwtErrorException;
@@ -187,20 +188,39 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public String signToken(String accountCode) {
+        return signToken(accountCode, null);
+    }
+    /**
+     * {@inheritDoc}
+     *
+     * @see JwtService#signToken(String, String)
+     */
+    @Override
+    public String signToken(String accountCode, String expiredTimePeriod) {
         Map<String, Object> claims = new HashMap<>(1);
         claims.put("accountCode", accountCode);
-        return signToken(claims);
+        return signToken(claims, expiredTimePeriod);
     }
-
     /**
      * {@inheritDoc}
      *
      * @see JwtService#signToken(Map)
      */
-    @SuppressWarnings("unchecked")
     @Override
     public String signToken(Map<String, Object> claims) {
-        Date expiredDate = new Date(System.currentTimeMillis() + authConfigBean.getExpired());
+        return signToken(claims, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see JwtService#signToken(Map, String)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public String signToken(Map<String, Object> claims, String expiredTimePeriod) {
+        Date expiredDate = new Date(System.currentTimeMillis() +
+                TypeUtils.string2TimePeriod(expiredTimePeriod, 100 * 12 * TypeUtils.MON));
         JWTCreator.Builder builder = JWT.create()
                 .withIssuer(authConfigBean.getIssuer())
                 .withSubject(authConfigBean.getSubject())

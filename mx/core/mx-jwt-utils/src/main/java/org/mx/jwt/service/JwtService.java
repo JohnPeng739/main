@@ -27,10 +27,30 @@ public interface JwtService {
     /**
      * 签发一个JWT身份令牌
      *
+     * @param accountCode       账号
+     * @param expiredTimePeriod TimePeriod描述的过期时长，如：1DAY, 4HOUR
+     * @return JWT身份令牌
+     * @see org.mx.TypeUtils#string2TimePeriod(String, long)
+     */
+    String signToken(String accountCode, String expiredTimePeriod);
+
+    /**
+     * 签发一个JWT身份令牌
+     *
      * @param claims 令牌中包含的载荷信息
      * @return JWT身份令牌
      */
     String signToken(Map<String, Object> claims);
+
+    /**
+     * 签发一个JWT身份令牌
+     *
+     * @param claims            令牌中包含的载荷信息
+     * @param expiredTimePeriod TimePeriod描述的过期时长，如：1DAY, 4HOUR
+     * @return JWT身份令牌
+     * @see org.mx.TypeUtils#string2TimePeriod(String, long)
+     */
+    String signToken(Map<String, Object> claims, String expiredTimePeriod);
 
     /**
      * 验证一个JWT身份令牌
