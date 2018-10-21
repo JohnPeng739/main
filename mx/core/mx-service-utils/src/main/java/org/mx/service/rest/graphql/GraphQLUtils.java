@@ -115,7 +115,7 @@ public class GraphQLUtils {
             // error
             if (errors.get(0) instanceof ExceptionWhileDataFetching &&
                     ((ExceptionWhileDataFetching) errors.get(0)).getException() instanceof UserInterfaceException) {
-                throw (UserInterfaceException)errors.get(0);
+                throw (UserInterfaceException) ((ExceptionWhileDataFetching) errors.get(0)).getException();
             }
             if (logger.isErrorEnabled()) {
                 StringBuffer sb = new StringBuffer("errors: ");
