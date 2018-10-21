@@ -2,6 +2,7 @@ package org.mx.service.rest.graphql;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import graphql.ExceptionWhileDataFetching;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.GraphQLError;
@@ -112,7 +113,8 @@ public class GraphQLUtils {
         List<GraphQLError> errors = result.getErrors();
         if (errors != null && !errors.isEmpty()) {
             // error
-            if (errors.get(0) instanceof UserInterfaceException) {
+            if (errors.get(0) instanceof ExceptionWhileDataFetching &&
+                    ((ExceptionWhileDataFetching) errors.get(0)).getException() instanceof UserInterfaceException) {
                 throw (UserInterfaceException)errors.get(0);
             }
             if (logger.isErrorEnabled()) {
