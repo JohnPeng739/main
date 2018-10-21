@@ -13,6 +13,7 @@ import graphql.schema.idl.TypeDefinitionRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
+import org.mx.error.UserInterfaceException;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.service.error.UserInterfaceServiceErrorException;
 
@@ -111,6 +112,9 @@ public class GraphQLUtils {
         List<GraphQLError> errors = result.getErrors();
         if (errors != null && !errors.isEmpty()) {
             // error
+            if (errors.get(0) instanceof UserInterfaceException) {
+                throw (UserInterfaceException)errors.get(0);
+            }
             if (logger.isErrorEnabled()) {
                 StringBuffer sb = new StringBuffer("errors: ");
                 errors.forEach(error -> sb.append(String.format("[(%s): %s.]",
