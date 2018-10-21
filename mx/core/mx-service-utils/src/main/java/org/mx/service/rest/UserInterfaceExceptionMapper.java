@@ -7,6 +7,7 @@ import org.mx.error.UserInterfaceException;
 import org.mx.service.error.UserInterfaceServiceErrorException;
 import org.mx.service.rest.vo.DataVO;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -35,6 +36,8 @@ public class UserInterfaceExceptionMapper implements ExceptionMapper<Exception> 
                 logger.debug("Any captured exception.", ex);
             }
             return Response.ok(new DataVO((UserInterfaceError) ex), MediaType.APPLICATION_JSON).build();
+        } else if (ex instanceof NotFoundException) {
+            return Response.status(404).build();
         } else {
             if (logger.isErrorEnabled()) {
                 logger.error("Any not captured exception", ex);
