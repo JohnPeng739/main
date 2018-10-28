@@ -15,6 +15,8 @@ public class WebsocketServerConfigBean extends HttpServerConfigBean {
     private boolean enabled;
     @Value("${websocket.port:9999}")
     private int port;
+    @Value("${websocket.echo.enabled:true}")
+    private boolean echoEnabled;
     @Value("${websocket.threads:100}")
     private int threads;
     @Value("${websocket.security:false}")
@@ -88,6 +90,15 @@ public class WebsocketServerConfigBean extends HttpServerConfigBean {
      */
     public int getPort() {
         return port;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see HttpServerConfigBean#isEchoEnabled()
+     */
+    public boolean isEchoEnabled() {
+        return echoEnabled;
     }
 
     /**

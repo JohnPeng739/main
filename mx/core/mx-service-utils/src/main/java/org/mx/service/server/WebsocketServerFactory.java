@@ -10,6 +10,7 @@ import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 import org.mx.StringUtils;
+import org.mx.service.server.websocket.EchoWebsoket;
 import org.mx.service.server.websocket.SimpleWsObject;
 import org.mx.service.server.websocket.WsSessionListener;
 import org.mx.service.server.websocket.WsSessionManager;
@@ -83,6 +84,11 @@ public class WebsocketServerFactory extends HttpServerFactory {
                         });
                     }
                 }
+            }
+            if (websocketServerConfigBean.isEchoEnabled()) {
+                // 根据需要加入测试用ECHO
+                WsSessionListener listener = new EchoWebsoket();
+                socketBeans.put(listener.getPath(), new SimpleWsObject(listener));
             }
             return new WebSocketHandler() {
                 @Override
