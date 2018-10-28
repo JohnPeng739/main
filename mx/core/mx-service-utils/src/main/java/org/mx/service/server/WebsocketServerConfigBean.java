@@ -93,9 +93,9 @@ public class WebsocketServerConfigBean extends HttpServerConfigBean {
     }
 
     /**
-     * {@inheritDoc}
+     * 获取是否启用ECHO测试
      *
-     * @see HttpServerConfigBean#isEchoEnabled()
+     * @return 返回true表示启用，否则不启用
      */
     public boolean isEchoEnabled() {
         return echoEnabled;

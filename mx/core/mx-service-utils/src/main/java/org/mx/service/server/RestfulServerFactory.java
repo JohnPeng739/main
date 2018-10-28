@@ -11,6 +11,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.UriConnegFilter;
 import org.glassfish.jersey.server.spring.scope.RequestContextFilter;
 import org.mx.StringUtils;
+import org.mx.service.rest.ServerStatisticResource;
 import org.mx.service.rest.UserInterfaceExceptionMapper;
 import org.mx.service.rest.auth.RestAuthenticateFilter;
 import org.mx.service.rest.cors.CorsConfigBean;
@@ -77,6 +78,10 @@ public class RestfulServerFactory extends HttpServerFactory {
                         restfulClasses.forEach(config::register);
                     }
                 }
+            }
+            // 根据需要启用服务器统计数据
+            if (restfulServerConfigBean.isStatEnabled()) {
+                config.register(ServerStatisticResource.class);
             }
             // 根据需要注册跨域过滤器
             if (corsConfigBean.isEnabled()) {

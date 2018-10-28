@@ -43,8 +43,6 @@ public abstract class HttpServerConfigBean {
      */
     public abstract int getPort();
 
-    public abstract boolean isEchoEnabled();
-
     /**
      * 获取线程数量
      *
