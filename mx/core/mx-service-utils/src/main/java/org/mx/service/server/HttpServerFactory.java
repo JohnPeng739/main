@@ -66,9 +66,12 @@ public abstract class HttpServerFactory extends AbstractServerFactory {
                 httpConfiguration.addCustomizer(new SecureRequestCustomizer());
 
                 SslContextFactory sslContextFactory = new SslContextFactory();
+                sslContextFactory.setKeyStoreType(httpServerConfigBean.getKeystoreType());
                 sslContextFactory.setKeyStorePath(httpServerConfigBean.getKeystorePath());
+                sslContextFactory.setTrustStorePath(httpServerConfigBean.getKeystorePath());
                 sslContextFactory.setKeyStorePassword(httpServerConfigBean.getKeystorePassword());
                 sslContextFactory.setKeyManagerPassword(httpServerConfigBean.getKeyManagerPassword());
+                sslContextFactory.setTrustStorePassword(httpServerConfigBean.getKeystorePassword());
 
                 ServerConnector https = new ServerConnector(server,
                         new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.toString()),

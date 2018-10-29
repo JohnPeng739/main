@@ -44,7 +44,7 @@ public class TestWebsocketSslServer {
         WsClientInvoke invoke = new WsClientInvoke();
         TestWebsocketMoniter listener = new TestWebsocketMoniter();
         try {
-            invoke.init(String.format("wss://localhost:%d/echo",
+            invoke.init(String.format("wss://localhost:%d/test",
                     context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
                     listener, false,
                     context.getEnvironment().getProperty("websocket.security.keystore"),
@@ -92,7 +92,7 @@ public class TestWebsocketSslServer {
         WsClientInvoke invoke = new WsClientInvoke();
         TestWebsocketMoniter listener = new TestWebsocketMoniter();
         try {
-            invoke.init(String.format("wss://localhost:%d/echo",
+            invoke.init(String.format("wss://localhost:%d/test",
                     context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
                     listener, true,
                     context.getEnvironment().getProperty("websocket.security.keystore"),
@@ -137,7 +137,7 @@ public class TestWebsocketSslServer {
             WsClientInvoke invoke1 = new WsClientInvoke();
             WsClientInvoke invoke2 = new WsClientInvoke();
             TestWebsocketMoniter listener = new TestWebsocketMoniter();
-            invoke1.init(String.format("wss://localhost:%d/echo",
+            invoke1.init(String.format("wss://localhost:%d/test",
                     context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
                     listener, false,
                     context.getEnvironment().getProperty("websocket.security.keystore"),

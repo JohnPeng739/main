@@ -20,7 +20,7 @@ public class EchoWebsocket extends DefaultWsSessionMonitor {
     private WsSessionManager manager;
 
     public EchoWebsocket() {
-        super("/echo");
+        super("/test");
         closeLatch = new CountDownLatch(1);
         manager = WsSessionManager.getManager();
     }

@@ -3,7 +3,6 @@ package org.mx.service.rest;
 import org.mx.SystemUtils;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.service.rest.vo.ServerStatisticVO;
-import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,7 +18,6 @@ import java.lang.management.RuntimeMXBean;
  * @author John.Peng
  * Date time 2018/4/27 上午10:57
  */
-@Component
 @Path("rest/v1")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

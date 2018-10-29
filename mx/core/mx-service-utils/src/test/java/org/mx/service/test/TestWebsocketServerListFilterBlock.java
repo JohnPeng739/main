@@ -41,7 +41,7 @@ public class TestWebsocketServerListFilterBlock {
             // test websocket client
             WsClientInvoke invoke1 = new WsClientInvoke();
             TestWebsocketMoniter listener = new TestWebsocketMoniter();
-            invoke1.init(String.format("ws://localhost:%d/echo",
+            invoke1.init(String.format("ws://localhost:%d/test",
                     context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
                     listener, false);
             Thread.sleep(1000);

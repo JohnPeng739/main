@@ -25,6 +25,8 @@ public class ServletServerConfigBean extends HttpServerConfigBean {
     private String keystorePassword;
     @Value("${servlet.security.keyManagerPassword:}")
     private String keyManagerPassword;
+    @Value("${servlet.security.keystore.type:JKS}")
+    private String keystoreType;
 
     @Value("${servlet.idleTimeoutSecs:300}")
     private int idleTimeoutSecs;
@@ -106,6 +108,15 @@ public class ServletServerConfigBean extends HttpServerConfigBean {
      */
     public String getKeyManagerPassword() {
         return keyManagerPassword;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see HttpServerConfigBean#getKeystoreType()
+     */
+    public String getKeystoreType() {
+        return keystoreType;
     }
 
     /**

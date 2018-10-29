@@ -27,6 +27,8 @@ public class RestfulServerConfigBean extends HttpServerConfigBean {
     private String keystorePassword;
     @Value("${restful.security.keyManagerPassword:}")
     private String keyManagerPassword;
+    @Value("${restful.security.keystore.type:JKS}")
+    private String keystoreType;
 
     @Value("${restful.idleTimeoutSecs:300}")
     private int idleTimeoutSecs;
@@ -117,6 +119,15 @@ public class RestfulServerConfigBean extends HttpServerConfigBean {
      */
     public String getKeyManagerPassword() {
         return keyManagerPassword;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see HttpServerConfigBean#getKeystoreType()
+     */
+    public String getKeystoreType() {
+        return keystoreType;
     }
 
     /**

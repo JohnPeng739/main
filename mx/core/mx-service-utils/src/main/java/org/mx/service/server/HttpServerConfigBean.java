@@ -79,6 +79,13 @@ public abstract class HttpServerConfigBean {
     public abstract String getKeyManagerPassword();
 
     /**
+     * 获取Keystore类型，默认为JKS
+     *
+     * @return Keystore类型
+     */
+    public abstract String getKeystoreType();
+
+    /**
      * 获取闲置超时值
      *
      * @return 闲置超时值

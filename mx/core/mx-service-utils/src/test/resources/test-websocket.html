@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test WebSocket</title>
+    <style>
+        body {
+            vertical-align: middle;
+        }
+        #address {
+            display: inline-block;
+            width: 300px;
+            margin: 8px;
+        }
+        #sendText {
+            margin: 8px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+<input id="address" value="ws://localhost:9991/echo">
+<span id="state">未连接</span><br>
+<textarea id="sendText" rows="4"></textarea>
+<button onclick="clickSend()">Send</button><br>
+<button onclick="clickConnect()">Connect</button>
+<button onclick="clickClose()">Close</button>
+<ul id="receiveList">
+</ul>
+<script>
+    var ws = null
+    function clickConnect() {
+        var addr = document.getElementById('address')
+        ws = new WebSocket(addr.value)
+        ws.onopen = function () {
+            document.getElementById('state').innerText = '连接成功'
+            console.log('has opened.')
+        }
+        ws.onclose = function () {
+            document.getElementById('state').innerText = '未连接'
+            console.log('has closed.')
+        }
+        ws.onerror = function (err) {
+            console.log(err)
+        }
+        ws.onmessage = function (evt) {
+            console.log(evt.data)
+            var list = document.getElementById('receiveList')
+            var li = document.createElement('LI')
+            li.innerText = evt.data
+            list.appendChild(li)
+        }
+    }
+    function clickSend() {
+        var msg = document.getElementById('sendText')
+        ws.send(msg.value)
+        msg.value = ""
+    }
+    function clickClose() {
+        if (ws) {
+            ws.close()
+        }
+    }
+</script>
+</body>
+</html>
