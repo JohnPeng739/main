@@ -29,6 +29,11 @@ subprojects { subprj ->
     from sourceSets.main.allSource
   }
 
+  task testJar(type: Jar) {
+    classifier = 'test'
+    from "$buildDir/classes/java/test"
+  }
+
   task copyDependencies(type: Copy) {
     into "$buildDir/dependencies"
     from configurations.runtime
