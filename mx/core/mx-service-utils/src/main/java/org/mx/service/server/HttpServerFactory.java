@@ -63,28 +63,34 @@ public abstract class HttpServerFactory extends AbstractServerFactory {
                 // 创建HTTPS
                 httpConfiguration.setSecureScheme("https");
                 httpConfiguration.setSecurePort(httpServerConfigBean.getPort());
-                httpConfiguration.addCustomizer(new SecureRequestCustomizer());
+                SecureRequestCustomizer src = new SecureRequestCustomizer();
+                src.setStsMaxAge(2000);
+                src.setStsIncludeSubDomains(true);
+                httpConfiguration.addCustomizer(src);
 
                 SslContextFactory sslContextFactory = new SslContextFactory();
+                sslContextFactory.setValidateCerts(false);
+                sslContextFactory.setValidatePeerCerts(false);
                 sslContextFactory.setKeyStoreType(httpServerConfigBean.getKeystoreType());
                 sslContextFactory.setKeyStorePath(httpServerConfigBean.getKeystorePath());
                 sslContextFactory.setTrustStorePath(httpServerConfigBean.getKeystorePath());
                 sslContextFactory.setKeyStorePassword(httpServerConfigBean.getKeystorePassword());
                 sslContextFactory.setKeyManagerPassword(httpServerConfigBean.getKeyManagerPassword());
                 sslContextFactory.setTrustStorePassword(httpServerConfigBean.getKeystorePassword());
+                sslContextFactory.setCertAlias(httpServerConfigBean.getKeyAlias());
 
                 ServerConnector https = new ServerConnector(server,
                         new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.toString()),
                         new HttpConnectionFactory(httpConfiguration));
                 https.setPort(httpServerConfigBean.getPort());
-                https.setIdleTimeout(httpServerConfigBean.getIdleTimeoutSecs());
+                https.setIdleTimeout(httpServerConfigBean.getIdleTimeoutSecs() * 1000);
                 server.addConnector(https);
             } else {
                 // 创建HTTP
                 ServerConnector http = new ServerConnector(server,
                         new HttpConnectionFactory(httpConfiguration));
                 http.setPort(httpServerConfigBean.getPort());
-                http.setIdleTimeout(httpServerConfigBean.getIdleTimeoutSecs());
+                http.setIdleTimeout(httpServerConfigBean.getIdleTimeoutSecs() * 1000);
                 server.addConnector(http);
             }
             server.setDumpAfterStart(false);

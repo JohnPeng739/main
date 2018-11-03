@@ -27,8 +27,10 @@ public class WebsocketServerConfigBean extends HttpServerConfigBean {
     private String keystorePassword;
     @Value("${websocket.security.keyManagerPassword:}")
     private String keyManagerPassword;
-    @Value("${websocket.security.keystore.type:JKS}")
+    @Value("${websocket.security.keystoreType:JKS}")
     private String keystoreType;
+    @Value("${websokcet.security.keyAlias:jetty}")
+    private String keyAlias;
 
     @Value("${websocket.idleTimeoutSecs:300}")
     private int idleTimeoutSecs;
@@ -155,6 +157,15 @@ public class WebsocketServerConfigBean extends HttpServerConfigBean {
      */
     public String getKeystoreType() {
         return keystoreType;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see HttpServerConfigBean#getKeyAlias()
+     */
+    public String getKeyAlias() {
+        return keyAlias;
     }
 
     /**

@@ -86,6 +86,13 @@ public abstract class HttpServerConfigBean {
     public abstract String getKeystoreType();
 
     /**
+     * 获取Key别名
+     *
+     * @return 别名
+     */
+    public abstract String getKeyAlias();
+
+    /**
      * 获取闲置超时值
      *
      * @return 闲置超时值
