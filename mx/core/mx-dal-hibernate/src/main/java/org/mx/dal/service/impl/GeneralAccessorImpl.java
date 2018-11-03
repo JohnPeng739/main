@@ -192,6 +192,10 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 return cb.le((Expression<? extends Number>) getField(tuple.field, root), (Number) tuple.value);
             case GTE:
                 return cb.ge((Expression<? extends Number>) getField(tuple.field, root), (Number) tuple.value);
+            case IS_NULL:
+                return cb.isNull(getField(tuple.field, root));
+            case IS_NOT_NULL:
+                return cb.isNotNull(getField(tuple.field, root));
             default:
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));
@@ -260,7 +264,8 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 orderGroup.getOrders().forEach(order -> {
                     if (order.getType() == RecordOrder.OrderType.ASC) {
                         orders.add(cb.asc(root.get(order.getField())))
-;                    } else {
+                        ;
+                    } else {
                         orders.add(cb.desc(root.get(order.getField())));
                     }
                 });
@@ -361,14 +366,13 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 entityManager.persist(t);
             }
         }
+        // 为了防止管理对象没有及时更新状态，这里强制刷新一次
         if (needFlush) {
             entityManager.flush();
         }
         if (logger.isDebugEnabled()) {
             logger.debug(String.format("Save entity success, entity: %s.", t));
         }
-        // 为了防止管理对象没有及时更新状态，这里强制刷新一次
-        entityManager.refresh(t);
         return t;
     }
 

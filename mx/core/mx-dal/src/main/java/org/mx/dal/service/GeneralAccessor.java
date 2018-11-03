@@ -362,6 +362,38 @@ public interface GeneralAccessor {
         }
 
         /**
+         * 创建一个空值校验的条件
+         *
+         * @param field 字段名
+         * @return 条件
+         */
+        public static ConditionTuple isNull(String field) {
+            if (StringUtils.isBlank(field)) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format("The condition is invalid, field: %s.", field));
+                }
+                return null;
+            }
+            return new ConditionTuple(field, ConditionOperate.IS_NULL, null);
+        }
+
+        /**
+         * 创建一个非空值校验的条件
+         *
+         * @param field 字段名
+         * @return 条件
+         */
+        public static ConditionTuple isNotNull(String field) {
+            if (StringUtils.isBlank(field)) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn(String.format("The condition is invalid, field: %s.", field));
+                }
+                return null;
+            }
+            return new ConditionTuple(field, ConditionOperate.IS_NOT_NULL, null);
+        }
+
+        /**
          * {@inheritDoc}
          *
          * @see ConditionGroup#getItems()
@@ -415,7 +447,15 @@ public interface GeneralAccessor {
             /**
              * 前缀
              */
-            PREFIX
+            PREFIX,
+            /**
+             * IS NULL
+             */
+            IS_NULL,
+            /**
+             * IS NOT NULL
+             */
+            IS_NOT_NULL
         }
     }
 

@@ -1,6 +1,7 @@
 package org.mx.test.config;
 
 import org.mx.dal.config.DalHibernateConfig;
+import org.mx.spring.config.SpringConfig;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         "classpath:jpa.properties"
 })
 @EnableTransactionManagement
-@Import(DalHibernateConfig.class)
+@Import({DalHibernateConfig.class, SpringConfig.class})
 @ComponentScan({
         "org.mx.test.service.impl"
 })

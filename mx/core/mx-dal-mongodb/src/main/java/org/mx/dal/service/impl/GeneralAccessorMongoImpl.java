@@ -195,7 +195,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
     private Criteria createToupleCriteria(ConditionTuple tuple) {
         switch (tuple.operate) {
             case CONTAIN:
-                // 将关键字中的空格转化为正则表达式的 OR 操作\
+                // 将关键字中的空格转化为正则表达式的 OR 操作
                 return where(tuple.field).regex(String.format(".*(%s).*",
                         ((String) tuple.value).replaceAll(" ", " | ")));
             case PREFIX:
@@ -212,6 +212,10 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
                 return where(tuple.field).lte(tuple.value);
             case GTE:
                 return where(tuple.field).gte(tuple.value);
+            case IS_NULL:
+                return where(tuple.field).exists(false);
+            case IS_NOT_NULL:
+                return where(tuple.field).exists(true);
             default:
                 if (logger.isErrorEnabled()) {
                     logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));

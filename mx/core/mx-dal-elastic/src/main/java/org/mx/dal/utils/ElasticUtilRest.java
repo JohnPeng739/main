@@ -432,6 +432,12 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
                 case GTE:
                     queryBuilder.must(QueryBuilders.rangeQuery(tuple.field).gte(tuple.value));
                     break;
+                case IS_NULL:
+                    queryBuilder.mustNot(QueryBuilders.existsQuery(tuple.field));
+                    break;
+                case IS_NOT_NULL:
+                    queryBuilder.must(QueryBuilders.existsQuery(tuple.field));
+                    break;
                 default:
                     if (logger.isErrorEnabled()) {
                         logger.error(String.format("Unsupported the operate type: %s.", tuple.operate));

@@ -50,7 +50,7 @@ project(':mx-jwt-utils') {
 }
 
 project(':mx-dal') {
-    version = '3.0.0'
+    version = '3.1.0'
     description = 'data access layer abstract classes and interfaces.'
 
     dependencies {
@@ -81,15 +81,15 @@ project(':mx-service-utils') {
                 libs.'jersey-hk2',
                 libs.'jetty-server',
                 libs.'jetty-servlet',
+                libs.'jetty-websocket',
                 libs.'graphql',
-                libs.'httpclient',
-                libs.'jetty-websocket'
+                libs.'httpclient'
         )
     }
 }
 
 project(':mx-dal-hibernate') {
-    version = '3.0.2'
+    version = '3.1.0'
     description = 'Dal with hibernate JPA.'
 
     dependencies {
@@ -106,7 +106,7 @@ project(':mx-dal-hibernate') {
 }
 
 project(':mx-dal-mongodb') {
-    version = '3.0.0'
+    version = '3.1.0'
     description = 'dal with mongoldb.'
 
     dependencies {
@@ -121,7 +121,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-dal-elastic') {
-    version = '3.0.0'
+    version = '3.1.0'
     description = 'dal with elasticsearch.'
 
     dependencies {

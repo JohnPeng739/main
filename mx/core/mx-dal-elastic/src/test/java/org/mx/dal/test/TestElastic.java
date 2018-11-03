@@ -57,7 +57,7 @@ public class TestElastic {
 
         try {
             WeatherEntityElastic w1 = EntityFactory.createEntity(WeatherEntityElastic.class);
-            w1.setLocation(new GeoPointLocation(0,0));
+            w1.setLocation(new GeoPointLocation(0, 0));
             w1.setName("原点");
             w1.setType("晴天");
             w1.setTemperature(38.0f);
@@ -80,14 +80,14 @@ public class TestElastic {
             assertEquals(2, list.size());
 
             list = elasticUtil.geoWithInPolygon(null, Arrays.asList(
-                    new GeoPointLocation(0,0),
+                    new GeoPointLocation(0, 0),
                     new GeoPointLocation(20, 0),
                     new GeoPointLocation(20, 30),
                     new GeoPointLocation(0, 30)
             ), null, Collections.singletonList(WeatherEntityElastic.class));
             assertEquals(1, list.size());
             list = elasticUtil.geoWithInPolygon(new GeoPointLocation(10, 25), Arrays.asList(
-                    new GeoPointLocation(0,0),
+                    new GeoPointLocation(0, 0),
                     new GeoPointLocation(20, 0),
                     new GeoPointLocation(20, 50),
                     new GeoPointLocation(0, 50)
@@ -114,7 +114,7 @@ public class TestElastic {
                 accessor.save(user);
             }
             long t1 = System.currentTimeMillis() - t0;
-            Thread.sleep(1000);
+            Thread.sleep(3000);
             assertEquals(1000, accessor.count(UserEntityElastic.class));
 
             t0 = System.currentTimeMillis();
@@ -128,7 +128,7 @@ public class TestElastic {
             }
             accessor.save(users);
             long t2 = System.currentTimeMillis() - t0;
-            Thread.sleep(1000);
+            Thread.sleep(3000);
             assertEquals(2000, accessor.count(UserEntityElastic.class));
             assertTrue(t2 <= t1);
         } catch (Exception ex) {
@@ -349,6 +349,11 @@ public class TestElastic {
                     )),
                     UserEntityElastic.class);
             assertEquals(1, list.size());
+
+            list = accessor.find(GeneralAccessor.ConditionTuple.isNotNull("age"), UserEntityElastic.class);
+            assertEquals(2, list.size());
+            list = accessor.find(GeneralAccessor.ConditionTuple.isNull("age"), UserEntityElastic.class);
+            assertEquals(0, list.size());
 
             accessor.remove(user1);
             Thread.sleep(delay);

@@ -15,7 +15,7 @@ public class BaseDictTreeEntity<T extends BaseDictTree> extends BaseDictEntity i
     @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "PARENT_ID")
     private T parent;
-    @OneToMany(cascade = {CascadeType.REFRESH})
+    @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "PARENT_ID")
     private Set<T> children;
 

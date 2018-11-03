@@ -181,6 +181,11 @@ public class TestDatabase extends BaseTest {
             ), User.class);
             assertEquals(1, list.size());
 
+            list = accessor.find(GeneralAccessor.ConditionTuple.isNull("code"), User.class);
+            assertEquals(0, list.size());
+            list = accessor.find(GeneralAccessor.ConditionTuple.isNotNull("code"), User.class);
+            assertEquals(2, list.size());
+
             user = accessor.getByCode("john", User.class);
             check = accessor.remove(user, false);
             assertNotNull(check);
