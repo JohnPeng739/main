@@ -40,6 +40,7 @@ public class UserInterfaceServiceErrorException extends UserInterfaceException {
         COMM_DATA_TOO_MORE("传输数据超出设置大小。"),
 
         GRAPHQL_EXECUTE_FAIL("执行GraphQL发生错误。"),
+        GRAPHQL_FILE_READ_FAIL("读取GraphQL文件失败。"),
 
         SERVICE_OTHER_FAIL("其他服务访问错误。");
         public static final int BASE_ORDINAL = 60;
