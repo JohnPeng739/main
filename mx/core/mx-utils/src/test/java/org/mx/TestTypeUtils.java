@@ -8,6 +8,39 @@ import static org.junit.Assert.*;
 
 public class TestTypeUtils {
     @Test
+    public void testEquals() {
+        String str1 = "12";
+        int i1 = 12;
+        Integer I1 = 12;
+        long l1 = 12;
+        Long L1 = 12L;
+        float f1 = 12.12F;
+        Float F1 = 12.12F;
+        double d1 = 12.12;
+        Double D1 = 12.12;
+        assertTrue(TypeUtils.equals(null, null));
+        assertFalse(TypeUtils.equals(null, str1));
+        assertFalse(TypeUtils.equals(null, i1));
+        assertFalse(TypeUtils.equals(null, I1));
+        assertFalse(TypeUtils.equals(null, l1));
+        assertFalse(TypeUtils.equals(null, L1));
+        assertFalse(TypeUtils.equals(null, f1));
+        assertFalse(TypeUtils.equals(null, F1));
+        assertFalse(TypeUtils.equals(null, d1));
+        assertFalse(TypeUtils.equals(null, D1));
+        assertTrue(TypeUtils.equals(str1, i1));
+        assertTrue(TypeUtils.equals(str1, I1));
+        assertTrue(TypeUtils.equals(str1, L1));
+        assertTrue(TypeUtils.equals(i1, I1));
+        assertTrue(TypeUtils.equals(i1, l1));
+        assertTrue(TypeUtils.equals(i1, L1));
+        assertTrue(TypeUtils.equals(l1, I1));
+        assertTrue(TypeUtils.equals(f1, F1));
+        assertTrue(TypeUtils.equals(d1, D1));
+        assertTrue(TypeUtils.equals(f1, D1));
+    }
+
+    @Test
     public void testInt() {
         Random random = new Random(System.currentTimeMillis());
         for (int index = 0; index < 10; index++) {

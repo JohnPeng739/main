@@ -366,7 +366,6 @@ public class TypeUtils {
         return sb.toString();
     }
 
-
     /**
      * 采用Base64算法进行编码，将字节数据转换为字符串。
      *
@@ -622,6 +621,24 @@ public class TypeUtils {
             }
         }
         return defaultValue;
+    }
+
+    /**
+     * 判定是否相等
+     *
+     * @param t1  值1
+     * @param t2  值2
+     * @param <T> 范型定义
+     * @return 如果相等返回true，否则返回false
+     */
+    public static <T> boolean equals(T t1, T t2) {
+        if (t1 == null && t2 == null) {
+            return true;
+        } else if (t1 != null && t2 != null) {
+            return t1.toString().equals(t2.toString());
+        } else {
+            return false;
+        }
     }
 
     /**
