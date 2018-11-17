@@ -30,7 +30,9 @@ public class UserInterfaceSystemErrorException extends UserInterfaceException {
         SYSTEM_UNSUPPORTED_OPERATE("不支持的操作方法，请联系开发人员。"),
         SYSTEM_NO_SUCH_ALGORITHM("不支持的系统算法。"),
 
-        SYSTEM_UNSUPPORTED("不支持的操作系统，请联系开发人员。"),
+        SYSTEM_UNSUPPORTED("不支持的操作类型，请联系开发人员。"),
+
+        CLASS_NOT_FOUND("指定的类不存在，请联系开发人员。"),
 
         FILE_NOT_EXISTED("指定的文件不存在，请联系开发人员。"),
         FILE_READ_ERROR("读取指定文件内容错误。"),
@@ -39,7 +41,7 @@ public class UserInterfaceSystemErrorException extends UserInterfaceException {
 
         SYSTEM_OTHER_FAIL("未知的系统错误。");
 
-        public static final int BASE_ORDINAL = 0;
+        public static final int BASE_ORDINAL = 1;
         private String errorMessage;
 
         /**
