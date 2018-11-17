@@ -7,7 +7,7 @@ apply from: '../../dependencies.gradle'
 apply from: '../../allprojects.gradle'
 
 project(':mx-utils') {
-    version = '2.1.24'
+    version = '2.1.25'
     description = 'Many utility java class, such as : DateUtils, StringUtils, etc.'
 
     dependencies {
@@ -23,7 +23,7 @@ project(':mx-utils') {
 }
 
 project(':mx-spring') {
-    version = '2.0.1'
+    version = '2.1.0'
     description = 'Many utility based on spring, such as : SpringContextHolder, etc.'
 
     dependencies {
@@ -34,6 +34,11 @@ project(':mx-spring') {
                 libs.'spring-data-redis',
                 libs.'jedis'
         )
+        compile(
+                libs.'spring-boot-starter'
+        ) {
+            exclude module: 'spring-rest-starter-logging'
+        }
     }
 }
 
@@ -63,7 +68,7 @@ project(':mx-dal') {
 }
 
 project(':mx-service-utils') {
-    version = '2.0.4'
+    version = '2.1.0'
     description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
     dependencies {
@@ -77,14 +82,17 @@ project(':mx-service-utils') {
                 libs.'jersey-media-multi',
                 libs.'jersey-jetty-http',
                 libs.'jersey-jetty-servlet',
-                libs.'jersey-spring4',
                 libs.'jersey-hk2',
                 libs.'jetty-server',
                 libs.'jetty-servlet',
                 libs.'jetty-websocket',
                 libs.'graphql',
-                libs.'httpclient'
+                libs.'httpclient',
+                libs.'spring-web'
         )
+        compile(libs.'jersey-spring4'){
+            exclude module: 'spring-web'
+        }
     }
 }
 
@@ -139,7 +147,7 @@ project(':mx-dal-elastic') {
     }
 }
 
-project('mx-hanlp-utils') {
+project(':mx-hanlp-utils') {
     version = '1.0.12'
     description = 'utilities API for hanlp.'
 
@@ -149,6 +157,35 @@ project('mx-hanlp-utils') {
                 project(':mx-service-utils')
         )
         compile 'com.oracle:ojdbc6:11.2.0.4.0-atlassian-hosted'
+    }
+}
+
+project(':test-tomcat') {
+    version = '1.0.0'
+    description = 'any test tomcat'
+
+    apply plugin: 'war'
+    webAppDirName = 'web'
+    buildDir = 'build'
+    war {
+        baseName = "test"
+    }
+
+    dependencies {
+        compile(
+                project(':mx-utils'),
+                project(':mx-spring'),
+                libs.'jersey-server',
+                libs.'jersey-media-jackson',
+                libs.'jersey-media-multi',
+                libs.'jersey-hk2',
+        )
+        compile(
+                project(':mx-service-utils')
+        ) {
+            exclude group: 'org.eclipse.jetty'
+            exclude group: 'org.eclipse.jetty.websocket'
+        }
     }
 }
 
