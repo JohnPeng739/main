@@ -7,7 +7,6 @@ import org.mx.service.rest.auth.RestAuthenticate;
 import org.mx.service.rest.vo.DataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -16,7 +15,6 @@ import java.io.InputStream;
 /**
  * Created by john on 2017/11/4.
  */
-@Component
 @Path("service")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

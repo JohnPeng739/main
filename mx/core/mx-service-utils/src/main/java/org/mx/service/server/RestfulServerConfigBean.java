@@ -43,6 +43,8 @@ public class RestfulServerConfigBean extends HttpServerConfigBean {
 
     @Value("${restful.service.classes:}")
     private String serviceClasses;
+    @Value("${restful.service.base.packages:}")
+    private String resourceBasePackages;
 
     /**
      * 默认的构造函数
@@ -183,6 +185,15 @@ public class RestfulServerConfigBean extends HttpServerConfigBean {
      * @return RESTful服务类类别
      */
     public String[] getServiceClasses() {
-        return StringUtils.split(serviceClasses);
+        return StringUtils.isBlank(serviceClasses) ? null : StringUtils.split(serviceClasses);
+    }
+
+    /**
+     * 获取配置的RESTful服务资源基准包路径，如果有多个包，用逗号分隔。系统将自动扫描。
+     *
+     * @return RESTful服务资源基本包路径
+     */
+    public String[] getResourceBasePackages() {
+        return StringUtils.isBlank(resourceBasePackages) ? null : StringUtils.split(resourceBasePackages);
     }
 }
