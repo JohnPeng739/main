@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
  * Date time 2018/7/18 下午1:16
  */
 public abstract class HttpServerConfigBean {
-    @Value("${spring.boot.class.package:}")
+    @Value("${spring.rest.class.package:}")
     private String springBootClassPackage;
 
     private ServerType serverType = ServerType.RESTful;

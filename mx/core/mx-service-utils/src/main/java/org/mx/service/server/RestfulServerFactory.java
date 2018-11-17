@@ -123,10 +123,8 @@ public class RestfulServerFactory extends HttpServerFactory {
         config.register(JettyHttpContainerProvider.class);
         config.register(RequestContextFilter.class);
         restfulClasses.forEach(config::register);
-        // 根据需要启用服务器统计数据
-        if (restfulServerConfigBean.isStatEnabled()) {
-            config.register(ServerStatisticResource.class);
-        }
+        // 启用服务器统计数据
+        config.register(ServerStatisticResource.class);
         // 根据需要注册跨域过滤器
         if (corsConfigBean.isEnabled()) {
             config.register(CorsFilter.class);

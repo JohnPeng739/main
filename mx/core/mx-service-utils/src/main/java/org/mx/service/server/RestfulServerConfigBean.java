@@ -15,8 +15,6 @@ public class RestfulServerConfigBean extends HttpServerConfigBean {
     private boolean enabled;
     @Value("${restful.port:9999}")
     private int port;
-    @Value("${restful.statistic.enabled:true}")
-    private boolean statEnabled;
     @Value("${restful.threads:100}")
     private int threads;
     @Value("${restful.security:false}")
@@ -69,15 +67,6 @@ public class RestfulServerConfigBean extends HttpServerConfigBean {
      */
     public int getPort() {
         return port;
-    }
-
-    /**
-     * 获取是否启用服务器统计信息
-     *
-     * @return 返回true表示启用，否则表示不启用
-     */
-    public boolean isStatEnabled() {
-        return statEnabled;
     }
 
     /**
