@@ -20,7 +20,6 @@ import org.springframework.core.env.Environment;
  */
 @Import({SpringConfig.class})
 public class ServerConfig {
-
     /**
      * 创建RESTful服务配置对象
      *

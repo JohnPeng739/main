@@ -4,6 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 描述： Spring boot应用启动工具类，添加常规服务初始化自动配置。
  *
@@ -21,10 +24,9 @@ public class SpringBootUtils {
      */
     public void startApplication(Class<?> clazz, String[] args) {
         SpringApplication app = new SpringApplication(clazz);
-        app.addInitializers(context -> {
-            this.context = context;
-            // TODO 根据启动类初始化相关内容：RESTful
-        });
+        Map<String, Object> defaultMap = new HashMap<>();
+        defaultMap.put("spring.boot.class.package", clazz.getPackage().getName());
+        app.setDefaultProperties(defaultMap);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
     }

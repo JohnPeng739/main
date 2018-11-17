@@ -194,6 +194,7 @@ public class RestfulServerConfigBean extends HttpServerConfigBean {
      * @return RESTful服务资源基本包路径
      */
     public String[] getResourceBasePackages() {
-        return StringUtils.isBlank(resourceBasePackages) ? null : StringUtils.split(resourceBasePackages);
+        String packages = StringUtils.isBlank(resourceBasePackages) ? super.getSpringBootClassPackage() : resourceBasePackages;
+        return StringUtils.split(packages);
     }
 }

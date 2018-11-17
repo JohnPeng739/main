@@ -1,5 +1,7 @@
 package org.mx.service.server;
 
+import org.springframework.beans.factory.annotation.Value;
+
 /**
  * 描述： 抽象的HTTP服务器配置对象
  *
@@ -7,6 +9,9 @@ package org.mx.service.server;
  * Date time 2018/7/18 下午1:16
  */
 public abstract class HttpServerConfigBean {
+    @Value("${spring.boot.class.package:}")
+    private String springBootClassPackage;
+
     private ServerType serverType = ServerType.RESTful;
 
     /**
@@ -18,6 +23,15 @@ public abstract class HttpServerConfigBean {
     public HttpServerConfigBean(ServerType serverType) {
         super();
         this.serverType = serverType;
+    }
+
+    /**
+     * 获取Spring Boot启动类的包路径，可能用于后续的自动扫描。
+     *
+     * @return Spring Boot启动时由SpringBootUtils加入的变量内容
+     */
+    public String getSpringBootClassPackage() {
+        return springBootClassPackage;
     }
 
     /**
