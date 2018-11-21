@@ -12,6 +12,7 @@ import org.mx.dal.test.entity.AnimalEntityElastic;
 import org.mx.dal.test.entity.UserEntityElastic;
 import org.mx.dal.test.entity.WeatherEntityElastic;
 import org.mx.dal.utils.ElasticUtil;
+import org.mx.hanlp.utils.HanlpUtils;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class TestElastic {
         assertNotNull(accessor);
         ElasticUtil elasticUtil = context.getBean(ElasticUtil.class);
         assertNotNull(elasticUtil);
+        elasticUtil.deleteIndex(UserEntityElastic.class);
 
         try {
             WeatherEntityElastic w1 = EntityFactory.createEntity(WeatherEntityElastic.class);
@@ -222,6 +224,7 @@ public class TestElastic {
             user1.setCode("john");
             user1.setName("John Peng");
             user1.setDesc("我是一个正高级工程师。");
+            user1.setYt(HanlpUtils.yinTou(user1.getDesc()));
             assertNull(user1.getId());
             UserEntityElastic u1 = accessor.save(user1);
             Thread.sleep(delay);
@@ -239,6 +242,7 @@ public class TestElastic {
             user2.setCode("彭明喜");
             user2.setName("Joy Peng");
             user2.setDesc("我是一个好学生。");
+            user2.setYt(HanlpUtils.yinTou(user2.getDesc()));
             assertNotNull(user2.getId());
             u1 = accessor.save(user2);
             Thread.sleep(delay);
@@ -252,6 +256,7 @@ public class TestElastic {
 
             u1.setAge(17);
             u1.setDesc(u1.getDesc() + "I am a student.");
+            u1.setYt(HanlpUtils.yinTou(u1.getDesc()));
             accessor.save(u1);
             Thread.sleep(delay);
             assertEquals(2, accessor.count(UserEntityElastic.class));
@@ -291,6 +296,9 @@ public class TestElastic {
             assertEquals(1, list.size());
             list = accessor.find(GeneralAccessor.ConditionGroup.and(
                     GeneralAccessor.ConditionTuple.contain("desc", "学生")), UserEntityElastic.class);
+            assertNotNull(list);
+            assertEquals(1, list.size());
+            list = accessor.find(GeneralAccessor.ConditionTuple.contain("yt", "xs"), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
 
