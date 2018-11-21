@@ -628,7 +628,7 @@ public class TypeUtils {
      *
      * @param t1  值1
      * @param t2  值2
-     * @param <T> 范型定义
+     * @param <T> 泛型定义
      * @return 如果相等返回true，否则返回false
      */
     public static <T> boolean equals(T t1, T t2) {
@@ -639,6 +639,18 @@ public class TypeUtils {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 判定是否可能需要更新到目标，一个简单到判定规则：源和目标值不同切源不为空
+     *
+     * @param tar 目标值
+     * @param src 源值
+     * @param <T> 泛型定义
+     * @return 返回true表示可能需要更新，否则返回false
+     */
+    public static <T> boolean maybeUpdate(T tar, T src) {
+        return !equals(tar, src) && src != null;
     }
 
     /**

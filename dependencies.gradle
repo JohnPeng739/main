@@ -37,7 +37,7 @@ ext.versions = [
   'mongodb-driver'	: '3.5.0',
   'mongodb-embed'	: '2.0.0',
   zookeeper	: '3.4.9',
-  'mx-utils'    	: '2.1.25',
+  'mx-utils'    	: '2.1.26',
   'mx-spring'		: '2.1.0',
   'mx-jwt-utils'	: '1.1.0',
   'mx-service-utils'	: '2.1.0',
