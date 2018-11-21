@@ -123,7 +123,7 @@ public class HanlpUtils {
             for (Pinyin pinyin : list) {
                 sb.append(pinyin.getShengmu());
             }
-            return sb.toString();
+            return sb.toString().replaceAll("none", "");
         } else {
             return "";
         }

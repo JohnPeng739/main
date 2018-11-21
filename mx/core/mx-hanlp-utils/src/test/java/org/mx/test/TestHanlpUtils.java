@@ -19,6 +19,7 @@ public class TestHanlpUtils {
         assertEquals("xjp", HanlpUtils.yinTou("习近平"));
         assertEquals("chq", HanlpUtils.yinTou("重庆"));
         assertEquals("zhy", HanlpUtils.yinTou("重要"));
+        assertEquals("zhy", HanlpUtils.yinTou("重123要"));
     }
 
     @Test

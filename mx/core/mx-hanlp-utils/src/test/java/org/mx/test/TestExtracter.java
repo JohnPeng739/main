@@ -1,21 +1,20 @@
 package org.mx.test;
 
-import org.mx.hanlp.TextExtracter;
-import org.mx.hanlp.impl.TextExtracterImpl;
+import org.mx.hanlp.utils.HanlpUtils;
 
 import java.util.List;
 
 public class TestExtracter {
     public static void main(String[] args) throws Exception {
-        TextExtracter extracter = new TextExtracterImpl();
+        HanlpUtils hanlpUtils = new HanlpUtils();
         String content = "算法可大致分为基本算法、数据结构的算法、数论算法、计算几何的算法、图的算法、动态规划以及数值分析、加密算法、排序算法、检索算法、随机化算法、并行算法、厄米变形模型、随机森林算法。\n" +
                 "算法可以宽泛的分为三类，\n" +
                 "一，有限的确定性算法，这类算法在有限的一段时间内终止。他们可能要花很长时间来执行指定的任务，但仍将在一定的时间内终止。这类算法得出的结果常取决于输入值。\n" +
                 "二，有限的非确定算法，这类算法在有限的时间内终止。然而，对于一个（或一些）给定的数值，算法的结果并不是唯一的或确定的。\n" +
                 "三，无限的算法，是那些由于没有定义终止定义条件，或定义的条件无法由输入的数据满足而不终止运行的算法。通常，无限算法的产生是由于未能确定的定义终止条件。";
-        String summary = extracter.summary(content);
+        String summary = hanlpUtils.summary(content, 500);
         System.out.println(summary);
-        List<String> keywords = extracter.keywords(content);
+        List<String> keywords = hanlpUtils.keywords(content, 10);
         System.out.println(keywords);
 
         content = "法新社消息称，日本防卫大臣小野寺五典表示，日本对朝鲜停止核试验和洲际导弹发射的承诺并不满意，警告说日本将继续对平壤施加最大压力。\n" +
@@ -25,9 +24,9 @@ public class TestExtracter {
                 "金正恩在20日举行的劳动党中央委员会第七届第三次全体会议上宣布，朝鲜将从21日开始不再进行任何核试验和洲际弹道导弹发射，废弃朝鲜北部核试验场。金正恩表示，只要朝鲜不受核威胁挑衅，朝鲜绝对不使用核武器，不泄露核武器和核技术。\n" +
                 "\n" +
                 "金正恩称，朝鲜将集中全部力量发展经济，提高人民生活水平。为营造对发展经济有利的国际环境，维护朝鲜半岛和世界和平，朝鲜将与周边国家和国际社会积极展开紧密联系和对话。";
-        summary = extracter.summary(content);
+        summary = hanlpUtils.summary(content, 500);
         System.out.println(summary);
-        keywords = extracter.keywords(content);
+        keywords = hanlpUtils.keywords(content, 10);
         System.out.println(keywords);
 
         content = "中兴通讯20日针对美国商务部的出口权限禁止令发表声明，称美国在相关调查尚未结束前，执意施以最严厉的制裁，对中兴通讯极不公平，中兴不能接受。\n" +
@@ -63,33 +62,33 @@ public class TestExtracter {
                 "外部的大风大浪，只会更激发中国走出一批对国际规则懂行、处置手段老道、渠道资源畅通的国际化大公司；只会更激发中国人自主创新的小宇宙和大志向；只会更激发中国加速在高技术研发领域深化改革、扩大开放的历史进程。\n" +
                 "\n" +
                 "最后，也希望中兴这家在中国成长起来的全球化企业，能如声明中说的那样，凝聚全体员工，坚定信心、团结一致、渡过难关。";
-        summary = extracter.summary(content);
+        summary = hanlpUtils.summary(content, 500);
         System.out.println(summary);
-        keywords = extracter.keywords(content, 10);
+        keywords = hanlpUtils.keywords(content, 10);
         System.out.println(keywords);
 
         content = "云龙园馋村联丰电器厂前面100米\n" +
                 " 电线着火  请辖区中队立即调派周边微型消防站增援  \n" +
                 " 抢险救援";
-        summary = extracter.summary(content);
+        summary = hanlpUtils.summary(content, 500);
         System.out.println(summary);
-        keywords = extracter.keywords(content);
+        keywords = hanlpUtils.keywords(content, 10);
         System.out.println(keywords);
 
         content = " 横河东上河村虹桥菜场\",\n" +
                 "   一层小房子着火。被自行扑灭,\n" +
                 "   其他";
-        summary = extracter.summary(content);
+        summary = hanlpUtils.summary(content, 500);
         System.out.println(summary);
-        keywords = extracter.keywords(content);
+        keywords = hanlpUtils.keywords(content, 10);
         System.out.println(keywords);
 
         content = " 黄鹂新村352号   马蜂窝,\n" +
                 "马蜂窝\n" +
                 " 摘除蜂窝";
-        summary = extracter.summary(content);
+        summary = hanlpUtils.summary(content, 500);
         System.out.println(summary);
-        keywords = extracter.keywords(content);
+        keywords = hanlpUtils.keywords(content, 10);
         System.out.println(keywords);
     }
 }

@@ -136,6 +136,7 @@ project(':mx-dal-elastic') {
         compile(
                 project(':mx-service-utils'),
                 project(':mx-dal'),
+                project(':mx-hanlp-utils'),
                 libs.'fastjson',
                 libs.'log4j-api',
                 libs.'log4j-core',
@@ -148,7 +149,7 @@ project(':mx-dal-elastic') {
 }
 
 project(':mx-hanlp-utils') {
-    version = '1.0.12'
+    version = '1.1.0'
     description = 'utilities API for hanlp.'
 
     dependencies {
