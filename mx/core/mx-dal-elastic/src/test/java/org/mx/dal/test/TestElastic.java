@@ -298,7 +298,7 @@ public class TestElastic {
                     GeneralAccessor.ConditionTuple.contain("desc", "学生")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
-            list = accessor.find(GeneralAccessor.ConditionTuple.contain("yt", "xs"), UserEntityElastic.class);
+            list = accessor.find(GeneralAccessor.ConditionTuple.contain("yt", "zgj"), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
 
