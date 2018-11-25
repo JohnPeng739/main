@@ -21,11 +21,24 @@ public abstract class GraphQLBaseResource {
 
     protected GraphQLFactory factory;
 
+    /**
+     * 构造函数
+     *
+     * @param factory GraphQL工厂接口
+     */
     public GraphQLBaseResource(GraphQLFactory factory) {
         super();
         this.factory = factory;
     }
 
+    /**
+     * 执行一次GraphQL
+     *
+     * @param schemaKey GraphQL Schema Key
+     * @param type      GraphQL操作类型
+     * @param request   GraphQL操作请求对象
+     * @return GraphQL执行结果
+     */
     private DataVO<JSONObject> graphQL(String schemaKey, GraphQLType type, GraphQLRequest request) {
         if (request == null || StringUtils.isBlank(request.getName()) || StringUtils.isBlank(request.getResult())) {
             if (logger.isErrorEnabled()) {
@@ -46,7 +59,7 @@ public abstract class GraphQLBaseResource {
         GraphQLUtils graphQLUtils = factory.getUtils(schemaKey);
         if (graphQLUtils == null) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("The GraphQL Schema[%s] not be defined."));
+                logger.error(String.format("The GraphQL Schema[%s] not be defined.", request.getName()));
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
@@ -63,14 +76,31 @@ public abstract class GraphQLBaseResource {
         return new DataVO<>(graphQLUtils.execute(requestString));
     }
 
+    /**
+     * 执行一次数据查询类型的GraphQL
+     *
+     * @param schemaKey GraphQL Schema Key
+     * @param request   GraphGL请求对象
+     * @return GraphQL执行结果
+     */
     protected DataVO<JSONObject> query(String schemaKey, GraphQLRequest request) {
         return graphQL(schemaKey, GraphQLType.QUERY, request);
     }
 
+    /**
+     * 执行一次数据操作类型的GraphQL
+     *
+     * @param schemaKey GraphQL Schema Key
+     * @param request   GraphGL请求对象
+     * @return GraphQL执行结果
+     */
     protected DataVO<JSONObject> mutation(String schemaKey, GraphQLRequest request) {
         return graphQL(schemaKey, GraphQLType.MUTATION, request);
     }
 
+    /**
+     * GraphGL操作类型，包括：查询和数据操作
+     */
     private enum GraphQLType {
         QUERY, MUTATION
     }

@@ -25,7 +25,9 @@ public class SpringBootUtils {
     public void startApplication(Class<?> clazz, String[] args) {
         SpringApplication app = new SpringApplication(clazz);
         Map<String, Object> defaultMap = new HashMap<>();
-        defaultMap.put("spring.rest.class.package", clazz.getPackage().getName());
+        String basePackage = clazz.getPackage().getName();
+        defaultMap.put("spring.rest.class.package", basePackage);
+        defaultMap.put("restful.service.base.packages", basePackage);
         app.setDefaultProperties(defaultMap);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);

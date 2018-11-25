@@ -90,7 +90,7 @@ public class ServerConfig {
      * @param context Spring IoC上下文
      * @return GraphQL工厂
      */
-    @Bean
+    @Bean(name = "graphQLFactory", initMethod = "init", destroyMethod = "destroy")
     public GraphQLFactory graphQLFactory(ApplicationContext context) {
         return new GraphQLFactory(context);
     }
