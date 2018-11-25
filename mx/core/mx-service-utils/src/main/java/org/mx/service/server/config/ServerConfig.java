@@ -1,6 +1,8 @@
 package org.mx.service.server.config;
 
 import org.mx.service.rest.cors.CorsConfigBean;
+import org.mx.service.rest.graphql.GraphQLConfigBean;
+import org.mx.service.rest.graphql.GraphQLFactory;
 import org.mx.service.server.*;
 import org.mx.service.server.websocket.rule.DdosFilterRule;
 import org.mx.service.server.websocket.rule.ListFilterRule;
@@ -69,6 +71,28 @@ public class ServerConfig {
     @Bean
     public CorsConfigBean corsConfigBean() {
         return new CorsConfigBean();
+    }
+
+    /**
+     * 根据配置文件创建GraphQL配置信息对象
+     *
+     * @param env Spring IoC上下文环境
+     * @return GraphQL配置信息对象
+     */
+    @Bean
+    public GraphQLConfigBean graphQLConfigBean(Environment env) {
+        return new GraphQLConfigBean(env);
+    }
+
+    /**
+     * 根据配置创建GraphQL工厂
+     *
+     * @param context Spring IoC上下文
+     * @return GraphQL工厂
+     */
+    @Bean
+    public GraphQLFactory graphQLFactory(ApplicationContext context) {
+        return new GraphQLFactory(context);
     }
 
     /**
