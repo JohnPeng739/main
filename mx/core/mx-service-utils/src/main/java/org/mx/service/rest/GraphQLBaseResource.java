@@ -40,13 +40,17 @@ public abstract class GraphQLBaseResource {
      * @return GraphQL执行结果
      */
     private DataVO<JSONObject> graphQL(String schemaKey, GraphQLType type, GraphQLRequest request) {
-        if (request == null || StringUtils.isBlank(request.getName()) || StringUtils.isBlank(request.getResult())) {
+        if (request == null || StringUtils.isBlank(request.getName())) {
             if (logger.isErrorEnabled()) {
-                logger.error("The graph request or name or result is blank.");
+                logger.error("The graph request or name is blank.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
+        }
+        // 如果没有设置result字段，表示查询的结果为原始结果
+        if (StringUtils.isBlank(request.getResult())) {
+            request.setResult("");
         }
         if (factory == null) {
             if (logger.isErrorEnabled()) {
@@ -65,9 +69,9 @@ public abstract class GraphQLBaseResource {
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        String requestString = String.format("%s%s{%s}", request.getName(),
+        String requestString = String.format("%s%s%s", request.getName(),
                 StringUtils.isBlank(request.getParam()) ? "" : "(" + request.getParam() + ")",
-                request.getResult());
+                StringUtils.isBlank(request.getResult()) ? "" : "{" + request.getResult() + "}");
         if (type == GraphQLType.MUTATION) {
             requestString = String.format("mutation{%s}", requestString);
         } else {
