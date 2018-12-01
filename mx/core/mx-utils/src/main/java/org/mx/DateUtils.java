@@ -380,8 +380,6 @@ public class DateUtils {
             }
             int[] units = new int[]{Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH, Calendar.HOUR_OF_DAY,
                     Calendar.MINUTE, Calendar.SECOND, Calendar.MILLISECOND};
-            int[] min = new int[]{1970, 0, 1, 0, 0, 0, 0},
-                    max = new int[]{5000, 11, 31, 23, 59, 59, 999};
             int length = params.length;
             Calendar calMin = Calendar.getInstance(), calMax = Calendar.getInstance();
             for (int index = 0; index < length; index++) {
@@ -389,8 +387,8 @@ public class DateUtils {
                 calMax.set(units[index], params[index]);
             }
             for (int index = length; index < units.length; index++) {
-                calMin.set(units[index], min[index]);
-                calMax.set(units[index], max[index]);
+                calMin.set(units[index], calMin.getActualMinimum(units[index]));
+                calMax.set(units[index], calMax.getActualMaximum(units[index]));
             }
             return new DatetimeRange(calMin.getTimeInMillis(), calMax.getTimeInMillis());
         }
