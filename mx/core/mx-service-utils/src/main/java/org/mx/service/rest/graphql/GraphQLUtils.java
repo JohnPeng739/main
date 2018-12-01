@@ -220,12 +220,16 @@ public class GraphQLUtils {
                                 try {
                                     return method.invoke(execution, environment);
                                 } catch (IllegalAccessException | InvocationTargetException ex) {
-                                    if (logger.isErrorEnabled()) {
-                                        logger.error(String.format("Invoke method[%s] fail.", method.getName()), ex);
+                                    if (ex.getCause() instanceof UserInterfaceException) {
+                                        throw (UserInterfaceException) ex.getCause();
+                                    } else {
+                                        if (logger.isErrorEnabled()) {
+                                            logger.error(String.format("Invoke method[%s] fail.", method.getName()), ex);
+                                        }
+                                        throw new UserInterfaceServiceErrorException(
+                                                UserInterfaceServiceErrorException.ServiceErrors.GRAPHQL_EXECUTE_FAIL
+                                        );
                                     }
-                                    throw new UserInterfaceServiceErrorException(
-                                            UserInterfaceServiceErrorException.ServiceErrors.GRAPHQL_EXECUTE_FAIL
-                                    );
                                 }
                             });
                             return typeWiring;
