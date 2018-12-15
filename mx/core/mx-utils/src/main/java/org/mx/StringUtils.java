@@ -98,6 +98,8 @@ public class StringUtils {
             str = str.trim();
             if (str.length() <= 0) {
                 return true;
+            } else if ("null".equalsIgnoreCase(str) || "undefined".equalsIgnoreCase(str)) {
+                return true;
             } else {
                 return false;
             }

@@ -3,8 +3,22 @@ package org.mx;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestStringUtils {
+
+	@Test
+	public void testIsBlank() {
+		String[] blanks = {null , "", "   ", "null", "Null", "NULL", "undefined", "UNDEFINED", "Undefined"};
+		String[] notBlanks = {"a", "1", " a", " a ", " 1 ", "a13 ", " a13   "};
+		for (String str : blanks) {
+			assertTrue(StringUtils.isBlank(str));
+		}
+		for (String str : notBlanks) {
+			assertFalse(StringUtils.isBlank(str));
+		}
+	}
 
 	@Test
 	public void testTruncate() {
