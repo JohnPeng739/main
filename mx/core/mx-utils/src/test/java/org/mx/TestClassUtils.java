@@ -24,7 +24,7 @@ public class TestClassUtils {
         List<String> list3 = ClassUtils.scanPackage("org.mx", true, false);
         assertTrue(list3.contains("org.mx.ClassUtils"));
         assertTrue(list3.contains("org.mx.FileUtils"));
-        assertTrue(list3.contains("org.mx.StringUtils$Radix"));
+        assertTrue(list3.contains("org.mx.TypeUtils$Radix"));
         assertTrue(list3.contains("org.mx.RandomUtils"));
         assertTrue(list3.contains("org.mx.config.SystemConfig"));
         assertTrue(list3.contains("org.mx.rate.GeneralTopNRate$ValueType"));

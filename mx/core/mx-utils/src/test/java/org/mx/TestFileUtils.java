@@ -1,15 +1,9 @@
 package org.mx;
 
-import javafx.animation.PathTransition;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -25,15 +19,17 @@ public class TestFileUtils {
         Path path1 = Paths.get(System.getProperty("user.dir"), source, child1);
         Path path2 = Paths.get(System.getProperty("user.dir"), source, child2);
         Path path11 = Paths.get(System.getProperty("user.dir"), source, child1,child11);
-        assertFalse(Files.exists(pathSource));
-        assertFalse(Files.exists(path1));
-        assertFalse(Files.exists(path2));
-        assertFalse(Files.exists(path11));
-        assertFalse(Files.isDirectory(pathSource));
-        assertFalse(Files.isDirectory(path1));
-        assertFalse(Files.isDirectory(path2));
-        assertFalse(Files.isDirectory(path11));
+
         try {
+            FileUtils.deleteFile(pathTarget);
+            assertFalse(Files.exists(pathTarget));
+
+            FileUtils.deleteFile(source);
+            assertFalse(Files.exists(pathSource));
+            assertFalse(Files.exists(path1));
+            assertFalse(Files.exists(path2));
+            assertFalse(Files.exists(path11));
+
             Files.createDirectories(path11);
             Files.createDirectories(path2);
             assertTrue(Files.exists(pathSource));

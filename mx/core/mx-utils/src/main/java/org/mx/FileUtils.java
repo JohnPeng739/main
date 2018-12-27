@@ -46,6 +46,9 @@ public class FileUtils {
      * @throws IOException 删除过程中发生的异常
      */
     public static void deleteFile(Path file) throws IOException {
+        if (file == null || !Files.exists(file)) {
+            return;
+        }
         Files.walkFileTree(file, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
@@ -170,7 +173,7 @@ public class FileUtils {
         }
         Path path = Paths.get(target);
         Path parent = path.getParent();
-        if (!Files.exists(parent)) {
+        if (parent != null && !Files.exists(parent)) {
             Files.createDirectories(parent);
         }
         copyFile(Paths.get(source), path);
