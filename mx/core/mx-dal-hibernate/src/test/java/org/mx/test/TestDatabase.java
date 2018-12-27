@@ -9,6 +9,7 @@ import org.mx.error.UserInterfaceException;
 import org.mx.test.entity.User;
 import org.mx.test.entity.UserEntity;
 import org.mx.test.repository.UserRepository;
+import org.mx.test.service.TransactionService;
 import org.mx.test.service.UserService;
 
 import java.util.ArrayList;
@@ -17,6 +18,30 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class TestDatabase extends BaseTest {
+
+    @Test
+    public void testTransaction() {
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+                GeneralDictAccessor.class);
+        assertNotNull(accessor);
+        accessor.clear(User.class);
+        assertEquals(0, accessor.count(User.class));
+        TransactionService transactionService = context.getBean(TransactionService.class);
+        assertNotNull(transactionService);
+
+        transactionService.commit();
+        assertTrue(transactionService.commitSuccess());
+
+        try {
+            transactionService.rollback();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        assertTrue(transactionService.rollbackSuccess());
+
+        accessor.clear(User.class);
+        assertEquals(0, accessor.count(User.class));
+    }
 
     @Test
     public void testPerformance() {
