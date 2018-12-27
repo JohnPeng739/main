@@ -26,11 +26,11 @@ public class RestClientInvoke {
         client = ClientBuilder.newClient();
     }
 
-    public RestClientInvoke(String keystorePath) {
-        this(keystorePath, true);
+    public RestClientInvoke(String keystorePath, String keystorePassword, String keyManagerPassword) {
+        this(keystorePath, keystorePassword, keyManagerPassword, true);
     }
 
-    public RestClientInvoke(String keystorePath, boolean ignoreHostnameVerify) {
+    public RestClientInvoke(String keystorePath, String keystorePassword, String keyManagerPassword, boolean ignoreHostnameVerify) {
         super();
         try {
             if (ignoreHostnameVerify) {
@@ -39,8 +39,8 @@ public class RestClientInvoke {
             ClientBuilder builder = ClientBuilder.newBuilder();
             sslContextFactory = new SslContextFactory();
             sslContextFactory.setKeyStorePath(keystorePath);
-            sslContextFactory.setKeyStorePassword("OBF:1j8x1iup1kfv1j9t1nl91fia1fek1nip1j591kcj1irx1j65");
-            sslContextFactory.setKeyManagerPassword("OBF:1k8a1lmp18jj18cg18ce18jj1lj11k5w");
+            sslContextFactory.setKeyStorePassword(keystorePassword);
+            sslContextFactory.setKeyManagerPassword(keyManagerPassword);
             sslContextFactory.start();
             builder.sslContext(sslContextFactory.getSslContext());
             client = builder.build();

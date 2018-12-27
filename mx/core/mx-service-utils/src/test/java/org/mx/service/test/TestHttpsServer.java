@@ -11,6 +11,7 @@ import org.mx.service.client.rest.RestInvokeException;
 import org.mx.service.error.UserInterfaceServiceErrorException;
 import org.mx.service.rest.vo.DataVO;
 import org.mx.service.server.AbstractServerFactory;
+import org.mx.service.server.RestfulServerConfigBean;
 import org.mx.service.server.RestfulServerFactory;
 import org.mx.service.test.config.TestHttpsConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -37,11 +38,13 @@ public class TestHttpsServer {
         assertNotNull(factory);
         Server server = factory.getServer();
         assertNotNull(server);
+        RestfulServerConfigBean config = context.getBean(RestfulServerConfigBean.class);
+        assertNotNull(config);
 
         // test service client
         try {
             String keystorePath = context.getEnvironment().getProperty("restful.security.keystore", "./keystore");
-            RestClientInvoke invoke = new RestClientInvoke(keystorePath);
+            RestClientInvoke invoke = new RestClientInvoke(keystorePath, config.getKeystorePassword(), config.getKeyManagerPassword());
             DataVO<String> dataVO = invoke.get("https://localhost:9999/service/get", DataVO.class);
             assertNotNull(dataVO);
             assertEquals("match the response data.", "get data.", dataVO.getData());

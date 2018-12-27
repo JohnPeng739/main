@@ -13,6 +13,7 @@ import org.mx.service.test.*;
 public class ServiceTestSuite {
     public static Test suite() {
         TestSuite suite = new TestSuite("Test any service");
+        suite.addTest(new JUnit4TestAdapter(TestGraphQLConfig.class));
         suite.addTest(new JUnit4TestAdapter(TestHttpServer.class));
         suite.addTest(new JUnit4TestAdapter(TestHttpsServer.class));
         suite.addTest(new JUnit4TestAdapter(TestServletServer.class));

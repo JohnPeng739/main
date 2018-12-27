@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mx.service.server.AbstractServerFactory;
+import org.mx.service.server.ServletServerConfigBean;
 import org.mx.service.server.ServletServerFactory;
 import org.mx.service.test.config.TestServletSslConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -47,13 +48,15 @@ public class TestServletSslServer {
         Server server = factory.getServer();
         assertNotNull(server);
 
+        ServletServerConfigBean config = context.getBean(ServletServerConfigBean.class);
+        assertNotNull(config);
+
         try {
             HttpClientBuilder builder = HttpClientBuilder.create();
             sslContextFactory = new SslContextFactory();
-            String keystorePath = context.getEnvironment().getProperty("servlet.security.keystore", "./keystore");
-            sslContextFactory.setKeyStorePath(keystorePath);
-            sslContextFactory.setKeyStorePassword("OBF:1j8x1iup1kfv1j9t1nl91fia1fek1nip1j591kcj1irx1j65");
-            sslContextFactory.setKeyManagerPassword("OBF:1k8a1lmp18jj18cg18ce18jj1lj11k5w");
+            sslContextFactory.setKeyStorePath(config.getKeystorePath());
+            sslContextFactory.setKeyStorePassword(config.getKeystorePassword());
+            sslContextFactory.setKeyManagerPassword(config.getKeyManagerPassword());
             sslContextFactory.start();
             builder.setSSLContext(sslContextFactory.getSslContext());
             builder.setSSLHostnameVerifier((s, sslSession) -> true);

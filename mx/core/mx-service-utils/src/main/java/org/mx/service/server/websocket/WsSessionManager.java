@@ -47,11 +47,6 @@ public class WsSessionManager {
      */
     private WsSessionManager() {
         super();
-        this.sessions = new ConcurrentHashMap<>();
-        this.pongs = new ConcurrentHashMap<>();
-        this.rules = new HashSet<>();
-        this.blocks = new HashSet<>();
-        this.removedListeners = new ArrayList<>();
     }
 
     /**
@@ -123,6 +118,9 @@ public class WsSessionManager {
      * @return 返回true表示阻止连接，否则返回false
      */
     private boolean block(Session session) {
+        if (rules == null) {
+            return false;
+        }
         for (WsSessionFilterRule rule : rules) {
             if (rule.filter(session)) {
                 // 只要有一个规则符合过滤条件，就阻止连接
@@ -279,6 +277,11 @@ public class WsSessionManager {
      * @param websocketServerConfigBean WebSocket服务配置对象
      */
     public void init(ApplicationContext context, WebsocketServerConfigBean websocketServerConfigBean) {
+        this.sessions = new ConcurrentHashMap<>();
+        this.pongs = new ConcurrentHashMap<>();
+        this.rules = new HashSet<>();
+        this.blocks = new HashSet<>();
+        this.removedListeners = new ArrayList<>();
         // 配置过滤规则
         if (websocketServerConfigBean != null && websocketServerConfigBean.getWebSocketFilter() != null) {
             String[] filters = websocketServerConfigBean.getWebSocketFilter().getFilters();
@@ -350,8 +353,14 @@ public class WsSessionManager {
          */
         @Override
         public void run() {
+            if (sessions == null) {
+                return;
+            }
             Set<String> invalid = new HashSet<>();
             sessions.forEach((connectKey, session) -> {
+                if (session == null) {
+                    return;
+                }
                 PingPongTime pingPongTime = pongs.get(connectKey);
                 long pingTime = pingPongTime.pingTime, pongTime = pingPongTime.pongTime;
                 if (pongTime <= 0) {
@@ -407,8 +416,14 @@ public class WsSessionManager {
          */
         @Override
         public void run() {
+            if (sessions == null) {
+                return;
+            }
             sessions.forEach((connectKey, session) -> {
                 try {
+                    if (session == null) {
+                        return;
+                    }
                     session.getRemote().sendPing(ByteBuffer.wrap(connectKey.getBytes()));
                     pongs.compute(connectKey, (k, v) -> v == null ? new PingPongTime() : v.ping());
                     if (logger.isDebugEnabled()) {

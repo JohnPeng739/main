@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.mx.service.client.websocket.DefaultWebsocketClientMoniter;
 import org.mx.service.client.websocket.WsClientInvoke;
 import org.mx.service.server.AbstractServerFactory;
+import org.mx.service.server.WebsocketServerConfigBean;
 import org.mx.service.server.WebsocketServerFactory;
 import org.mx.service.test.config.TestWebsocketSslConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -30,26 +31,19 @@ public class TestWebsocketSslServer {
 
     @Test
     public void testWebsocketServer() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-            // do nothing
-        }
         AbstractServerFactory factory = context.getBean(WebsocketServerFactory.class);
         assertNotNull(factory);
         Server server = factory.getServer();
         assertNotNull(server);
+        WebsocketServerConfigBean config = context.getBean(WebsocketServerConfigBean.class);
+        assertNotNull(config);
 
         // test websocket client
         WsClientInvoke invoke = new WsClientInvoke();
         TestWebsocketMoniter listener = new TestWebsocketMoniter();
         try {
-            invoke.init(String.format("wss://localhost:%d/test",
-                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
-                    listener, false,
-                    context.getEnvironment().getProperty("websocket.security.keystore"),
-                    context.getEnvironment().getProperty("websocket.security.keystorePassword"),
-                    context.getEnvironment().getProperty("websocket.security.keyManagerPassword"));
+            invoke.init(String.format("wss://localhost:%d/test", config.getPort()), listener, false,
+                    config.getKeystorePath(), config.getKeystorePassword(), config.getKeyManagerPassword());
             Thread.sleep(1000);
             assertTrue(invoke.isReady());
             assertThat(listener.textMsg, startsWith("Server is ok:"));
@@ -74,30 +68,24 @@ public class TestWebsocketSslServer {
         } catch (Exception ex) {
             // do nothing
         }
+        invoke.close();
     }
 
     @Test
     public void testWebsocketServerReconnect() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-            // do nothing
-        }
         AbstractServerFactory factory = context.getBean(WebsocketServerFactory.class);
         assertNotNull(factory);
         Server server = factory.getServer();
         assertNotNull(server);
+        WebsocketServerConfigBean config = context.getBean(WebsocketServerConfigBean.class);
+        assertNotNull(config);
 
         // test websocket client
         WsClientInvoke invoke = new WsClientInvoke();
         TestWebsocketMoniter listener = new TestWebsocketMoniter();
         try {
-            invoke.init(String.format("wss://localhost:%d/test",
-                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
-                    listener, true,
-                    context.getEnvironment().getProperty("websocket.security.keystore"),
-                    context.getEnvironment().getProperty("websocket.security.keystorePassword"),
-                    context.getEnvironment().getProperty("websocket.security.keyManagerPassword"));
+            invoke.init(String.format("wss://localhost:%d/test", config.getPort()), listener, true,
+                    config.getKeystorePath(), config.getKeystorePassword(), config.getKeyManagerPassword());
             Thread.sleep(1000);
             assertTrue(invoke.isReady());
             assertThat(listener.textMsg, startsWith("Server is ok:"));
@@ -118,37 +106,27 @@ public class TestWebsocketSslServer {
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
+        invoke.close();
     }
 
     @Test
     public void testAnyConnectWebsocket() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException ex) {
-            // do nothing
-        }
         AbstractServerFactory factory = context.getBean(WebsocketServerFactory.class);
         assertNotNull(factory);
         Server server = factory.getServer();
         assertNotNull(server);
+        WebsocketServerConfigBean config = context.getBean(WebsocketServerConfigBean.class);
+        assertNotNull(config);
 
         try {
             // test websocket client
             WsClientInvoke invoke1 = new WsClientInvoke();
             WsClientInvoke invoke2 = new WsClientInvoke();
             TestWebsocketMoniter listener = new TestWebsocketMoniter();
-            invoke1.init(String.format("wss://localhost:%d/test",
-                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
-                    listener, false,
-                    context.getEnvironment().getProperty("websocket.security.keystore"),
-                    context.getEnvironment().getProperty("websocket.security.keystorePassword"),
-                    context.getEnvironment().getProperty("websocket.security.keyManagerPassword"));
-            invoke2.init(String.format("wss://localhost:%d/echo",
-                    context.getEnvironment().getProperty("websocket.port", Integer.class, 9997)),
-                    listener, false,
-                    context.getEnvironment().getProperty("websocket.security.keystore"),
-                    context.getEnvironment().getProperty("websocket.security.keystorePassword"),
-                    context.getEnvironment().getProperty("websocket.security.keyManagerPassword"));
+            invoke1.init(String.format("wss://localhost:%d/test", config.getPort()), listener, false,
+                    config.getKeystorePath(), config.getKeystorePassword(), config.getKeyManagerPassword());
+            invoke2.init(String.format("wss://localhost:%d/echo", config.getPort()), listener, false,
+                    config.getKeystorePath(), config.getKeystorePassword(), config.getKeyManagerPassword());
             Thread.sleep(1000);
             assertTrue(invoke1.isReady());
             assertTrue(invoke2.isReady());
@@ -163,6 +141,8 @@ public class TestWebsocketSslServer {
             Thread.sleep(1000);
             assertFalse(invoke1.isReady());
             assertFalse(invoke2.isReady());
+            invoke1.close();
+            invoke2.close();
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
