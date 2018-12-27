@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mx.service.rest.graphql.GraphQLConfigBean;
+import org.mx.service.test.config.TestGraphQLConfigConfig;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class TestGraphQLConfig {
 
     @Before
     public void before() {
-        context = new AnnotationConfigApplicationContext(org.mx.service.test.config.TestGraphQLConfig.class);
+        context = new AnnotationConfigApplicationContext(TestGraphQLConfigConfig.class);
     }
 
     @After
