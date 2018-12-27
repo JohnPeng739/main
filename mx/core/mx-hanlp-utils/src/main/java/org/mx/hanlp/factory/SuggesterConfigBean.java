@@ -7,8 +7,6 @@ import org.mx.error.UserInterfaceSystemErrorException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,21 +69,15 @@ public class SuggesterConfigBean {
         String path = env.getProperty(String.format("suggester.%d.config.path", index));
         int id = env.getProperty(String.format("suggester.%d.config.fields.id", index), Integer.class, -1);
         int content = env.getProperty(String.format("suggester.%d.config.fields.content", index), Integer.class, -1);
-        if (Files.notExists(Paths.get(path))) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("The file[%s] not found.", path));
+        if (StringUtils.isBlank(path)) {
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("The file[%s] not found.", path));
             }
-            throw new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.FILE_NOT_EXISTED
-            );
         }
         if (id < 0 || content < 0) {
-            if (logger.isErrorEnabled()) {
+            if (logger.isWarnEnabled()) {
                 logger.error(String.format("Any param invalid, id: %d, content: %d.", id, content));
             }
-            throw new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
-            );
         }
         return new SuggesterCsvProviderConfig(name, provider, path, id, content);
     }
@@ -99,13 +91,10 @@ public class SuggesterConfigBean {
         String query = env.getProperty(String.format("suggester.%d.config.query", index));
         if (StringUtils.isBlank(url) || StringUtils.isBlank(driver) || StringUtils.isBlank(id) ||
                 StringUtils.isBlank(query)) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("Any param invalid, url: %s, driver: %s, id: %s, query: %s.",
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("Any param invalid, url: %s, driver: %s, id: %s, query: %s.",
                         url, driver, id, query));
             }
-            throw new UserInterfaceSystemErrorException(
-                    UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
-            );
         }
         return new SuggesterJdbcProviderConfig(name, provider, url, driver, user, password, id, query);
     }
