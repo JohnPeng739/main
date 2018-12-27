@@ -8,7 +8,7 @@ import org.springframework.core.env.Environment;
 
 @Configuration
 @PropertySource({
-        "classpath:elastic.properties"
+        "classpath:test-elastic-config.properties"
 })
 public class TestConfigConfig {
     @Bean(name = "elasticConfigBean")

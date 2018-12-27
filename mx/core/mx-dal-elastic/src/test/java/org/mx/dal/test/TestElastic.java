@@ -43,9 +43,6 @@ public class TestElastic {
         // 先清理，再关闭
         GeneralAccessor accessor = context.getBean("generalAccessorElastic", GeneralAccessor.class);
         assertNotNull(accessor);
-        accessor.clear(UserEntityElastic.class);
-        accessor.clear(AnimalEntityElastic.class);
-        accessor.clear(WeatherEntityElastic.class);
         context.close();
     }
 
@@ -95,6 +92,8 @@ public class TestElastic {
                     new GeoPointLocation(0, 50)
             ), null, Collections.singletonList(WeatherEntityElastic.class));
             assertEquals(2, list.size());
+
+            accessor.clear(WeatherEntityElastic.class);
         } catch (Exception ex) {
             ex.printStackTrace();
             fail(ex.getMessage());
@@ -133,6 +132,8 @@ public class TestElastic {
             Thread.sleep(3000);
             assertEquals(2000, accessor.count(UserEntityElastic.class));
             assertTrue(t2 <= t1);
+
+            accessor.clear(UserEntityElastic.class);
         } catch (Exception ex) {
             ex.printStackTrace();
             fail(ex.getMessage());
@@ -204,6 +205,8 @@ public class TestElastic {
                     GeneralAccessor.ConditionTuple.gt("age", 10)),
                     UserEntityElastic.class);
             assertEquals(40, list.size());
+
+            accessor.clear(UserEntityElastic.class);
         } catch (Exception ex) {
             ex.printStackTrace();
             fail("fail");
@@ -298,7 +301,11 @@ public class TestElastic {
                     GeneralAccessor.ConditionTuple.contain("desc", "学生")), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
-            list = accessor.find(GeneralAccessor.ConditionTuple.contain("yt", "zgj"), UserEntityElastic.class);
+            // 增加了对z和zh的识别
+            list = accessor.find(GeneralAccessor.ConditionGroup.or(
+                    GeneralAccessor.ConditionTuple.contain("yt", "zgj"),
+                    GeneralAccessor.ConditionTuple.contain("yt", "zhgj")
+            ), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
 
@@ -373,6 +380,8 @@ public class TestElastic {
             accessor.remove(user2, false);
             Thread.sleep(delay);
             assertEquals(0, accessor.count(UserEntityElastic.class));
+
+            accessor.clear(UserEntityElastic.class);
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
@@ -445,6 +454,9 @@ public class TestElastic {
 
             accessor.remove(user1, false);
             accessor.remove(animal1, false);
+
+            accessor.clear(UserEntityElastic.class);
+            accessor.clear(AnimalEntityElastic.class);
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
