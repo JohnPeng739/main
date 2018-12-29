@@ -1,18 +1,68 @@
-package org.mx.dal.service;
+package org.mx.dal;
 
+import de.flapdoodle.embed.mongo.MongodExecutable;
+import de.flapdoodle.embed.mongo.MongodProcess;
+import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.IMongodConfig;
+import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
+import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.runtime.Network;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.mx.DigestUtils;
-import org.mx.dal.BaseTest;
-import org.mx.dal.EntityFactory;
+import org.mx.dal.config.TestDalMongodbConfig;
+import org.mx.dal.entity.SchoolEntity;
 import org.mx.dal.entity.User;
+import org.mx.dal.service.GeneralAccessor;
+import org.mx.dal.service.GeneralDictAccessor;
+import org.mx.dal.service.GeneralTextSearchAccessor;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.data.geo.*;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.NearQuery;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.springframework.data.geo.Metrics.KILOMETERS;
 
-public class TestDatabase extends BaseTest {
+public class TestDatabase {
+    protected AnnotationConfigApplicationContext context;
+    private MongodExecutable mongodExecutable;
+    private MongodProcess mongod;
+
+    @Before
+    public void before() {
+        try {
+            IMongodConfig config = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
+                    .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
+            mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
+            mongod = mongodExecutable.start();
+            context = new AnnotationConfigApplicationContext(TestDalMongodbConfig.class);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            fail(ex.getMessage());
+        }
+    }
+
+    @After
+    public void after() {
+        if (context != null) {
+            context.close();
+        }
+        if (mongod != null) {
+            mongod.stop();
+        }
+        if (mongodExecutable != null) {
+            mongodExecutable.stop();
+        }
+    }
 
     @Test
     public void testPerformance() {
@@ -52,6 +102,7 @@ public class TestDatabase extends BaseTest {
         long t2 = System.currentTimeMillis() - t0;
         assertEquals(2000, accessor.count(User.class));
         assertTrue(t2 <= t1);
+        System.out.println(String.format("t1: %dms, t2: %sms.", t1, t2));
 
         accessor.clear(User.class);
     }
@@ -271,6 +322,75 @@ public class TestDatabase extends BaseTest {
             accessor.remove(item02, false);
             accessor.remove(root, false);
             assertEquals(0, accessor.count(User.class));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testGeoFunc() {
+        MongoTemplate template = context.getBean(MongoTemplate.class);
+        assertNotNull(template);
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+                GeneralDictAccessor.class);
+        assertNotNull(accessor);
+        accessor.clear(SchoolEntity.class);
+        assertEquals(0, accessor.count(SchoolEntity.class));
+
+        try {
+            // 1.5420KM
+            SchoolEntity s1 = EntityFactory.createEntity(SchoolEntity.class);
+            s1.setName("SJTU");
+            s1.setLocation(new double[] {121.4038, 29.1234});
+            accessor.save(s1);
+            SchoolEntity s2 = EntityFactory.createEntity(SchoolEntity.class);
+            s2.setName("NO1");
+            s2.setLocation(new double[]{121.4148, 29.1334});
+            accessor.save(s2);
+            SchoolEntity check = accessor.getById(s1.getId(), SchoolEntity.class);
+            assertNotNull(check);
+            assertEquals("SJTU", check.getName());
+            check = accessor.getById(s2.getId(), SchoolEntity.class);
+            assertNotNull(check);
+            assertEquals("NO1", check.getName());
+            assertEquals(2, accessor.count(SchoolEntity.class));
+
+            Circle circle = new Circle(new Point(121.4038, 29.1234), new Distance(1.5, KILOMETERS));
+            List<SchoolEntity> list = template.find(new Query(Criteria.where("location").withinSphere(circle)), SchoolEntity.class);
+            assertEquals(1, list.size());
+            assertEquals("SJTU", list.get(0).getName());
+
+            circle = new Circle(new Point(121.4038, 29.1234), new Distance(1.6, KILOMETERS));
+            list = template.find(new Query(Criteria.where("location").withinSphere(circle)), SchoolEntity.class);
+            assertEquals(2, list.size());
+            assertEquals("SJTU", list.get(0).getName());
+            assertEquals("NO1", list.get(1).getName());
+
+            Box box = new Box(new Point(121.4030, 29.1230), new Point(121.4147, 29.1333));
+            list = template.find(new Query(Criteria.where("location").within(box)), SchoolEntity.class);
+            assertEquals(1, list.size());
+            assertEquals("SJTU", list.get(0).getName());
+
+            box = new Box(new Point(121.4030, 29.1230), new Point(121.4149, 29.1335));
+            list = template.find(new Query(Criteria.where("location").within(box)), SchoolEntity.class);
+            assertEquals(2, list.size());
+            assertEquals("SJTU", list.get(0).getName());
+            assertEquals("NO1", list.get(1).getName());
+
+            NearQuery query = NearQuery.near(new Point(121.4038, 29.1234)).maxDistance(new Distance(1.5, Metrics.KILOMETERS));
+            GeoResults<SchoolEntity> results = template.geoNear(query, SchoolEntity.class);
+            assertEquals(1, results.getContent().size());
+            assertEquals("SJTU", results.getContent().get(0).getContent().getName());
+
+            query = NearQuery.near(new Point(121.4038, 29.1234)).maxDistance(new Distance(1.6, Metrics.KILOMETERS));
+            results = template.geoNear(query, SchoolEntity.class);
+            assertEquals(2, results.getContent().size());
+            assertEquals("SJTU", results.getContent().get(0).getContent().getName());
+            assertEquals("NO1", results.getContent().get(1).getContent().getName());
+
+            accessor.clear(SchoolEntity.class);
+            assertEquals(0, accessor.count(SchoolEntity.class));
         } catch (Exception ex) {
             ex.printStackTrace();
             fail(ex.getMessage());

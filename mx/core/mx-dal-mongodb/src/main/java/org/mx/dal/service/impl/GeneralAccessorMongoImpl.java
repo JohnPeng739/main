@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoWriter;
 import org.springframework.data.mongodb.core.query.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,6 +56,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#count(Class, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(Class<T> clazz, boolean isValid) {
         return count(isValid ? ConditionTuple.eq("valid", true) : null, clazz);
@@ -65,6 +67,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#count(ConditionGroup, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(ConditionGroup group, Class<T> clazz) {
         if (clazz.isInterface()) {
@@ -91,6 +94,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#count(Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> long count(Class<T> clazz) {
         return count(clazz, true);
@@ -101,6 +105,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#list(Class, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Class<T> clazz, boolean isValid) {
         try {
@@ -131,6 +136,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#list(Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Class<T> clazz) {
         return list(clazz, true);
@@ -141,6 +147,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#list(Pagination, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz) {
         return list(pagination, clazz, true);
@@ -151,6 +158,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#list(Pagination, Class, boolean)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> list(Pagination pagination, Class<T> clazz, boolean isValid) {
         if (pagination == null) {
@@ -180,6 +188,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#getById(String, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> T getById(String id, Class<T> clazz) {
         try {
@@ -263,6 +272,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#find(ConditionGroup, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> find(ConditionGroup group, Class<T> clazz) {
         return find(null, group, null, clazz);
@@ -273,6 +283,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#find(Pagination, ConditionGroup, RecordOrderGroup, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> find(Pagination pagination, ConditionGroup group, RecordOrderGroup orderGroup, Class<T> clazz) {
         try {
@@ -304,6 +315,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#findOne(ConditionGroup, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> T findOne(ConditionGroup group, Class<T> clazz) {
         List<T> list = find(group, clazz);
@@ -319,6 +331,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralTextSearchAccessor#search(String, boolean, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> search(String content, boolean valid, Class<T> clazz) {
         return search(Collections.singletonList(content), valid, clazz);
@@ -329,6 +342,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralTextSearchAccessor#search(List, boolean, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> search(List<String> contents, boolean valid, Class<T> clazz) {
         return search(null, contents, valid, clazz);
@@ -339,6 +353,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralTextSearchAccessor#search(Pagination, String, boolean, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> search(Pagination pagination, String content, boolean valid, Class<T> clazz) {
         return search(pagination, Collections.singletonList(content), valid, clazz);
@@ -349,6 +364,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralTextSearchAccessor#search(Pagination, List, boolean, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends Base> List<T> search(Pagination pagination, List<String> contents, boolean valid, Class<T> clazz) {
         try {
@@ -379,6 +395,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#save(Base)
      */
+    @Transactional
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T save(T t) {
@@ -440,6 +457,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#save(List)
      */
+    @Transactional
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Base> List<T> save(List<T> ts) {
@@ -492,11 +510,10 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#clear(Class)
      */
+    @Transactional
     @Override
     public <T extends Base> void clear(Class<T> clazz) {
-        if (template.collectionExists(clazz)) {
-            template.dropCollection(clazz);
-        }
+        template.remove(clazz).all();
     }
 
     /**
@@ -504,6 +521,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#remove(String, Class)
      */
+    @Transactional
     @Override
     public <T extends Base> T remove(String id, Class<T> clazz) {
         return remove(id, clazz, true);
@@ -514,6 +532,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#remove(String, Class, boolean)
      */
+    @Transactional
     @Override
     public <T extends Base> T remove(String id, Class<T> clazz, boolean logicRemove) {
         T t = getById(id, clazz);
@@ -528,6 +547,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#remove(Base)
      */
+    @Transactional
     @Override
     public <T extends Base> T remove(T t) {
         return remove(t, true);
@@ -538,6 +558,7 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
      *
      * @see GeneralAccessor#remove(Base, boolean)
      */
+    @Transactional
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) {
         if (logicRemove) {

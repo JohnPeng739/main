@@ -1,22 +1,23 @@
 package org.mx.dal.config;
 
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import org.mx.StringUtils;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.service.impl.GeneralAccessorMongoImpl;
 import org.mx.dal.service.impl.GeneralDictAccessorMongoImpl;
+import org.mx.dal.utils.MongoDbConfigBean;
+import org.mx.dal.utils.MongoDbUtils;
 import org.mx.spring.config.SpringConfig;
 import org.mx.spring.session.SessionDataStore;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.util.Assert;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
 /**
  * 基于Mongodb的DAL实现的Java Configure定义
@@ -28,10 +29,8 @@ import org.springframework.util.Assert;
 @Import({DalConfig.class, SpringConfig.class})
 @ComponentScan({"org.mx.dal.service.impl"})
 public class DalMongodbConfig {
-    @Value("${mongodb.uri:}")
-    private String mongodbUrl;
-    @Value("${mongodb.database:database}")
-    private String mongoDatabase;
+
+    private MongoTransactionManager transactionManager = null;
 
     /**
      * 默认的构造函数
@@ -41,27 +40,48 @@ public class DalMongodbConfig {
     }
 
     /**
-     * 创建MongodDB客户端
+     * 根据配置文件内容和默认内容创建MongoDB配置信息对象
      *
      * @param env Spring IoC上下文环境
-     * @return 客户端
+     * @return MongoDB配置信息对象
      */
-    @Bean(name = "mongoClient")
-    public MongoClient mongoClient(Environment env) {
-        Assert.isTrue(!StringUtils.isBlank(mongodbUrl), "The Mongodb Uri not configured.");
-        return new MongoClient(new MongoClientURI(mongodbUrl));
+    @Bean
+    public MongoDbConfigBean mongoDbConfigBean(Environment env) {
+        return new MongoDbConfigBean(env);
+    }
+
+    /**
+     * 根据配置创建MongoDB Client
+     *
+     * @param mongoDbConfigBean MongoDB配置信息对象
+     * @return MongoDB Client
+     */
+    @Bean
+    public MongoClient mongoClient(MongoDbConfigBean mongoDbConfigBean) {
+        return MongoDbUtils.createMongoClient(mongoDbConfigBean);
+    }
+
+    /**
+     * 根据配置创建MongoDB数据库工厂
+     *
+     * @param mongoClient       MongoDb Client
+     * @param mongoDbConfigBean MongoDB配置信息对象
+     * @return MongoDB数据库工厂
+     */
+    @Bean
+    public MongoDbFactory mongoDbFactory(MongoClient mongoClient, MongoDbConfigBean mongoDbConfigBean) {
+        return new SimpleMongoDbFactory(mongoClient, mongoDbConfigBean.getDatabase());
     }
 
     /**
      * 创建MongoDB模版工具
      *
-     * @param env Spring IoC上下文环境
+     * @param mongoDbFactory MongoDB数据库工厂
      * @return 模版工具
-     * @see #mongoClient(Environment)
      */
     @Bean(name = "mongoTemplate")
-    public MongoTemplate mongoTemplate(Environment env) {
-        return new MongoTemplate(mongoClient(env), mongoDatabase);
+    public MongoTemplate mongoTemplate(MongoDbFactory mongoDbFactory) {
+        return new MongoTemplate(mongoDbFactory);
     }
 
     @Bean(name = "generalAccessorMongodb")

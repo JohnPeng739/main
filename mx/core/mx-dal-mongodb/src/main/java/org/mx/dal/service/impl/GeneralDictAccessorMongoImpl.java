@@ -6,8 +6,7 @@ import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.spring.session.SessionDataStore;
 import org.springframework.data.mongodb.core.MongoTemplate;
-
-import java.util.Collections;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 基于Mongodb实现的基础字典类实体访问实现类
@@ -32,6 +31,7 @@ public class GeneralDictAccessorMongoImpl extends GeneralAccessorMongoImpl imple
      *
      * @see GeneralDictAccessor#getByCode(String, Class)
      */
+    @Transactional(readOnly = true)
     @Override
     public <T extends BaseDict> T getByCode(String code, Class<T> clazz)
             throws UserInterfaceDalErrorException {
