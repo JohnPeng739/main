@@ -16,7 +16,7 @@ public class TestTransactionServiceImpl implements TestTransactionService {
     private GeneralDictAccessor generalDictAccessor;
 
     @Autowired
-    public TestTransactionServiceImpl(@Qualifier("generalDictAccessor") GeneralDictAccessor generalDictAccessor) {
+    public TestTransactionServiceImpl(@Qualifier("generalDictAccessorMongodb") GeneralDictAccessor generalDictAccessor) {
         super();
         this.generalDictAccessor = generalDictAccessor;
     }

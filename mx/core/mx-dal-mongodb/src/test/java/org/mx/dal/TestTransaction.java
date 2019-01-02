@@ -34,7 +34,7 @@ public class TestTransaction {
 
     @Test
     public void testTransaction() {
-        GeneralAccessor accessor = context.getBean("generalAccessor", GeneralAccessor.class);
+        GeneralAccessor accessor = context.getBean("generalAccessorMongodb", GeneralAccessor.class);
         assertNotNull(accessor);
         TestTransactionService service = context.getBean(TestTransactionService.class);
         assertNotNull(service);

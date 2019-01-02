@@ -66,7 +66,7 @@ public class TestDatabase {
 
     @Test
     public void testPerformance() {
-        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessorMongodb",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
 
@@ -110,10 +110,10 @@ public class TestDatabase {
     @SuppressWarnings("unchecked")
     @Test
     public void testUserInterface() {
-        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessorMongodb",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
-        GeneralTextSearchAccessor searchAccessor = context.getBean("generalDictAccessor",
+        GeneralTextSearchAccessor searchAccessor = context.getBean("generalDictAccessorMongodb",
                 GeneralTextSearchAccessor.class);
 
         try {
@@ -259,7 +259,7 @@ public class TestDatabase {
     @SuppressWarnings("unchecked")
     @Test
     public void testParentChildren() {
-        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessorMongodb",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
 
@@ -332,7 +332,7 @@ public class TestDatabase {
     public void testGeoFunc() {
         MongoTemplate template = context.getBean(MongoTemplate.class);
         assertNotNull(template);
-        GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
+        GeneralDictAccessor accessor = context.getBean("generalDictAccessorMongodb",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
         accessor.clear(SchoolEntity.class);

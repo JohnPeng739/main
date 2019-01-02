@@ -9,7 +9,6 @@ import org.mx.dal.utils.MongoDbConfigBean;
 import org.mx.dal.utils.MongoDbUtils;
 import org.mx.spring.config.SpringConfig;
 import org.mx.spring.session.SessionDataStore;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -92,27 +91,5 @@ public class DalMongodbConfig {
     @Bean(name = "generalDictAccessorMongodb")
     public GeneralDictAccessor generalDictAccessorMongodb(MongoTemplate template, SessionDataStore sessionDataStore) {
         return new GeneralDictAccessorMongoImpl(template, sessionDataStore);
-    }
-
-    /**
-     * 创建一个通用的数据访问器
-     *
-     * @param context Spring IoC上下文
-     * @return 数据访问器
-     */
-    @Bean(name = "generalAccessor")
-    public GeneralAccessor generalAccessor(ApplicationContext context) {
-        return context.getBean("generalAccessorMongodb", GeneralAccessor.class);
-    }
-
-    /**
-     * 创建一个通用的字典数据访问器
-     *
-     * @param context Spring IoC上下文
-     * @return 数据访问器
-     */
-    @Bean(name = "generalDictAccessor")
-    public GeneralDictAccessor generalDictAccessor(ApplicationContext context) {
-        return context.getBean("generalDictAccessorMongodb", GeneralDictAccessor.class);
     }
 }
