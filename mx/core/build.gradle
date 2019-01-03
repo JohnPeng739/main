@@ -106,6 +106,7 @@ project(':mx-dal-hibernate') {
                 libs.'h2database',
                 libs.'commons-dbcp2',
                 libs.'spring-tx',
+                libs.'javax-el-api',
                 libs.'spring-data-jpa',
                 libs.'hibernate-entitymanager',
                 libs.'mysql'
@@ -176,6 +177,9 @@ project(':test-tomcat') {
         compile(
                 project(':mx-utils'),
                 project(':mx-spring'),
+                project(':mx-dal-hibernate'),
+                project(':mx-dal-mongodb'),
+                project(':mx-dal-elastic'),
                 libs.'jersey-server',
                 libs.'jersey-media-jackson',
                 libs.'jersey-media-multi',
