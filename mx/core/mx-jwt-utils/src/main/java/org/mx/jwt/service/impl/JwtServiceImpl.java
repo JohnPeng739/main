@@ -92,7 +92,7 @@ public class JwtServiceImpl implements JwtService {
                 default:
                     return Algorithm.HMAC256(secret);
             }
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error("Initialize JWT fail.", ex);
             }

@@ -4,6 +4,7 @@ import org.mx.service.rest.cors.CorsConfigBean;
 import org.mx.service.rest.graphql.GraphQLConfigBean;
 import org.mx.service.rest.graphql.GraphQLFactory;
 import org.mx.service.server.*;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.mx.service.server.websocket.rule.DdosFilterRule;
 import org.mx.service.server.websocket.rule.ListFilterRule;
 import org.mx.spring.config.SpringConfig;
@@ -93,6 +94,13 @@ public class ServerConfig {
     @Bean(name = "graphQLFactory", initMethod = "init", destroyMethod = "destroy")
     public GraphQLFactory graphQLFactory(ApplicationContext context) {
         return new GraphQLFactory(context);
+    }
+
+    @Bean(name = "wsSessionManager")
+    public WsSessionManager wsSessionManager(ApplicationContext context, WebsocketServerConfigBean configBean) {
+        WsSessionManager manager = WsSessionManager.getManager();
+        manager.init(context, configBean);
+        return manager;
     }
 
     /**

@@ -1,7 +1,6 @@
 package org.mx.dal.utils;
 
 import com.mongodb.ServerAddress;
-import com.mongodb.internal.connection.ServerAddressHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 
@@ -90,7 +89,7 @@ public class MongoDbConfigBean {
         for (int index = 1; index <= nodeNum; index++) {
             String host = env.getProperty(String.format("mongo.nodes.%d.host", index));
             int port = env.getProperty(String.format("mongo.nodes.%d.port", index), Integer.class, 27017);
-            nodes.add(ServerAddressHelper.createServerAddress(host, port));
+            nodes.add(new ServerAddress(host, port));
         }
         return nodes;
     }
