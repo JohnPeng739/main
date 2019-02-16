@@ -10,6 +10,10 @@ import org.mx.service.rest.graphql.GraphQLRequest;
 import org.mx.service.rest.graphql.GraphQLUtils;
 import org.mx.service.rest.vo.DataVO;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 描述： GraphQL类型的RESTful基础服务定义
  *
@@ -31,27 +35,47 @@ public abstract class GraphQLBaseResource {
         this.factory = factory;
     }
 
+    private List<String> createGraphQLString(List<GraphQLRequest> requests) {
+        List<String> list = new ArrayList<>();
+        for (GraphQLRequest request : requests) {
+            if (request == null || StringUtils.isBlank(request.getName())) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("The graph request or name is blank.");
+                }
+                throw new UserInterfaceSystemErrorException(
+                        UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
+                );
+            }
+            // 如果没有设置result字段，表示查询的结果为原始结果
+            if (StringUtils.isBlank(request.getResult())) {
+                request.setResult("");
+            }
+            String requestString = String.format("%s%s%s", request.getName(),
+                    StringUtils.isBlank(request.getParam()) ? "" : "(" + request.getParam() + ")",
+                    StringUtils.isBlank(request.getResult()) ? "" : "{" + request.getResult() + "}");
+            list.add(requestString);
+        }
+        return list;
+    }
+
     /**
      * 执行一次GraphQL
      *
      * @param schemaKey GraphQL Schema Key
      * @param type      GraphQL操作类型
-     * @param request   GraphQL操作请求对象
+     * @param requests   GraphQL操作请求对象列表
      * @return GraphQL执行结果
      */
-    private DataVO<JSONObject> graphQL(String schemaKey, GraphQLType type, GraphQLRequest request) {
-        if (request == null || StringUtils.isBlank(request.getName())) {
+    private DataVO<JSONObject> graphQL(String schemaKey, GraphQLType type, List<GraphQLRequest> requests) {
+        if (requests == null || requests.isEmpty()) {
             if (logger.isErrorEnabled()) {
-                logger.error("The graph request or name is blank.");
+                logger.error("The graph request is null or name is blank or requests is empty.");
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        // 如果没有设置result字段，表示查询的结果为原始结果
-        if (StringUtils.isBlank(request.getResult())) {
-            request.setResult("");
-        }
+        String requestString = StringUtils.merge(createGraphQLString(requests), " ");
         if (factory == null) {
             if (logger.isErrorEnabled()) {
                 logger.error("The GrahpQL factory is null.");
@@ -63,15 +87,12 @@ public abstract class GraphQLBaseResource {
         GraphQLUtils graphQLUtils = factory.getUtils(schemaKey);
         if (graphQLUtils == null) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("The GraphQL Schema[%s] not be defined.", request.getName()));
+                logger.error(String.format("The GraphQL Schema[%s] not be defined.", schemaKey));
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM
             );
         }
-        String requestString = String.format("%s%s%s", request.getName(),
-                StringUtils.isBlank(request.getParam()) ? "" : "(" + request.getParam() + ")",
-                StringUtils.isBlank(request.getResult()) ? "" : "{" + request.getResult() + "}");
         if (type == GraphQLType.MUTATION) {
             requestString = String.format("mutation{%s}", requestString);
         } else {
@@ -88,7 +109,18 @@ public abstract class GraphQLBaseResource {
      * @return GraphQL执行结果
      */
     protected DataVO<JSONObject> query(String schemaKey, GraphQLRequest request) {
-        return graphQL(schemaKey, GraphQLType.QUERY, request);
+        return graphQL(schemaKey, GraphQLType.QUERY, Collections.singletonList(request));
+    }
+
+    /**
+     * 执行一次数据查询类型的GraphQL
+     *
+     * @param schemaKey GraphQL Schema Key
+     * @param requests   GraphGL请求对象列表
+     * @return GraphQL执行结果
+     */
+    protected DataVO<JSONObject> query(String schemaKey, List<GraphQLRequest> requests) {
+        return graphQL(schemaKey, GraphQLType.QUERY, requests);
     }
 
     /**
@@ -99,7 +131,18 @@ public abstract class GraphQLBaseResource {
      * @return GraphQL执行结果
      */
     protected DataVO<JSONObject> mutation(String schemaKey, GraphQLRequest request) {
-        return graphQL(schemaKey, GraphQLType.MUTATION, request);
+        return graphQL(schemaKey, GraphQLType.MUTATION, Collections.singletonList(request));
+    }
+
+    /**
+     * 执行一次数据操作类型的GraphQL
+     *
+     * @param schemaKey GraphQL Schema Key
+     * @param requests   GraphGL请求对象列表
+     * @return GraphQL执行结果
+     */
+    protected DataVO<JSONObject> mutation(String schemaKey, List<GraphQLRequest> requests) {
+        return graphQL(schemaKey, GraphQLType.MUTATION, requests);
     }
 
     /**

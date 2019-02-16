@@ -9,6 +9,13 @@ package org.mx.service.rest.graphql;
 public class GraphQLRequest {
     private String name, param, result;
 
+    public GraphQLRequest(String name, String param, String result) {
+        super();
+        this.name = name;
+        this.param = param;
+        this.result = result;
+    }
+
     /**
      * 获取请求名
      *

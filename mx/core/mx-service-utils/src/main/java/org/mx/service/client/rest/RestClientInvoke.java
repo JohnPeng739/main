@@ -6,7 +6,6 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.client.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 
@@ -138,7 +137,7 @@ public class RestClientInvoke {
         WebTarget target = client.target(url);
         Entity<D> entity = null;
         if (d != null) {
-            entity = Entity.entity(d, MediaType.APPLICATION_JSON_TYPE);
+            entity = Entity.json(d);
         }
         Invocation.Builder builder = target.request();
         if (headers != null && !headers.isEmpty()) {
@@ -160,7 +159,7 @@ public class RestClientInvoke {
         WebTarget target = client.target(url);
         Entity<D> entity = null;
         if (d != null) {
-            entity = Entity.entity(d, MediaType.APPLICATION_JSON_TYPE);
+            entity = Entity.json(d);
         }
         Invocation.Builder builder = target.request();
         if (headers != null && !headers.isEmpty()) {

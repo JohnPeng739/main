@@ -1,12 +1,18 @@
 subprojects { subprj ->
   buildscript {
-      repositories {
-          jcenter() {
-              url 'http://jcenter.bintray.com/'
-          }
-      }
+//      repositories {
+//          jcenter() {
+//              url 'http://jcenter.bintray.com/'
+//          }
+//      }
   }
   repositories {
+//      maven {
+//        url 'https://root.dev.ds:8443/repository/maven-public/'
+//      }
+//      maven {
+//        url 'http://192.168.0.249:8088/repository/maven-public/'
+//      }
 //    maven {
 //      url 'http://localhost:8081/repository/jcenter/'
 //    }

@@ -68,7 +68,7 @@ project(':mx-dal') {
 }
 
 project(':mx-service-utils') {
-    version = '2.1.4'
+    version = '2.1.5'
     description = 'Many service utilities class, with Jetty, include: RESTful, Servlet, Websocket.'
 
     dependencies {
@@ -184,6 +184,7 @@ project(':test-tomcat') {
                 libs.'jersey-media-jackson',
                 libs.'jersey-media-multi',
                 libs.'jersey-hk2',
+                libs.'javax-rs-api'
         )
         compile(
                 project(':mx-service-utils')
