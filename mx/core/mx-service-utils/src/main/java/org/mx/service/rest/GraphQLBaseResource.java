@@ -1,5 +1,7 @@
 package org.mx.service.rest;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -101,6 +103,33 @@ public abstract class GraphQLBaseResource {
         return new DataVO<>(graphQLUtils.execute(requestString));
     }
 
+    private GraphQLRequest prepareSingleRequest(JSONObject json) {
+        if (json == null) {
+            return null;
+        }
+        String name = json.getString("name"),
+                param = json.getString("param"),
+                result = json.getString("result");
+        return new GraphQLRequest(name, param, result);
+    }
+
+    private List<GraphQLRequest> prepareRequestFromJson(JSON request) {
+        if (request == null) {
+            return null;
+        }
+        if (request instanceof JSONArray) {
+            JSONArray array = (JSONArray)request;
+            List<GraphQLRequest> requests = new ArrayList<>();
+            for (int index = 0; index < array.size(); index ++) {
+                requests.add(prepareSingleRequest(array.getJSONObject(index)));
+            }
+            return requests;
+        } else {
+            JSONObject json = (JSONObject)request;
+            return Collections.singletonList(prepareSingleRequest(json));
+        }
+    }
+
     /**
      * 执行一次数据查询类型的GraphQL
      *
@@ -124,6 +153,17 @@ public abstract class GraphQLBaseResource {
     }
 
     /**
+     * 执行一次数据查询类型的GraphQL
+     *
+     * @param schemaKey GraphQL Schema Key
+     * @param request   GraphGL请求对象列表(JSON)
+     * @return GraphQL执行结果
+     */
+    protected DataVO<JSONObject> query(String schemaKey, JSON request) {
+        return graphQL(schemaKey, GraphQLType.QUERY, prepareRequestFromJson(request));
+    }
+
+    /**
      * 执行一次数据操作类型的GraphQL
      *
      * @param schemaKey GraphQL Schema Key
@@ -143,6 +183,17 @@ public abstract class GraphQLBaseResource {
      */
     protected DataVO<JSONObject> mutation(String schemaKey, List<GraphQLRequest> requests) {
         return graphQL(schemaKey, GraphQLType.MUTATION, requests);
+    }
+
+    /**
+     * 执行一次数据操作类型的GraphQL
+     *
+     * @param schemaKey GraphQL Schema Key
+     * @param request   GraphGL请求对象(JSON)
+     * @return GraphQL执行结果
+     */
+    protected DataVO<JSONObject> mutation(String schemaKey, JSON request) {
+        return graphQL(schemaKey, GraphQLType.MUTATION, prepareRequestFromJson(request));
     }
 
     /**
