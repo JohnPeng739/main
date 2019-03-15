@@ -3,6 +3,7 @@ package org.mx.service.client.comm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.service.error.UserInterfaceServiceErrorException;
+import org.mx.service.server.CommServerConfigBean;
 import org.mx.service.server.comm.*;
 
 import java.io.IOException;
@@ -72,7 +73,9 @@ public class CommClientInvoke {
         this.ip = ip;
         this.port = port;
         if (type == CommServiceProvider.CommServiceType.UDP) {
-            udpProvider = new UdpCommServiceProvider(port, wrapper, length, timeout);
+            CommServerConfigBean.UdpServerConfig config = new CommServerConfigBean.UdpServerConfig(port, length, null, null);
+            config.setSoTimeout(timeout);
+            udpProvider = new UdpCommServiceProvider(config, wrapper);
             udpProvider.init(receiver);
         } else if (type == CommServiceProvider.CommServiceType.TCP) {
             tcpConnection = initTcpConnection(receiver, wrapper, length, timeout);
@@ -91,7 +94,7 @@ public class CommClientInvoke {
     private TcpConnection initTcpConnection(ReceiverListener receiver, PacketWrapper wrapper, int length, int timeout) {
         try {
             Socket socket = new Socket(ip, port);
-            return new TcpConnection(wrapper, socket, receiver, length, timeout, this.port);
+            return new TcpConnection(wrapper, socket, receiver, length, this.port);
         } catch (IOException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Create a socket[%s:%d] fail.", ip, port), ex);

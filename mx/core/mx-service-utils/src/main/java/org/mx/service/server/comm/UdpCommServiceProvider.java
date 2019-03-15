@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.TypeUtils;
 import org.mx.service.error.UserInterfaceServiceErrorException;
+import org.mx.service.server.CommServerConfigBean;
 
 import java.io.IOException;
 import java.net.*;
@@ -30,13 +31,11 @@ public class UdpCommServiceProvider extends CommServiceProvider {
     /**
      * 默认的构造函数
      *
-     * @param port    监听端口号
+     * @param config    配置信息对象
      * @param wrapper 数据包装器
-     * @param length  缓存最大长度
-     * @param timeout 等待超时值，单位为毫秒
      */
-    public UdpCommServiceProvider(int port, PacketWrapper wrapper, int length, int timeout) {
-        super(CommServiceType.UDP, port, length, timeout);
+    public UdpCommServiceProvider(CommServerConfigBean.UdpServerConfig config, PacketWrapper wrapper) {
+        super(CommServiceType.UDP, config);
         this.wrapper = wrapper;
     }
 
@@ -48,23 +47,32 @@ public class UdpCommServiceProvider extends CommServiceProvider {
     @Override
     public void init(ReceiverListener receiver) {
         try {
-            socket = new DatagramSocket(super.port);
-            if (super.maxTimeout > 0) {
-                socket.setSoTimeout(super.maxTimeout);
+            CommServerConfigBean.UdpServerConfig config = (CommServerConfigBean.UdpServerConfig)super.config;
+            socket = new DatagramSocket(config.getPort());
+            if (config.getSoTimeout() > 0) {
+                socket.setSoTimeout(config.getSoTimeout());
             }
-            // 额外添加10个字节作为余量
-            socket.setReceiveBufferSize(super.maxLength + wrapper.getExtraLength() + 10);
-            socket.setSendBufferSize(super.maxLength + wrapper.getExtraLength() + 10);
+            if (config.getSendBufferSize() >  0) {
+                socket.setSendBufferSize(config.getSendBufferSize());
+            }
+            if (config.getReceiveBufferSize() >  0) {
+                socket.setReceiveBufferSize(config.getReceiveBufferSize());
+            }
+            if (config.getTrafficClass() > 0) {
+                socket.setTrafficClass(config.getTrafficClass());
+            }
+            socket.setReuseAddress(config.isReuseAddress());
+            socket.setBroadcast(config.isBroadcast());
             // 启动接收线程
             receiveExecutor = Executors.newSingleThreadExecutor();
-            final byte[] buffer = new byte[super.maxLength];
-            final DatagramPacket receivePacket = new DatagramPacket(buffer, super.maxLength);
-            receiveTask = new ReceiveTask(socket, super.maxLength, super.port, receiver);
+            final byte[] buffer = new byte[config.getMaxLength()];
+            final DatagramPacket receivePacket = new DatagramPacket(buffer, config.getMaxLength());
+            receiveTask = new ReceiveTask(socket, config.getMaxLength(), config.getPort(), receiver);
             receiveExecutor.submit(receiveTask);
         } catch (SocketException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("Any socket exception, port: %d, timeout: %d, max length: %d.",
-                        super.port, super.maxTimeout, super.maxLength), ex);
+                        config.getPort(), config.getSoTimeout(), config.getMaxLength()), ex);
             }
             throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_SOCKET_ERROR);
         }
@@ -83,7 +91,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
         }
         if (receiveExecutor != null) {
             try {
-                receiveExecutor.awaitTermination(super.maxTimeout, TimeUnit.MILLISECONDS);
+                receiveExecutor.awaitTermination(config.getSoTimeout(), TimeUnit.MILLISECONDS);
             } catch (InterruptedException ex) {
                 if (logger.isWarnEnabled()) {
                     logger.warn("Wait for receive task termination fail.", ex);
@@ -97,7 +105,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
             socket = null;
         }
         if (logger.isInfoEnabled()) {
-            logger.info(String.format("Close UDP Server successfully, port: %d.", super.port));
+            logger.info(String.format("Close UDP Server successfully, port: %d.", config.getPort()));
         }
     }
 
@@ -115,7 +123,7 @@ public class UdpCommServiceProvider extends CommServiceProvider {
             }
             return;
         }
-        if (payload.length <= super.maxLength) {
+        if (payload.length <= config.getMaxLength()) {
             if (wrapper != null) {
                 // 如果设置了包装器，则对载荷进行包装
                 payload = wrapper.packetPayload(payload);

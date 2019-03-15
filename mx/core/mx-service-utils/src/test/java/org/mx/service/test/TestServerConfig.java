@@ -114,21 +114,36 @@ public class TestServerConfig {
         assertEquals(1, config.getTcpServerNum());
         assertEquals(1, config.getTcpServers().size());
         assertNotNull(config.getTcpServers().get(0));
-        assertEquals(9996, config.getTcpServers().get(0).getPort());
-        assertEquals(500, config.getTcpServers().get(0).getMaxLength());
-        assertEquals(321, config.getTcpServers().get(0).getMaxTimeout());
-        assertEquals("org.mx.service.server.comm.DefaultPacketWrapper", config.getTcpServers().get(0).getPacketWrapper());
-        assertEquals("tcpReceiver", config.getTcpServers().get(0).getReceiver());
+        CommServerConfigBean.TcpServerConfig tcpServerConfig = (CommServerConfigBean.TcpServerConfig) config.getTcpServers().get(0);
+        assertEquals(9996, tcpServerConfig.getPort());
+        assertEquals(1024, tcpServerConfig.getMaxLength());
+        assertEquals(146988, tcpServerConfig.getSendBufferSize());
+        assertEquals(408300, tcpServerConfig.getReceiveBufferSize());
+        assertEquals(0, tcpServerConfig.getSoTimeout());
+        assertEquals("org.mx.service.server.comm.DefaultPacketWrapper", tcpServerConfig.getPacketWrapper());
+        assertEquals("tcpReceiver", tcpServerConfig.getReceiver());
+        assertEquals(0, tcpServerConfig.getTrafficClass());
+        assertEquals(-1, tcpServerConfig.getSoLinger());
+        assertTrue(tcpServerConfig.isReuseAddress());
+        assertFalse(tcpServerConfig.isKeepAlive());
+        assertFalse(tcpServerConfig.isOobInline());
+        assertFalse(tcpServerConfig.isNoDelay());
 
         assertTrue(config.isUdpEnabled());
         assertEquals(1, config.getUdpServerNum());
         assertEquals(1, config.getUdpServers().size());
         assertNotNull(config.getUdpServers().get(0));
-        assertEquals(9995, config.getUdpServers().get(0).getPort());
-        assertEquals(50, config.getUdpServers().get(0).getMaxLength());
-        assertEquals(123, config.getUdpServers().get(0).getMaxTimeout());
-        assertEquals("org.mx.service.server.comm.DefaultPacketWrapper", config.getUdpServers().get(0).getPacketWrapper());
-        assertEquals("udpReceiver", config.getUdpServers().get(0).getReceiver());
+        CommServerConfigBean.UdpServerConfig udpServerConfig = (CommServerConfigBean.UdpServerConfig)config.getUdpServers().get(0);
+        assertEquals(9995, udpServerConfig.getPort());
+        assertEquals(1024, udpServerConfig.getMaxLength());
+        assertEquals(65507, udpServerConfig.getSendBufferSize());
+        assertEquals(65507, udpServerConfig.getReceiveBufferSize());
+        assertEquals(0, udpServerConfig.getSoTimeout());
+        assertEquals("org.mx.service.server.comm.DefaultPacketWrapper", udpServerConfig.getPacketWrapper());
+        assertEquals("udpReceiver", udpServerConfig.getReceiver());
+        assertEquals(0, udpServerConfig.getTrafficClass());
+        assertTrue(udpServerConfig.isBroadcast());
+        assertFalse(udpServerConfig.isReuseAddress());
     }
 
     @Test
@@ -137,7 +152,7 @@ public class TestServerConfig {
         assertNotNull(config);
 
         assertTrue(config.isEnabled());
-        assertEquals("http://www.baidu.com/", config.getAllowOrigin());
+        assertEquals("*", config.getAllowOrigin());
         assertEquals("origin, content-type, accept, authorization, token", config.getAllowHeaders());
         assertEquals("X-My-Custorm-Header, X-Custom-Header", config.getExposeHeader());
         assertEquals("GET, POST, PUT, DELETE, OPTIONS", config.getAllowMethods());

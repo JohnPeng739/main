@@ -18,8 +18,7 @@ import org.springframework.core.env.Environment;
  */
 @Configuration
 @PropertySource({
-        "classpath:server-config-test.properties",
-        "classpath:cors.properties"
+        "classpath:server-config-test.properties"
 })
 public class TestServerConfigConfig {
     /**
