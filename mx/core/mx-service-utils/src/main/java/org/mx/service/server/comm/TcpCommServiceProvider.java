@@ -3,6 +3,7 @@ package org.mx.service.server.comm;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.service.error.UserInterfaceServiceErrorException;
+import org.mx.service.server.CommServerConfigBean;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -32,13 +33,11 @@ public class TcpCommServiceProvider extends CommServiceProvider {
     /**
      * 默认的构造函数
      *
-     * @param port    监听端口号
+     * @param config  配置信息对象
      * @param wrapper 数据包 包装器
-     * @param length  缓存最大长度
-     * @param timeout 等待超时值，单位为毫秒
      */
-    public TcpCommServiceProvider(int port, PacketWrapper wrapper, int length, int timeout) {
-        super(CommServiceType.TCP, port, length, timeout);
+    public TcpCommServiceProvider(CommServerConfigBean.TcpServerConfig config, PacketWrapper wrapper) {
+        super(CommServiceType.TCP, config);
         this.packetWrapper = wrapper;
         tcpConnections = new HashMap<>();
     }
@@ -52,13 +51,13 @@ public class TcpCommServiceProvider extends CommServiceProvider {
     public void init(ReceiverListener receiver) {
         this.receiver = receiver;
         try {
-            serverSocket = new ServerSocket(super.port);
-            if (super.maxTimeout > 0) {
-                serverSocket.setSoTimeout(super.maxTimeout);
+            CommServerConfigBean.TcpServerConfig config = (CommServerConfigBean.TcpServerConfig) super.config;
+            serverSocket = new ServerSocket(config.getPort());
+            if (config.getSoTimeout() > 0) {
+                serverSocket.setSoTimeout(config.getSoTimeout());
             }
-            serverSocket.setReceiveBufferSize(super.maxLength);
             executorService = Executors.newSingleThreadExecutor();
-            executorService.submit(new SocketAcceptTask(super.port, super.maxLength, super.maxTimeout));
+            executorService.submit(new SocketAcceptTask(config));
             if (logger.isInfoEnabled()) {
                 logger.info("Initialize the TCP server successfully.");
             }
@@ -88,7 +87,7 @@ public class TcpCommServiceProvider extends CommServiceProvider {
         }
         if (executorService != null) {
             try {
-                executorService.awaitTermination(super.maxTimeout, TimeUnit.MILLISECONDS);
+                executorService.awaitTermination(config.getSoTimeout(), TimeUnit.MILLISECONDS);
             } catch (InterruptedException ex) {
                 if (logger.isWarnEnabled()) {
                     logger.warn("Wait for any tasks termination fail.", ex);
@@ -132,20 +131,16 @@ public class TcpCommServiceProvider extends CommServiceProvider {
      */
     private class SocketAcceptTask implements Runnable {
         private boolean needExit = false;
-        private int length, timeout, localPort;
+        private CommServerConfigBean.TcpServerConfig config;
 
         /**
          * 默认的构造函数
          *
-         * @param localPort  本地监听端口号
-         * @param maxLength  缓存最大长度
-         * @param maxTimeout 最大超时值
+         * @param config 配置信息对象
          */
-        public SocketAcceptTask(int localPort, int maxLength, int maxTimeout) {
+        public SocketAcceptTask(CommServerConfigBean.TcpServerConfig config) {
             super();
-            this.localPort = localPort;
-            this.length = maxLength;
-            this.timeout = maxTimeout;
+            this.config = config;
         }
 
         /**
@@ -170,15 +165,33 @@ public class TcpCommServiceProvider extends CommServiceProvider {
                 }
                 try {
                     Socket socket = serverSocket.accept();
+                    if (config.getSoTimeout() > 0) {
+                        socket.setSoTimeout(config.getSoTimeout());
+                    }
+                    if (config.getSendBufferSize() > 0) {
+                        socket.setSendBufferSize(config.getSendBufferSize());
+                    }
+                    if (config.getReceiveBufferSize() > 0) {
+                        socket.setReceiveBufferSize(config.getReceiveBufferSize());
+                    }
+                    socket.setTcpNoDelay(config.isNoDelay());
+                    socket.setSoLinger(config.getSoLinger() != -1, config.getSoLinger());
+                    socket.setOOBInline(config.isOobInline());
+                    socket.setKeepAlive(config.isKeepAlive());
+                    if (config.getTrafficClass() > 0) {
+                        socket.setTrafficClass(config.getTrafficClass());
+                    }
+                    socket.setReuseAddress(config.isReuseAddress());
                     String key = ipAndPort(socket.getInetAddress().getAddress(), socket.getPort());
-                    TcpConnection tcpConnection = new TcpConnection(packetWrapper, socket, receiver, length, timeout, localPort);
+                    TcpConnection tcpConnection = new TcpConnection(packetWrapper, socket, receiver,
+                            config.getMaxLength(), config.getPort());
                     tcpConnections.put(key, tcpConnection);
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format("There has a new connection: %s.", key));
                     }
                 } catch (SocketTimeoutException ex) {
                     if (logger.isWarnEnabled()) {
-                        logger.warn(String.format("Timeout: %d ms.", timeout), ex);
+                        logger.warn(String.format("Timeout: %d ms.", config.getSoTimeout()), ex);
                     }
                 } catch (IOException ex) {
                     if (logger.isErrorEnabled()) {

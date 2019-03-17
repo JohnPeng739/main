@@ -8,7 +8,6 @@ import org.mx.service.error.UserInterfaceServiceErrorException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -33,29 +32,14 @@ public class TcpConnection {
      * @param socket    连接套接字
      * @param receiver  数据接收监听器
      * @param length    缓存最大长度
-     * @param timeout   最大超时值
      * @param localPort 本地监听端口号
      */
-    public TcpConnection(PacketWrapper wrapper, Socket socket, ReceiverListener receiver, int length, int timeout,
-                         int localPort) {
+    public TcpConnection(PacketWrapper wrapper, Socket socket, ReceiverListener receiver, int length, int localPort) {
         super();
         this.packetWrapper = wrapper;
         this.socket = socket;
         this.receiver = receiver;
-        try {
-            if (timeout > 0) {
-                this.socket.setSoTimeout(timeout);
-            }
-            this.maxLength = length;
-            // 额外添加10个字节作为余量
-            this.socket.setReceiveBufferSize(length + wrapper.getExtraLength() + 10);
-            this.socket.setSendBufferSize(length + wrapper.getExtraLength() + 10);
-        } catch (SocketException ex) {
-            if (logger.isErrorEnabled()) {
-                logger.error(String.format("Max length: %d, Timeout: %d ms.", length, timeout), ex);
-            }
-            throw new UserInterfaceServiceErrorException(UserInterfaceServiceErrorException.ServiceErrors.COMM_SOCKET_ERROR);
-        }
+        this.maxLength = length;
         try {
             String fromIp = TypeUtils.byteArray2Ip(socket.getInetAddress().getAddress());
             int fromPort = socket.getPort();

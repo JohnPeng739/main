@@ -28,7 +28,7 @@ public class CommServerFactory {
     /**
      * 默认的构造函数
      *
-     * @param context Spring IoC上下文
+     * @param context              Spring IoC上下文
      * @param commServerConfigBean COMM通信配置对象
      */
     public CommServerFactory(ApplicationContext context, CommServerConfigBean commServerConfigBean) {
@@ -39,17 +39,14 @@ public class CommServerFactory {
         this.udpProviders = new HashMap<>();
     }
 
-    private void initTcpProvider(CommServerConfigBean.ServerConfig serverConfig,
+    private void initTcpProvider(CommServerConfigBean.TcpServerConfig serverConfig,
                                  Map<Integer, TcpCommServiceProvider> tcpProviders) {
         int port = serverConfig.getPort();
-        int maxLength = serverConfig.getMaxLength();
-        int maxTimeout = serverConfig.getMaxTimeout();
         String receiverName = serverConfig.getReceiver();
         String wrapperClassName = serverConfig.getPacketWrapper();
-        if (port <= 0 || maxLength <= 0 || (maxTimeout <= 0 && maxTimeout != -1) || StringUtils.isBlank(receiverName)) {
+        if (port <= 0 || StringUtils.isBlank(receiverName)) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("Invalid tcp server parameter, port: %d, buffer length: %d, " +
-                                "timeout: %d, receiver name: %s, wrapper class: %s.", port, maxLength, maxTimeout,
+                logger.error(String.format("Invalid tcp server parameter, port: %d, receiver name: %s, wrapper class: %s.", port,
                         receiverName, wrapperClassName));
             }
             throw new UserInterfaceSystemErrorException(
@@ -62,13 +59,12 @@ public class CommServerFactory {
             } else {
                 wrapper = (PacketWrapper) Class.forName(wrapperClassName).newInstance();
             }
-            TcpCommServiceProvider tcpProvider = new TcpCommServiceProvider(port, wrapper, maxLength, maxTimeout);
+            TcpCommServiceProvider tcpProvider = new TcpCommServiceProvider(serverConfig, wrapper);
             ReceiverListener receiver = context.getBean(receiverName, ReceiverListener.class);
             tcpProvider.init(receiver);
             tcpProviders.put(port, tcpProvider);
             if (logger.isInfoEnabled()) {
-                logger.info(String.format("Create a tcp server successfully, port: %d, buffer length: %d," +
-                        "timeout: %d, receiver: %s.", port, maxLength, maxTimeout, receiverName));
+                logger.info(String.format("Create a tcp server successfully, port: %d, receiver: %s.", port, receiverName));
             }
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
             if (logger.isErrorEnabled()) {
@@ -77,18 +73,14 @@ public class CommServerFactory {
         }
     }
 
-    private void initUdpProvider(CommServerConfigBean.ServerConfig serverConfig,
+    private void initUdpProvider(CommServerConfigBean.UdpServerConfig serverConfig,
                                  Map<Integer, UdpCommServiceProvider> udpProviders) {
         int port = serverConfig.getPort();
-        int maxLength = serverConfig.getMaxLength();
-        int maxTimeout = serverConfig.getMaxTimeout();
         String receiverName = serverConfig.getReceiver();
         String wrapperClassName = serverConfig.getPacketWrapper();
-        if (port <= 0 || maxLength <= 0 || (maxTimeout <= 0 && maxTimeout != -1) || StringUtils.isBlank(receiverName)) {
+        if (port <= 0 || StringUtils.isBlank(receiverName)) {
             if (logger.isErrorEnabled()) {
-                logger.error(String.format("Invalid udp server parameter, port: %d, buffer length: %d, " +
-                                "timeout: %d, receiver name: %s.", port, maxLength, maxTimeout,
-                        receiverName));
+                logger.error(String.format("Invalid udp server parameter, port: %d, receiver name: %s.", port, receiverName));
             }
             throw new UserInterfaceSystemErrorException(
                     UserInterfaceSystemErrorException.SystemErrors.SYSTEM_ILLEGAL_PARAM);
@@ -100,13 +92,12 @@ public class CommServerFactory {
             } else {
                 wrapper = (PacketWrapper) Class.forName(wrapperClassName).newInstance();
             }
-            UdpCommServiceProvider udpProvider = new UdpCommServiceProvider(port, wrapper, maxLength, maxTimeout);
+            UdpCommServiceProvider udpProvider = new UdpCommServiceProvider(serverConfig, wrapper);
             ReceiverListener receiver = context.getBean(receiverName, ReceiverListener.class);
             udpProvider.init(receiver);
             udpProviders.put(port, udpProvider);
             if (logger.isInfoEnabled()) {
-                logger.info(String.format("Create a udp server successfully, port: %d, buffer length: %d," +
-                        "timeout: %d, receiver: %s.", port, maxLength, maxTimeout, receiverName));
+                logger.info(String.format("Create a udp server successfully, port: %d, receiver: %s.", port, receiverName));
             }
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
             if (logger.isErrorEnabled()) {
@@ -124,7 +115,7 @@ public class CommServerFactory {
         int tcpNum = commServerConfigBean.getTcpServerNum();
         if (tcpEnabled && tcpNum > 0) {
             for (CommServerConfigBean.ServerConfig serverConfig : commServerConfigBean.getTcpServers()) {
-                initTcpProvider(serverConfig, tcpProviders);
+                initTcpProvider((CommServerConfigBean.TcpServerConfig) serverConfig, tcpProviders);
             }
         }
 
@@ -132,7 +123,7 @@ public class CommServerFactory {
         int udpNum = commServerConfigBean.getUdpServerNum();
         if (udpEnabled && udpNum > 0) {
             for (CommServerConfigBean.ServerConfig serverConfig : commServerConfigBean.getUdpServers()) {
-                initUdpProvider(serverConfig, udpProviders);
+                initUdpProvider((CommServerConfigBean.UdpServerConfig) serverConfig, udpProviders);
             }
         }
 

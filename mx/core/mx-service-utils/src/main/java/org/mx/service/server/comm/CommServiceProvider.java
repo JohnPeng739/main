@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.TypeUtils;
 import org.mx.service.error.UserInterfaceServiceErrorException;
+import org.mx.service.server.CommServerConfigBean;
 
 import java.io.UnsupportedEncodingException;
 
@@ -17,23 +18,18 @@ public abstract class CommServiceProvider {
     private static final Log logger = LogFactory.getLog(CommServiceProvider.class);
 
     protected CommServiceType type;
-    protected int port;
-    protected int maxLength, maxTimeout;
+    protected CommServerConfigBean.ServerConfig config;
 
     /**
      * 默认的构造函数
      *
-     * @param type       通信类型，TCP | UDP
-     * @param port       监听端口号
-     * @param maxLength  缓存最大长度
-     * @param maxTimeout 等待超时值，单位为毫秒
+     * @param type   通信类型，TCP | UDP
+     * @param config 配置信息对象
      */
-    public CommServiceProvider(CommServiceType type, int port, int maxLength, int maxTimeout) {
+    public CommServiceProvider(CommServiceType type, CommServerConfigBean.ServerConfig config) {
         super();
         this.type = type;
-        this.port = port;
-        this.maxLength = maxLength;
-        this.maxTimeout = maxTimeout;
+        this.config = config;
     }
 
     /**

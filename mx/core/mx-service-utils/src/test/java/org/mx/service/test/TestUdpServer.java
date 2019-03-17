@@ -31,17 +31,15 @@ public class TestUdpServer {
     public void testUdpCommServer() {
         CommServerFactory factory = context.getBean(CommServerFactory.class);
         assertNotNull(factory);
-        UdpCommServiceProvider provider = factory.getUdpProvider(9995);
+        Integer port = context.getEnvironment().getProperty("udp.servers.1.port", Integer.class);
+        assertNotNull(port);
+        UdpCommServiceProvider provider = factory.getUdpProvider(port);
         assertNotNull(provider);
         TestUdpReceiver udpReceiver = context.getBean("udpReceiver", TestUdpReceiver.class);
         assertNotNull(udpReceiver);
-        Integer port = context.getEnvironment().getProperty("udp.servers.1.port", Integer.class);
-        Integer length = context.getEnvironment().getProperty("udp.servers.1.maxLength", Integer.class);
-        Integer timeout = context.getEnvironment().getProperty("udp.servers.1.maxTimeout", Integer.class);
-        assertNotNull(port);
 
         CommClientInvoke client = new CommClientInvoke(CommServiceProvider.CommServiceType.UDP, udpReceiver,
-                new DefaultPacketWrapper(), "127.0.0.1", 3000, length, timeout);
+                new DefaultPacketWrapper(), "127.0.0.1", 3000, 50, 1000);
 
         try {
             byte[] payload = "test message".getBytes();
@@ -50,7 +48,6 @@ public class TestUdpServer {
             assertNotNull(udpReceiver.getPayload());
             assertArrayEquals(payload, udpReceiver.getPayload());
 
-            // 在默认的包装器下，最大数据载荷为：length - 12
             payload = "12345678901234567890123456789012345678901234567890".getBytes();
             client.send(payload);
             Thread.sleep(500);
