@@ -392,7 +392,8 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
         }
     }
 
-    private <T extends Base> void prepareSave(T t, T old) {
+    private <T extends Base> T prepareSave(T t) {
+        T old = super.checkExist(t);
         if (old == null) {
             // new
             if (StringUtils.isBlank(t.getId())) {
@@ -401,6 +402,7 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
             }
             t.setCreatedTime(new Date().getTime());
         } else {
+            t.setId(old.getId());
             t.setCreatedTime(old.getCreatedTime());
             // 修改操作不能修改代码字段
             if (t instanceof BaseDict) {
@@ -411,6 +413,7 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
         if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
             t.setOperator(sessionDataStore.getCurrentUserCode());
         }
+        return old;
     }
 
     /**
@@ -422,8 +425,7 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T save(T t) {
-        T old = super.checkExist(t);
-        prepareSave(t, old);
+        prepareSave(t);
         template.save(t);
         if (t instanceof BaseDictTree) {
             // 处理父级节点
@@ -474,8 +476,7 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
         }
         BulkOperations bulk = template.bulkOps(BulkOperations.BulkMode.ORDERED, ts.get(0).getClass());
         for (T t : ts) {
-            T old = super.checkExist(t);
-            prepareSave(t, old);
+            T old = prepareSave(t);
             if (old == null) {
                 bulk.insert(t);
             } else {
