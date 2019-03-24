@@ -16,6 +16,7 @@ import org.mx.jwt.error.UserInterfaceJwtErrorException;
 import org.mx.jwt.service.JwtService;
 
 import java.io.FileInputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.interfaces.RSAPrivateCrtKey;
@@ -91,7 +92,7 @@ public class JwtServiceImpl implements JwtService {
                 default:
                     return Algorithm.HMAC256(secret);
             }
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException | UnsupportedEncodingException ex) {
             if (logger.isErrorEnabled()) {
                 logger.error("Initialize JWT fail.", ex);
             }

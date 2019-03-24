@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -109,9 +110,9 @@ public class MongoDbUtils {
             );
         } else if (serverAddresses.size() == 1) {
             ServerAddress addr = serverAddresses.get(0);
-            return credential != null ? new MongoClient(addr, credential, options) : new MongoClient(addr, options);
+            return credential != null ? new MongoClient(addr, Collections.singletonList(credential), options) : new MongoClient(addr, options);
         } else {
-            return credential != null ? new MongoClient(serverAddresses, credential, options) : new MongoClient(serverAddresses, options);
+            return credential != null ? new MongoClient(serverAddresses, Collections.singletonList(credential), options) : new MongoClient(serverAddresses, options);
         }
     }
 }

@@ -43,7 +43,7 @@ project(':mx-spring') {
 }
 
 project(':mx-jwt-utils') {
-    version = '1.1.1'
+    version = '1.1.2'
     description = 'Many json web tokens utility.'
 
     dependencies {
@@ -55,7 +55,7 @@ project(':mx-jwt-utils') {
 }
 
 project(':mx-dal') {
-    version = '3.1.0'
+    version = '3.1.1'
     description = 'data access layer abstract classes and interfaces.'
 
     dependencies {
@@ -97,7 +97,7 @@ project(':mx-service-utils') {
 }
 
 project(':mx-dal-hibernate') {
-    version = '3.2.0'
+    version = '3.1.1'
     description = 'Dal with hibernate JPA.'
 
     dependencies {
@@ -115,7 +115,7 @@ project(':mx-dal-hibernate') {
 }
 
 project(':mx-dal-mongodb') {
-    version = '3.1.0'
+    version = '3.1.1'
     description = 'dal with mongoldb.'
 
     dependencies {
@@ -130,7 +130,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-dal-elastic') {
-    version = '3.2.0'
+    version = '3.1.1'
     description = 'dal with elasticsearch.'
 
     dependencies {
