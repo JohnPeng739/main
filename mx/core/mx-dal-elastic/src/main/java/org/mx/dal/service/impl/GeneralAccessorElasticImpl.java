@@ -199,7 +199,26 @@ public class GeneralAccessorElasticImpl extends AbstractGeneralAccessor implemen
             t.setOperator(sessionDataStore.getCurrentUserCode());
         }
         Class<T> clazz = (Class<T>) t.getClass();
-        return super.checkExist(t);
+        T old = super.checkExist(t);
+        if (old == null) {
+            // 新增操作
+            if (StringUtils.isBlank(t.getId())) {
+                // 如果ID为空，则自动生成UUID，否则使用外部传入的ID
+                t.setId(DigestUtils.uuid());
+            }
+            if (t.getCreatedTime() <= 0) {
+                t.setCreatedTime(new Date().getTime());
+            }
+        } else {
+            // 修改操作
+            t.setId(old.getId());
+            t.setCreatedTime(old.getCreatedTime());
+            if (t instanceof BaseDict) {
+                // 代码字段一旦保存，则不允许被修改
+                ((BaseDict) t).setCode(((BaseDict) old).getCode());
+            }
+        }
+        return old;
     }
 
     /**
@@ -210,25 +229,7 @@ public class GeneralAccessorElasticImpl extends AbstractGeneralAccessor implemen
     @Override
     public <T extends Base> T save(T t) {
         T old = prepareSave(t);
-        if (old == null) {
-            // 新增操作
-            if (StringUtils.isBlank(t.getId())) {
-                // 如果ID为空，则自动生成UUID，否则使用外部传入的ID
-                t.setId(DigestUtils.uuid());
-            }
-            if (t.getCreatedTime() <= 0) {
-                t.setCreatedTime(new Date().getTime());
-            }
-            return elasticUtil.index(t, true);
-        } else {
-            // 修改操作
-            t.setCreatedTime(old.getCreatedTime());
-            if (t instanceof BaseDict) {
-                // 代码字段一旦保存，则不允许被修改
-                ((BaseDict) t).setCode(((BaseDict) old).getCode());
-            }
-            return elasticUtil.index(t, false);
-        }
+        return elasticUtil.index(t, old == null);
     }
 
     /**

@@ -239,6 +239,17 @@ public class TestElastic {
             assertNotNull(u1);
             assertEquals(user1.getCode(), u1.getCode());
 
+            UserEntityElastic user = EntityFactory.createEntity(UserEntityElastic.class);
+            user.setId(null);
+            user.setAge(45);
+            user.setCode("john");
+            user.setName("John Peng");
+            user.setDesc("我是一个正高级工程师。");
+            UserEntityElastic check = accessor.save(user);
+            assertNotNull(check);
+            assertEquals(check.getId(), u1.getId());
+            assertEquals(1, accessor.count(UserEntityElastic.class));
+
             UserEntityElastic user2 = EntityFactory.createEntity(UserEntityElastic.class);
             user2.setId(DigestUtils.uuid());
             user2.setAge(16);
