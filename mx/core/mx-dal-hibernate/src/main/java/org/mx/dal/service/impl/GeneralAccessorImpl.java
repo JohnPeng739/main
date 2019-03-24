@@ -10,6 +10,7 @@ import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
+import org.mx.dal.service.AbstractGeneralAccessor;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
 import org.mx.spring.session.SessionDataStore;
@@ -29,7 +30,7 @@ import java.util.List;
  * @author : john.peng date : 2017/10/6
  * @see GeneralAccessor
  */
-public class GeneralAccessorImpl implements GeneralAccessor {
+public class GeneralAccessorImpl extends AbstractGeneralAccessor implements GeneralAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorImpl.class);
 
     @PersistenceContext
@@ -327,14 +328,16 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Base> T save(T t, boolean needFlush) {
+    private <T extends Base> T prepareSave(T t) {
         if (t.getUpdatedTime() <= 0) {
+            // 如果外部传入过修改时间，则以外部传入为准
             t.setUpdatedTime(new Date().getTime());
         }
         if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
             t.setOperator(sessionDataStore.getCurrentUserCode());
         }
         Class<T> clazz = (Class<T>) t.getClass();
+        T old = super.checkExist(t);
         if (t instanceof BaseDictTree) {
             BaseDictTree parent = ((BaseDictTree) t).getParent();
             if (!StringUtils.isBlank(((BaseDictTree) t).getParentId())) {
@@ -342,36 +345,43 @@ public class GeneralAccessorImpl implements GeneralAccessor {
                 ((BaseDictTree) t).setParent((BaseDictTree) p);
             }
         }
-        if (StringUtils.isBlank(t.getId())) {
+        if (old == null) {
             // 新增操作
-            t.setId(DigestUtils.uuid());
+            if (StringUtils.isBlank(t.getId())) {
+                // 如果ID为空，则自动生成UUID，否则使用外部传入的ID
+                t.setId(DigestUtils.uuid());
+            }
             if (t.getCreatedTime() <= 0) {
                 t.setCreatedTime(new Date().getTime());
             }
+        } else {
+            // 修改操作
+            t.setId(old.getId());
+            t.setCreatedTime(old.getCreatedTime());
+            if (t instanceof BaseDict) {
+                // 代码字段一旦保存，则不允许被修改
+                ((BaseDict) t).setCode(((BaseDict) old).getCode());
+            }
+        }
+        return old;
+    }
+
+    private <T extends Base> T save(T t, boolean needFlush) {
+        T old = prepareSave(t);
+        if (old == null) {
+            // 新增操作
             entityManager.persist(t);
         } else {
             // 修改操作
-            T old = getById(t.getId(), clazz);
-            if (old != null) {
-                t.setCreatedTime(old.getCreatedTime());
-                if (t instanceof BaseDict) {
-                    ((BaseDict) t).setCode(((BaseDict) old).getCode());
-                }
-                entityManager.merge(t);
-            } else {
-                // 新增操作，使用传入的ID
-                if (t.getCreatedTime() <= 0) {
-                    t.setCreatedTime(new Date().getTime());
-                }
-                entityManager.persist(t);
-            }
+            entityManager.merge(t);
         }
-        // 为了防止管理对象没有及时更新状态，这里强制刷新一次
         if (needFlush) {
+            // 为了防止管理对象没有及时更新状态，这里根据需要强制刷新一次
             entityManager.flush();
+            entityManager.clear();
         }
         if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Save entity success, entity: %s.", t));
+            logger.debug(String.format("Save(%s) entity success, entity: %s.", old == null ? "INSERT" : "UPDATE", t));
         }
         return t;
     }
@@ -385,11 +395,26 @@ public class GeneralAccessorImpl implements GeneralAccessor {
     @Override
     public <T extends Base> List<T> save(List<T> ts) {
         if (ts != null && !ts.isEmpty()) {
+            // 必须要先处理存在性判断，否则checkExist中发起的查询将破坏事务性二降低性能
+            List<Boolean> isNews = new ArrayList<>(ts.size());
             for (T t : ts) {
-                save(t, false);
+                isNews.add(prepareSave(t) == null);
+                //save(t, false);
+            }
+            for (int index = 0; index < ts.size(); index++) {
+                T t = ts.get(index);
+                boolean isNew = isNews.get(index);
+                if (isNew) {
+                    // 新增操作
+                    entityManager.persist(t);
+                } else {
+                    // 修改操作
+                    entityManager.merge(t);
+                }
             }
         }
         entityManager.flush();
+        entityManager.clear();
         return ts;
     }
 

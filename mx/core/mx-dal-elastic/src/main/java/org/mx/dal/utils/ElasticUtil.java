@@ -164,20 +164,22 @@ public interface ElasticUtil {
     /**
      * 索引指定的实体对象
      *
-     * @param t   实体对象，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
-     * @param <T> 泛型定义
+     * @param t     实体对象，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
+     * @param <T>   泛型定义
+     * @param isNew 是否新实体
      * @return 索引成功后的实体对象
      */
-    <T extends Base> T index(T t);
+    <T extends Base> T index(T t, boolean isNew);
 
     /**
      * 索引指定的实体对象列表
      *
-     * @param ts  实体对象列表，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
-     * @param <T> 泛型定义
+     * @param ts     实体对象列表，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
+     * @param <T>    泛型定义
+     * @param isNews 是否新实体列表，与ts中的元素一一对应
      * @return 索引成功后的实体对象列表
      */
-    <T extends Base> List<T> index(List<T> ts);
+    <T extends Base> List<T> index(List<T> ts, List<Boolean> isNews);
 
     /**
      * 删除指定实体对应的索引信息

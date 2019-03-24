@@ -51,8 +51,9 @@ public class TestDatabase extends BaseTest {
         accessor.clear(User.class);
 
         long t0 = System.currentTimeMillis();
-        for (int index = 1000; index < 2000; index ++) {
+        for (int index = 0; index < 1000; index ++) {
             User user = EntityFactory.createEntity(User.class);
+            user.setId(null);
             user.setCode("john " + index);
             user.setName("John Peng");
             user.setAddress("address");
@@ -64,10 +65,13 @@ public class TestDatabase extends BaseTest {
         long t1 = System.currentTimeMillis() - t0;
         assertEquals(1000, accessor.count(User.class));
 
+        accessor.clear(User.class);
+
         t0 = System.currentTimeMillis();
         List<User> users = new ArrayList<>(1000);
         for (int index = 0; index < 1000; index ++) {
             User user = EntityFactory.createEntity(User.class);
+            user.setId(null);
             user.setCode("john " + index);
             user.setName("John Peng");
             user.setAddress("address");
@@ -78,8 +82,9 @@ public class TestDatabase extends BaseTest {
         }
         accessor.save(users);
         long t2 = System.currentTimeMillis() - t0;
+        System.out.println(String.format("t1: %d, t2: %s.", t1, t2));
         assertTrue(t2 <= t1);
-        assertEquals(2000, accessor.count(User.class));
+        assertEquals(1000, accessor.count(User.class));
     }
 
     @Test
@@ -106,6 +111,19 @@ public class TestDatabase extends BaseTest {
             assertEquals(user.getName(), check.getName());
             assertEquals(user.getAddress(), check.getAddress());
             assertTrue(user.getCreatedTime() > 0);
+            assertEquals(1, accessor.count(User.class));
+
+            User user1 = EntityFactory.createEntity(User.class);
+            user1.setId(null);
+            user1.setCode("john");
+            user1.setName("John Peng");
+            user1.setAddress("address");
+            user1.setEmail("email");
+            user1.setPostCode("zip");
+            user1.setDesc("description");
+            User check1 = accessor.save(user1);
+            assertNotNull(check1);
+            assertEquals(check1.getId(), check.getId());
             assertEquals(1, accessor.count(User.class));
 
             check = accessor.getById(user.getId(), User.class);

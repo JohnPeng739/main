@@ -136,6 +136,19 @@ public class TestDatabase {
             assertTrue(user.getCreatedTime() > 0);
             assertEquals(1, accessor.count(User.class));
 
+            User user1 = EntityFactory.createEntity(User.class);
+            user1.setId(null);
+            user1.setCode("john");
+            user1.setName("John Peng");
+            user1.setAddress("some address is here, 中华人民共和国，美利坚合众国。");
+            user1.setEmail("email");
+            user1.setPostCode("zip");
+            user1.setDesc("description");
+            User check1 = accessor.save(user1);
+            assertNotNull(check1);
+            assertEquals(check1.getId(), check.getId());
+            assertEquals(1, accessor.count(User.class));
+
             check = accessor.getById(user.getId(), User.class);
             assertNotNull(check);
             assertEquals(user.getCode(), check.getCode());
