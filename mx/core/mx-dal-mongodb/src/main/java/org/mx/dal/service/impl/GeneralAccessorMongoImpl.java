@@ -4,6 +4,7 @@ import com.mongodb.util.JSONParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.Document;
+import org.mx.DigestUtils;
 import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
@@ -11,6 +12,7 @@ import org.mx.dal.entity.Base;
 import org.mx.dal.entity.BaseDict;
 import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
+import org.mx.dal.service.AbstractGeneralAccessor;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralTextSearchAccessor;
 import org.mx.error.UserInterfaceSystemErrorException;
@@ -38,7 +40,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
  * @see GeneralAccessor
  * @see GeneralTextSearchAccessor
  */
-public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSearchAccessor {
+public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements GeneralAccessor, GeneralTextSearchAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorMongoImpl.class);
     private static final String ID_FIELD = "_id";
 
@@ -390,6 +392,27 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         }
     }
 
+    private <T extends Base> void prepareSave(T t, T old) {
+        if (old == null) {
+            // new
+            if (StringUtils.isBlank(t.getId())) {
+                // 如果ID为空，则自动生成UUID，否则使用外部传入的ID
+                t.setId(DigestUtils.uuid());
+            }
+            t.setCreatedTime(new Date().getTime());
+        } else {
+            t.setCreatedTime(old.getCreatedTime());
+            // 修改操作不能修改代码字段
+            if (t instanceof BaseDict) {
+                ((BaseDict) t).setCode(((BaseDict) old).getCode());
+            }
+        }
+        t.setUpdatedTime(new Date().getTime());
+        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
+            t.setOperator(sessionDataStore.getCurrentUserCode());
+        }
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -399,23 +422,8 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T save(T t) {
-        if (StringUtils.isBlank(t.getId())) {
-            // new
-            t.setCreatedTime(new Date().getTime());
-        } else {
-            T old = this.getById(t.getId(), (Class<T>) t.getClass());
-            if (old != null) {
-                t.setCreatedTime(old.getCreatedTime());
-                // 修改操作不能修改代码字段
-                if (t instanceof BaseDict) {
-                    ((BaseDict) t).setCode(((BaseDict) old).getCode());
-                }
-            }
-        }
-        t.setUpdatedTime(new Date().getTime());
-        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
-            t.setOperator(sessionDataStore.getCurrentUserCode());
-        }
+        T old = super.checkExist(t);
+        prepareSave(t, old);
         template.save(t);
         if (t instanceof BaseDictTree) {
             // 处理父级节点
@@ -466,26 +474,9 @@ public class GeneralAccessorMongoImpl implements GeneralAccessor, GeneralTextSea
         }
         BulkOperations bulk = template.bulkOps(BulkOperations.BulkMode.ORDERED, ts.get(0).getClass());
         for (T t : ts) {
-            boolean isNew = true;
-            if (StringUtils.isBlank(t.getId())) {
-                // new
-                t.setCreatedTime(new Date().getTime());
-            } else {
-                T old = this.getById(t.getId(), (Class<T>) t.getClass());
-                if (old != null) {
-                    isNew = false;
-                    t.setCreatedTime(old.getCreatedTime());
-                    // 修改操作不能修改代码字段
-                    if (t instanceof BaseDict) {
-                        ((BaseDict) t).setCode(((BaseDict) old).getCode());
-                    }
-                }
-            }
-            t.setUpdatedTime(new Date().getTime());
-            if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
-                t.setOperator(sessionDataStore.getCurrentUserCode());
-            }
-            if (isNew) {
+            T old = super.checkExist(t);
+            prepareSave(t, old);
+            if (old == null) {
                 bulk.insert(t);
             } else {
                 bulk.updateOne(new Query(where("id").is(t.getId())),
