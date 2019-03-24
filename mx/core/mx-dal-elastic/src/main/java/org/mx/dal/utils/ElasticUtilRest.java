@@ -34,12 +34,14 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.mx.ClassUtils;
-import org.mx.DigestUtils;
 import org.mx.StringUtils;
 import org.mx.dal.Pagination;
 import org.mx.dal.annotation.ElasticField;
 import org.mx.dal.annotation.ElasticIndex;
-import org.mx.dal.entity.*;
+import org.mx.dal.entity.Base;
+import org.mx.dal.entity.ElasticBaseEntity;
+import org.mx.dal.entity.ElasticGeoPointBaseEntity;
+import org.mx.dal.entity.GeoPointLocation;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.utils.bean.IndicesInfoBean;
@@ -788,36 +790,14 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     /**
      * 将指定实体转化为Elastic Rest请求
      *
-     * @param t   实体对象
-     * @param <T> 实体泛型
+     * @param t     实体对象
+     * @param <T>   实体泛型
+     * @param isNew 是否为新的实体
      * @return Elastic REST请求
      */
     @SuppressWarnings("unchecked")
-    private <T extends Base> DocWriteRequest createRequest(T t) {
+    private <T extends Base> DocWriteRequest createRequest(T t, boolean isNew) {
         Class<T> clazz = (Class<T>) t.getClass();
-        boolean isNew;
-        if (StringUtils.isBlank(t.getId())) {
-            // 新数据
-            t.setId(DigestUtils.uuid());
-            t.setCreatedTime(System.currentTimeMillis());
-            isNew = true;
-        } else {
-            T check = getById(t.getId(), clazz);
-            if (check != null) {
-                // 修改数据
-                t.setCreatedTime(check.getCreatedTime());
-                if (check instanceof BaseDict) {
-                    ((BaseDict) t).setCode(((BaseDict) check).getCode());
-                }
-                isNew = false;
-            } else {
-                isNew = true;
-            }
-        }
-        t.setUpdatedTime(System.currentTimeMillis());
-        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
-            t.setOperator(sessionDataStore.getCurrentUserCode());
-        }
         String index = getIndex(clazz);
         if (isNew) {
             IndexRequest request = new IndexRequest(index, index, t.getId());
@@ -833,11 +813,11 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     /**
      * {@inheritDoc}
      *
-     * @see ElasticUtil#index(Base)
+     * @see ElasticUtil#index(Base, boolean)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public <T extends Base> T index(T t) {
+    public <T extends Base> T index(T t, boolean isNew) {
         if (t == null) {
             if (logger.isWarnEnabled()) {
                 logger.warn("The entity is null.");
@@ -845,7 +825,7 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             return null;
         }
         try {
-            DocWriteRequest request = createRequest(t);
+            DocWriteRequest request = createRequest(t, isNew);
             if (request instanceof IndexRequest) {
                 client.index((IndexRequest) request);
             } else {
@@ -863,10 +843,10 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     /**
      * {@inheritDoc}
      *
-     * @see ElasticUtil#index(List)
+     * @see ElasticUtil#index(List, List)
      */
     @Override
-    public <T extends Base> List<T> index(List<T> ts) {
+    public <T extends Base> List<T> index(List<T> ts, List<Boolean> isNews) {
         if (ts == null || ts.isEmpty()) {
             if (logger.isWarnEnabled()) {
                 logger.warn("The entity's list is null or empty.");
@@ -874,8 +854,10 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             return ts;
         }
         BulkRequest bulkRequest = new BulkRequest();
-        for (T t : ts) {
-            DocWriteRequest request = createRequest(t);
+        for (int index = 0; index < ts.size(); index ++) {
+            T t = ts.get(index);
+            boolean isNew = isNews.get(index);
+            DocWriteRequest request = createRequest(t, isNew);
             bulkRequest.add(request);
         }
         try {
@@ -923,7 +905,7 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         if (logicRemove) {
             // 逻辑删除
             t.setValid(false);
-            return index(t);
+            return index(t, false);
         } else {
             // 物理删除
             Class<T> clazz = (Class<T>) t.getClass();

@@ -4,6 +4,7 @@ import org.mx.dal.entity.BaseDict;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.GeneralDictAccessor;
 import org.mx.dal.utils.ElasticUtil;
+import org.mx.spring.session.SessionDataStore;
 
 import java.util.List;
 
@@ -17,10 +18,11 @@ public class GeneralDictAccessorElasticImpl extends GeneralAccessorElasticImpl i
     /**
      * 默认的构造函数
      *
-     * @param elasticUtil ES访问工具
+     * @param sessionDataStore 会话上下文存储
+     * @param elasticUtil      ES访问工具
      */
-    public GeneralDictAccessorElasticImpl(ElasticUtil elasticUtil) {
-        super(elasticUtil);
+    public GeneralDictAccessorElasticImpl(SessionDataStore sessionDataStore, ElasticUtil elasticUtil) {
+        super(sessionDataStore, elasticUtil);
     }
 
     /**

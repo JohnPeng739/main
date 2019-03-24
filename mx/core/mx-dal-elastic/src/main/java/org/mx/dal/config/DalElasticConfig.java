@@ -32,12 +32,12 @@ public class DalElasticConfig {
     }
 
     @Bean(name = "generalAccessorElastic")
-    public GeneralAccessor generalAccessorElastic(ElasticUtil elasticUtil) {
-        return new GeneralAccessorElasticImpl(elasticUtil);
+    public GeneralAccessor generalAccessorElastic(SessionDataStore sessionDataStore, ElasticUtil elasticUtil) {
+        return new GeneralAccessorElasticImpl(sessionDataStore, elasticUtil);
     }
 
     @Bean(name = "generalDictAccessorElastic")
-    public GeneralDictAccessor generalDictAccessorElastic(ElasticUtil elasticUtil) {
-        return new GeneralDictAccessorElasticImpl(elasticUtil);
+    public GeneralDictAccessor generalDictAccessorElastic(SessionDataStore sessionDataStore, ElasticUtil elasticUtil) {
+        return new GeneralDictAccessorElasticImpl(sessionDataStore, elasticUtil);
     }
 }

@@ -2,15 +2,22 @@ package org.mx.dal.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mx.DigestUtils;
+import org.mx.StringUtils;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
+import org.mx.dal.entity.BaseDict;
 import org.mx.dal.entity.ElasticBaseEntity;
 import org.mx.dal.error.UserInterfaceDalErrorException;
+import org.mx.dal.service.AbstractGeneralAccessor;
 import org.mx.dal.service.ElasticAccessor;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.utils.ElasticUtil;
+import org.mx.spring.session.SessionDataStore;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,18 +26,21 @@ import java.util.List;
  * @author John.Peng
  * Date time 2018/4/1 上午8:56
  */
-public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAccessor {
+public class GeneralAccessorElasticImpl extends AbstractGeneralAccessor implements GeneralAccessor, ElasticAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorElasticImpl.class);
 
+    private SessionDataStore sessionDataStore;
     private ElasticUtil elasticUtil;
 
     /**
      * 默认的构造函数
      *
-     * @param elasticUtil ES工具
+     * @param sessionDataStore 会话上下文数据存储
+     * @param elasticUtil      ES工具
      */
-    public GeneralAccessorElasticImpl(ElasticUtil elasticUtil) {
+    public GeneralAccessorElasticImpl(SessionDataStore sessionDataStore, ElasticUtil elasticUtil) {
         super();
+        this.sessionDataStore = sessionDataStore;
         this.elasticUtil = elasticUtil;
     }
 
@@ -179,6 +189,19 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
         }
     }
 
+    @SuppressWarnings("unchecked")
+    private <T extends Base> T prepareSave(T t) {
+        if (t.getUpdatedTime() <= 0) {
+            // 如果外部传入过修改时间，则以外部传入为准
+            t.setUpdatedTime(new Date().getTime());
+        }
+        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
+            t.setOperator(sessionDataStore.getCurrentUserCode());
+        }
+        Class<T> clazz = (Class<T>) t.getClass();
+        return super.checkExist(t);
+    }
+
     /**
      * {@inheritDoc}
      *
@@ -186,7 +209,26 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> T save(T t) {
-        return elasticUtil.index(t);
+        T old = prepareSave(t);
+        if (old == null) {
+            // 新增操作
+            if (StringUtils.isBlank(t.getId())) {
+                // 如果ID为空，则自动生成UUID，否则使用外部传入的ID
+                t.setId(DigestUtils.uuid());
+            }
+            if (t.getCreatedTime() <= 0) {
+                t.setCreatedTime(new Date().getTime());
+            }
+            return elasticUtil.index(t, true);
+        } else {
+            // 修改操作
+            t.setCreatedTime(old.getCreatedTime());
+            if (t instanceof BaseDict) {
+                // 代码字段一旦保存，则不允许被修改
+                ((BaseDict) t).setCode(((BaseDict) old).getCode());
+            }
+            return elasticUtil.index(t, false);
+        }
     }
 
     /**
@@ -196,7 +238,12 @@ public class GeneralAccessorElasticImpl implements GeneralAccessor, ElasticAcces
      */
     @Override
     public <T extends Base> List<T> save(List<T> ts) {
-        return elasticUtil.index(ts);
+        List<Boolean> isNews = new ArrayList<>(ts.size());
+        for (T t : ts) {
+            T old = prepareSave(t);
+            isNews.add(old == null);
+        }
+        return elasticUtil.index(ts, isNews);
     }
 
     /**
