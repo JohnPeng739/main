@@ -43,7 +43,7 @@ public class TestDatabase {
             IMongodConfig config = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
                     .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
             mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
-            mongod = mongodExecutable.start();
+            //mongod = mongodExecutable.start();
             context = new AnnotationConfigApplicationContext(TestDalMongodbConfig.class);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -103,6 +103,22 @@ public class TestDatabase {
         assertEquals(2000, accessor.count(User.class));
         assertTrue(t2 <= t1);
         System.out.println(String.format("t1: %dms, t2: %sms.", t1, t2));
+
+        t0 = System.currentTimeMillis();
+        //users = new ArrayList<>(1000);
+        for (int index = 0; index < 1000; index++) {
+            User user = users.get(index);
+            user.setName("John Peng 123");
+            user.setAddress("some address is here, 中华人民共和国，美利坚合众国。");
+            user.setEmail("email123");
+            user.setPostCode("zip123");
+            user.setDesc("description123");
+        }
+        accessor.save(users);
+        long t3 = System.currentTimeMillis() - t0;
+        assertEquals(2000, accessor.count(User.class));
+        //assertTrue(t2 <= t1);
+        System.out.println(String.format("t1: %dms, t2: %dms, t3: %dms.", t1, t2, t3));
 
         accessor.clear(User.class);
     }
