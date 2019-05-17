@@ -270,6 +270,7 @@ public class TestDatabase extends BaseTest {
         GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
+        accessor.clear(User.class);
         UserRepository repository = context.getBean(UserRepository.class);
         assertNotNull(repository);
 
@@ -321,6 +322,7 @@ public class TestDatabase extends BaseTest {
         GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
+        accessor.clear(User.class);
         UserService userService = context.getBean(UserService.class);
         assertNotNull(userService);
 

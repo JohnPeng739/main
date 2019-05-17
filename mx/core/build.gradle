@@ -88,7 +88,8 @@ project(':mx-service-utils') {
                 libs.'jetty-websocket',
                 libs.'graphql',
                 libs.'httpclient',
-                libs.'spring-web'
+                libs.'spring-web',
+                libs.'rocketmq'
         )
         compile(libs.'jersey-spring4'){
             exclude module: 'spring-web'
@@ -97,7 +98,7 @@ project(':mx-service-utils') {
 }
 
 project(':mx-dal-hibernate') {
-    version = '3.1.1'
+    version = '3.1.2'
     description = 'Dal with hibernate JPA.'
 
     dependencies {
@@ -108,7 +109,10 @@ project(':mx-dal-hibernate') {
                 libs.'spring-tx',
                 libs.'javax-el-api',
                 libs.'spring-data-jpa',
-                libs.'hibernate-entitymanager',
+                libs.'hibernate-entitymanager'
+        )
+        runtime(
+                libs.'postgresql',
                 libs.'mysql'
         )
     }
