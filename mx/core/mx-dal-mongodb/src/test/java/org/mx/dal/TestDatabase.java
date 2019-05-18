@@ -2,12 +2,6 @@ package org.mx.dal;
 
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.runtime.Network;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +34,9 @@ public class TestDatabase {
     @Before
     public void before() {
         try {
-            IMongodConfig config = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
-                    .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
-            mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
+            //IMongodConfig config = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
+            //        .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
+            //mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
             //mongod = mongodExecutable.start();
             context = new AnnotationConfigApplicationContext(TestDalMongodbConfig.class);
         } catch (Exception ex) {
@@ -72,55 +66,78 @@ public class TestDatabase {
 
         accessor.clear(User.class);
 
-        long t0 = System.currentTimeMillis();
-        for (int index = 1000; index < 2000; index++) {
-            User user = EntityFactory.createEntity(User.class);
-            user.setCode("john " + index);
-            user.setName("John Peng");
-            user.setAddress("some address is here, 中华人民共和国，美利坚合众国。");
-            user.setEmail("email");
-            user.setPostCode("zip");
-            user.setDesc("description");
-            accessor.save(user);
-        }
-        long t1 = System.currentTimeMillis() - t0;
-        assertEquals(1000, accessor.count(User.class));
-
-        t0 = System.currentTimeMillis();
+        // initialize
         List<User> users = new ArrayList<>(1000);
-        for (int index = 2000; index < 3000; index++) {
+        for (int index = 0; index < 1000; index ++) {
             User user = EntityFactory.createEntity(User.class);
+            user.setId(null);
             user.setCode("john " + index);
             user.setName("John Peng");
-            user.setAddress("some address is here, 中华人民共和国，美利坚合众国。");
+            user.setAddress("address");
             user.setEmail("email");
             user.setPostCode("zip");
             user.setDesc("description");
             users.add(user);
         }
-        accessor.save(users);
-        long t2 = System.currentTimeMillis() - t0;
-        assertEquals(2000, accessor.count(User.class));
-        assertTrue(t2 <= t1);
-        System.out.println(String.format("t1: %dms, t2: %sms.", t1, t2));
 
+        // normal insert
+        long t0 = System.currentTimeMillis();
+        for (User user : users) {
+            accessor.save(user);
+        }
+        long t1_1 = System.currentTimeMillis() - t0;
+        assertEquals(1000, accessor.count(User.class));
+        // normal update
         t0 = System.currentTimeMillis();
-        //users = new ArrayList<>(1000);
-        for (int index = 0; index < 1000; index++) {
-            User user = users.get(index);
-            user.setName("John Peng 123");
-            user.setAddress("some address is here, 中华人民共和国，美利坚合众国。");
-            user.setEmail("email123");
-            user.setPostCode("zip123");
-            user.setDesc("description123");
+        for (User user : users) {
+            user.setName(user.getName() + " test");
+            accessor.save(user);
+        }
+        long t1_2 = System.currentTimeMillis() - t0;
+        assertEquals(1000, accessor.count(User.class));
+        // normal delete
+        t0 = System.currentTimeMillis();
+        for (User user : users) {
+            accessor.remove(user, false);
+        }
+        long t1_3 = System.currentTimeMillis() - t0;
+        assertEquals(0, accessor.count(User.class));
+
+        users.clear();
+        users = new ArrayList<>(1000);
+        for (int index = 0; index < 1000; index ++) {
+            User user = EntityFactory.createEntity(User.class);
+            user.setId(null);
+            user.setCode("josh " + index);
+            user.setName("josh Peng");
+            user.setAddress("address");
+            user.setEmail("email");
+            user.setPostCode("zip");
+            user.setDesc("description");
+            users.add(user);
+        }
+        // batch insert
+        t0 = System.currentTimeMillis();
+        accessor.save(users);
+        long t2_1 = System.currentTimeMillis() - t0;
+        assertEquals(1000, accessor.count(User.class));
+        // batch update
+        t0 = System.currentTimeMillis();
+        for (User user : users) {
+            user.setName(user.getName() + " test");
         }
         accessor.save(users);
-        long t3 = System.currentTimeMillis() - t0;
-        assertEquals(2000, accessor.count(User.class));
-        //assertTrue(t2 <= t1);
-        System.out.println(String.format("t1: %dms, t2: %dms, t3: %dms.", t1, t2, t3));
-
+        long t2_2 = System.currentTimeMillis() - t0;
+        assertEquals(1000, accessor.count(User.class));
+        // batch delete
+        t0 = System.currentTimeMillis();
         accessor.clear(User.class);
+        long t2_3 = System.currentTimeMillis() - t0;
+        assertEquals(0, accessor.count(User.class));
+        System.out.println("Operate type\tinsert\t\tupdate\t\tdelete");
+        System.out.println(String.format("Normal\t\t%6dms\t%6dms\t%6dms", t1_1, t1_2, t1_3));
+        System.out.println(String.format("Batch\t\t%6dms\t%6dms\t%6dms", t2_1, t2_2, t2_3));
+        assertTrue(t2_1 <= t1_1);
     }
 
     @SuppressWarnings("unchecked")

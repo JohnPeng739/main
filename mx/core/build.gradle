@@ -113,7 +113,7 @@ project(':mx-dal-hibernate') {
         )
         runtime(
                 libs.'postgresql',
-                libs.'mysql'
+                libs.'mysql8'
         )
     }
 }
