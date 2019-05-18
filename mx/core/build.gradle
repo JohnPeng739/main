@@ -43,7 +43,7 @@ project(':mx-spring') {
 }
 
 project(':mx-jwt-utils') {
-    version = '1.1.1'
+    version = '1.1.2'
     description = 'Many json web tokens utility.'
 
     dependencies {
@@ -55,7 +55,7 @@ project(':mx-jwt-utils') {
 }
 
 project(':mx-dal') {
-    version = '3.1.0'
+    version = '3.1.1'
     description = 'data access layer abstract classes and interfaces.'
 
     dependencies {
@@ -88,7 +88,8 @@ project(':mx-service-utils') {
                 libs.'jetty-websocket',
                 libs.'graphql',
                 libs.'httpclient',
-                libs.'spring-web'
+                libs.'spring-web',
+                libs.'rocketmq'
         )
         compile(libs.'jersey-spring4'){
             exclude module: 'spring-web'
@@ -97,7 +98,7 @@ project(':mx-service-utils') {
 }
 
 project(':mx-dal-hibernate') {
-    version = '3.2.0'
+    version = '3.1.2'
     description = 'Dal with hibernate JPA.'
 
     dependencies {
@@ -108,14 +109,17 @@ project(':mx-dal-hibernate') {
                 libs.'spring-tx',
                 libs.'javax-el-api',
                 libs.'spring-data-jpa',
-                libs.'hibernate-entitymanager',
-                libs.'mysql'
+                libs.'hibernate-entitymanager'
+        )
+        runtime(
+                libs.'postgresql',
+                libs.'mysql8'
         )
     }
 }
 
 project(':mx-dal-mongodb') {
-    version = '3.2.0-beta2'
+    version = '3.1.2'
     description = 'dal with mongoldb.'
 
     dependencies {
@@ -130,7 +134,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-dal-elastic') {
-    version = '3.2.0'
+    version = '3.1.1'
     description = 'dal with elasticsearch.'
 
     dependencies {
@@ -184,6 +188,7 @@ project(':test-tomcat') {
                 libs.'jersey-media-jackson',
                 libs.'jersey-media-multi',
                 libs.'jersey-hk2',
+                libs.'javax-rs-api'
         )
         compile(
                 project(':mx-service-utils')

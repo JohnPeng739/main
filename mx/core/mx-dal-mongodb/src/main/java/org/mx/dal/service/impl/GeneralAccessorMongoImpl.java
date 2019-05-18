@@ -25,10 +25,7 @@ import org.springframework.data.mongodb.core.convert.MongoWriter;
 import org.springframework.data.mongodb.core.query.*;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
@@ -440,9 +437,10 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
         return t;
     }
 
-    private <T> Document toDocument(T objectToSave, MongoWriter<T> writer) {
+    private <T> Update toUpdate(T objectToSave, MongoWriter<T> writer) {
+        Document doc = null;
         if (objectToSave instanceof Document) {
-            return (Document) objectToSave;
+            doc = (Document) objectToSave;
         }
 
         if (!(objectToSave instanceof String)) {
@@ -452,14 +450,25 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
             if (dbDoc.containsKey(ID_FIELD) && dbDoc.get(ID_FIELD) == null) {
                 dbDoc.remove(ID_FIELD);
             }
-            return dbDoc;
+            doc = dbDoc;
         } else {
             try {
-                return Document.parse((String) objectToSave);
+                doc = Document.parse((String) objectToSave);
             } catch (JSONParseException e) {
                 throw new MappingException("Could not parse given String to save into a JSON document!", e);
             }
         }
+
+        Set<String> excludes = new HashSet<>(Arrays.asList("_id", "_class"));
+        Update update = new Update();
+        for (String key : doc.keySet()) {
+            if (excludes.contains(key)) {
+                continue;
+            }
+            Object value = doc.get(key);
+            update.set(key, value);
+        }
+        return update;
     }
 
     /**
@@ -480,16 +489,15 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
             if (old == null) {
                 bulk.insert(t);
             } else {
-                bulk.updateOne(new Query(where("id").is(t.getId())),
-                        new BasicUpdate(toDocument(t, template.getConverter())));
+                bulk.updateOne(new Query(where("_id").is(t.getId())), toUpdate(t, template.getConverter()));
             }
             if (t instanceof BaseDictTree) {
                 // 处理父级节点
                 BaseDictTree p = ((BaseDictTree) t).getParent();
                 if (p != null) {
                     p.getChildren().add(t);
-                    bulk.updateOne(new Query(where("id").is(t.getId())),
-                            new BasicUpdate(toDocument(p, template.getConverter())));
+                    bulk.updateOne(new Query(where("_id").is(t.getId())),
+                            toUpdate(p, template.getConverter()));
                 }
             }
         }

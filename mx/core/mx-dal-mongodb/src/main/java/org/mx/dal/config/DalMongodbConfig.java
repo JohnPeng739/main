@@ -14,7 +14,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.MongoDbFactory;
-import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 
@@ -28,8 +27,6 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 @Import({DalConfig.class, SpringConfig.class})
 @ComponentScan({"org.mx.dal.service.impl"})
 public class DalMongodbConfig {
-
-    private MongoTransactionManager transactionManager = null;
 
     /**
      * 默认的构造函数

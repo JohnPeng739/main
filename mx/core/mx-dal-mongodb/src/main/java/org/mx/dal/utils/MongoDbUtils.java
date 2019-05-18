@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.error.UserInterfaceSystemErrorException;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,10 +21,28 @@ public class MongoDbUtils {
     public static MongoClient createMongoClient(MongoDbConfigBean mongoDbConfigBean) {
         List<ServerAddress> serverAddresses = mongoDbConfigBean.getNodes();
         MongoCredential credential = null;
+        String username = mongoDbConfigBean.getCredentialUser(),
+                database = mongoDbConfigBean.getDatabase();
+        char[] password = mongoDbConfigBean.getCredentialPassword().toCharArray();
         if (!StringUtils.isBlank(mongoDbConfigBean.getCredentialUser())) {
-            credential = MongoCredential.createCredential(mongoDbConfigBean.getCredentialUser(), mongoDbConfigBean.getDatabase(),
-                    mongoDbConfigBean.getCredentialPassword().toCharArray());
-            credential = credential.withMechanism(AuthenticationMechanism.valueOf(mongoDbConfigBean.getCredentialMechanism()));
+            switch (AuthenticationMechanism.valueOf(mongoDbConfigBean.getCredentialMechanism())) {
+                case GSSAPI:
+                    credential = MongoCredential.createGSSAPICredential(username);
+                    break;
+                case MONGODB_CR:
+                    credential = MongoCredential.createMongoCRCredential(username, database, password);
+                    break;
+                case SCRAM_SHA_1:
+                    credential = MongoCredential.createScramSha1Credential(username, database, password);
+                    break;
+                case MONGODB_X509:
+                    credential = MongoCredential.createMongoX509Credential(username);
+                    break;
+                case PLAIN:
+                default:
+                    credential = MongoCredential.createCredential(username, database, password);
+                    break;
+            }
         }
         MongoClientOptions.Builder builder = MongoClientOptions.builder();
         if (!StringUtils.isBlank(mongoDbConfigBean.getApplication())) {
@@ -77,8 +96,7 @@ public class MongoDbUtils {
         if (mongoDbConfigBean.getServerSelectionTimeout() > 0) {
             builder.serverSelectionTimeout(mongoDbConfigBean.getServerSelectionTimeout());
         }
-        builder.retryWrites(mongoDbConfigBean.isRetryWrites())
-                .cursorFinalizerEnabled(mongoDbConfigBean.isCursorFinalizer())
+        builder.cursorFinalizerEnabled(mongoDbConfigBean.isCursorFinalizer())
                 .sslEnabled(mongoDbConfigBean.isSsl())
                 .sslInvalidHostNameAllowed(mongoDbConfigBean.isSslInvalidHostNameAllowed())
                 .alwaysUseMBeans(mongoDbConfigBean.isAlwaysUseMBeans());
@@ -92,9 +110,9 @@ public class MongoDbUtils {
             );
         } else if (serverAddresses.size() == 1) {
             ServerAddress addr = serverAddresses.get(0);
-            return credential != null ? new MongoClient(addr, credential, options) : new MongoClient(addr, options);
+            return credential != null ? new MongoClient(addr, Collections.singletonList(credential), options) : new MongoClient(addr, options);
         } else {
-            return credential != null ? new MongoClient(serverAddresses, credential, options) : new MongoClient(serverAddresses, options);
+            return credential != null ? new MongoClient(serverAddresses, Collections.singletonList(credential), options) : new MongoClient(serverAddresses, options);
         }
     }
 }

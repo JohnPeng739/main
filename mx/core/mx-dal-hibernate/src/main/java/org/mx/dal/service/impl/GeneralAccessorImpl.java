@@ -131,13 +131,17 @@ public class GeneralAccessorImpl extends AbstractGeneralAccessor implements Gene
             if (clazz.isInterface()) {
                 clazz = EntityFactory.getEntityClass(clazz);
             }
-            Query query = entityManager.createQuery(String.format("SELECT entity FROM %s entity %s ", clazz.getName(),
-                    isValid ? "WHERE entity.valid = TRUE" : ""));
-            List<T> result = query.getResultList();
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("List %d %s entity[%s].", result.size(), isValid ? "valid" : "", clazz.getName()));
+            Query query;
+            if (isValid) {
+                return find(ConditionTuple.eq("valid", true), clazz);
+            } else {
+                query = entityManager.createQuery(String.format("SELECT entity FROM %s entity", clazz.getName()));
+                List<T> result = query.getResultList();
+                if (logger.isDebugEnabled()) {
+                    logger.debug(String.format("List %d %s entity[%s].", result.size(), isValid ? "valid" : "", clazz.getName()));
+                }
+                return result;
             }
-            return result;
         } catch (ClassNotFoundException ex) {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_INSTANCE_FAIL);
         }

@@ -50,24 +50,7 @@ public class TestDatabase extends BaseTest {
         assertNotNull(accessor);
         accessor.clear(User.class);
 
-        long t0 = System.currentTimeMillis();
-        for (int index = 0; index < 1000; index ++) {
-            User user = EntityFactory.createEntity(User.class);
-            user.setId(null);
-            user.setCode("john " + index);
-            user.setName("John Peng");
-            user.setAddress("address");
-            user.setEmail("email");
-            user.setPostCode("zip");
-            user.setDesc("description");
-            accessor.save(user);
-        }
-        long t1 = System.currentTimeMillis() - t0;
-        assertEquals(1000, accessor.count(User.class));
-
-        accessor.clear(User.class);
-
-        t0 = System.currentTimeMillis();
+        // initialize
         List<User> users = new ArrayList<>(1000);
         for (int index = 0; index < 1000; index ++) {
             User user = EntityFactory.createEntity(User.class);
@@ -80,11 +63,65 @@ public class TestDatabase extends BaseTest {
             user.setDesc("description");
             users.add(user);
         }
-        accessor.save(users);
-        long t2 = System.currentTimeMillis() - t0;
-        System.out.println(String.format("t1: %d, t2: %s.", t1, t2));
-        assertTrue(t2 <= t1);
+
+        // normal insert
+        long t0 = System.currentTimeMillis();
+        for (User user : users) {
+            accessor.save(user);
+        }
+        long t1_1 = System.currentTimeMillis() - t0;
         assertEquals(1000, accessor.count(User.class));
+        // normal update
+        t0 = System.currentTimeMillis();
+        for (User user : users) {
+            user.setName(user.getName() + " test");
+            accessor.save(user);
+        }
+        long t1_2 = System.currentTimeMillis() - t0;
+        assertEquals(1000, accessor.count(User.class));
+        // normal delete
+        t0 = System.currentTimeMillis();
+        for (User user : users) {
+            accessor.remove(user, false);
+        }
+        long t1_3 = System.currentTimeMillis() - t0;
+        assertEquals(0, accessor.count(User.class));
+
+        users.clear();
+        users = new ArrayList<>(1000);
+        for (int index = 0; index < 1000; index ++) {
+            User user = EntityFactory.createEntity(User.class);
+            user.setId(null);
+            user.setCode("josh " + index);
+            user.setName("josh Peng");
+            user.setAddress("address");
+            user.setEmail("email");
+            user.setPostCode("zip");
+            user.setDesc("description");
+            users.add(user);
+        }
+        // batch insert
+        t0 = System.currentTimeMillis();
+        accessor.save(users);
+        long t2_1 = System.currentTimeMillis() - t0;
+        assertEquals(1000, accessor.count(User.class));
+        // batch update
+        t0 = System.currentTimeMillis();
+        for (User user : users) {
+            user.setName(user.getName() + " test");
+        }
+        accessor.save(users);
+        long t2_2 = System.currentTimeMillis() - t0;
+        assertEquals(1000, accessor.count(User.class));
+        // batch delete
+        t0 = System.currentTimeMillis();
+        accessor.clear(User.class);
+        long t2_3 = System.currentTimeMillis() - t0;
+        assertEquals(0, accessor.count(User.class));
+        System.out.println("Operate type\tinsert\t\tupdate\t\tdelete");
+        System.out.println(String.format("Normal\t\t%6dms\t%6dms\t%6dms", t1_1, t1_2, t1_3));
+        System.out.println(String.format("Batch\t\t%6dms\t%6dms\t%6dms", t2_1, t2_2, t2_3));
+        assertTrue(t2_1 <= t1_1);
     }
 
     @Test
@@ -270,6 +307,7 @@ public class TestDatabase extends BaseTest {
         GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
+        accessor.clear(User.class);
         UserRepository repository = context.getBean(UserRepository.class);
         assertNotNull(repository);
 
@@ -321,6 +359,7 @@ public class TestDatabase extends BaseTest {
         GeneralDictAccessor accessor = context.getBean("generalDictAccessor",
                 GeneralDictAccessor.class);
         assertNotNull(accessor);
+        accessor.clear(User.class);
         UserService userService = context.getBean(UserService.class);
         assertNotNull(userService);
 

@@ -106,34 +106,75 @@ public class TestElastic {
         assertNotNull(accessor);
 
         try {
-            long t0 = System.currentTimeMillis();
-            for (int index = 1000; index < 2000; index++) {
-                UserEntityElastic user = EntityFactory.createEntity(UserEntityElastic.class);
-                user.setCode("john " + index);
-                user.setName("John Peng");
-                user.setDesc("description");
-                accessor.save(user);
-            }
-            long t1 = System.currentTimeMillis() - t0;
-            Thread.sleep(3000);
-            assertEquals(1000, accessor.count(UserEntityElastic.class));
-
-            t0 = System.currentTimeMillis();
+            // initialize
             List<UserEntityElastic> users = new ArrayList<>(1000);
-            for (int index = 2000; index < 3000; index++) {
+            for (int index = 0; index < 1000; index ++) {
                 UserEntityElastic user = EntityFactory.createEntity(UserEntityElastic.class);
                 user.setCode("john " + index);
                 user.setName("John Peng");
                 user.setDesc("description");
                 users.add(user);
             }
-            accessor.save(users);
-            long t2 = System.currentTimeMillis() - t0;
-            Thread.sleep(3000);
-            assertEquals(2000, accessor.count(UserEntityElastic.class));
-            assertTrue(t2 <= t1);
 
+            // normal insert
+            long t0 = System.currentTimeMillis();
+            for (UserEntityElastic user : users) {
+                accessor.save(user);
+            }
+            long t1_1 = System.currentTimeMillis() - t0;
+            Thread.sleep(2000);
+            assertEquals(1000, accessor.count(UserEntityElastic.class));
+            // normal update
+            t0 = System.currentTimeMillis();
+            for (UserEntityElastic user : users) {
+                user.setName(user.getName() + " test");
+                accessor.save(user);
+            }
+            long t1_2 = System.currentTimeMillis() - t0;
+            Thread.sleep(2000);
+            assertEquals(1000, accessor.count(UserEntityElastic.class));
+            // normal delete
+            t0 = System.currentTimeMillis();
+            for (UserEntityElastic user : users) {
+                accessor.remove(user, false);
+            }
+            long t1_3 = System.currentTimeMillis() - t0;
+            Thread.sleep(2000);
+            assertEquals(0, accessor.count(UserEntityElastic.class));
+
+            users.clear();
+            users = new ArrayList<>(1000);
+            for (int index = 0; index < 1000; index ++) {
+                UserEntityElastic user = EntityFactory.createEntity(UserEntityElastic.class);
+                user.setCode("john " + index);
+                user.setName("John Peng");
+                user.setDesc("description");
+                users.add(user);
+            }
+            // batch insert
+            t0 = System.currentTimeMillis();
+            accessor.save(users);
+            long t2_1 = System.currentTimeMillis() - t0;
+            Thread.sleep(2000);
+            assertEquals(1000, accessor.count(UserEntityElastic.class));
+            // batch update
+            t0 = System.currentTimeMillis();
+            for (UserEntityElastic user : users) {
+                user.setName(user.getName() + " test");
+            }
+            accessor.save(users);
+            long t2_2 = System.currentTimeMillis() - t0;
+            Thread.sleep(2000);
+            assertEquals(1000, accessor.count(UserEntityElastic.class));
+            // batch delete
+            t0 = System.currentTimeMillis();
             accessor.clear(UserEntityElastic.class);
+            long t2_3 = System.currentTimeMillis() - t0;
+            Thread.sleep(2000);
+            System.out.println("Operate type\tinsert\t\tupdate\t\tdelete");
+            System.out.println(String.format("Normal\t\t%6dms\t%6dms\t%6dms", t1_1, t1_2, t1_3));
+            System.out.println(String.format("Batch\t\t%6dms\t%6dms\t%6dms", t2_1, t2_2, t2_3));
+            assertTrue(t2_1 <= t1_1);
         } catch (Exception ex) {
             ex.printStackTrace();
             fail(ex.getMessage());
@@ -238,6 +279,17 @@ public class TestElastic {
             u1 = accessor.getById(user1.getId(), UserEntityElastic.class);
             assertNotNull(u1);
             assertEquals(user1.getCode(), u1.getCode());
+
+            UserEntityElastic user = EntityFactory.createEntity(UserEntityElastic.class);
+            user.setId(null);
+            user.setAge(45);
+            user.setCode("john");
+            user.setName("John Peng");
+            user.setDesc("我是一个正高级工程师。");
+            UserEntityElastic check = accessor.save(user);
+            assertNotNull(check);
+            assertEquals(check.getId(), u1.getId());
+            assertEquals(1, accessor.count(UserEntityElastic.class));
 
             UserEntityElastic user2 = EntityFactory.createEntity(UserEntityElastic.class);
             user2.setId(DigestUtils.uuid());
