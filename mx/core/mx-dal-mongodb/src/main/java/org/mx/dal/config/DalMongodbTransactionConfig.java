@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 /**
- * 基于Mongodb的事务控制实现的Java Configure定义
+ * 基于Mongodb的事务控制实现的Java Configure定义，事务必须在MongoDB V4.0+的副本集中使用。
  *
  * @author : john.peng date : 2018/12/27
  */
