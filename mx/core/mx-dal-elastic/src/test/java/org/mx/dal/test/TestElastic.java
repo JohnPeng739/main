@@ -168,7 +168,7 @@ public class TestElastic {
             assertEquals(1000, accessor.count(UserEntityElastic.class));
             // batch delete
             t0 = System.currentTimeMillis();
-            accessor.clear(UserEntityElastic.class);
+            accessor.remove(users, false);
             long t2_3 = System.currentTimeMillis() - t0;
             Thread.sleep(2000);
             System.out.println("Operate type\tinsert\t\tupdate\t\tdelete");
