@@ -115,7 +115,7 @@ public class TestDatabase extends BaseTest {
         assertEquals(1000, accessor.count(User.class));
         // batch delete
         t0 = System.currentTimeMillis();
-        accessor.clear(User.class);
+        accessor.remove(users, false);
         long t2_3 = System.currentTimeMillis() - t0;
         assertEquals(0, accessor.count(User.class));
         System.out.println("Operate type\tinsert\t\tupdate\t\tdelete");

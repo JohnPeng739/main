@@ -2,13 +2,9 @@ package org.mx.dal.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.DigestUtils;
-import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
-import org.mx.dal.entity.BaseDict;
-import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.AbstractGeneralAccessor;
 import org.mx.dal.service.GeneralAccessor;
@@ -21,7 +17,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,8 +31,6 @@ public class GeneralAccessorImpl extends AbstractGeneralAccessor implements Gene
     @PersistenceContext
     protected EntityManager entityManager = null;
 
-    protected SessionDataStore sessionDataStore;
-
     /**
      * 默认的构造函数
      *
@@ -45,7 +38,7 @@ public class GeneralAccessorImpl extends AbstractGeneralAccessor implements Gene
      */
     public GeneralAccessorImpl(SessionDataStore sessionDataStore) {
         super();
-        this.sessionDataStore = sessionDataStore;
+        super.sessionDataStore = sessionDataStore;
     }
 
     /**
@@ -138,7 +131,7 @@ public class GeneralAccessorImpl extends AbstractGeneralAccessor implements Gene
                 query = entityManager.createQuery(String.format("SELECT entity FROM %s entity", clazz.getName()));
                 List<T> result = query.getResultList();
                 if (logger.isDebugEnabled()) {
-                    logger.debug(String.format("List %d %s entity[%s].", result.size(), isValid ? "valid" : "", clazz.getName()));
+                    logger.debug(String.format("List %d entity[%s].", result.size(), clazz.getName()));
                 }
                 return result;
             }
@@ -331,45 +324,6 @@ public class GeneralAccessorImpl extends AbstractGeneralAccessor implements Gene
         return save(t, true);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Base> T prepareSave(T t) {
-        if (t.getUpdatedTime() <= 0) {
-            // 如果外部传入过修改时间，则以外部传入为准
-            t.setUpdatedTime(new Date().getTime());
-        }
-        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
-            t.setOperator(sessionDataStore.getCurrentUserCode());
-        }
-        Class<T> clazz = (Class<T>) t.getClass();
-        T old = super.checkExist(t);
-        if (t instanceof BaseDictTree) {
-            BaseDictTree parent = ((BaseDictTree) t).getParent();
-            if (!StringUtils.isBlank(((BaseDictTree) t).getParentId())) {
-                T p = getById(((BaseDictTree) t).getParentId(), clazz);
-                ((BaseDictTree) t).setParent((BaseDictTree) p);
-            }
-        }
-        if (old == null) {
-            // 新增操作
-            if (StringUtils.isBlank(t.getId())) {
-                // 如果ID为空，则自动生成UUID，否则使用外部传入的ID
-                t.setId(DigestUtils.uuid());
-            }
-            if (t.getCreatedTime() <= 0) {
-                t.setCreatedTime(new Date().getTime());
-            }
-        } else {
-            // 修改操作
-            t.setId(old.getId());
-            t.setCreatedTime(old.getCreatedTime());
-            if (t instanceof BaseDict) {
-                // 代码字段一旦保存，则不允许被修改
-                ((BaseDict) t).setCode(((BaseDict) old).getCode());
-            }
-        }
-        return old;
-    }
-
     private <T extends Base> T save(T t, boolean needFlush) {
         T old = prepareSave(t);
         if (old == null) {
@@ -403,7 +357,6 @@ public class GeneralAccessorImpl extends AbstractGeneralAccessor implements Gene
             List<Boolean> isNews = new ArrayList<>(ts.size());
             for (T t : ts) {
                 isNews.add(prepareSave(t) == null);
-                //save(t, false);
             }
             for (int index = 0; index < ts.size(); index++) {
                 T t = ts.get(index);
@@ -477,19 +430,35 @@ public class GeneralAccessorImpl extends AbstractGeneralAccessor implements Gene
      * @see GeneralAccessor#remove(Base, boolean)
      */
     @Transactional()
-    @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) {
+        return remove(t, logicRemove, true);
+    }
+
+    @Transactional()
+    @Override
+    public <T extends Base> List<T> remove(List<T> ts, boolean logicRemove) {
+        for (T t : ts) {
+            remove(t, logicRemove, false);
+        }
+        entityManager.flush();
+        return ts;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Base> T remove(T t, boolean logicRemove, boolean needFlush) {
         T removeEntity = getById(t.getId(), (Class<T>) t.getClass());
         if (logicRemove) {
             // 逻辑删除
             removeEntity.setValid(false);
-            t = save(removeEntity);
+            t = save(removeEntity, needFlush);
             return t;
         } else {
             // 物理删除
             entityManager.remove(removeEntity);
-            entityManager.flush();
+            if (needFlush) {
+                entityManager.flush();
+            }
             return t;
         }
     }
