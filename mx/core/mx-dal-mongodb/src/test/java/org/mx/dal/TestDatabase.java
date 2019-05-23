@@ -2,6 +2,12 @@ package org.mx.dal;
 
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodProcess;
+import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.IMongodConfig;
+import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
+import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.runtime.Network;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,10 +40,10 @@ public class TestDatabase {
     @Before
     public void before() {
         try {
-            //IMongodConfig config = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
-            //        .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
-            //mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
-            //mongod = mongodExecutable.start();
+            IMongodConfig config = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
+                    .net(new Net("localhost", 27017, Network.localhostIsIPv6())).build();
+            mongodExecutable = MongodStarter.getDefaultInstance().prepare(config);
+            mongod = mongodExecutable.start();
             context = new AnnotationConfigApplicationContext(TestDalMongodbConfig.class);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -131,7 +137,7 @@ public class TestDatabase {
         assertEquals(1000, accessor.count(User.class));
         // batch delete
         t0 = System.currentTimeMillis();
-        accessor.clear(User.class);
+        accessor.remove(users, false);
         long t2_3 = System.currentTimeMillis() - t0;
         assertEquals(0, accessor.count(User.class));
         System.out.println("Operate type\tinsert\t\tupdate\t\tdelete");

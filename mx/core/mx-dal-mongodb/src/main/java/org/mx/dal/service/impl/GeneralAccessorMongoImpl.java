@@ -4,12 +4,10 @@ import com.mongodb.util.JSONParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bson.Document;
-import org.mx.DigestUtils;
 import org.mx.StringUtils;
 import org.mx.dal.EntityFactory;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
-import org.mx.dal.entity.BaseDict;
 import org.mx.dal.entity.BaseDictTree;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.AbstractGeneralAccessor;
@@ -42,12 +40,11 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
     private static final String ID_FIELD = "_id";
 
     protected MongoTemplate template;
-    private SessionDataStore sessionDataStore;
 
     public GeneralAccessorMongoImpl(MongoTemplate template, SessionDataStore sessionDataStore) {
         super();
         this.template = template;
-        this.sessionDataStore = sessionDataStore;
+        super.sessionDataStore = sessionDataStore;
     }
 
     /**
@@ -389,30 +386,6 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
         }
     }
 
-    private <T extends Base> T prepareSave(T t) {
-        T old = super.checkExist(t);
-        if (old == null) {
-            // new
-            if (StringUtils.isBlank(t.getId())) {
-                // 如果ID为空，则自动生成UUID，否则使用外部传入的ID
-                t.setId(DigestUtils.uuid());
-            }
-            t.setCreatedTime(new Date().getTime());
-        } else {
-            t.setId(old.getId());
-            t.setCreatedTime(old.getCreatedTime());
-            // 修改操作不能修改代码字段
-            if (t instanceof BaseDict) {
-                ((BaseDict) t).setCode(((BaseDict) old).getCode());
-            }
-        }
-        t.setUpdatedTime(new Date().getTime());
-        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
-            t.setOperator(sessionDataStore.getCurrentUserCode());
-        }
-        return old;
-    }
-
     /**
      * {@inheritDoc}
      *
@@ -422,7 +395,7 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Base> T save(T t) {
-        prepareSave(t);
+        super.prepareSave(t);
         template.save(t);
         if (t instanceof BaseDictTree) {
             // 处理父级节点
@@ -478,13 +451,20 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
      */
     @Transactional
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends Base> List<T> save(List<T> ts) {
+        return save(ts, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Base> List<T> save(List<T> ts, boolean logicRemove) {
         if (ts == null || ts.isEmpty()) {
             return ts;
         }
         BulkOperations bulk = template.bulkOps(BulkOperations.BulkMode.ORDERED, ts.get(0).getClass());
         for (T t : ts) {
+            if (logicRemove) {
+                t.setValid(false);
+            }
             T old = prepareSave(t);
             if (old == null) {
                 bulk.insert(t);
@@ -571,5 +551,23 @@ public class GeneralAccessorMongoImpl extends AbstractGeneralAccessor implements
             template.remove(t);
             return t;
         }
+    }
+
+    @Transactional
+    @Override
+    public <T extends Base> List<T> remove(List<T> ts, boolean logicRemove) {
+        if (ts == null || ts.isEmpty()) {
+            return ts;
+        }
+        if (logicRemove) {
+            return save(ts, true);
+        } else {
+            BulkOperations bulk = template.bulkOps(BulkOperations.BulkMode.ORDERED, ts.get(0).getClass());
+            for (T t : ts) {
+                bulk.remove(new Query(where("_id").is(t.getId())));
+            }
+            bulk.execute();
+        }
+        return ts;
     }
 }
