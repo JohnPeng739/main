@@ -47,7 +47,6 @@ import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.utils.bean.IndicesInfoBean;
 import org.mx.dal.utils.bean.NodeInfoBean;
 import org.mx.error.UserInterfaceSystemErrorException;
-import org.mx.spring.session.SessionDataStore;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,7 +67,6 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     private static final Log logger = LogFactory.getLog(ElasticUtilRest.class);
 
     private ElasticConfigBean elasticConfigBean;
-    private SessionDataStore sessionDataStore;
 
     private RestHighLevelClient client = null;
     private Map<String, String> indexes = new HashMap<>(), revIndexes = new HashMap<>();
@@ -76,13 +74,11 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
     /**
      * 默认的构造函数
      *
-     * @param sessionDataStore  会话数据服务接口
      * @param elasticConfigBean Elastic配置对象
      */
-    public ElasticUtilRest(SessionDataStore sessionDataStore, ElasticConfigBean elasticConfigBean) {
+    public ElasticUtilRest(ElasticConfigBean elasticConfigBean) {
         super();
         this.elasticConfigBean = elasticConfigBean;
-        this.sessionDataStore = sessionDataStore;
     }
 
     /**
@@ -92,8 +88,6 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
      */
     public void destroy() throws Exception {
         if (client != null) {
-            // CloseIndexRequest request = new CloseIndexRequest(this.index);
-            // client.indices().close(request);
             client.close();
             client = null;
         }
@@ -234,6 +228,58 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             // 清理缓存
             String className = clazz.getName();
             indexes.remove(className);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticLowLevelUtil#deleteIndex(String)
+     */
+    public void deleteIndex(String id, String index) {
+        if (getById(id, index) != null) {
+            DeleteRequest request = new DeleteRequest(index, index, id);
+            try {
+                client.delete(request);
+            } catch (IOException ex) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("Delete the data from elastic fail.", ex);
+                }
+                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
+            }
+        } else {
+            if (logger.isWarnEnabled()) {
+                logger.warn(String.format("The document[%s] not found in index[%s].", id, index));
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see ElasticUtil#deleteIndex(List)
+     */
+    @Override
+    public <T extends Base> void deleteIndex(List<T> ts) {
+        if (ts == null || ts.isEmpty()) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The entity's list is null or empty.");
+            }
+            return;
+        }
+        BulkRequest bulkRequest = new BulkRequest();
+        for (int index = 0; index < ts.size(); index++) {
+            T t = ts.get(index);
+            DocWriteRequest request = createDeleteRequest(t);
+            bulkRequest.add(request);
+        }
+        try {
+            client.bulk(bulkRequest);
+        } catch (IOException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error(String.format("Bulk delete entities fail, total: %d.", ts.size()), ex);
+            }
+            throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_INDEX_FAIL);
         }
     }
 
@@ -787,27 +833,29 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         }
     }
 
-    /**
-     * 将指定实体转化为Elastic Rest请求
-     *
-     * @param t     实体对象
-     * @param <T>   实体泛型
-     * @param isNew 是否为新的实体
-     * @return Elastic REST请求
-     */
     @SuppressWarnings("unchecked")
-    private <T extends Base> DocWriteRequest createRequest(T t, boolean isNew) {
+    private <T extends Base> DocWriteRequest createIndexRequest(T t) {
         Class<T> clazz = (Class<T>) t.getClass();
         String index = getIndex(clazz);
-        if (isNew) {
-            IndexRequest request = new IndexRequest(index, index, t.getId());
-            request.source(JSON.toJSONString(t), XContentType.JSON);
-            return request;
-        } else {
-            UpdateRequest request = new UpdateRequest(index, index, t.getId());
-            request.doc(JSON.toJSONString(t), XContentType.JSON);
-            return request;
-        }
+        IndexRequest request = new IndexRequest(index, index, t.getId());
+        request.source(JSON.toJSONString(t), XContentType.JSON);
+        return request;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Base> DocWriteRequest createUpdateRequest(T t) {
+        Class<T> clazz = (Class<T>) t.getClass();
+        String index = getIndex(clazz);
+        UpdateRequest request = new UpdateRequest(index, index, t.getId());
+        request.doc(JSON.toJSONString(t), XContentType.JSON);
+        return request;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Base> DocWriteRequest createDeleteRequest(T t) {
+        Class<T> clazz = (Class<T>) t.getClass();
+        String index = getIndex(clazz);
+        return new DeleteRequest(index, index, t.getId());
     }
 
     /**
@@ -825,7 +873,7 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             return null;
         }
         try {
-            DocWriteRequest request = createRequest(t, isNew);
+            DocWriteRequest request = isNew ? createIndexRequest(t) : createUpdateRequest(t);
             if (request instanceof IndexRequest) {
                 client.index((IndexRequest) request);
             } else {
@@ -854,10 +902,10 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             return ts;
         }
         BulkRequest bulkRequest = new BulkRequest();
-        for (int index = 0; index < ts.size(); index ++) {
+        for (int index = 0; index < ts.size(); index++) {
             T t = ts.get(index);
             boolean isNew = isNews.get(index);
-            DocWriteRequest request = createRequest(t, isNew);
+            DocWriteRequest request = isNew ? createIndexRequest(t) : createUpdateRequest(t);
             bulkRequest.add(request);
         }
         try {
@@ -869,61 +917,5 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ES_INDEX_FAIL);
         }
         return ts;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see ElasticLowLevelUtil#remove(String, String)
-     */
-    public void remove(String id, String index) {
-        if (getById(id, index) != null) {
-            DeleteRequest request = new DeleteRequest(index, index, id);
-            try {
-                client.delete(request);
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Delete the data from elastic fail.", ex);
-                }
-                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
-            }
-        } else {
-            if (logger.isWarnEnabled()) {
-                logger.warn(String.format("The document[%s] not found in index[%s].", id, index));
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @see ElasticUtil#remove(Base, boolean)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public <T extends Base> T remove(T t, boolean logicRemove) {
-        if (logicRemove) {
-            // 逻辑删除
-            t.setValid(false);
-            return index(t, false);
-        } else {
-            // 物理删除
-            Class<T> clazz = (Class<T>) t.getClass();
-            t = getById(t.getId(), clazz);
-            if (t == null) {
-                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.ENTITY_NOT_FOUND);
-            }
-            String index = getIndex(clazz);
-            DeleteRequest request = new DeleteRequest(index, index, t.getId());
-            try {
-                client.delete(request);
-                return t;
-            } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Delete the data from elastic fail.", ex);
-                }
-                throw new UserInterfaceDalErrorException(UserInterfaceDalErrorException.DalErrors.DB_OPERATE_FAIL);
-            }
-        }
     }
 }

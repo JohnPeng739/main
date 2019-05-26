@@ -200,6 +200,16 @@ public interface GeneralAccessor {
     <T extends Base> T remove(T t, boolean logicRemove);
 
     /**
+     * 删除指定的实体列表，支持逻辑删除和物理删除。
+     *
+     * @param ts           实体对象列表
+     * @param <T>         实现Base接口的泛型对象类型
+     * @param logicRemove 设置为true表示逻辑删除，否则物理删除。
+     * @return 删除的实体
+     */
+    <T extends Base> List<T> remove(List<T> ts, boolean logicRemove);
+
+    /**
      * 查询条件定义
      *
      * @author : john.peng date : 2017/8/18

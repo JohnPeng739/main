@@ -55,7 +55,7 @@ project(':mx-jwt-utils') {
 }
 
 project(':mx-dal') {
-    version = '3.1.1'
+    version = '3.1.3'
     description = 'data access layer abstract classes and interfaces.'
 
     dependencies {
@@ -98,7 +98,7 @@ project(':mx-service-utils') {
 }
 
 project(':mx-dal-hibernate') {
-    version = '3.1.2'
+    version = '3.1.3'
     description = 'Dal with hibernate JPA.'
 
     dependencies {
@@ -119,7 +119,7 @@ project(':mx-dal-hibernate') {
 }
 
 project(':mx-dal-mongodb') {
-    version = '3.1.2'
+    version = '3.1.3'
     description = 'dal with mongoldb.'
 
     dependencies {
@@ -134,7 +134,7 @@ project(':mx-dal-mongodb') {
 }
 
 project(':mx-dal-elastic') {
-    version = '3.1.1'
+    version = '3.1.3'
     description = 'dal with elasticsearch.'
 
     dependencies {

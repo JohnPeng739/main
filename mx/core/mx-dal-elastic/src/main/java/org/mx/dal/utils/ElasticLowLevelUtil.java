@@ -55,5 +55,5 @@ public interface ElasticLowLevelUtil {
      * @param id    文档的ID
      * @param index 指定的索引
      */
-    void remove(String id, String index);
+    void deleteIndex(String id, String index);
 }

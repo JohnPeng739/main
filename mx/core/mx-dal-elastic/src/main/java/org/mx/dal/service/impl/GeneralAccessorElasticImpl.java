@@ -2,11 +2,8 @@ package org.mx.dal.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mx.DigestUtils;
-import org.mx.StringUtils;
 import org.mx.dal.Pagination;
 import org.mx.dal.entity.Base;
-import org.mx.dal.entity.BaseDict;
 import org.mx.dal.entity.ElasticBaseEntity;
 import org.mx.dal.error.UserInterfaceDalErrorException;
 import org.mx.dal.service.AbstractGeneralAccessor;
@@ -17,7 +14,6 @@ import org.mx.spring.session.SessionDataStore;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,7 +25,6 @@ import java.util.List;
 public class GeneralAccessorElasticImpl extends AbstractGeneralAccessor implements GeneralAccessor, ElasticAccessor {
     private static final Log logger = LogFactory.getLog(GeneralAccessorElasticImpl.class);
 
-    private SessionDataStore sessionDataStore;
     private ElasticUtil elasticUtil;
 
     /**
@@ -40,7 +35,7 @@ public class GeneralAccessorElasticImpl extends AbstractGeneralAccessor implemen
      */
     public GeneralAccessorElasticImpl(SessionDataStore sessionDataStore, ElasticUtil elasticUtil) {
         super();
-        this.sessionDataStore = sessionDataStore;
+        super.sessionDataStore = sessionDataStore;
         this.elasticUtil = elasticUtil;
     }
 
@@ -189,38 +184,6 @@ public class GeneralAccessorElasticImpl extends AbstractGeneralAccessor implemen
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Base> T prepareSave(T t) {
-        if (t.getUpdatedTime() <= 0) {
-            // 如果外部传入过修改时间，则以外部传入为准
-            t.setUpdatedTime(new Date().getTime());
-        }
-        if (StringUtils.isBlank(t.getOperator()) || "NA".equalsIgnoreCase(t.getOperator())) {
-            t.setOperator(sessionDataStore.getCurrentUserCode());
-        }
-        Class<T> clazz = (Class<T>) t.getClass();
-        T old = super.checkExist(t);
-        if (old == null) {
-            // 新增操作
-            if (StringUtils.isBlank(t.getId())) {
-                // 如果ID为空，则自动生成UUID，否则使用外部传入的ID
-                t.setId(DigestUtils.uuid());
-            }
-            if (t.getCreatedTime() <= 0) {
-                t.setCreatedTime(new Date().getTime());
-            }
-        } else {
-            // 修改操作
-            t.setId(old.getId());
-            t.setCreatedTime(old.getCreatedTime());
-            if (t instanceof BaseDict) {
-                // 代码字段一旦保存，则不允许被修改
-                ((BaseDict) t).setCode(((BaseDict) old).getCode());
-            }
-        }
-        return old;
-    }
-
     /**
      * {@inheritDoc}
      *
@@ -306,6 +269,30 @@ public class GeneralAccessorElasticImpl extends AbstractGeneralAccessor implemen
      */
     @Override
     public <T extends Base> T remove(T t, boolean logicRemove) {
-        return elasticUtil.remove(t, logicRemove);
+        if (logicRemove) {
+            t.setValid(false);
+            return save(t);
+        } else {
+            elasticUtil.deleteIndex(Collections.singletonList(t));
+            return t;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see GeneralAccessor#remove(List, boolean)
+     */
+    @Override
+    public <T extends Base> List<T> remove(List<T> ts, boolean logicRemove) {
+        if (logicRemove) {
+            List<Boolean> isNews = new ArrayList<>(ts.size());
+            ts.forEach(t -> t.setValid(false));
+            Collections.fill(isNews, false);
+            return elasticUtil.index(ts, isNews);
+        } else {
+            elasticUtil.deleteIndex(ts);
+            return ts;
+        }
     }
 }

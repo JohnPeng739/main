@@ -44,6 +44,14 @@ public interface ElasticUtil {
     <T extends Base> void deleteIndex(Class<T> clazz);
 
     /**
+     * 删除制定实体列表对应的ES索引
+     *
+     * @param ts  实体列表
+     * @param <T> 泛型定义
+     */
+    <T extends Base> void deleteIndex(List<T> ts);
+
+    /**
      * 获取指定索引对应的实体类名
      *
      * @param index 索引名
@@ -180,14 +188,4 @@ public interface ElasticUtil {
      * @return 索引成功后的实体对象列表
      */
     <T extends Base> List<T> index(List<T> ts, List<Boolean> isNews);
-
-    /**
-     * 删除指定实体对应的索引信息
-     *
-     * @param t           实体对象，实体必须使用{@link org.mx.dal.annotation.ElasticIndex}进行注解
-     * @param logicRemove 设置为true表示逻辑删除，否则物理删除
-     * @param <T>         泛型定义
-     * @return 删除成功后的实体对象
-     */
-    <T extends Base> T remove(T t, boolean logicRemove);
 }

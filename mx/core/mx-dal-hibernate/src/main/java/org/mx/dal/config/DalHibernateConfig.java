@@ -4,8 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.dal.service.GeneralAccessor;
 import org.mx.dal.service.GeneralDictAccessor;
+import org.mx.dal.service.JdbcBatchAccessor;
 import org.mx.dal.service.impl.GeneralAccessorImpl;
 import org.mx.dal.service.impl.GeneralDictAccessorImpl;
+import org.mx.dal.service.impl.JdbcBatchAccessorImpl;
 import org.mx.dbcp.Dbcp2DataSourceConfigBean;
 import org.mx.dbcp.Dbcp2DataSourceFactory;
 import org.mx.spring.session.SessionDataStore;
@@ -14,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
@@ -77,6 +80,28 @@ public class DalHibernateConfig implements TransactionManagementConfigurer {
     @Bean(name = "dataSource")
     public DataSource dataSource(Dbcp2DataSourceFactory dataSourceFactory) {
         return dataSourceFactory.getDataSource();
+    }
+
+    /**
+     * 基于DataSource构建出Hibernate JdbcTemplate
+     *
+     * @param dataSource 数据源
+     * @return JdbcTemplate
+     */
+    @Bean(name = "jdbcTemplate")
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    /**
+     * 创建基于JdbcTemplate和事务的JDBC批量数据操作访问器
+     *
+     * @param jdbcTemplate JdbcTemplate
+     * @return JdbcBatchAccessor
+     */
+    @Bean(name = "jdbcBatchAccessor")
+    public JdbcBatchAccessor jdbcBatchAccessor(JdbcTemplate jdbcTemplate) {
+        return new JdbcBatchAccessorImpl(jdbcTemplate);
     }
 
     /**

@@ -30,6 +30,9 @@ public class UserInterfaceDalErrorException extends UserInterfaceException {
      */
     public enum DalErrors implements UserInterfaceError {
         DB_OPERATE_FAIL("数据库操作失败。"),
+        DB_BATCH_INSERT_FAIL("数据库批量插入操作失败。"),
+        DB_BATCH_UPDATE_FAIL("数据库批量更新操作失败。"),
+        DB_BATCH_DELETE_FAIL("数据库批量删除操作失败。"),
         ENTITY_INSTANCE_FAIL("创建指定的实体失败。"),
         ENTITY_NOT_FOUND("指定的实体不存在。"),
         ENTITY_INVALID_BASE("指定的实体没有实现Base接口。"),

@@ -27,8 +27,8 @@ public class DalElasticConfig {
     }
 
     @Bean(name = "elasticUtilRest", initMethod = "init", destroyMethod = "destroy")
-    public ElasticUtilRest elasticUtilRest(SessionDataStore sessionDataStore, ElasticConfigBean elasticConfigBean) {
-        return new ElasticUtilRest(sessionDataStore, elasticConfigBean);
+    public ElasticUtilRest elasticUtilRest(ElasticConfigBean elasticConfigBean) {
+        return new ElasticUtilRest(elasticConfigBean);
     }
 
     @Bean(name = "generalAccessorElastic")
