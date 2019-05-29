@@ -202,7 +202,7 @@ public interface GeneralAccessor {
     /**
      * 删除指定的实体列表，支持逻辑删除和物理删除。
      *
-     * @param ts           实体对象列表
+     * @param ts          实体对象列表
      * @param <T>         实现Base接口的泛型对象类型
      * @param logicRemove 设置为true表示逻辑删除，否则物理删除。
      * @return 删除的实体
@@ -480,26 +480,53 @@ public interface GeneralAccessor {
         private OperateType operateType = OperateType.AND;
         private List<ConditionGroup> items;
 
+        /**
+         * 默认的构造函数，默认使用"与-AND"操作
+         */
         public ConditionGroup() {
             super();
             this.items = new ArrayList<>();
         }
 
+        /**
+         * 默认的构造函数
+         *
+         * @param operateType 条件组操作类型，仅支持"与-AND"、"或-OR"操作
+         */
         public ConditionGroup(OperateType operateType) {
             this();
             this.operateType = operateType;
         }
 
+        /**
+         * 默认的构造函数，默认使用"与-AND"操作
+         *
+         * @param items 条件列表
+         * @see ConditionTuple
+         */
         public ConditionGroup(List<ConditionGroup> items) {
             super();
             this.items = items;
         }
 
+        /**
+         * 默认的构造函数
+         *
+         * @param operateType 条件组操作类型，仅支持"与-AND"、"或-OR"操作
+         * @param items       条件列表
+         * @see ConditionTuple
+         */
         public ConditionGroup(OperateType operateType, List<ConditionGroup> items) {
             this(items);
             this.operateType = operateType;
         }
 
+        /**
+         * 根据指定的条件列表创建一个"与-AND"操作的条件组
+         *
+         * @param items 条件列表
+         * @return 条件组
+         */
         public static ConditionGroup and(List<ConditionGroup> items) {
             if (items == null || items.isEmpty()) {
                 if (logger.isWarnEnabled()) {
@@ -510,6 +537,12 @@ public interface GeneralAccessor {
             return new ConditionGroup(items);
         }
 
+        /**
+         * 根据指定的条件数组创建一个"与-AND"操作的条件组
+         *
+         * @param items 条件数组
+         * @return 条件组
+         */
         public static ConditionGroup and(ConditionGroup... items) {
             if (items == null || items.length <= 0) {
                 if (logger.isWarnEnabled()) {
@@ -520,6 +553,12 @@ public interface GeneralAccessor {
             return new ConditionGroup(Arrays.asList(items));
         }
 
+        /**
+         * 根据指定的条件列表创建一个"或-OR"操作的条件组
+         *
+         * @param items 条件列表
+         * @return 条件组
+         */
         public static ConditionGroup or(List<ConditionGroup> items) {
             if (items == null || items.isEmpty()) {
                 if (logger.isWarnEnabled()) {
@@ -530,6 +569,12 @@ public interface GeneralAccessor {
             return new ConditionGroup(OperateType.OR, items);
         }
 
+        /**
+         * 根据指定的条件数组创建一个"或-OR"操作的条件组
+         *
+         * @param items 条件数组
+         * @return 条件组
+         */
         public static ConditionGroup or(ConditionTuple... items) {
             if (items == null || items.length <= 0) {
                 if (logger.isWarnEnabled()) {
