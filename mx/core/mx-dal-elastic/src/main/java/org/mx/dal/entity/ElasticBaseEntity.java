@@ -2,6 +2,10 @@ package org.mx.dal.entity;
 
 import org.mx.dal.annotation.ElasticField;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * 描述： 基于Elasticsearch实现的基础类实体
  *
@@ -10,14 +14,16 @@ import org.mx.dal.annotation.ElasticField;
  */
 public class ElasticBaseEntity implements Base {
     @ElasticField
-    private String id, operator;
+    private String id, operator; // ID、操作者
     @ElasticField(type = "long")
-    private long createdTime, updatedTime;
+    private long createdTime, updatedTime; // 创建时间、更新时间
     @ElasticField(type = "boolean")
-    private boolean valid = true;
+    private boolean valid = true; // 是否有效
 
-    @ElasticField(type = "float", store = false)
+    // 存储搜索结果的命中分数
     private float score = 0.0f;
+    // 存储搜索结果中可能存在的命中高亮字段（仅针对CONTAIN搜索条件字段）
+    private Map<String, List<String>> highlights = new HashMap<>();
 
     /**
      * {@inheritDoc}
@@ -135,5 +141,14 @@ public class ElasticBaseEntity implements Base {
      */
     public void setScore(float score) {
         this.score = score;
+    }
+
+    /**
+     * 获取高亮显示字段及其内容
+     *
+     * @return 高亮显示字段及其内容集合
+     */
+    public Map<String, List<String>> getHighlights() {
+        return highlights;
     }
 }

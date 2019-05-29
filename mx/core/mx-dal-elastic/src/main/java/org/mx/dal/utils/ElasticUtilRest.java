@@ -21,9 +21,11 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.geo.GeoPoint;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.AbstractQueryBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -31,6 +33,7 @@ import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.mx.ClassUtils;
@@ -93,6 +96,9 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         }
     }
 
+    /**
+     * 初始化扫描包路径下所有的Elastic Entity
+     */
     @SuppressWarnings("unchecked")
     private void scanElasticEntitiesAndInitialize() {
         String[] packages = elasticConfigBean.getEntityBasePackages();
@@ -116,6 +122,11 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         }
     }
 
+    /**
+     * 扫描指定Elastic Entity类中的索引属性
+     * @param clazz Elastic Entity类定义
+     * @param action 扫描到索引属性后执行的Action
+     */
     private void scanClassFields(Class<?> clazz, BiConsumer<String, ElasticField> action) {
         if (clazz.getName().equalsIgnoreCase("java.lang.Object")) {
             // 已经到了顶层对象，跳出
@@ -268,8 +279,7 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             return;
         }
         BulkRequest bulkRequest = new BulkRequest();
-        for (int index = 0; index < ts.size(); index++) {
-            T t = ts.get(index);
+        for (T t : ts) {
             DocWriteRequest request = createDeleteRequest(t);
             bulkRequest.add(request);
         }
@@ -306,6 +316,11 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         revIndexes.remove(index);
     }
 
+    /**
+     * 触发一次Low Level的Elastic REST调用
+     * @param path 访问REST路径
+     * @param action 访问成功后数据处理Action
+     */
     private void performLowLevelGetRequest(String path, Consumer<String> action) {
         try {
             InputStream in = client.getLowLevelClient()
@@ -374,6 +389,11 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         }
     }
 
+    /**
+     * 获取指定Elastic Entity类对应的索引名
+     * @param clazz Elastic Entity类定义
+     * @return 索引名
+     */
     private String getIndex(Class<?> clazz) {
         String name = clazz.getName();
         if (indexes.containsKey(name)) {
@@ -409,16 +429,27 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
      * 对条件组创建查询
      *
      * @param group 条件组
+     * @param clazz 实体类定义
+     * @param highlightFields 搜索结果高亮显示字段列表（根据条件自动扫描）
      * @return 查询
      */
-    private BoolQueryBuilder createQueryGroupBuilder(GeneralAccessor.ConditionGroup group, Class<?> clazz) {
+    private AbstractQueryBuilder createQueryGroupBuilder(GeneralAccessor.ConditionGroup group, Class<?> clazz,
+                                                         Set<String> highlightFields) {
+        if (group == null) {
+            return QueryBuilders.matchAllQuery();
+        }
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-        if (group.getItems().size() == 1) {
+        if (group.getItems().size() == 1 && group instanceof GeneralAccessor.ConditionTuple) {
+            // 添加field到高亮字段
+            if (highlightFields != null &&
+                    ((GeneralAccessor.ConditionTuple)group).operate == GeneralAccessor.ConditionTuple.ConditionOperate.CONTAIN) {
+                highlightFields.add(((GeneralAccessor.ConditionTuple) group).field);
+            }
             return boolQueryBuilder.must(createQueryBuilder(group.getOperateType(),
                     (GeneralAccessor.ConditionTuple) group.getItems().get(0), clazz));
         } else {
             for (GeneralAccessor.ConditionGroup subGroup : group.getItems()) {
-                QueryBuilder subQueryBuilder = createQueryGroupBuilder(subGroup, clazz);
+                QueryBuilder subQueryBuilder = createQueryGroupBuilder(subGroup, clazz, highlightFields);
                 if (group.getOperateType() == GeneralAccessor.ConditionGroup.OperateType.AND) {
                     boolQueryBuilder.must(subQueryBuilder);
                 } else {
@@ -429,6 +460,12 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         }
     }
 
+    /**
+     * 判断Elastic Entity类中指定的属性是否定义为全文检索属性
+     * @param field 字段
+     * @param clazz Elastic Entity类定义
+     * @return 如果是全文检索（TEXT）类型返回true，否则返回false。
+     */
     private boolean isTextType(String field, Class<?> clazz) {
         if (clazz.getName().equalsIgnoreCase("java.lang.Object")) {
             return true;
@@ -558,16 +595,25 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         return search(group, null, Collections.singletonList(clazz), pagination);
     }
 
+    /**
+     * 根据条件组、排序组等输入创建对应的全文检索请求
+     * @param group 条件组
+     * @param orderGroup 排序组
+     * @param classes Elastic Entity类定义列表
+     * @param pagination 分页对象
+     * @return Elastic Search请求
+     * @see SearchRequest
+     */
     private SearchRequest createSearchRequest(GeneralAccessor.ConditionGroup group,
                                               GeneralAccessor.RecordOrderGroup orderGroup,
                                               List<Class<? extends Base>> classes,
                                               Pagination pagination) {
         SearchSourceBuilder builder = new SearchSourceBuilder();
-        if (group == null) {
-            builder.query(QueryBuilders.matchAllQuery());
-        } else {
-            builder.query(createQueryGroupBuilder(group, classes.get(0)));
-        }
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
+        Set<String> highlightFields = new HashSet<>();
+        builder.query(createQueryGroupBuilder(group, classes.get(0), highlightFields));
+        highlightFields.forEach(highlightBuilder::field);
+        builder.highlighter(highlightBuilder);
         if (pagination != null) {
             builder.from((pagination.getPage() - 1) * pagination.getSize());
             builder.size(pagination.getSize());
@@ -586,8 +632,15 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         return request;
     }
 
+    /**
+     * 执行一次Elastic查询
+     * @param searchRequest Elastic Search请求
+     * @param pagination 分页对象
+     * @param <T> 泛型定义
+     * @return 符合条件的Elastic Entity列表
+     */
     @SuppressWarnings("unchecked")
-    public <T extends Base> List<T> search(SearchRequest searchRequest, Pagination pagination) {
+    private <T extends Base> List<T> search(SearchRequest searchRequest, Pagination pagination) {
         try {
             // 设置滚动操作
             Scroll scroll = new Scroll(TimeValue.timeValueHours(1L));
@@ -603,6 +656,17 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
                 for (SearchHit hit : response.getHits().getHits()) {
                     T t = JSON.parseObject(hit.getSourceAsString(), (Class<T>) getIndexClass(hit.getIndex()));
                     ((ElasticBaseEntity) t).setScore(hit.getScore());
+                    // 注入高亮数据
+                    if (hit.getHighlightFields() != null) {
+                        hit.getHighlightFields().values().forEach(f -> {
+                            String key = f.getName();
+                            List<String> fragments = new ArrayList<>();
+                            for (Text text : f.getFragments()) {
+                                fragments.add(text.string());
+                            }
+                            ((ElasticBaseEntity)t).getHighlights().put(key, fragments);
+                        });
+                    }
                     result.add(t);
                 }
                 if (pagination == null) {
@@ -649,6 +713,10 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         return search(request, pagination);
     }
 
+    /**
+     * {@inheritDoc}
+     * @see ElasticUtil#count(GeneralAccessor.ConditionGroup, List)
+     */
     @Override
     public <T extends Base> long count(GeneralAccessor.ConditionGroup group, List<Class<? extends Base>> classes) {
         SearchRequest request = createSearchRequest(group, null, classes, null);
@@ -714,9 +782,11 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             );
         }
         SearchSourceBuilder builder = new SearchSourceBuilder();
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
         QueryBuilder boolBuilder = QueryBuilders.boolQuery();
+        Set<String> highlightFields = new HashSet<>();
         if (group != null) {
-            QueryBuilder groupBuilder = createQueryGroupBuilder(group, classes.get(0));
+            QueryBuilder groupBuilder = createQueryGroupBuilder(group, classes.get(0), highlightFields);
             ((BoolQueryBuilder) boolBuilder).must(groupBuilder);
         }
         QueryBuilder geoBuilder = QueryBuilders.geoDistanceQuery("location")
@@ -725,6 +795,8 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
                 .geoDistance(GeoDistance.ARC);
         ((BoolQueryBuilder) boolBuilder).must(geoBuilder);
         builder.query(boolBuilder);
+        highlightFields.forEach(highlightBuilder::field);
+        builder.highlighter(highlightBuilder);
         if (pagination != null) {
             builder.from((pagination.getPage() - 1) * pagination.getSize());
             builder.size(pagination.getSize());
@@ -769,16 +841,20 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
             );
         }
         SearchSourceBuilder builder = new SearchSourceBuilder();
+        HighlightBuilder highlightBuilder = new HighlightBuilder();
         List<GeoPoint> points = new ArrayList<>(polygon.size());
         polygon.forEach(point -> points.add(point.get()));
         QueryBuilder boolBuilder = QueryBuilders.boolQuery();
+        Set<String> highlightFields = new HashSet<>();
         if (group != null) {
-            QueryBuilder groupBuilder = createQueryGroupBuilder(group, classes.get(0));
+            QueryBuilder groupBuilder = createQueryGroupBuilder(group, classes.get(0), highlightFields);
             ((BoolQueryBuilder) boolBuilder).must(groupBuilder);
         }
         QueryBuilder geoBuilder = QueryBuilders.geoPolygonQuery("location", points);
         ((BoolQueryBuilder) boolBuilder).must(geoBuilder);
         builder.query(boolBuilder);
+        highlightFields.forEach(highlightBuilder::field);
+        builder.highlighter(highlightBuilder);
         if (pagination != null) {
             builder.from((pagination.getPage() - 1) * pagination.getSize());
             builder.size(pagination.getSize());
@@ -833,6 +909,12 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         }
     }
 
+    /**
+     * 根据指定的Elastic Entity对象创建一个创建索引的请求
+     * @param t Elastic实体对象
+     * @param <T> 泛型定义
+     * @return 转换后的DocWriteRequest
+     */
     @SuppressWarnings("unchecked")
     private <T extends Base> DocWriteRequest createIndexRequest(T t) {
         Class<T> clazz = (Class<T>) t.getClass();
@@ -842,6 +924,12 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         return request;
     }
 
+    /**
+     * 根据指定的Elastic Entity对象创建一个更新索引的请求
+     * @param t Elastic实体对象
+     * @param <T> 泛型定义
+     * @return 转换后的DocWriteRequest
+     */
     @SuppressWarnings("unchecked")
     private <T extends Base> DocWriteRequest createUpdateRequest(T t) {
         Class<T> clazz = (Class<T>) t.getClass();
@@ -851,6 +939,12 @@ public class ElasticUtilRest implements ElasticUtil, ElasticLowLevelUtil {
         return request;
     }
 
+    /**
+     * 根据指定的Elastic Entity对象创建一个删除索引的请求
+     * @param t Elastic实体对象
+     * @param <T> 泛型定义
+     * @return 转换后的DocWriteRequest
+     */
     @SuppressWarnings("unchecked")
     private <T extends Base> DocWriteRequest createDeleteRequest(T t) {
         Class<T> clazz = (Class<T>) t.getClass();
