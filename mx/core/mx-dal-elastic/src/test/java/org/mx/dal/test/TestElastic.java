@@ -460,10 +460,10 @@ public class TestElastic {
             List<UserEntityElastic> list = accessor.find(GeneralAccessor.ConditionTuple.eq("code", "john"), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
-            list = accessor.find( GeneralAccessor.ConditionTuple.eq("name", "John"), UserEntityElastic.class);
+            list = accessor.find( GeneralAccessor.ConditionTuple.contain("name", "John"), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
-            list = accessor.find( GeneralAccessor.ConditionTuple.eq("name", "Peng"), UserEntityElastic.class);
+            list = accessor.find( GeneralAccessor.ConditionTuple.contain("name", "Peng"), UserEntityElastic.class);
             assertNotNull(list);
             assertEquals(1, list.size());
             list = accessor.find(GeneralAccessor.ConditionTuple.contain("desc", "高级工程师"), UserEntityElastic.class);

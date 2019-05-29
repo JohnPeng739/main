@@ -11,7 +11,7 @@ import org.mx.dal.annotation.ElasticField;
 public class ElasticBaseDictEntity extends ElasticBaseEntity implements BaseDict {
     @ElasticField
     private String code; // 代码
-    @ElasticField(type = "text")
+    @ElasticField
     private  String name; // 名称
     @ElasticField(type = "text", analyzer = "hanlp")
     private  String desc; // 描述
