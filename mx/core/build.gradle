@@ -111,7 +111,7 @@ project(':mx-dal-hibernate') {
                 libs.'spring-data-jpa',
                 libs.'hibernate-entitymanager'
         )
-        runtime(
+        compile(
                 libs.'postgresql',
                 libs.'mysql8'
         )
