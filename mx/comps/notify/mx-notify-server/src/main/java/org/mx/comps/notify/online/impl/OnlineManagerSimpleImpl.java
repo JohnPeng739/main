@@ -8,8 +8,8 @@ import org.mx.comps.notify.config.NotifyConfigBean;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineDeviceAuthenticate;
 import org.mx.comps.notify.online.OnlineManager;
+import org.mx.service.server.websocket.WsSessionListener;
 import org.mx.service.server.websocket.WsSessionManager;
-import org.mx.service.server.websocket.WsSessionRemovedListener;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
  */
 @Component("onlineManagerSimple")
 public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean, DisposableBean,
-        WsSessionRemovedListener {
+        WsSessionListener {
     private static final Log logger = LogFactory.getLog(OnlineManagerSimpleImpl.class);
 
     private final Serializable onlineDeviceMutex = "ONLINE_DEVICE";
@@ -58,16 +58,36 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
             this.deviceAuthenticate = context.getBean(notifyConfigBean.getAuthenticate(), OnlineDeviceAuthenticate.class);
         }
         wsSessionManager = WsSessionManager.getManager();
-        wsSessionManager.addSessionRemovedListener(this);
+        wsSessionManager.addSessionListener(this);
     }
 
     /**
      * {@inheritDoc}
      *
-     * @see WsSessionRemovedListener#sessionRemoved(String)
+     * @see WsSessionListener#added(String, Session)
      */
     @Override
-    public void sessionRemoved(String connectKey) {
+    public void added(String connectKey, Session session) {
+        // do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see WsSessionListener#blocked(String, Session)
+     */
+    @Override
+    public void blocked(String connectKey, Session session) {
+        // do nothing
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @see WsSessionListener#removed(String, Session)
+     */
+    @Override
+    public void removed(String connectKey, Session session) {
         // 连接的会话已经断开，将设备从在线设备列表中移除
         synchronized (OnlineManagerSimpleImpl.this.onlineDeviceMutex) {
             onlineDevices.forEach((k, v) -> {

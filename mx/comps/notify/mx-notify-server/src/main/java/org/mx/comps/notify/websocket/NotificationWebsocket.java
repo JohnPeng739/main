@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mx.StringUtils;
 import org.mx.comps.notify.config.NotifyConfigBean;
 import org.mx.comps.notify.processor.MessageProcessorChain;
-import org.mx.service.server.websocket.DefaultWsSessionMonitor;
+import org.mx.service.server.websocket.WsLifeCircleMonitor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @author : john.peng created on date : 2018/1/3
  */
 @Component("notifyWebsocket")
-public final class NotificationWebsocket extends DefaultWsSessionMonitor {
+public final class NotificationWebsocket extends WsLifeCircleMonitor {
     private static final Log logger = LogFactory.getLog(NotificationWebsocket.class);
 
     private MessageProcessorChain processorChain;
@@ -37,7 +37,7 @@ public final class NotificationWebsocket extends DefaultWsSessionMonitor {
     /**
      * {@inheritDoc}
      *
-     * @see DefaultWsSessionMonitor#hasText(String, String)
+     * @see WsLifeCircleMonitor#hasText(String, String)
      */
     @Override
     public void hasText(String connectKey, String message) {
@@ -61,7 +61,7 @@ public final class NotificationWebsocket extends DefaultWsSessionMonitor {
     /**
      * {@inheritDoc}
      *
-     * @see DefaultWsSessionMonitor#hasBinary(String, byte[]) (String, byte[])
+     * @see WsLifeCircleMonitor#hasBinary(String, byte[]) (String, byte[])
      */
     @Override
     public void hasBinary(String connectKey, byte[] buffer) {
