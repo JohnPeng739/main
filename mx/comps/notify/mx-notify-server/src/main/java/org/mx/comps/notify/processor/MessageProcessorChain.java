@@ -25,6 +25,7 @@ public class MessageProcessorChain {
     private static final Log logger = LogFactory.getLog(MessageProcessorChain.class);
 
     private Set<MessageProcessor> processors;
+    private WsSessionManager manager = null;
 
     /**
      * 默认的构造函数
@@ -33,8 +34,9 @@ public class MessageProcessorChain {
      * @param context          Spring IoC上下文
      */
     @Autowired
-    public MessageProcessorChain(NotifyConfigBean notifyConfigBean, ApplicationContext context) {
+    public MessageProcessorChain(NotifyConfigBean notifyConfigBean, ApplicationContext context, WsSessionManager manager) {
         super();
+        this.manager = manager;
         this.processors = new HashSet<>();
         for (String name : notifyConfigBean.getProcessors()) {
             String processorName = String.format("%sCommandProcessor", name);
@@ -86,7 +88,7 @@ public class MessageProcessorChain {
             }
             return;
         }
-        Session session = WsSessionManager.getManager().getSession(connectKey);
+        Session session = manager.getSession(connectKey);
         if (session == null) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The session[%s] not existed.", connectKey));
@@ -118,7 +120,7 @@ public class MessageProcessorChain {
             }
             return;
         }
-        Session session = WsSessionManager.getManager().getSession(connectKey);
+        Session session = manager.getSession(connectKey);
         if (session == null) {
             if (logger.isErrorEnabled()) {
                 logger.error(String.format("The session[%s] not existed.", connectKey));

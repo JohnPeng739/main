@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.mx.spring.utils.SpringContextHolder;
 
 /**
@@ -37,9 +38,11 @@ public class UnregistryCommandProcessor extends DeviceCommandProcessor {
 
     /**
      * 默认的构造函数
+     *
+     * @param sessionManager WebSocket会话管理器
      */
-    public UnregistryCommandProcessor() {
-        super(COMMAND);
+    public UnregistryCommandProcessor(WsSessionManager sessionManager) {
+        super(COMMAND, sessionManager);
     }
 
     /**

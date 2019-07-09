@@ -28,13 +28,15 @@ public class NotifyProcessor {
     private static final Log logger = LogFactory.getLog(NotifyProcessor.class);
 
     private OnlineManager onlineManager;
+    private WsSessionManager sessionManager;
 
     private NotifyProcessListener listener;
 
     @Autowired
-    public NotifyProcessor(ApplicationContext context, NotifyConfigBean notifyConfigBean, OnlineManager onlineManager) {
+    public NotifyProcessor(ApplicationContext context, NotifyConfigBean notifyConfigBean, OnlineManager onlineManager, WsSessionManager sessionManager) {
         super();
         this.onlineManager = onlineManager;
+        this.sessionManager = sessionManager;
         if (!StringUtils.isBlank(notifyConfigBean.getNotifyListener())) {
             this.listener = context.getBean(notifyConfigBean.getNotifyListener(), NotifyProcessListener.class);
         }
@@ -175,7 +177,6 @@ public class NotifyProcessor {
         }
 
         // 如果必要，则向发送端发送推送回执
-        WsSessionManager sessionManager = WsSessionManager.getManager();
         if (sessionManager != null) {
             String connectKey = message.getString("connectKey");
             if (!StringUtils.isBlank(connectKey)) {

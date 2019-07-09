@@ -7,6 +7,7 @@ import org.mx.comps.notify.processor.impl.UnregistryCommandProcessor;
 import org.mx.comps.notify.rest.NotifyServerResource;
 import org.mx.comps.notify.websocket.NotificationWebsocket;
 import org.mx.service.server.config.ServerConfig;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -36,31 +37,34 @@ public class NotificationServerConfig {
     /**
      * 创建一个系统默认的终端注册命令处理器
      *
+     * @param manager WebSocket会话管理器
      * @return 终端注册命令处理器
      */
     @Bean(name = "registryCommandProcessor")
-    public RegistryCommandProcessor registryCommandProcessor() {
-        return new RegistryCommandProcessor();
+    public RegistryCommandProcessor registryCommandProcessor(WsSessionManager manager) {
+        return new RegistryCommandProcessor(manager);
     }
 
     /**
      * 创建一个系统默认的终端注销命令处理器
      *
+     * @param manager WebSocket会话管理器
      * @return 终端注销命令处理器
      */
     @Bean(name = "unregistryCommandProcessor")
-    public UnregistryCommandProcessor unregistryCommandProcessor() {
-        return new UnregistryCommandProcessor();
+    public UnregistryCommandProcessor unregistryCommandProcessor(WsSessionManager manager) {
+        return new UnregistryCommandProcessor(manager);
     }
 
     /**
      * 创建一个系统默认的终端状态报送命令处理器
      *
+     * @param manager WebSocket会话管理器
      * @return 终端状态报送命令处理器
      */
     @Bean(name = "pingCommandProcessor")
-    public PingCommandProcessor pingCommandProcessor() {
-        return new PingCommandProcessor();
+    public PingCommandProcessor pingCommandProcessor(WsSessionManager manager) {
+        return new PingCommandProcessor(manager);
     }
 
     /**

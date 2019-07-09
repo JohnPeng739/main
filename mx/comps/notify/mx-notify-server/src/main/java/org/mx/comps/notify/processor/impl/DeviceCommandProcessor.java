@@ -24,15 +24,18 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
     private static final Log logger = LogFactory.getLog(DeviceCommandProcessor.class);
 
     private String command;
+    private WsSessionManager sessionManager;
 
     /**
      * 构造函数
      *
-     * @param command 命令
+     * @param command        命令
+     * @param sessionManager WebSocket会话管理器
      */
-    public DeviceCommandProcessor(String command) {
+    public DeviceCommandProcessor(String command, WsSessionManager sessionManager) {
         super();
         this.command = command;
+        this.sessionManager = sessionManager;
     }
 
     /**
@@ -99,7 +102,6 @@ public abstract class DeviceCommandProcessor implements MessageProcessor {
      * @param error      错误信息
      */
     protected void sendResponseMessage(String connectKey, String command, String deviceId, String error) {
-        WsSessionManager sessionManager = WsSessionManager.getManager();
         if (sessionManager != null) {
             Session session = sessionManager.getSession(connectKey);
             if (session != null) {

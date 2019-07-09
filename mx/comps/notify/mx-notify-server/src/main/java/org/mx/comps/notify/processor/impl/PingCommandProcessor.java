@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.mx.comps.notify.online.OnlineDevice;
 import org.mx.comps.notify.online.OnlineManager;
+import org.mx.service.server.websocket.WsSessionManager;
 import org.mx.spring.utils.SpringContextHolder;
 
 /**
@@ -37,8 +38,8 @@ public class PingCommandProcessor extends DeviceCommandProcessor {
     public static final String COMMAND = "ping";
     private static final Log logger = LogFactory.getLog(PingCommandProcessor.class);
 
-    public PingCommandProcessor() {
-        super(COMMAND);
+    public PingCommandProcessor(WsSessionManager sessionManager) {
+        super(COMMAND, sessionManager);
     }
 
     /**

@@ -50,14 +50,14 @@ public class OnlineManagerSimpleImpl implements OnlineManager, InitializingBean,
      * @param notifyConfigBean 推送配置对象
      */
     @Autowired
-    public OnlineManagerSimpleImpl(ApplicationContext context, NotifyConfigBean notifyConfigBean) {
+    public OnlineManagerSimpleImpl(ApplicationContext context, NotifyConfigBean notifyConfigBean, WsSessionManager manager) {
         super();
         this.onlineDevices = new ConcurrentHashMap<>();
         this.notifyConfigBean = notifyConfigBean;
         if (!StringUtils.isBlank(notifyConfigBean.getAuthenticate())) {
             this.deviceAuthenticate = context.getBean(notifyConfigBean.getAuthenticate(), OnlineDeviceAuthenticate.class);
         }
-        wsSessionManager = WsSessionManager.getManager();
+        wsSessionManager = manager;
         wsSessionManager.addSessionListener(this);
     }
 
