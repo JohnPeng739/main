@@ -8,7 +8,6 @@ import org.mx.TypeUtils;
 import org.mx.service.server.WebsocketServerConfigBean;
 import org.springframework.context.ApplicationContext;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -414,9 +413,9 @@ public class WsSessionManager {
                     if (logger.isDebugEnabled()) {
                         logger.debug(String.format("Send ping to session[%s] successfully.", connectKey));
                     }
-                } catch (IOException ex) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(String.format("Send ping to session[%s] fail.", connectKey));
+                } catch (Throwable ex) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn(String.format("Send ping to session[%s] fail.", connectKey));
                     }
                 }
             });
