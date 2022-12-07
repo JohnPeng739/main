@@ -15,7 +15,7 @@
     "body-parser": "^1.18.2",
     "echarts": "^4.0.2",
     "element-ui": "^2.1.0",
-    "express": "^4.16.2",
+    "express": "^4.17.3",
     "express-session": "^1.15.6",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
